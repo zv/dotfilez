@@ -1,0 +1,2 @@
+io:format("Executing erl_profile in  HOME/.erlang\n",[]).
+io:format(".erlang config successfully intialized\n",[]).
