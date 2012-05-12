@@ -1,1 +1,4 @@
-io:fwrite("Zephyr Pellerin"). 
+%% Zealous Zeph's .erlang
+%% -*- mode: erlang; erlang-indent-level: 2 -*-
+shell:results(2).
+code:add_patha("/home/zephyr/").
