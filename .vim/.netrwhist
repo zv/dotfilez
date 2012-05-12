@@ -1,4 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
-let g:netrw_dirhist_1='/Users/zephyrpellerin/Development/amov2/app'
-let g:netrw_dirhist_2='/Users/zephyrpellerin/Development/amov2/app/controllers'
