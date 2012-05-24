@@ -39,6 +39,12 @@ task :default => 'install'
 
 private
 
+def run(cmd)
+  puts
+  puts "[Installing] #{cmd}"
+  `#{cmd}` unless ENV['DEBUG']
+end
+
 def success_msg()
   puts ""
   puts "Feel the now!" 
