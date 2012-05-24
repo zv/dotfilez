@@ -1,7 +1,6 @@
-# Dotfiles for a cultivation of supreme enlightenment
+# Dotfiles for travelers with no specific destination or time of arrival.
 
-## Just go with it.
-
+If you'd like to install them
 ```
 git clone https://github.com/zv/dotfilez 
 cd ~/dotfilez && rake install
