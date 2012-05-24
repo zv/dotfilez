@@ -19,7 +19,6 @@ task :install => [:submodules] do
     puts "file:   #{file}"
     puts "source: #{source}"
     puts "target: #{target}"
-
     run %{ mv "$HOME/.#{file}" "$HOME/.#{file}.backup" }
     FileUtils.rm_rf(target) # sorry 
     run %{ ln -s "#{source}" "#{target}" }
