@@ -3,8 +3,8 @@
 # Just another dotfile repository.
 
 ```
-git clone https://github.com/skwp/dotfiles ~/.yadr
-cd ~/.yadr && rake install
+git clone https://github.com/zv/dotfilez 
+cd ~/dotfilez && rake install
 ```
 
 ### Use pry
@@ -276,4 +276,5 @@ You may use `~/.vimrc.before` for settings like the __leader__ setting. You may 
 
 First, I'd like to thank the state of Colorado for being boring enough for me to spend years in front of a computer rather than do something
 worthwhile with my youth.
-Secondly I'd like to thank Janus for being who actually put this together.
+
+Secondly I'd like to thank Janus and yadr for their heroic work for being the ones who actually put this together.
