@@ -23,7 +23,6 @@ cd ~/dotfilez && rake install
 If you'll permit me to share some wisdom with you, here's some things I've found useful
   * I know you've been told to learn this language and that language a million times. You're probably anticipating what I'm going to say with a little bit of dread, but nevertheless, I would strongly encourage you to learn Erlang and Ruby, or some equivalents. Having these sort of tools has made for exceptionally light work these past few years. x86 and C++ will always have a powerful fascinating quality but age gifts us with a pragmatism we may have not fully realized in a language in our younger years.
   * I am in general very satisfied with HiPE's compiled bytecode performance, I would recommend it if you're not already on R15B (Erlang).
-  * Try to hold no preferences. This is a cultivated quality that has proven useful to me time and time again.
   * I am quite partial to the Ruby intepreter pry, it is advantageous in numerous respects. This configuration carries a pry configuration with it, if irb has wore you thin, give it a shot with `pry`
   * Don't collect tools or programming languages beyond what is useful.
   * Being detached from desire has always allowed me to make much clearer decisions. 
@@ -34,6 +33,8 @@ If you'll permit me to share some wisdom with you, here's some things I've found
   * You can only write code the way you practice.
   * It is much easier to learn 10,000 things through the full realization of one human discipline of knowledge than to realize skill in a craft through learning 10,000 things.
   * Theres always more than one way to the top of the mountain.
+  * There are no facts, only interpretations.
+  * Deliberation is superior to caution.
 
 ### Git Keywords
 
