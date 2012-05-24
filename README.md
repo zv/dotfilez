@@ -1,4 +1,4 @@
-# Dotfiles for travelers with no specific destination or time of arrival.
+# .files for those with no specific destination or time of arrival.
 
 If you'd like to install them
 ```
@@ -7,17 +7,17 @@ cd ~/dotfilez && rake install
 ```
 
 
-## But why?
-  This collection of dotfiles has been created with no definite purpose in mind, 
-  material or otherwise.
+## Why?
+  This collection of dotfiles has been created with no definite purpose in mind, material or otherwise.
 
   So here's an unconventional koan I've always enjoyed
 
+  ```
   Shuzan held out his short staff and said, 
     "If you call this a short staff, you oppose its reality. 
     If you do not call it a short staff, you ignore the fact. 
     Now what do you wish to call this?"
-
+  ```
 
 ## Wisdom
 If you'll permit me to share some wisdom with you, here's some things I've found useful
@@ -26,6 +26,7 @@ If you'll permit me to share some wisdom with you, here's some things I've found
   * It's generally wise to add --no-rdoc --no-ri to gem installation commands, this dotfile configuration can handle it for you
   * :map <COMMAND> shows you what a mapping does, adding :verbose tells you where it's done. This is quite an interesting trick that once allowed me to save a damsel in distress, which I thought was worth it.
   * Janus is quite passionate about the LustyJuggler buffer manager, `,lj` will suffice for most of your needs however.    
+
 ### Git Keywords
 
 Git is a very cleverly designed DVCS. I suspect you've heard of it considering you're on github.
