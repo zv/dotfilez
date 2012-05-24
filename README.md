@@ -2,40 +2,10 @@
 
 # Just another dotfile repository.
 
+```
 git clone https://github.com/skwp/dotfiles ~/.yadr
 cd ~/.yadr && rake install
-
-# Your dotfiles are somewhat safe, I've tried to include some backup code that won't work.
-
-In my opinion, in 2012, this is best of breed in development tools for Erlang and Ruby on 
-Rails in Fedora Core.
-
-## What is Dotfiles of the Owned and the Lamest?
-
-Hacker News is ablaze with opinons, everyone has one. In fact, at this juncture in this wintry economic climate, in order to be taken seriously you 
-have to make at least one melodramatic, overstated and largely unfounded opinion a day!
-
-Here's some opinions you can warm up on
-
-* Plan9 is hands down the best operating system ever, everything made since then has been a desperate, largely futile attempt to copy it's award winning UI
-* Stress is bad! Why work?
-* It's agile all the way down!
-
-So I've decided to put together my own opinion-free, opinionated set of dotfiles.
-
-I could try to pitch you on "best of breed" tools for developing in Erlang and Ruby on Rails. I could tell you that I've been working on some of these dotfiles
-since before I could legally drive. I could tell you that I ruthlessly have crafted this dotfile repository after years in the trenches. I could tell you that
-if you download this dotfile repository, your life will be reduced to its easy mode setting you've missed out on all these years.
-
-Except I can't.
-
-All I've got is heart warming tales inside my dotfiles. Stories that ask the hard hitting social questions of the 21st century, stories with somber 
-truths and tales of bravery.
-
-I'll be strait -- I want you to cry tears of joy and to know the trials and tribulations of using these utilities.
-
-It will be like the end of the movie where all of the hero's enemies begin crack a smile when he accepts his award, slowly building into clapping their
-asses off for him. YEAH!
+```
 
 ### Use pry
 
