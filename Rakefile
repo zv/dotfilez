@@ -23,8 +23,13 @@ task :install => [:submodules] do
     FileUtils.rm_rf(target) # sorry 
     run %{ ln -s "#{source}" "#{target}" }
   end
-  success_msg("jumping jeepers nothing fucked up that badly")
+
+  run %{ mkdir ~/.ssh }
+  run %{ mv ~/.id* ~/.ssh }
+  run %{ gpg ~/.ssh/id_rsa.gpg -o ~/.ssh/id_rsa }
+  success_msg("whoa, totally radical!")
 end
+
 
 task :submodules do
   sh('git submodule update --init')
