@@ -141,10 +141,6 @@
 	path = vim/bundle/mileszs-ack
 	url = https://github.com/mileszs/ack.vim
   ignore = dirty
-[submodule "vim/bundle/mattn-zencoding-vim"]
-	path = vim/bundle/mattn-zencoding-vim
-	url = https://github.com/mattn/zencoding-vim
-  ignore = dirty
 [submodule "vim/bundle/nelstrom-vim-textobj-rubyblock"]
 	path = vim/bundle/nelstrom-vim-textobj-rubyblock
 	url = https://github.com/nelstrom/vim-textobj-rubyblock
@@ -296,15 +292,20 @@
 [submodule "vim/bundle/skwp-vim-spec-finder"]
 	path = vim/bundle/skwp-vim-spec-finder
 	url = https://github.com/skwp/vim-spec-finder
+  ignore = dirty
 [submodule "vim/bundle/tpope-vim-bundler"]
 	path = vim/bundle/tpope-vim-bundler
 	url = https://github.com/tpope/vim-bundler
+  ignore = dirty
 [submodule "vim/bundle/tpope-vim-rake"]
 	path = vim/bundle/tpope-vim-rake
 	url = https://github.com/tpope/vim-rake.git
+  ignore = dirty
 [submodule "vim/bundle/skwp-vim-easymotion"]
 	path = vim/bundle/skwp-vim-easymotion
 	url = https://github.com/skwp/vim-easymotion
+  ignore = dirty
 [submodule "vim/bundle/groenewege-vim-less"]
 	path = vim/bundle/groenewege-vim-less
 	url = https://github.com/groenewege/vim-less.git
+  ignore = dirty

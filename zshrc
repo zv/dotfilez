@@ -2,68 +2,6 @@
 # meow nyan meow nyan meow 
 # 2012
 
-# Behind every good config file there is a
-# good story.
-# The story of this config file begins with
-# a portrait of a programmer as a young man..
-#
-# When did I start using ZSH? In truth, this
-# sort of question doesn't hold much signifigance
-# for me. However, if you were to ask me when I 
-# stopped using bash, then I can confidently
-# say: I have never used bash, ever. I knew
-# the bash that came preinstalled with all
-# my computers was a fraud, and now that I 
-# think about it, all of my friends at the time
-# had the same look of disbelief when they found
-# their history and config files miraculously 
-# deleted by some strange cosmic force of 
-# nature.
-#
-# Or maybe it was just bash. 
-# 
-# It was bash that  made me suspicious about the world.
-# Bash was something of an introduction to the
-# ancient phenomenological question of the evil
-# of man contrasted with the alleged perfect
-# good of god. Despite bash's omnipresence,
-# bash made me a disbeliever. God is dead.
-#
-# However, it took me a bit longer to realize that
-# aliens, ghosts, time travellers, and ESPers were
-# just as big of a fraud as bash was.
-# No, wait. I probably did realize these things.
-# I just didn't want to admit it. Yes, deep
-# inside my soul I wanted those time travelers,
-# aliens, and corrupt evil corporations to
-# suddenly appear. 
-# I wanted to be the one who saved the girl kidnapped
-# by evil forces beyond our control and imprisoned
-# in some foul, salad bowl like fortress.
-# Yet, reality is a cruel mistress.
-# By high school, I had firmly grown out of these 
-# childish ideals.
-#
-# Unfortunately these things are just fantasy.
-# Since then, I haven't met any time travelers,
-# and my skills as a telepathic have yet to
-# emerge - I once spent two hours staring.
-# at a hat, but I couldn't get it to move
-# an inch.
-#
-# Nothing supernatural really happened in
-# 2005, turning 13 was just another page in
-# the book of life.
-#
-# I eventually stopped fantasizing about
-# meetings with supernatural beings and
-# there I tried to become a normal, mature
-# High School Student.
-#
-# Until that day.. 
-#
-# That day when I found the ZSH manpage. 
-
 #! /bin/zsh
 # A script to make using 256 colors in zsh less painful.
 # P.C. Shyamshankar <sykora@lucentbeing.com>
@@ -111,7 +49,7 @@ prompt_fix_for_git() {
   fi
 }
 
-PROMPT='%2~ $(prompt_fix_for_git) ओम् »%b '
+PROMPT='%2~ $(prompt_fix_for_git)>> '
 
 #############################################
 #
@@ -579,7 +517,7 @@ compinit -i
 
 ############################################
 
-export PATH=/usr/local/Cellar/erlang/R15B01/bin:/Users/zephyrpellerin/.rbenv/shims:/Users/zephyrpellerin/.rbenv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/sbin/local:/usr/local/Cellar/opencv/2.3.1a/include:/usr/local/Cellar/imagemagick/6.7.5-7:/Users/zephyrpellerin/.cabal/bin
+export PATH=/Users/zephyrpellerin/.rbenv/shims:/Users/zephyrpellerin/.rbenv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/sbin/local:/usr/local/Cellar/opencv/2.3.1a/include:/usr/local/Cellar/imagemagick/6.7.5-7:/Users/zephyrpellerin/.cabal/bin
 
 export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 
