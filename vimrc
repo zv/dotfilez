@@ -19,7 +19,9 @@ set gcr=a:blinkon0              "Disable cursor blink
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set hidden                      "Hidden Buffers
-
+let mapleader   = ','
+let g:mapleader = ','
+set encoding=utf8               "Yes, really
 "turn on syntax highlighting
 syntax on
 
@@ -57,7 +59,7 @@ filetype plugin on
 filetype indent on
 
 
-" ================ Smooth Folding ===================
+" ================ Smooth Scrolling =================
 
 map <C-U> <C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y>
 map <C-D> <C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E>
@@ -94,6 +96,7 @@ set wildignore+=*.png,*.jpg,*.gif
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
+
 
 for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
   exe 'source' f
