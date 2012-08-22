@@ -70,7 +70,7 @@ nnoremap ,. '.
 imap <C-a> <esc>wa
 
 " ==== NERD tree
-" Cmd-Shift-N for nerd tree
+" Leader-Shift-N for nerd tree
 nmap ,N :NERDTreeToggle<CR>
 
 " ,q to toggle quickfix window (where you have stuff like GitGrep)
