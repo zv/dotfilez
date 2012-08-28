@@ -8,8 +8,8 @@ if has("gui_running")
   " http://ethanschoonover.com/solarized/vim-colors-solarized
   colorscheme default 
   
-  set guioptions=aegit
-  " If you want your toolbar back just add 
+  set guioptions=agit
+  " If you want your toolbar and tabs back just add 
   " set guioptions=aegitTm
 
   set guiheadroom=0
