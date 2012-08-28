@@ -1,6 +1,3 @@
-[submodule "vim/bundle/raimondi-delimitMate"]
-	path = vim/bundle/raimondi-delimitMate
-	url = https://github.com/Raimondi/delimitMate
 [submodule "vim/bundle/vim-scripts-AnsiEsc"]
 	path = vim/bundle/vim-scripts-AnsiEsc
 	url = https://github.com/vim-scripts/AnsiEsc.vim.git
@@ -12,14 +9,6 @@
 [submodule "vim/bundle/kogakure-vim-sparkup"]
 	path = vim/bundle/kogakure-vim-sparkup
 	url = https://github.com/kogakure/vim-sparkup.git
-  ignore = dirty
-[submodule "vim/bundle/tomtom-tcomment_vim"]
-	path = vim/bundle/tomtom-tcomment_vim
-	url = https://github.com/tomtom/tcomment_vim.git
-  ignore = dirty
-[submodule "vim/bundle/nelstrom-vim-markdown-preview"]
-	path = vim/bundle/nelstrom-vim-markdown-preview
-	url = https://github.com/nelstrom/vim-markdown-preview
   ignore = dirty
 [submodule "vim/bundle/scrooloose-nerdtree"]
 	path = vim/bundle/scrooloose-nerdtree
@@ -65,10 +54,6 @@
 	path = vim/bundle/vim-ruby-vim-ruby
 	url = https://github.com/vim-ruby/vim-ruby.git
   ignore = dirty
-[submodule "vim/bundle/ecomba-vim-ruby-refactoring"]
-	path = vim/bundle/ecomba-vim-ruby-refactoring
-	url = https://github.com/ecomba/vim-ruby-refactoring
-  ignore = dirty
 [submodule "vim/bundle/vim-scripts-matchit.zip"]
 	path = vim/bundle/vim-scripts-matchit.zip
 	url = https://github.com/vim-scripts/matchit.zip.git
@@ -89,17 +74,9 @@
 	path = vim/bundle/Shougo-neocomplcache
 	url = https://github.com/Shougo/neocomplcache.git
   ignore = dirty
-[submodule "vim/bundle/skwp-vim-colors-solarized"]
-	path = vim/bundle/skwp-vim-colors-solarized
-	url = https://github.com/skwp/vim-colors-solarized
-  ignore = dirty
 [submodule "vim/bundle/tpope-vim-pathogen"]
 	path = vim/bundle/tpope-vim-pathogen
 	url = https://github.com/tpope/vim-pathogen
-  ignore = dirty
-[submodule "vim/bundle/drewolson-ruby_focused_unit_test_vim"]
-	path = vim/bundle/drewolson-ruby_focused_unit_test_vim
-	url = https://github.com/drewolson/ruby_focused_unit_test_vim
   ignore = dirty
 [submodule "vim/bundle/tpope-vim-fugitive"]
 	path = vim/bundle/tpope-vim-fugitive
@@ -128,10 +105,6 @@
 [submodule "vim/bundle/vim-scripts-sudo"]
 	path = vim/bundle/vim-scripts-sudo
 	url = https://github.com/vim-scripts/sudo.vim
-  ignore = dirty
-[submodule "vim/bundle/nelstrom-vim-textobj-rubyblock"]
-	path = vim/bundle/nelstrom-vim-textobj-rubyblock
-	url = https://github.com/nelstrom/vim-textobj-rubyblock
   ignore = dirty
 [submodule "vim/bundle/kana-vim-textobj-user"]
 	path = vim/bundle/kana-vim-textobj-user
@@ -181,10 +154,6 @@
 	path = vim/bundle/nathanaelkane-vim-indent-guides
 	url = https://github.com/nathanaelkane/vim-indent-guides
   ignore = dirty
-[submodule "vim/bundle/aaronjensen-vim-sass-status"]
-	path = vim/bundle/aaronjensen-vim-sass-status
-	url = https://github.com/aaronjensen/vim-sass-status
-  ignore = dirty
 [submodule "vim/bundle/tpope-vim-haml"]
 	path = vim/bundle/tpope-vim-haml
 	url = https://github.com/tpope/vim-haml
@@ -192,10 +161,6 @@
 [submodule "vim/bundle/kana-vim-textobj-function"]
 	path = vim/bundle/kana-vim-textobj-function
 	url = https://github.com/kana/vim-textobj-function
-  ignore = dirty
-[submodule "vim/bundle/wavded-vim-stylus"]
-	path = vim/bundle/wavded-vim-stylus
-	url = https://github.com/wavded/vim-stylus
   ignore = dirty
 [submodule "vim/bundle/vim-scripts-Vim-R-plugin"]
 	path = vim/bundle/vim-scripts-Vim-R-plugin
@@ -208,10 +173,6 @@
 [submodule "vim/bundle/majutsushi-tagbar"]
 	path = vim/bundle/majutsushi-tagbar
 	url = https://github.com/majutsushi/tagbar.git
-  ignore = dirty
-[submodule "vim/bundle/joestelmach-javaScriptLint"]
-  path = vim/bundle/joestelmach-javaScriptLint
-  url = https://github.com/joestelmach/javaScriptLint.vim
   ignore = dirty
 [submodule "vim/bundle/VimEz-ShowMarks"]
 	path = vim/bundle/VimEz-ShowMarks
@@ -281,7 +242,7 @@
 	path = vim/bundle/skwp-vim-easymotion
 	url = https://github.com/skwp/vim-easymotion
   ignore = dirty
-[submodule "vim/bundle/groenewege-vim-less"]
-	path = vim/bundle/groenewege-vim-less
-	url = https://github.com/groenewege/vim-less.git
+[submodule "vim/bundle/mikewest-vimroom"]
+  path = vim/bundle/mikewest
+  url= https://github.com/mikewest/vimroom.git
   ignore = dirty
