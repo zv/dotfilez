@@ -81,10 +81,6 @@ nmap <silent> ,qo :copen<CR>
 " Open the project tree and expose current file in the nerdtree with Ctrl-\
 nnoremap <silent> <C-\> :NERDTreeFind<CR>
 
-" Command-/ to toggle comments
-map <C-/> :TComment<CR>
-imap <C-/> <Esc>:TComment<CR>i
-
 "GitGrep - open up a git grep line, with a quote started for the search
 nnoremap ,gg :GitGrep ""<left>
 "GitGrep Current Partial
@@ -173,7 +169,7 @@ nnoremap ` '
 " ============================
 " Tabularize - alignment
 " ============================
-" Hit Cmd-Shift-A then type a character you want to align by
+" Hit Ctrl-Shift-A then type a character you want to align by
 nmap <C-A> :Tabularize /
 vmap <C-A> :Tabularize /
 

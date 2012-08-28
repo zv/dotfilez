@@ -1,12 +1,18 @@
 " Make it beautiful - colors and fonts
+" 
+set t_Co=256
+
 if has("gui_running")
   "tell the term has 256 colors
-  " set t_Co=256
-
+  
   " http://ethanschoonover.com/solarized/vim-colors-solarized
-  colorscheme solarized
-  set background=dark
+  colorscheme default 
+  
+  set guioptions=aegit
+  " If you want your toolbar back just add 
+  " set guioptions=aegitTm
 
+  set guiheadroom=0
   " Show tab number (useful for Cmd-1, Cmd-2.. mapping)
   " For some reason this doesn't work as a regular set command,
   " (the numbers don't show up) so I made it a VimEnter event
