@@ -253,3 +253,9 @@
 [submodule "vim/bundle/scrooloose-nerdcommenter"]
 	path = vim/bundle/scrooloose-nerdcommenter
 	url = git://github.com/scrooloose/nerdcommenter.git
+[submodule "lsvim/bundle/riprip-clang-complete"]
+	path = lsvim/bundle/riprip-clang-complete
+	url = git://github.com/Rip-Rip/clang_complete.git
+[submodule "vim/bundle/riprip-clang-complete"]
+	path = vim/bundle/riprip-clang-complete
+	url = git://github.com/Rip-Rip/clang_complete.git
