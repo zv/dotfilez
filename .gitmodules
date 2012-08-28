@@ -250,3 +250,6 @@
 	path = vim/bundle/jimenezrick-vimerl
 	url = git://github.com/jimenezrick/vimerl.git
   ignore = dirty
+[submodule "vim/bundle/scrooloose-nerdcommenter"]
+	path = vim/bundle/scrooloose-nerdcommenter
+	url = git://github.com/scrooloose/nerdcommenter.git
