@@ -11,7 +11,7 @@ set nocompatible
 " ================ General Config ====================
 
 set guifont=Terminus\ 14
-set number                      "Line numbers are good
+set number                      "Line numbers are good:
 set backspace=indent,eol,start  "Allow backspace in insert mode
 set history=1000                "Store lots of :cmdline history
 set showcmd                     "Show incomplete cmds down the bottom
@@ -20,9 +20,8 @@ set gcr=a:blinkon0              "Disable cursor blink
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set hidden                      "Hidden Buffers
-let mapleader   = ','
-let g:mapleader = ','
 set encoding=utf8               "Yes, really
+
 "turn on syntax highlighting
 syntax on
 
