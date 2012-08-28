@@ -243,6 +243,10 @@
 	url = https://github.com/skwp/vim-easymotion
   ignore = dirty
 [submodule "vim/bundle/mikewest-vimroom"]
-  path = vim/bundle/mikewest
-  url= https://github.com/mikewest/vimroom.git
+	path = vim/bundle/mikewest-vimroom
+	url = git://github.com/mikewest/vimroom.git
+  ignore = dirty
+[submodule "vim/bundle/jimenezrick-vimerl"]
+	path = vim/bundle/jimenezrick-vimerl
+	url = git://github.com/jimenezrick/vimerl.git
   ignore = dirty
