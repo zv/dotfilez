@@ -259,3 +259,6 @@
 [submodule "vim/bundle/riprip-clang-complete"]
 	path = vim/bundle/riprip-clang-complete
 	url = git://github.com/Rip-Rip/clang_complete.git
+[submodule "zsh/rupa-z"]
+	path = zsh/rupa-z
+	url = git://github.com/rupa/z.git
