@@ -49,7 +49,7 @@ prompt_fix_for_git() {
   fi
 }
 
-PROMPT='%2~ $(prompt_fix_for_git)>> '
+PROMPT='[%n@%m]%2~ $(prompt_fix_for_git)>> '
 
 #############################################
 #
