@@ -517,9 +517,10 @@ compinit -i
 
 ############################################
 
-export PATH=/Users/zephyrpellerin/.rbenv/shims:/Users/zephyrpellerin/.rbenv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/sbin/local:/usr/local/Cellar/opencv/2.3.1a/include:/usr/local/Cellar/imagemagick/6.7.5-7:/Users/zephyrpellerin/.cabal/bin
+# some RBENV stuff
+export PATH="$HOME/.rbenv/bin:$HOME/bin:$PATH"
+eval "$(rbenv init -)"
 
-export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 
 ### Closing words ###########################
 #

@@ -6,10 +6,6 @@
 	path = vim/bundle/skwp-vim-ruby-conque
 	url = https://github.com/skwp/vim-ruby-conque
   ignore = dirty
-[submodule "vim/bundle/kogakure-vim-sparkup"]
-	path = vim/bundle/kogakure-vim-sparkup
-	url = https://github.com/kogakure/vim-sparkup.git
-  ignore = dirty
 [submodule "vim/bundle/scrooloose-nerdtree"]
 	path = vim/bundle/scrooloose-nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
