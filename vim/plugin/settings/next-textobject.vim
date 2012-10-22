@@ -7,7 +7,6 @@ onoremap an :<c-u>call <SID>NextTextObject('a', 'f')<cr>
 xnoremap an :<c-u>call <SID>NextTextObject('a', 'f')<cr>
 onoremap in :<c-u>call <SID>NextTextObject('i', 'f')<cr>
 xnoremap in :<c-u>call <SID>NextTextObject('i', 'f')<cr>
-
 onoremap al :<c-u>call <SID>NextTextObject('a', 'F')<cr>
 xnoremap al :<c-u>call <SID>NextTextObject('a', 'F')<cr>
 onoremap il :<c-u>call <SID>NextTextObject('i', 'F')<cr>

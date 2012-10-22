@@ -345,6 +345,72 @@ POST_1_7_2_GIT=$(git_compare_version "1.7.2")
 #clean up the namespace slightly by removing the checker function
 unset -f git_compare_version
 
+
+#############################################
+# "During the last few years feminist
+#  scholarship has begun to recognise
+#  that the dominant science system
+#  emerged as a liberating force not for
+#  humanity as a whole (though it
+#  legitimised itself in terms of
+#  universal betterment of the species),
+#  but as a masculine and patriarchal
+#  project which necessarily entailed the
+#  subjugation of both nature and
+#  women"
+#  
+#  - Tumblr Blog 
+#
+### SSH #################################
+
+local _plugin__ssh_env=$HOME/.ssh/environment-$HOST
+local _plugin__forwarding
+
+function _plugin__start_agent()
+{
+  local -a identities
+
+  # start ssh-agent and setup environment
+  /usr/bin/env ssh-agent | sed 's/^echo/#echo/' > ${_plugin__ssh_env}
+  chmod 600 ${_plugin__ssh_env}
+  . ${_plugin__ssh_env} > /dev/null
+
+  # load identies
+  zstyle -a :omz:plugins:ssh-agent identities identities 
+  echo starting...
+  /usr/bin/ssh-add $HOME/.ssh/${^identities}
+}
+
+zstyle -b :omz:plugins:ssh-agent agent-forwarding _plugin__forwarding
+
+if [[ ${_plugin__forwarding} == "yes" && -n "$SSH_AUTH_SOCK" ]]; then
+  
+  # Add a nifty symlink for screen/tmux if agent forwarding
+  # 
+  [[ -L $SSH_AUTH_SOCK ]] || ln -sf "$SSH_AUTH_SOCK" /tmp/ssh-agent-$USER-screen
+  
+elif [ -f "${_plugin__ssh_env}" ]; then
+
+  # Source SSH settings, if applicable
+  # 
+  . ${_plugin__ssh_env} > /dev/null
+  
+  ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+
+    _plugin__start_agent;
+    
+  }
+  
+else
+  _plugin__start_agent;
+fi
+
+# tidy up after ourselves
+unfunction _plugin__start_agent
+unset _plugin__forwarding
+unset _plugin__ssh_env
+
+
 #############################################
 #
 # "Those who do not remember history are 
