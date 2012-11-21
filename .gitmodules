@@ -172,7 +172,7 @@
   ignore = dirty
 [submodule "vim/bundle/VimEz-ShowMarks"]
 	path = vim/bundle/VimEz-ShowMarks
-	url = https://github.com/VimEz/ShowMarks.git
+	url = https://github.com/vimez/vim-showmarks.git  
   ignore = dirty
 [submodule "vim/bundle/skwp-vim-powerline"]
 	path = vim/bundle/skwp-vim-powerline
