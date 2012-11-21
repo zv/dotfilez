@@ -5,7 +5,6 @@ set t_Co=256
 if has("gui_running")
   "tell the term has 256 colors
   
-  " http://ethanschoonover.com/solarized/vim-colors-solarized
   colorscheme default 
   
   set guioptions=agit
@@ -21,7 +20,6 @@ if has("gui_running")
   set lines=60
   set columns=190
 
-  set guifont=Terminus\ 12
 else
   "dont load csapprox if we no gui support - silences an annoying warning
   let g:CSApprox_loaded = 1
