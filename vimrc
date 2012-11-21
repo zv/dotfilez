@@ -10,7 +10,7 @@ set nocompatible
 
 " ================ General Config ====================
 
-set guifont=Terminus\ 14
+set guifont=Terminus
 set number                      "Line numbers are good:
 set backspace=indent,eol,start  "Allow backspace in insert mode
 set history=1000                "Store lots of :cmdline history
@@ -70,9 +70,11 @@ set linebreak    "Wrap lines at convenient points
 
 " ================ Folds ============================
 
-set foldmethod=indent   "fold based on indent
+set foldmethod=syntax "fold based on indent
 set foldnestmax=3       "deepest fold is 3 levels
 set nofoldenable        "dont fold by default
+nnoremap <Space> za 
+vnoremap <Space> za 
 
 " ================ Completion =======================
 
