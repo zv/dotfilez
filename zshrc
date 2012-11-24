@@ -584,7 +584,7 @@ compinit -i
 ############################################
 
 # some RBENV stuff
-export PATH="$HOME/.rbenv/bin:$HOME/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/bin:/opt/vagrant/bin:$PATH"
 eval "$(rbenv init -)"
 
 
