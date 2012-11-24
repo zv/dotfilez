@@ -1,8 +1,8 @@
 Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , borderColor = "black"
        , border = TopB
-       , bgColor = "white"
-       , fgColor = "black"
+       , bgColor = "black"
+       , fgColor = "white"
        , position = Top
        , lowerOnStart = True
        , commands = [ Run Weather "KSFO" ["-t","<station>: <tempF>F","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
@@ -11,11 +11,12 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Com "acpi" [] "" 10
                     , Run Battery [] 10 
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap% | %wlan0% | %battery% | <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap% | %wlan0% | %acpi% | <fc=#ee9a00>%date%</fc>"
        }
