@@ -11,7 +11,8 @@ install: 	$(objects)
 
 # watch yourself, this is naive
 backupconfig:
-		mv ~/.$(objects) ~/$i.backup
+		mkdir -p ~/configuration_backup/
+		mv ~/.$(objects) ~/configuration_backup/$i.backup
 
 privatekey:
 		cp id_rsa.gpg ~/.ssh/id_rsa.gpg 
