@@ -2,10 +2,6 @@
 	path = vim/bundle/vim-scripts-AnsiEsc
 	url = https://github.com/vim-scripts/AnsiEsc.vim.git
   ignore = dirty
-[submodule "vim/bundle/skwp-vim-ruby-conque"]
-	path = vim/bundle/skwp-vim-ruby-conque
-	url = https://github.com/skwp/vim-ruby-conque
-  ignore = dirty
 [submodule "vim/bundle/scrooloose-nerdtree"]
 	path = vim/bundle/scrooloose-nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
@@ -21,10 +17,6 @@
 [submodule "vim/bundle/scrooloose-syntastic"]
 	path = vim/bundle/scrooloose-syntastic
 	url = https://github.com/scrooloose/syntastic.git
-  ignore = dirty
-[submodule "vim/bundle/sjbach-lusty"]
-	path = vim/bundle/sjbach-lusty
-	url = https://github.com/sjbach/lusty.git
   ignore = dirty
 [submodule "vim/bundle/tjennings-git-grep-vim"]
 	path = vim/bundle/tjennings-git-grep-vim
@@ -61,10 +53,6 @@
 [submodule "vim/bundle/tpope-vim-endwise"]
 	path = vim/bundle/tpope-vim-endwise
 	url = https://github.com/tpope/vim-endwise.git
-  ignore = dirty
-[submodule "vim/bundle/skwp-vim-html-escape"]
-	path = vim/bundle/skwp-vim-html-escape
-	url = https://github.com/skwp/vim-html-escape
   ignore = dirty
 [submodule "vim/bundle/Shougo-neocomplcache"]
 	path = vim/bundle/Shougo-neocomplcache
@@ -150,17 +138,9 @@
 	path = vim/bundle/nathanaelkane-vim-indent-guides
 	url = https://github.com/nathanaelkane/vim-indent-guides
   ignore = dirty
-[submodule "vim/bundle/tpope-vim-haml"]
-	path = vim/bundle/tpope-vim-haml
-	url = https://github.com/tpope/vim-haml
-  ignore = dirty
 [submodule "vim/bundle/kana-vim-textobj-function"]
 	path = vim/bundle/kana-vim-textobj-function
 	url = https://github.com/kana/vim-textobj-function
-  ignore = dirty
-[submodule "vim/bundle/vim-scripts-Vim-R-plugin"]
-	path = vim/bundle/vim-scripts-Vim-R-plugin
-	url = https://github.com/vim-scripts/Vim-R-plugin
   ignore = dirty
 [submodule "vim/bundle/kien-ctrlp"]
 	path = vim/bundle/kien-ctrlp
@@ -201,10 +181,6 @@
 [submodule "vim/bundle/honza-snipmate-snippets"]
 	path = vim/bundle/honza-snipmate-snippets
 	url = https://github.com/honza/snipmate-snippets.git
-  ignore = dirty
-[submodule "vim/bundle/skwp-vim-conque"]
-	path = vim/bundle/skwp-vim-conque
-	url = https://github.com/skwp/vim-conque
   ignore = dirty
 [submodule "vim/bundle/gregsexton-gitv"]
 	path = vim/bundle/gregsexton-gitv
@@ -249,9 +225,6 @@
 [submodule "vim/bundle/scrooloose-nerdcommenter"]
 	path = vim/bundle/scrooloose-nerdcommenter
 	url = git://github.com/scrooloose/nerdcommenter.git
-[submodule "lsvim/bundle/riprip-clang-complete"]
-	path = lsvim/bundle/riprip-clang-complete
-	url = git://github.com/Rip-Rip/clang_complete.git
 [submodule "vim/bundle/riprip-clang-complete"]
 	path = vim/bundle/riprip-clang-complete
 	url = git://github.com/Rip-Rip/clang_complete.git
