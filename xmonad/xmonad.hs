@@ -19,7 +19,7 @@ main = do
      xmproc  <- spawnPipe "/usr/bin/xmobar" 
      session <- getEnv "DESKTOP_SESSION"
      -- one day we will have locale support in uxterm
-     xmonad $ (maybe desktopConfig desktop session) { terminal = "gnome-terminal --hide-menubar"
+     xmonad $ (maybe desktopConfig desktop session) { terminal = "urxvt"
                                                     , logHook = dynamicLogWithPP xmobarPP
                                                         { ppOutput = hPutStrLn xmproc
                                                         , ppTitle = xmobarColor "green" "" . shorten 50
