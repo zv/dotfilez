@@ -77,17 +77,16 @@ set linebreak    "Wrap lines at convenient points
 set foldmethod=indent "fold based on indent
 set foldnestmax=3       "deepest fold is 3 levels
 set nofoldenable        "dont fold by default
-nnoremap <Space> za 
-vnoremap <Space> za 
 
 " ================ Completion =======================
 
-set wildmode=list:longest
+set wildchar=<Tab> 
+set wildmode=list:longest,
 set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
 set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
 set wildignore+=*vim/backups*
 set wildignore+=*sass-cache*
-set wildignore+=*DS_Store*
+set wildignore+=*.beam
 set wildignore+=vendor/rails/**
 set wildignore+=vendor/cache/**
 set wildignore+=*.gem
