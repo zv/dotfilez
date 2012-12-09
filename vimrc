@@ -45,6 +45,10 @@ set nowb
 set undodir=~/.vim/backups
 set undofile
 
+" ==================  Ctags  ========================
+
+set tags=./tags;$HOME
+
 " ================ Indentation ======================
 
 set autoindent
