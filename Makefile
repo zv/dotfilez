@@ -6,6 +6,7 @@ install: 	$(objects)
 		ls $(objects) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} ln -sf `pwd`/{} ~/.{}
 		ln -sf `pwd`/xmonad ~/.xmonad
 		ln -sf `pwd`/vim ~/.vim
+		ln -s ~/.xsession ~/.xinitrc
 		git submodule update --init
 
 
