@@ -586,6 +586,8 @@ compinit -i
 # some RBENV stuff
 export PATH="$HOME/.rbenv/bin:$HOME/bin:/opt/vagrant/bin:$PATH"
 eval "$(rbenv init -)"
+export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
 
 
 ### Closing words ###########################
