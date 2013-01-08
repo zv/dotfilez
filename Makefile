@@ -9,7 +9,6 @@ install: 	$(objects)
 		ln -s ~/.xsession ~/.xinitrc
 		git submodule update --init
 
-
 # watch yourself, this is naive
 backupconfig:
 		mkdir -p ~/configuration_backup/
