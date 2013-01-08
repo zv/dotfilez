@@ -8,3 +8,6 @@ xsetroot -solid black
 xscreensaver -no-splash &
 xhost local:
 xmonad
+# remap capslock
+xmodmap $HOME/.xmodmaprc
+
