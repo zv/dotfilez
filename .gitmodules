@@ -54,10 +54,6 @@
 	path = vim/bundle/tpope-vim-endwise
 	url = https://github.com/tpope/vim-endwise.git
   ignore = dirty
-[submodule "vim/bundle/Shougo-neocomplcache"]
-	path = vim/bundle/Shougo-neocomplcache
-	url = https://github.com/Shougo/neocomplcache.git
-  ignore = dirty
 [submodule "vim/bundle/tpope-vim-pathogen"]
 	path = vim/bundle/tpope-vim-pathogen
 	url = https://github.com/tpope/vim-pathogen
@@ -231,3 +227,9 @@
 [submodule "zsh/rupa-z"]
 	path = zsh/rupa-z
 	url = git://github.com/rupa/z.git
+[submodule "vim/bundle/shougo-neocomplcache"]
+	path = vim/bundle/shougo-neocomplcache
+	url = git://github.com/Shougo/neocomplcache.git
+[submodule "vim/bundle/altercation-vim-colors-solarized"]
+	path = vim/bundle/altercation-vim-colors-solarized
+	url = git://github.com/altercation/vim-colors-solarized.git
