@@ -1,0 +1,4 @@
+set hintkeys=asdfg;lkjh
+map u <C-u>
+map -b j 5j
+map -b k 5k
