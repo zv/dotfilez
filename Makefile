@@ -1,5 +1,5 @@
 objects = aprc gemrc gitconfig erlang pryrc \
-	  zshrc xmobarrc xsession vimrc 
+	  zshrc xmobarrc xsession vimrc pentadactylrc
 
 install: 	$(objects)
 		# find all the rc files, throw them in readlink to get the absolute path, put them in basename because of limitations expanding out the -I option being passed in (in this case -l). 
