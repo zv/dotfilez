@@ -60,13 +60,6 @@ set expandtab
 filetype plugin on
 filetype indent on
 
-
-" ================ Smooth Scrolling =================
-
-map <C-U> <C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y>
-map <C-D> <C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E>
-
-
 set nowrap       "Don't wrap lines
 set linebreak    "Wrap lines at convenient points
 

@@ -5,7 +5,8 @@ set t_Co=256
 if has("gui_running")
   "tell the term has 256 colors
   
-  colorscheme default 
+  " colorscheme default 
+  colorscheme solarized
   
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
