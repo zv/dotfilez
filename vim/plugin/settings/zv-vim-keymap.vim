@@ -67,11 +67,24 @@ nnoremap ,. '.
 "
 " the first quote will autoclose so you'll get 'foo' and hitting <c-a> will
 " put the cursor right after the quote
-imap <C-a> <esc>wa
-
+imap <C-h> <esc>wa
 " ==== NERD tree
 " Leader-Shift-N for nerd tree
 nmap ,N :NERDTreeToggle<CR>
+
+" When using P, don't save the overwritten piece in a register 
+function! RestoreRegister()
+  let @" = s:restore_reg
+  return ''
+endfunction
+
+function! s:Repl()
+    let s:restore_reg = @"
+    return "p@=RestoreRegister()\<cr>"
+endfunction
+
+" NB: this supports "rp that replaces the selection by the contents of @r
+vnoremap <silent> <expr> P <sid>Repl()
 
 " ,q to toggle quickfix window (where you have stuff like GitGrep)
 " ,oq to open it back up (rare)
