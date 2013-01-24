@@ -4,8 +4,8 @@ objects = aprc gemrc gitconfig erlang pryrc \
 install: 	$(objects)
 		# find all the rc files, throw them in readlink to get the absolute path, put them in basename because of limitations expanding out the -I option being passed in (in this case -l). 
 		ls $(objects) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} ln -sf `pwd`/{} ~/.{}
-		ln -sf `pwd`/xmonad  ~
-		ln -sf `pwd`/vim  ~
+		ln -sf -t ~/.vim `pwd`/xmonad  ~
+		ln -sf -t ~/.vim `pwd`/vim 
 		ln -sf ~/.xsession ~/.xinitrc
 		git submodule update --init
 
