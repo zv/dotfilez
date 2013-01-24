@@ -19,6 +19,7 @@ key:
 	cp id_rsa.pub ~/.ssh/id_rsa.pub 
 	ln -sf `pwd`/ssh_config ~/.ssh/config
 	gpg ~/.ssh/id_rsa.gpg 
+	chown `whoami` ~/.ssh/config
 	chmod 0600 ~/.ssh/config ~/.ssh/id_rsa
 
 clean: 

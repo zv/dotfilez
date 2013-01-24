@@ -1,9 +1,18 @@
-# .files for those with no specific destination or time of arrival.
-
-If you'd like to install them
+## Installing  
+If you want, you can backup your existing .files  
+```sh
+$ make backup 
 ```
-git clone https://github.com/zv/dotfilez 
-cd ~/dotfilez && make install
+
+Then install
+
+```sh
+$ make install
+```
+
+and you can remove them with 
+```sh
+$ make clean 
 ```
 
 ### Some Interesting Vim 
@@ -43,6 +52,7 @@ cd ~/dotfilez && make install
  * `,jV` vendor
  * `,jF` factories
  * `CTRL-Shift-P` - Clear CtrlP cache
+ * `CTRL-R [register]` - (Insert Mode) inserts into the current document from specified register. 
  * `:Bopen [gem name]` to navigate to a gem (@tpope/vim-bundler)
  * `Ctrl-H` and `Ctrl-L` - left an right on tabs
  * Use `CTRL-1` thru `CTRL-9` to switch to a specific tab number (like iTerm) - and tabs have been set up to show numbers
