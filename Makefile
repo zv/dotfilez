@@ -4,7 +4,7 @@ DOTDIRS = vim xmonad
 
 install: 
 	$(foreach file, $(DOTFILES), ln -sf $(PWD)/$(file) $(HOME)/.$(file);)
-	$(foreach directory, $(DOTFILES), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
+	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	git submodule update --init
 
 
