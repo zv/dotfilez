@@ -4,10 +4,11 @@ objects = aprc gemrc gitconfig erlang pryrc \
 install: clean 
 	# I would love to know a better way to achieve this
 	ls $(objects) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} ln -sf `pwd`/{} ~/.{}
-	ln -sf -t ~/.vim `pwd`/xmonad  ~
-	ln -sf -t ~/.vim `pwd`/vim 
+	ln -sf `pwd`/xmonad ~/.xmonad
+	ln -sf `pwd`/vim ~/.vim
 	ln -sf ~/.xsession ~/.xinitrc
 	git submodule update --init
+
 
 backup: 
 	mkdir -p ~/.dotfilez_backups/`date %+F`
