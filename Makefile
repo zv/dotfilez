@@ -1,18 +1,16 @@
-objects = aprc gemrc gitconfig erlang pryrc \
+DOTFILES = aprc gemrc gitconfig erlang pryrc \
 	  zshrc xmobarrc xsession vimrc pentadactylrc
+DOTDIRS = vim xmonad
 
-install: clean 
-	# I would love to know a better way to achieve this
-	ls $(objects) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} ln -sf `pwd`/{} ~/.{}
-	ln -sf `pwd`/xmonad ~/.xmonad
-	ln -sf `pwd`/vim ~/.vim
-	ln -sf ~/.xsession ~/.xinitrc
+install: 
+	$(foreach file, $(DOTFILES), ln -sf $(PWD)/$(file) $(HOME)/.$(file);)
+	$(foreach directory, $(DOTFILES), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	git submodule update --init
 
 
 backup: 
 	mkdir -p ~/.dotfilez_backups/`date %+F`
-	ls $(objects) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} cp -f `pwd`/{} ~/.dotfilez_backups/`date %+F` 
+	ls $(DOTFILES) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} cp -f `pwd`/{} ~/.dotfilez_backups/`date %+F` 
 	cp -r ~/.vim ~/.dotfilez_backups/`date %+F`/.vim
 	cp -r ~/.xmonad ~/.dotfilez_backups/`date %+F`/.xmonad
 
@@ -24,7 +22,7 @@ key:
 	chmod 0600 ~/.ssh/config ~/.ssh/id_rsa
 
 clean: 
-	rm ~/.$(objects)
+	$(foreach file, $(DOTFILES), rm -f ~/.$(file);)
 	rm -rf ~/.vim
 	rm -rf ~/.xmonad
 
