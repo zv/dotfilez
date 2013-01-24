@@ -31,8 +31,6 @@ rescue LoadError => err
   puts "gem install awesome_print  # <-- highly recommended"
 end
 
-# === CUSTOM COMMANDS ===
-# from: https://gist.github.com/1297510
 default_command_set = Pry::CommandSet.new do
   command "copy", "Copy argument to the clip-board" do |str|
      IO.popen('pbcopy', 'w') { |f| f << str.to_s }
@@ -88,7 +86,7 @@ CodeRay.scan("example", :ruby).term # just to load necessary files
 # Token colors pulled from: https://github.com/rubychan/coderay/blob/master/lib/coderay/encoders/terminal.rb
 TERM_TOKEN_COLORS = {
         :attribute_name => '33',
-        :attribute_value => '31',
+        :attribute_value => '32',
         :binary => '1;35',
         :char => {
           :self => '36', :delimiter => '34'
