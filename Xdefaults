@@ -1,0 +1,33 @@
+urxvt*font:       xft:Terminus:size=14
+urxvt*boldFont:     xft:Terminus
+urxvt*italicFont:   xft:Terminus
+urxvt*bolditalicFont: xft:Terminus
+urxvt*scrollBar:    false
+urxvt*internalBorder: 6
+*background: #111111
+*foreground: #babdb6
+
+! pouring one out for my homie vim
+*color0:  #FFFFFF
+*color8:  #555753
+! DarkRed + Red
+*color1:  #ff6565
+*color9:  #ff8d8d
+! DarkGreen + Green
+*color2:  #93d44f
+*color10: #c8e7a8
+! DarkYellow + Yellow
+*color3:  #eab93d
+*color11: #ffc123
+! DarkBlue + Blue
+*color4:  #204a87
+*color12: #3465a4
+! DarkMagenta + Magenta
+*color5:  #ce5c00
+*color13: #f57900
+!DarkCyan + Cyan (both not tango)
+*color6:  #89b6e2
+*color14: #46a4ff
+! LightGrey + White
+*color7:  #cccccc
+*color15: #ffffff
