@@ -1,4 +1,10 @@
-set hintkeys=asdfg;lkjh
-map u <C-u>
+set hintkeys=asdfg;lkjhqwertyuiop
 map -b j 5j
 map -b k 5k
+
+map -b J gT
+map -b K gt
+
+map -b x d
+map -b d <scroll-page-down> 
+map -b u <C-b>
