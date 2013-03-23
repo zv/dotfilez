@@ -2,12 +2,13 @@
 # Load resources
 # xrdb -merge .Xresources
 # Set the background color
-xsetroot -solid black 
+xsetroot -solid white 
  
-# Fire up apps
+# remap capslock
+xmodmap /home/zv/.xmodmaprc &
+
+## Fire up apps
 xscreensaver -no-splash &
 xhost local:
 xmonad
-# remap capslock
-xmodmap $HOME/.xmodmaprc
 
