@@ -1,5 +1,7 @@
 DOTFILES = aprc gemrc gitconfig erlang pryrc \
-	  zshrc xmobarrc xsession vimrc pentadactylrc
+	  zshrc xmobarrc xsession vimrc pentadactylrc \
+	  Xdefaults xmodmaprc
+
 DOTDIRS = vim xmonad
 
 install: 
