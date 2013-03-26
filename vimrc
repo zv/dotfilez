@@ -1,4 +1,4 @@
-set nocompatible
+set nocompatible " rube would be proud
 
 " =============== Pathogen Initialization ===============
 
@@ -8,7 +8,6 @@ set nocompatible
 
 " ================ General Config ====================
 
-set guifont=Terminus
 set number                      "Line numbers are good:
 set backspace=indent,eol,start  "Allow backspace in insert mode
 set history=1000                "Store lots of :cmdline history
@@ -19,6 +18,7 @@ set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set hidden                      "Hidden Buffers
 set encoding=utf8               "Yes, really
+set columns=80                  "Set column width at 80
 
 "turn on syntax highlighting
 syntax on
@@ -90,7 +90,7 @@ set wildignore+=*.png,*.jpg,*.gif
 " ================ Scrolling ========================
 
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
+set sidescrolloff=15 
 set sidescroll=1
 
 
