@@ -7,7 +7,6 @@ urxvt*internalBorder: 6
 *background: #111111
 *foreground: #babdb6
 
-! pouring one out for my homie vim
 *color0:  #FFFFFF
 *color8:  #555753
 ! DarkRed + Red
@@ -17,8 +16,8 @@ urxvt*internalBorder: 6
 *color2:  #93d44f
 *color10: #c8e7a8
 ! DarkYellow + Yellow
-*color3:  #eab93d
-*color11: #ffc123
+*color3:  #757100
+*color11: #757100
 ! DarkBlue + Blue
 *color4:  #204a87
 *color12: #3465a4
@@ -29,5 +28,5 @@ urxvt*internalBorder: 6
 *color6:  #89b6e2
 *color14: #46a4ff
 ! LightGrey + White
-*color7:  #cccccc
+*color7:  #6e2020
 *color15: #ffffff
