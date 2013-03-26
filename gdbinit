@@ -1,59 +1,9 @@
-# INSTALL INSTRUCTIONS: save as ~/.gdbinit
-#
-# DESCRIPTION: A user-friendly gdb configuration file, for x86/x86_64 and ARM platforms.
-#
-# REVISION : 8.0.2 (31/07/2012)
-#
-# CONTRIBUTORS: mammon_, elaine, pusillus, mong, zhang le, l0kit,
-#               truthix the cyberpunk, fG!, gln
-#
-# FEEDBACK: http://reverse.put.as - reverser@put.as
-#
-# NOTES: 'help user' in gdb will list the commands/descriptions in this file
-#        'context on' now enables auto-display of context screen
-#
-# MAC OS X NOTES: If you are using this on Mac OS X, you must either attach gdb to a process
-#                 or launch gdb without any options and then load the binary file you want to analyse with "exec-file" option
-#                 If you load the binary from the command line, like $gdb binary-name, this will not work as it should
-#                 For more information, read it here http://reverse.put.as/2008/11/28/apples-gdb-bug/
-#
-# UPDATE: This bug can be fixed in gdb source. Refer to http://reverse.put.as/2009/08/10/fix-for-apples-gdb-bug-or-why-apple-forks-are-bad/
-#         and http://reverse.put.as/2009/08/26/gdb-patches/ (if you want the fixed binary for i386)
-#
-#         An updated version of the patch and binary is available at http://reverse.put.as/2011/02/21/update-to-gdb-patches-fix-a-new-bug/
-#
-# iOS NOTES: iOS gdb from Cydia (and Apple's) suffer from the same OS X bug.
-#			 If you are using this on Mac OS X or iOS, you must either attach gdb to a process
-#            or launch gdb without any options and then load the binary file you want to analyse with "exec-file" option
-#            If you load the binary from the command line, like $gdb binary-name, this will not work as it should
-#            For more information, read it here http://reverse.put.as/2008/11/28/apples-gdb-bug/
-#
-# CHANGELOG: (older changes at the end of the file)
-#
-#   Version 8.0.2 (31/07/2012)
-#     - Merge pull request from mheistermann to support local modifications in a .gdbinit.local file
-#     - Add a missing opcode to the stepo command
-#
-#   Version 8.0.1 (23/04/2012)
-#     - Small bug fix to the attsyntax and intelsyntax commands (changing X86 flavor variable was missing)
-#
-#   Version 8.0 (13/04/2012)
-#     - Merged x86/x64 and ARM versions
-#     - Added commands intelsyntax and attsyntax to switch between x86 disassembly flavors
-#     - Added new configuration variables ARM, ARMOPCODES, and X86FLAVOR
-#     - Code cleanups and fixes to the indentation
-#     - Bug fixes to some ARM related code
-#     - Added the dumpmacho command to memory dump the mach-o header to a file
-#
-#   TODO:
-#
-
 # __________________gdb options_________________
 
 # set to 1 to have ARM target debugging as default, use the "arm" command to switch inside gdb
 set $ARM = 0
 # set to 1 to enable 64bits target by default (32bits is the default)
-set $64BITS = 0
+set $64BITS = 1
 
 if $64BITS == 1
    printf "64-bit mode is default. Use the 32bits command if your target is 32 bits.\n"
@@ -90,9 +40,6 @@ set $X86FLAVOR = 0
 
 set confirm off
 set verbose off
-
-
-
 set output-radix 0x10
 set input-radix 0x10
 
@@ -2889,31 +2836,9 @@ end
 # ____________________misc____________________
 define hook-stop
 # Display instructions formats
-    if $ARM == 1
-        if $ARMOPCODES == 1
-            set arm show-opcode-bytes 1
-        else
-            set arm show-opcode-bytes 1
-        end
-    else
-        if $X86FLAVOR == 0
-            set disassembly-flavor intel
-        else
-            set disassembly-flavor att
-        end
-    end
-
+    set disassembly-flavor intel
+    context 
     # this makes 'context' be called at every BP/step
-    if ($SHOW_CONTEXT > 0)
-        context
-    end
-    if ($SHOW_NEST_INSN > 0)
-        set $x = $_nest
-        while ($x > 0)
-            printf "\t"
-            set $x = $x - 1
-        end
-    end
 end
 document hook-stop
 !!! FOR INTERNAL USE ONLY - DO NOT CALL !!!
