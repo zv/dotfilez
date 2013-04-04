@@ -3,6 +3,8 @@
 " ========================================
 "
 "
+" Change p to not copy the data underneath it into the first yank buffer 
+xnoremap p pgvy
 " Change leader to a comma because the backslash is too far away
 " That means all \x commands turn into ,x
 let mapleader=","
