@@ -122,33 +122,7 @@ alias brake='noglob bundle exec rake' # execute the bundled rake gem
 alias srake='noglob sudo rake' # noglob must come before sudo
 alias sbrake='noglob sudo bundle exec rake' # altogether now ... 
 
-
-# Rails not Jails!
-function _rails_command () {
-  if [ -e "script/server" ]; then
-    ruby script/$@
-  else
-    ruby script/rails $@
-  fi
-}
-
-alias rc='_rails_command console'
-alias rd='_rails_command destroy'
-alias rdb='_rails_command dbconsole'
-alias rdbm='rake db:migrate db:test:clone'
-alias rg='_rails_command generate'
-alias rp='_rails_command plugin'
-alias ru='_rails_command runner'
-alias rs='_rails_command server'
-alias rsd='_rails_command server --debugger'
-alias devlog='tail -f log/development.log'
-alias rdm='rake db:migrate'
-alias rdr='rake db:rollback'
-alias md='mkdir -p'
-alias rd=rmdir
-alias d='dirs -v'
-
-# mkdir & cd to it
+# # mkdir & cd to it
 function mcd() { 
   mkdir -p "$1" && cd "$1"; 
 }
@@ -521,6 +495,9 @@ setopt long_list_jobs
 export PAGER=less
 export LC_CTYPE=$LANG
 
+# fuuuuck yea, vim for manpages
+export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
 #############################################
 # 
 # "Programs must be written for humans to read
@@ -551,10 +528,6 @@ alias ga='git add'
 alias gm='git merge'
 alias grh='git reset HEAD'
 alias grhh='git reset HEAD --hard'
-# Git and svn mix
-alias git-svn-dcommit-push='git svn dcommit && git push github master:svntrunk'
-alias gsr='git svn rebase'
-alias gsd='git svn dcommit'
 
 # Will return the current branch name
 # Usage example: git pull origin $(current_branch)
@@ -563,11 +536,6 @@ function current_branch() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo ${ref#refs/heads/}
 }
-
-# these aliases take advantage of the previous function
-alias ggpull='git pull origin $(current_branch)'
-alias ggpush='git push origin $(current_branch)'
-alias ggpnp='git pull origin $(current_branch) && git push origin $(current_branch)'
 
 
 ############################################
@@ -584,15 +552,15 @@ compinit -i
 ############################################
 
 # some RBENV stuff
-export PATH="$HOME/.rbenv/bin:$HOME/bin:/opt/vagrant/bin:/usr/local/bin:$HOME/go/bin:$PATH"
+export PATH="$HOME/bin:/opt/vagrant/bin:/usr/local/bin:$HOME/go/bin:$PATH"
 export GOPATH=$HOME/Development/go
 export GOROOT=$HOME/go
 
-if [ -f $HOME/.rbenv/bin/rbenv ]; then 
-  eval "$(rbenv init -)" || false 
-fi
-export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
-
+#if [ -f $HOME/.rbenv/bin/rbenv ]; then 
+  #eval "$(rbenv init -)" || false 
+#fi
+#
+source $HOME/.rvm/scripts/rvm
 
 ### Closing words ###########################
 #
@@ -601,3 +569,5 @@ export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu
 #  - Confucious
 #
 #############################################
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
