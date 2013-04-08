@@ -6,7 +6,7 @@ if has("gui_running")
   "tell the term has 256 colors
   
   " colorscheme default 
-  colorscheme solarized
+  colorscheme evening 
   
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
