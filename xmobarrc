@@ -5,10 +5,8 @@ Config { font = "xft:Fixed-14"
        , fgColor = "black"
        , position = Top
        , lowerOnStart = True
-       , commands = [ Run Com "acpi" [] "" 10
-                    , Run StdinReader
-                    ]
+       , commands = [ Run StdinReader ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %acpi% | <fc=#000000>%date%</fc>"
+       , template = "%StdinReader% }{ <fc=#000000>%date%</fc>"
        }
