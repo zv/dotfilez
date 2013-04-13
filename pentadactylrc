@@ -8,3 +8,5 @@ map -b K gt
 map -b x d
 map -b d <scroll-page-down> 
 map -b u <C-b>
+
+map -b a <C-jk>
