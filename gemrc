@@ -5,7 +5,7 @@
 - http://gems.github.com
 :benchmark: false
 :bulk_threshold: 1000
-:backtrace: false
+:backtrace: true 
 :verbose: true
 gem: --no-ri --no-rdoc
 
