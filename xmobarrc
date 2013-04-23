@@ -8,5 +8,5 @@ Config { font = "xft:Fixed-14"
        , commands = [ Run StdinReader ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ <fc=#000000>%date%</fc>"
+       , template = "%StdinReader% }{ <fc=#000000>%acpi% || %date%</fc>"
        }
