@@ -127,6 +127,9 @@ function mcd() {
   mkdir -p "$1" && cd "$1"; 
 }
 
+alias rpry="rails-console-pry -r pry-doc -r awesome_print"
+
+
 ############################################
 #
 # "A little knowledge is a dangerous thing,
