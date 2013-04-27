@@ -37,6 +37,16 @@ function spectrum_ls() {
 #
 ### Zephyr's Theme ##########################
 
+# This is a function that returns the price of bitcoin 
+function price_of_bitcoin() {
+ if [ ! -f /tmp/price_of_bitcoin ] || (( (`date +%s` - `stat -L --format %Y /tmp/price_of_bitcoin`) > (30*60) )); 
+ then
+   curl -s http://data.mtgox.com/api/1/BTCUSD/ticker | ruby -e "require 'rubygems'; require 'json'; puts JSON[STDIN.read]['return']['last_all']['display'];"  > /tmp/price_of_bitcoin  
+ fi
+ cat /tmp/price_of_bitcoin  
+}
+
+
 ZEPHYR_THEME_GIT_PROMPT_PREFIX="%{$reset_color%}%{$fg[white]%}["
 ZEPHYR_THEME_GIT_PROMPT_SUFFIX="]%{$reset_color%}"
 ZEPHYR_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}●%{$reset_color%}"
@@ -49,7 +59,7 @@ prompt_fix_for_git() {
   fi
 }
 
-PROMPT='[%n@%m]%2~ $(prompt_fix_for_git)>> '
+PROMPT='[%n@%m]%2~ :: BTC: $(price_of_bitcoin) $(prompt_fix_for_git)>> '
 
 #############################################
 #
