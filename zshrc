@@ -39,7 +39,7 @@ function spectrum_ls() {
 
 # This is a function that returns the price of bitcoin 
 function price_of_bitcoin() {
- if [ ! -f /tmp/price_of_bitcoin ] || (( (`date +%s` - `stat -L --format %Y /tmp/price_of_bitcoin`) > (30*60) )); 
+ if [ ! -f /tmp/price_of_bitcoin ] || (( (`date +%s` - `stat -L --format %Y /tmp/price_of_bitcoin`) > 30 )); 
  then
    curl -s http://data.mtgox.com/api/1/BTCUSD/ticker | ruby -e "require 'rubygems'; require 'json'; puts JSON[STDIN.read]['return']['last_all']['display'];"  > /tmp/price_of_bitcoin  
  fi
