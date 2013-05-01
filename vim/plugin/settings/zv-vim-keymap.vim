@@ -59,17 +59,6 @@ vmap ,{ c{<C-R>"}<ESC>
 " gary bernhardt's hashrocket
 imap <c-l> <space>=><space>
 
-"Go to last edit location with ,.
-nnoremap ,. '.
-
-"When typing a string, your quotes auto complete. Move past the quote
-"while still in insert mode by hitting Ctrl-a. Example:
-"
-" type 'foo<c-a>
-"
-" the first quote will autoclose so you'll get 'foo' and hitting <c-a> will
-" put the cursor right after the quote
-imap <C-h> <esc>wa
 " ==== NERD tree
 " Leader-Shift-N for nerd tree
 nmap ,N :NERDTreeToggle<CR>
@@ -140,12 +129,6 @@ nnoremap <C-Up>        <C-w>+ <C-w>+ <C-w>+ <C-w>+
 nnoremap <C-Down>      <C-w>- <C-w>- <C-w>- <C-w>-
 nnoremap <C-Left>      <C-w>< <C-w>< <C-w>< <C-w><
 nnoremap <C-Right>     <C-w>> <C-w>> <C-w>> <C-w>>
-
-" create <%= foo %> erb tags using Ctrl-k in edit mode
-imap <silent> <C-K> <%=   %><Esc>3hi
-
-" create <%= foo %> erb tags using Ctrl-j in edit mode
-imap <silent> <C-J> <%  %><Esc>2hi
 
 " ============================
 " Shortcuts for everyday tasks
