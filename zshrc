@@ -334,19 +334,27 @@ unset -f git_compare_version
 
 
 #############################################
-# "During the last few years feminist
-#  scholarship has begun to recognise
-#  that the dominant science system
-#  emerged as a liberating force not for
-#  humanity as a whole (though it
-#  legitimised itself in terms of
-#  universal betterment of the species),
-#  but as a masculine and patriarchal
-#  project which necessarily entailed the
-#  subjugation of both nature and
-#  women"
+#  I prove that if markets are efficient,
+#  meaning current prices fully reflect all
+#  information available in past prices,
+#  then P = NP, meaning every computational
+#  problem whose solution can be verified
+#  in polynomial time can also be solved
+#  in polynomial time. I also prove the
+#  converse by showing how we can
+#  “program” the market to solve
+#  NP-complete problems. Since P probably
+#  does not equal NP, markets are
+#  probably not efficient. Specifically,
+#  markets become increasingly
+#  inefficient as the time series
+#  lengthens or becomes more frequent. An
+#  illustration by way of partitioning
+#  the excess returns to momentum
+#  strategies based on data availability
+#  confirms this prediction.#
 #  
-#  - Tumblr Blog 
+#  - Social Science Research Network 
 #
 ### SSH #################################
 
@@ -549,6 +557,7 @@ function current_branch() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo ${ref#refs/heads/}
 }
+
 
 
 ############################################
