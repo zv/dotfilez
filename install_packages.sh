@@ -1,9 +1,11 @@
-PACKAGES="vim zsh curl erlang tmux"
+PACKAGES="valgrind gprof vim zsh curl erlang tmux"
 
 if [ -f /etc/debian_version ]; then
   apt-get update 
+  sudo apt-get install build-essential
   eval sudo apt-get install "$PACKAGES"
 elif [ -f /etc/redhat-release ]; then
+  yum groupinstall 'Development Tools'
   eval sudo yum install "$PACKAGES"
 fi
 
