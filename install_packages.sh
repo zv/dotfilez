@@ -1,4 +1,4 @@
-PACKAGES="valgrind gprof vim zsh curl erlang tmux"
+PACKAGES="valgrind gprof vim zsh curl erlang tmux golang"
 
 if [ -f /etc/debian_version ]; then
   apt-get update 
