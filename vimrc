@@ -94,6 +94,11 @@ set sidescrolloff=15
 set sidescroll=1
 
 
+" ================ Go Vim Plugins ========================
+
+set rtp+=$GOROOT/misc/vim
+
+
 for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
   exe 'source' f
 endfor
