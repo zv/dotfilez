@@ -5,9 +5,10 @@ DOTFILES = aprc gemrc gitconfig erlang pryrc \
 DOTDIRS = vim xmonad
 
 install: 
+	git submodule update --init
 	$(foreach file, $(DOTFILES), ln -sf $(PWD)/$(file) $(HOME)/.$(file);)
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
-	git submodule update --init
+	ln -sf $(HOME)/.Xdefaults $(HOME)/.Xresources
 
 
 backup: 
