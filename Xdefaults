@@ -1,32 +1,56 @@
-urxvt*font:       xft:Terminus:size=14
+! vim: set ft=xdefaults:
+urxvt*font:       xft:Terminus:size=14:antialias=false
 urxvt*boldFont:     xft:Terminus
 urxvt*italicFont:   xft:Terminus
 urxvt*bolditalicFont: xft:Terminus
 urxvt*scrollBar:    false
+urxvt*saveLines: 20000 
 urxvt*internalBorder: 6
-*background: #111111
-*foreground: #babdb6
 
-*color0:  #FFFFFF
-*color8:  #555753
-! DarkRed + Red
-*color1:  #ff6565
-*color9:  #ff8d8d
-! DarkGreen + Green
-*color2:  #93d44f
-*color10: #c8e7a8
-! DarkYellow + Yellow
-*color3:  #757100
-*color11: #757100
-! DarkBlue + Blue
-*color4:  #204a87
-*color12: #3465a4
-! DarkMagenta + Magenta
-*color5:  #ce5c00
-*color13: #f57900
-!DarkCyan + Cyan (both not tango)
-*color6:  #89b6e2
-*color14: #46a4ff
-! LightGrey + White
-*color7:  #6e2020
-*color15: #ffffff
+! Don't scroll with scrollback!
+urxvt*scrollTtyOutput:      false
+urxvt*scrollWithBuffer:     true
+urxvt*scrollTtyKeypress:    true
+
+urxvt.background: #FAF0E6
+urxvt.foreground: #000000
+!69717A
+
+urxvt.colorBD: #5B636B
+urxvt.colorIT: #5B636B
+urxvt.colorUL: #5B636B
+
+urxvt.cursorColor: #B144A8
+
+! BLK
+urxvt.color0: #000000
+urxvt.color8: #8F98A1
+
+! WHT
+urxvt.color7: #5B636B
+urxvt.color15: #00020E
+
+! RED
+urxvt.color1: #F46864
+urxvt.color9: #B42B33
+
+! YEL
+urxvt.color3: #AC9510
+urxvt.color11: #726000
+
+! GRN
+urxvt.color2: #00AE58
+urxvt.color10: #007525
+
+! CYN
+urxvt.color6: #00B0CC
+urxvt.color14: #007793
+
+! BLU
+urxvt.color4: #389BFF
+urxvt.color12: #0066CB
+
+! MAG
+urxvt.color5: #DC6DD2
+urxvt.color13: #A03398
+
