@@ -7,6 +7,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Actions.NoBorders
 import qualified Data.Map as M
 
 -- import XMonad.Layout.NoBorders
@@ -14,7 +15,9 @@ import qualified Data.Map as M
 import System.IO
 
 mykeys (XConfig {modMask = modm}) = M.fromList $ 
-  [ ((modm , xK_x), sendMessage ToggleStruts) ]
+  [ ((modm , xK_x), sendMessage ToggleStruts) 
+  , ((modm,  xK_g ), withFocused toggleBorder) 
+  ]
 
 main = do
      xmproc  <- spawnPipe "/usr/bin/xmobar" 
