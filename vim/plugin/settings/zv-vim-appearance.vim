@@ -6,8 +6,11 @@ if has("gui_running")
   "tell the term has 256 colors
   
   " colorscheme default 
-  colorscheme desert 
+  " colorscheme desert 
+  colorscheme solarized 
+
   
+  set guifont=Terminus\ 14
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
   " set guioptions=aegitTm
