@@ -1,6 +1,7 @@
-# This is Zephyr's ZSHRC. :3 
+# This is zv's ZSHRC. 
+# haq the plan8
 # meow nyan meow nyan meow 
-# 2012
+# 2013
 
 #! /bin/zsh
 # A script to make using 256 colors in zsh less painful.
@@ -582,4 +583,8 @@ source $HOME/.rvm/scripts/rvm
 #
 #############################################
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+export PATH="$HOME/bin:/opt/vagrant/bin:/usr/local/bin:$HOME/go/bin:$PATH"
+export GOPATH=$HOME/Development/go
+export GOROOT=$HOME/go
+source $HOME/.rvm/scripts/rvm
+
