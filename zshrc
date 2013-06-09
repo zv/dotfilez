@@ -117,18 +117,14 @@ alias l='ls -la'
 # we're ubuntu bro!
 alias ll='ls -l'
 
-# Rake noglob noise 
-alias rake="noglob rake" # allows square brackts for rake task invocation
-alias brake='noglob bundle exec rake' # execute the bundled rake gem
-alias srake='noglob sudo rake' # noglob must come before sudo
-alias sbrake='noglob sudo bundle exec rake' # altogether now ... 
-
 # # mkdir & cd to it
 function mcd() { 
   mkdir -p "$1" && cd "$1"; 
 }
 
-alias rpry="rails-console-pry -r pry-doc -r awesome_print"
+alias ta="tmux attach-session"
+alias tl="tmux list-sessions"
+
 
 
 ############################################
