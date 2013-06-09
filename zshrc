@@ -470,9 +470,6 @@ setopt no_beep
 # Automatic CD on directory specification
 setopt auto_cd
 
-# Mac OSX compatability
-setopt multios
-
 # CD into variable from var name
 setopt cdablevarS
 
@@ -549,8 +546,6 @@ function current_branch() {
   echo ${ref#refs/heads/}
 }
 
-
-
 ############################################
 #
 # Face the facts of being what you are, for 
@@ -562,18 +557,9 @@ function current_branch() {
 autoload -U compinit
 compinit -i
 
-############################################
+#### RVM ####################################
 
-# some RBENV stuff
-export PATH="$HOME/bin:/opt/vagrant/bin:/usr/local/bin:$HOME/go/bin:$PATH"
-export GOPATH=$HOME/Development/go
-export GOROOT=$HOME/go
-
-#if [ -f $HOME/.rbenv/bin/rbenv ]; then 
-  #eval "$(rbenv init -)" || false 
-#fi
-#
-source $HOME/.rvm/scripts/rvm
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 ### Closing words ###########################
 #

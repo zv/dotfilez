@@ -102,3 +102,7 @@ set rtp+=$GOROOT/misc/vim
 for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
   exe 'source' f
 endfor
+
+" ================ VIM Man Plugin ========================
+runtime ftplugin/man.vim
+
