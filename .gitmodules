@@ -229,3 +229,6 @@
 [submodule "vim/bundle/altercation-vim-colors-solarized"]
 	path = vim/bundle/altercation-vim-colors-solarized
 	url = git://github.com/altercation/vim-colors-solarized.git
+[submodule "vim/bundle/nono-handlebars"]
+	path = vim/bundle/nono-handlebars
+	url = git://github.com/nono/vim-handlebars.git
