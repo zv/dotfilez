@@ -232,3 +232,6 @@
 [submodule "vim/bundle/nono-handlebars"]
 	path = vim/bundle/nono-handlebars
 	url = git://github.com/nono/vim-handlebars.git
+[submodule "vim/bundle/vimscript-ansiesc"]
+	path = vim/bundle/vimscript-ansiesc
+	url = git://github.com/vim-scripts/AnsiEsc.vim.git
