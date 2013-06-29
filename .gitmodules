@@ -82,10 +82,6 @@
 	path = vim/bundle/sjl-gundo
 	url = https://github.com/sjl/gundo.vim
   ignore = dirty
-[submodule "vim/bundle/vim-scripts-sudo"]
-	path = vim/bundle/vim-scripts-sudo
-	url = https://github.com/vim-scripts/sudo.vim
-  ignore = dirty
 [submodule "vim/bundle/kana-vim-textobj-user"]
 	path = vim/bundle/kana-vim-textobj-user
 	url = https://github.com/kana/vim-textobj-user
@@ -105,10 +101,6 @@
 [submodule "vim/bundle/kana-vim-textobj-entire"]
 	path = vim/bundle/kana-vim-textobj-entire
 	url = https://github.com/kana/vim-textobj-entire
-  ignore = dirty
-[submodule "vim/bundle/mattn-gist-vim"]
-	path = vim/bundle/mattn-gist-vim
-	url = https://github.com/mattn/gist-vim
   ignore = dirty
 [submodule "vim/bundle/godlygeek-tabular"]
 	path = vim/bundle/godlygeek-tabular
@@ -190,25 +182,9 @@
 	path = vim/bundle/vim-scripts-Specky
 	url = https://github.com/vim-scripts/Specky.git
   ignore = dirty
-[submodule "vim/bundle/skwp-vim-spec-finder"]
-	path = vim/bundle/skwp-vim-spec-finder
-	url = https://github.com/skwp/vim-spec-finder
-  ignore = dirty
-[submodule "vim/bundle/tpope-vim-bundler"]
-	path = vim/bundle/tpope-vim-bundler
-	url = https://github.com/tpope/vim-bundler
-  ignore = dirty
-[submodule "vim/bundle/tpope-vim-rake"]
-	path = vim/bundle/tpope-vim-rake
-	url = https://github.com/tpope/vim-rake.git
-  ignore = dirty
 [submodule "vim/bundle/skwp-vim-easymotion"]
 	path = vim/bundle/skwp-vim-easymotion
 	url = https://github.com/skwp/vim-easymotion
-  ignore = dirty
-[submodule "vim/bundle/mikewest-vimroom"]
-	path = vim/bundle/mikewest-vimroom
-	url = git://github.com/mikewest/vimroom.git
   ignore = dirty
 [submodule "vim/bundle/jimenezrick-vimerl"]
 	path = vim/bundle/jimenezrick-vimerl
@@ -232,6 +208,3 @@
 [submodule "vim/bundle/nono-handlebars"]
 	path = vim/bundle/nono-handlebars
 	url = git://github.com/nono/vim-handlebars.git
-[submodule "vim/bundle/vimscript-ansiesc"]
-	path = vim/bundle/vimscript-ansiesc
-	url = git://github.com/vim-scripts/AnsiEsc.vim.git
