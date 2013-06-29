@@ -10,7 +10,7 @@ if has("gui_running")
   colorscheme solarized 
 
   
-  set guifont=Terminus\ 14
+  set guifont=Terminus\ 12
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
   " set guioptions=aegitTm
