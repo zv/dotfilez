@@ -208,3 +208,6 @@
 [submodule "vim/bundle/nono-handlebars"]
 	path = vim/bundle/nono-handlebars
 	url = git://github.com/nono/vim-handlebars.git
+[submodule "vim/bundle/vim-scripts-asmx86"]
+	path = vim/bundle/vim-scripts-asmx86
+	url = git@github.com:vim-scripts/asmx86.git
