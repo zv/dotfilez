@@ -125,10 +125,10 @@ nnoremap <silent> vv <C-w>v
 nnoremap <silent> ss <C-w>s
 
 " Resize windows with arrow keys
-nnoremap <C-Up>        <C-w>+ <C-w>+ <C-w>+ <C-w>+ 
-nnoremap <C-Down>      <C-w>- <C-w>- <C-w>- <C-w>-
-nnoremap <C-Left>      <C-w>< <C-w>< <C-w>< <C-w><
-nnoremap <C-Right>     <C-w>> <C-w>> <C-w>> <C-w>>
+nnoremap <C-Up>        10<C-w>+ 
+nnoremap <C-Down>      10<C-w>-
+nnoremap <C-Left>      10<C-w>< 
+nnoremap <C-Right>     10<C-w>> 
 
 " ============================
 " Shortcuts for everyday tasks
