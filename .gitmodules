@@ -211,3 +211,6 @@
 [submodule "vim/bundle/vim-scripts-asmx86"]
 	path = vim/bundle/vim-scripts-asmx86
 	url = git@github.com:vim-scripts/asmx86.git
+[submodule "vim/bundle/elixir-lang-vim-elixir"]
+	path = vim/bundle/elixir-lang-vim-elixir
+	url = git@github.com:elixir-lang/vim-elixir.git
