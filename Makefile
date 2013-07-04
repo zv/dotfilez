@@ -10,10 +10,6 @@ install:
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	ln -sf $(HOME)/.Xdefaults $(HOME)/.Xresources
 
-# Installs the solarized theme for the chrome developer tools
-solarize_chrome:
-	ln -sf $(PWD)/chrome-solarized.css $(HOME)/.config/google-chrome/Defaults/User\ StyleSheets/Custom.css 
-
 backup: 
 	mkdir -p ~/.dotfilez_backups/`date %+F`
 	ls $(DOTFILES) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} cp -f `pwd`/{} ~/.dotfilez_backups/`date %+F` 
