@@ -12,3 +12,4 @@ xscreensaver -no-splash &
 xhost local:
 xmonad
 
+autocutsel &
