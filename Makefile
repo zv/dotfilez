@@ -1,7 +1,7 @@
 DOTFILES = aprc gemrc gitconfig erlang pryrc \
 	  zshrc xmobarrc xsession vimrc pentadactylrc \
 	  Xdefaults xmodmaprc gdbinit tmux.conf xpdfrc \
-		iex
+		iex ctags 
 
 DOTDIRS = vim xmonad
 
