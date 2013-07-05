@@ -8,6 +8,7 @@ IO.puts "Build date: #{S.build_info()[:date]}"
 IO.puts "Arguments: #{S.argv()}"
 IO.puts "Virtual PID: #{S.get_pid()}"
 
+IEx.Options.set :colors, eval_result: :"magenta"
 IEx.Options.set :inspect, limit: 15 # Only show 15 items in pretty print 
 IEx.Options.set :history_size, 2000
 
