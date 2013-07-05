@@ -1,12 +1,3 @@
-# pwning zeph 101 
-# step 1. get him to connect to a server that wants to forward my agent!
-# step 2. get his private key
-# step 3. ???
-# step 4. profit
-Host * 
-  ForwardAgent yes
-
-
 #Host iota.offblast.org
   #user zv
   #DynamicForward 5050
