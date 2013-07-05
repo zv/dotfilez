@@ -1,4 +1,6 @@
 vim/.netrwhist
+vim/bundle
+vim/backups
 xmonad/xmonad
 xmonad/xmonad-x86_64-linux
 xmonad/xmonad.errors

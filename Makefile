@@ -10,6 +10,7 @@ install:
 	$(foreach file, $(DOTFILES), ln -sf $(PWD)/$(file) $(HOME)/.$(file);)
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	ln -sf $(HOME)/.Xdefaults $(HOME)/.Xresources
+	vim +BundleInstall +qall
 
 backup: 
 	mkdir -p ~/.dotfilez_backups/`date %+F`
@@ -30,8 +31,8 @@ clean:
 	rm -rf ~/.vim
 	rm -rf ~/.xmonad
 
+# make a ziparoo of these dotfiles
 dotfilez.tar.gz:
 	tar cvf dotfilez.tar * 
 	gzip -9c dotfilez.tar >> dotfilez.tar.gz
 	rm dotfilez.tar
-
