@@ -557,6 +557,10 @@ compinit -i
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
+if [ -f $HOME/.rvm/scripts/rvm ]; then
+  source $HOME/.rvm/scripts/rvm
+fi
+
 ### Closing words ###########################
 #
 # Isn't it a pleasure to study and practice 
@@ -568,5 +572,4 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 export PATH="$HOME/bin:/opt/vagrant/bin:/usr/local/bin:$HOME/go/bin:$PATH"
 export GOPATH=$HOME/Development/go
 export GOROOT=$HOME/go
-source $HOME/.rvm/scripts/rvm
 
