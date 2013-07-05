@@ -1,15 +1,9 @@
 " Make it beautiful - colors and fonts
 " 
-set t_Co=256
+colorscheme desert 
 
 if has("gui_running")
-  "tell the term has 256 colors
-  
-  " colorscheme default 
-  " colorscheme desert 
-  colorscheme solarized 
-
-  
+  set t_Co=256
   set guifont=Terminus\ 12
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
@@ -20,12 +14,9 @@ if has("gui_running")
   " For some reason this doesn't work as a regular set command,
   " (the numbers don't show up) so I made it a VimEnter event
   autocmd VimEnter * set guitablabel=%N:\ %t\ %M
-
-  set lines=60
-  set columns=190
-
 else
   "dont load csapprox if we no gui support - silences an annoying warning
   let g:CSApprox_loaded = 1
 endif
 
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$' " Highlight git cflct markers 
