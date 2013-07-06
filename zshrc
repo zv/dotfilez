@@ -536,11 +536,13 @@ alias grhh='git reset HEAD --hard'
 
 # Will return the current branch name
 # Usage example: git pull origin $(current_branch)
-
 function current_branch() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo ${ref#refs/heads/}
 }
+
+# Apply the latest stash made inside this branch
+alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
 
 ############################################
 #
