@@ -1,4 +1,15 @@
 %% Zealous Zeph's .erlang
 %% -*- mode: erlang; erlang-indent-level: 2 -*-
+io:format("Running Erlang\n").
 shell:results(2).
-code:add_patha("/home/zephyr/").
+
+% use mochiweb reloader
+% broken :(
+% code:load_abs("/home/zv/reloader.erl"). reloader:start().
+
+%% prepend . to load path
+code:add_patha(".").
+
+%% Start sasl
+io:format("starting erl-sasl~n").
+application:start(sasl), ok.
