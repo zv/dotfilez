@@ -124,8 +124,8 @@ function mcd() {
 
 alias ta="tmux attach-session"
 alias tl="tmux list-sessions"
-
-
+# esxape ANSI sequences
+alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 
 ############################################
 #
