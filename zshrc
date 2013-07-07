@@ -326,6 +326,39 @@ POST_1_7_2_GIT=$(git_compare_version "1.7.2")
 #clean up the namespace slightly by removing the checker function
 unset -f git_compare_version
 
+# Git aliases
+alias g='git'
+alias gst='git status'
+alias gl='git pull'
+alias gup='git fetch && git rebase'
+alias gp='git push'
+gdv() { git diff -w "$@" | view - }
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+alias gco='git checkout'
+alias gcm='git checkout master'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gcount='git shortlog -sn'
+alias gcp='git cherry-pick'
+alias glg='git log --stat --max-count=5'
+alias glgg='git log --graph --max-count=5'
+alias gss='git status -s'
+alias ga='git add'
+alias gm='git merge'
+alias grh='git reset HEAD'
+alias grhh='git reset HEAD --hard'
+
+# Will return the current branch name
+# Usage example: git pull origin $(current_branch)
+function current_branch() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo ${ref#refs/heads/}
+}
+
+# Apply the latest stash made inside this branch
+alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
+
 
 #############################################
 #  I prove that if markets are efficient,
@@ -493,6 +526,7 @@ setopt prompt_subst
 #
 ### But wait, theres more ##################
 
+
 # smart urls
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
@@ -507,49 +541,9 @@ setopt long_list_jobs
 export PAGER=less
 export LC_CTYPE=$LANG
 
-# fuuuuck yea, vim for manpages
+# vim for manpages
 export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
-#############################################
-# 
-# "Programs must be written for humans to read
-#   and only incidentally for computers to run"
-#   - SICP 
-#
-### Some really cool git plugin I found #####
-
-# Git aliases
-alias g='git'
-alias gst='git status'
-alias gl='git pull'
-alias gup='git fetch && git rebase'
-alias gp='git push'
-gdv() { git diff -w "$@" | view - }
-alias gc='git commit -v'
-alias gca='git commit -v -a'
-alias gco='git checkout'
-alias gcm='git checkout master'
-alias gb='git branch'
-alias gba='git branch -a'
-alias gcount='git shortlog -sn'
-alias gcp='git cherry-pick'
-alias glg='git log --stat --max-count=5'
-alias glgg='git log --graph --max-count=5'
-alias gss='git status -s'
-alias ga='git add'
-alias gm='git merge'
-alias grh='git reset HEAD'
-alias grhh='git reset HEAD --hard'
-
-# Will return the current branch name
-# Usage example: git pull origin $(current_branch)
-function current_branch() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo ${ref#refs/heads/}
-}
-
-# Apply the latest stash made inside this branch
-alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
 
 ############################################
 #
