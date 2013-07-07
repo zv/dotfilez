@@ -5,63 +5,116 @@ call vundle#rc()
 
 Bundle "gmarik/vundle"
 
-
-Bundle "AndrewRadev/splitjoin.vim"
-Bundle "Raimondi/delimitMate"
-Bundle "austintaylor/vim-indentobject"
-Bundle "claco/jasmine.vim"
+"@BeginType: TextObjects   
 Bundle "coderifous/textobj-word-column.vim"
-Bundle "elixir-lang/vim-elixir"
-Bundle "godlygeek/tabular"
-Bundle "gregsexton/gitv"
-Bundle "groenewege/vim-less.git"
-Bundle "itspriddle/vim-jquery.git"
-Bundle "jimenezrick/vimerl"
-Bundle "jnwhiteh/vim-golang"
 Bundle "kana/vim-textobj-datetime"
 Bundle "kana/vim-textobj-entire"
 Bundle "kana/vim-textobj-function"
 Bundle "kana/vim-textobj-line"
+Bundle "austintaylor/vim-indentobject"
 Bundle "kana/vim-textobj-user"
-Bundle "kchmck/vim-coffee-script"
-Bundle "kien/ctrlp.vim"
 Bundle "lucapette/vim-textobj-underscore"
-Bundle "majutsushi/tagbar"
+"@EndType
+
+"@BeginType: Languages and Scripts
+Bundle "jimenezrick/vimerl"
+Bundle "jnwhiteh/vim-golang"
+Bundle "elixir-lang/vim-elixir"
 Bundle "mattonrails/vim-mix"
-Bundle "nelstrom/vim-visual-star-search"
+Bundle "vim-scripts/asmx86"
+Bundle "Rip-Rip/clang_complete"
+Bundle "kchmck/vim-coffee-script"
+Bundle "adimit/prolog.vim"
 Bundle "nono/vim-handlebars"
+Bundle "claco/jasmine.vim"
 Bundle "pangloss/vim-javascript"
-Bundle "scrooloose/nerdtree"
-Bundle "scrooloose/syntastic"
-Bundle "shougo/neocomplcache"
-Bundle "sjl/gundo.vim"
-Bundle "skwp/greplace.vim"
-Bundle "skwp/vim-easymotion"
-Bundle "skwp/vim-powerline.git"
-Bundle "terryma/vim-multiple-cursors"
-Bundle "tjennings/git-grep-vim"
-Bundle "tomtom/tcomment_vim"
-Bundle "tpope/vim-endwise.git"
-Bundle "tpope/vim-fugitive"
-Bundle "tpope/vim-git"
 Bundle "tpope/vim-liquid.git"
 Bundle "tpope/vim-rails.git"
-Bundle "tpope/vim-rake.git"
-Bundle "tpope/vim-repeat.git"
-Bundle "tpope/vim-rvm.git"
-Bundle "tpope/vim-surround.git"
-Bundle "tpope/vim-surround.git"
-Bundle "tpope/vim-unimpaired"
 Bundle "vim-ruby/vim-ruby.git"
+Bundle "groenewege/vim-less.git"
+Bundle "itspriddle/vim-jquery.git"
+"@EndType
+
+"@utility: sj and sk to split and join {} and [] into {\n} etc.
+Bundle "AndrewRadev/splitjoin.vim"
+"@utility: ,a to align text by a character
+Bundle "godlygeek/tabular"
+"@utility: :Gitv to get a gitk-alike history layout
+Bundle "gregsexton/gitv"
+"@utility: CTRLP is an amazing utility for automatically pulling up things.
+"Try it with ,t or ,b to fuzzy search for files or buffers.
+"@image: 'https://a248.e.akamai.net/camo.github.com/0a0b4c0d24a44d381cbad420ecb285abc2aaa4cb/687474703a2f2f692e696d6775722e636f6d2f7949796e722e706e67 '
+Bundle "kien/ctrlp.vim"
+"@utility: Origami for Vim Folds (Make fold markers less of a hassle)
+"@image: 'https://github.com/kshenoy/vim-origami/blob/images/vim-origami_4.png?raw=true'
+Bundle "kshenoy / vim-origami"
+"@utility: ,T to bring up a tagbar on the right.
+Bundle "majutsushi/tagbar"
+"@utility: Select more than a single word with * or #.
+Bundle "nelstrom/vim-visual-star-search"
+"@Automatically close brackets, parenthesis, etc.
+Bundle "Raimondi/delimitMate"
+"@utility: The original NERDTree file browser
+Bundle "scrooloose/nerdtree"
+"@utilty: A utility
+"@image: 'https://github.com/scrooloose/syntastic/raw/master/_assets/screenshot_1.png
+Bundle "scrooloose/syntastic"
+"@utility: Crazy good completion.
+"@image:'https://a248.e.akamai.net/camo.github.com/9fc2701fcb8b4a54ab9e0d0ff2902b11aadb825f/687474703a2f2f322e62702e626c6f6773706f742e636f6d2f5f63693279426e717a4a674d2f54443150546f6c6b5442492f41414141414141414144552f6b6e4a33656e69754857492f73313630302f6f6d6e695f636f6d706c6574652e706e67' 
+Bundle "shougo/neocomplcache"
+"@utility: Get a complete tree of your undo history
+"@image: 'https://a248.e.akamai.net/camo.github.com/02d40619ef8e5559acabb28df959a42e0c783d74/687474703a2f2f6661726d352e7374617469632e666c69636b722e636f6d2f343131332f353039333131343630355f656263343664363439342e6a7067' 
+Bundle "sjl/gundo.vim"
+"@utility: Replace in all files with :Gsearch and :Greplace
+Bundle "skwp/greplace.vim"
+"@utility: Make motions easier.
+"@image: 'https://a248.e.akamai.net/camo.github.com/311e2034c078b3d7a53497020cda7b3bedda249d/687474703a2f2f6f6935342e74696e797069632e636f6d2f3279797365666d2e6a7067' 
+Bundle "skwp/vim-easymotion"
+"@image: 'https://a248.e.akamai.net/camo.github.com/63f9947cac196ec7e6e3d790fd3cd1e1463a7b9b/687474703a2f2f692e696d6775722e636f6d2f4d737549422e706e67'
+Bundle "skwp/vim-powerline.git"
+"@utility: 'Multiple cursors (Use with Ctrl-N)'
+"@image: 'https://github.com/terryma/vim-multiple-cursors/raw/master/assets/example1.gif?raw=true'
+Bundle "terryma/vim-multiple-cursors"
+"@utility: ',gg to git grep.'
+Bundle "tjennings/git-grep-vim"
+"@utility: gc to comment (Got tired of NERDCommenter).
+Bundle "tomtom/tcomment_vim"
+"@utility: End statements automatically.
+Bundle "tpope/vim-endwise.git"
+"@utility: Tpope's great git plugin.
+Bundle "tpope/vim-fugitive"
+Bundle "tpope/vim-git"
+Bundle "tpope/vim-repeat.git"
+"@utility: Make surrounding things easy, try it with `,{` or `,'` to surround
+"vselected text with {} or '' appropriately. Look in the keymap file for all
+"of my definitions.
+Bundle "tpope/vim-surround.git"
+"@utility: Ying-Yang options carry the same key prefixed by [ .`]a` is next, `[a`
+"is previous for example)
+Bundle "tpope/vim-unimpaired"
+"@utility: :AnsiEsc to escape ansicodes into vim coloring
 Bundle "vim-scripts/AnsiEsc.vim.git"
+"@utility: Automatically ctag when you save
 Bundle "vim-scripts/AutoTag.git"
+"@utility: Highlight valid tags (Notice all the external items here in the
+"linxu kernel are tagged)
+"@image: 'http://www.cgtk.co.uk/vim-scripts/taghighlight/images/module_with_ctags_highlighter.png'
 Bundle "vim-scripts/TagHighlight.git"
+"@utility: 'Zoomwin permits for ,gz, which zooms in and out of a particular
+""window so you can temporarily focus.'
 Bundle "vim-scripts/ZoomWin"
+"@utility: 'Adds argument text objects (i.e, daa to delete an argument, via
+"" to delete an inner argument, etc.'
 Bundle "vim-scripts/argtextobj.vim"
-Bundle "vim-scripts/asmx86"
+"@utility: 'Adds motions for CamelCase objects with the capitalized words (W,
+""B, etc.) .'
 Bundle "vim-scripts/camelcasemotion.git"
+"@utility: 'Matchit adds some extended % matching facilties for vim'
 Bundle "vim-scripts/matchit.zip.git"
+"@utility: 'ShowMarks shows marks in a file (added with 'X where x is any
+"char) '
 Bundle "xsunsmile/showmarks.git"
+
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
 
@@ -74,7 +127,7 @@ function! WhatsThatPluginAgain()
     let isbundle = substitute(getline("."), '^Bundle "', "", 'g')
     let unbundled = substitute(isbundle, '"', "", 'g')
     let unbundled = substitute(unbundled, '\.git', "", 'g')
-    let unbundled = substitute(unbundled, '\.vim', "", 'g')
+    " let unbundled = substitute(unbundled, '\.vim', "", 'g')
     let url = substitute(unbundled, "^", "https://github.com/", 'g')
     silent exec "!google-chrome '".url."'"
   else
@@ -83,4 +136,4 @@ function! WhatsThatPluginAgain()
 endfunction
 
 " ,fb for find bundle
-nnoremap <leader>fb :call WhatsThatPluginAgain()<cr>
+nnoremap ,fb :call WhatsThatPluginAgain()<cr>
