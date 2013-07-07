@@ -92,10 +92,6 @@ set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15 
 set sidescroll=1
 
-
-" ================ Go Syntax ========================
-set rtp+=$GOROOT/misc/vim
-
 " ================ External Settings ========================
 for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
   exe 'source' f
