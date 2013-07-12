@@ -1,69 +1,51 @@
-" ========================================
-" General vim sanity improvements
-" ========================================
-"
-"
-" Change p to not copy the data underneath it into the first yank buffer 
-xnoremap p pgvy
-" Change leader to a comma because the backslash is too far away
-" That means all \x commands turn into ,x
 let mapleader=","
 
+" stop the visual paste insanity 
+xnoremap p pgvy
+
 " alias yw to yank the entire word 'yank inner word'
-" even if the cursor is halfway inside the word
-" FIXME: will not properly repeat when you use a dot (tie into repeat.vim)
 nnoremap ,yw yiww
 
 " ,ow = 'overwrite word', replace a word with what's in the yank buffer
 " FIXME: will not properly repeat when you use a dot (tie into repeat.vim)
 nnoremap ,ow "_diwhp
 
-"make Y consistent with C and D
+" y copies line 
 nnoremap Y y$
 
-" ========================================
-" RSI Prevention - keyboard remaps
-" ========================================
+" Faster substitute.
+nnoremap ,S :%s//g<left><left>
 
-" ,# Surround a word with #{ruby interpolation}
+" Re hard wrap paragraph.
+nnoremap ,qw gqip
+
+" Reselect text ater indent/unindent.
+vnoremap < <gv
+vnoremap > >gv
+
+" Surround with ", ', (), [], {} and #{} by simply ,CHARACTER 
+""""""""""""""""""""""""""""""""""""""""""""""""""
 map ,# ysiw#
 vmap ,# c#{<C-R>"}<ESC>
-
-" ," Surround a word with "quotes"
 map ," ysiw"
 vmap ," c"<C-R>""<ESC>
-
-" ,' Surround a word with 'single quotes'
 map ,' ysiw'
 vmap ,' c'<C-R>"'<ESC>
-
-" ,) or ,( Surround a word with (parens)
-" The difference is in whether a space is put in
 map ,( ysiw(
 map ,) ysiw)
 vmap ,( c( <C-R>" )<ESC>
 vmap ,) c(<C-R>")<ESC>
-
-" ,[ Surround a word with [brackets]
 map ,] ysiw]
 map ,[ ysiw[
 vmap ,[ c[ <C-R>" ]<ESC>
 vmap ,] c[<C-R>"]<ESC>
-
-" ,{ Surround a word with {braces}
 map ,} ysiw}
 map ,{ ysiw{
 vmap ,} c{ <C-R>" }<ESC>
 vmap ,{ c{<C-R>"}<ESC>
+" 
 
-" gary bernhardt's hashrocket
-imap <c-l> <space>=><space>
-
-" ==== NERD tree
-" Leader-Shift-N for nerd tree
-nmap ,N :NERDTreeToggle<CR>
-
-" When using P, don't save the overwritten piece in a register 
+" give paste a chance (don't overwrite your register with whats pasted) 
 function! RestoreRegister()
   let @" = s:restore_reg
   return ''
@@ -77,24 +59,15 @@ endfunction
 " NB: this supports "rp that replaces the selection by the contents of @r
 vnoremap <silent> <expr> P <sid>Repl()
 
-" ,q to toggle quickfix window (where you have stuff like GitGrep)
-" ,oq to open it back up (rare)
+" toggle your qfix
 nmap <silent> ,qc :cclose<CR>
 nmap <silent> ,qo :copen<CR>
 
-" Open the project tree and expose current file in the nerdtree with Ctrl-\
+" find your file in the nerdtree 
 nnoremap <silent> <C-\> :NERDTreeFind<CR>
 
-"GitGrep - open up a git grep line, with a quote started for the search
+" grep in a git repoz :)
 nnoremap ,gg :GitGrep ""<left>
-"GitGrep Current Partial
-nnoremap ,gcp :GitGrepCurrentPartial<CR>
-"GitGrep Current File
-nnoremap ,gcf :call GitGrep(expand("%:t:r"))<CR>
-
-" hit ,f to find the definition of the current class
-" this uses ctags. the standard way to get this is Ctrl-]
-nnoremap <silent> ,f <C-]>
 
 " use ,F to jump to tag in a vertical split
 nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
@@ -102,11 +75,9 @@ nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("
 " use ,gf to go to file in a vertical split
 nnoremap <silent> ,gf :vertical botright wincmd f<CR>
 
-
-"Move back and forth through previous and next buffers
-"with ,z and ,x
-nnoremap <silent> ,z :bp<CR>
-nnoremap <silent> ,x :bn<CR>
+" move us around by functions
+nnoremap <silent> <C-j> }
+nnoremap <silent> <C-k> {
 
 " ==============================
 " Window/Tab/Split Manipulation
@@ -119,7 +90,6 @@ nnoremap <silent> <C-j> <C-w>j
 " Zoom in and out of current window with ,gz
 map <silent> ,gz <C-w>o
 
-
 " Create window splits easier. 
 nnoremap <silent> vv <C-w>v
 nnoremap <silent> ss <C-w>s
@@ -130,10 +100,6 @@ nnoremap <C-Down>      10<C-w>-
 nnoremap <C-Left>      10<C-w>< 
 nnoremap <C-Right>     10<C-w>> 
 
-" ============================
-" Shortcuts for everyday tasks
-" ============================
-
 " copy current filename into system clipboard - mnemonic: (c)urrent(f)ilename
 " this is helpful to paste someone the path you're looking at
 nnoremap <silent> ,cf :let @* = expand("%:~")<CR>
@@ -141,12 +107,6 @@ nnoremap <silent> ,cn :let @* = expand("%:t")<CR>
 
 "Clear current search highlight by double tapping //
 nmap <silent> // :nohlsearch<CR>
-
-"(v)im (c)ommand - execute current line as a vim command
-nmap <silent> ,vc yy:<C-f>p<C-c><CR>
-
-" Type ,hl to toggle highlighting on/off, and show current value.
-noremap ,hl :set hlsearch! hlsearch?<CR>
 
 " These are very similar keys. Typing 'a will jump to the line in the current
 " file marked with ma. However, `a will jump to the line and column marked
@@ -156,15 +116,18 @@ noremap ,hl :set hlsearch! hlsearch?<CR>
 nnoremap ' `
 nnoremap ` '
 
-" ============================
-" Tabularize - alignment
-" ============================
+"reload your file here
+nmap <silent> ,vr :so %<CR>
+
+" run script
+nmap <silent> ,rs yy:<C-f>p<C-c><CR>
+
 " Hit leader a then type a character you want to align by
 nmap ,a :Tabularize /
 vmap ,a :Tabularize /
 
-" ============================
-" SplitJoin plugin
-" ============================
+" turn {\n} into {} 
 nmap sj :SplitjoinSplit<cr>
+
+"turn {} into { " }
 nmap sk :SplitjoinJoin<cr>
