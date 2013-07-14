@@ -1,6 +1,6 @@
-# This is zv's ZSHRC. 
+# This is zv's ZSHRC.
 # haq the plan8
-# meow nyan meow nyan meow 
+# meow nyan meow nyan meow
 # 2013
 
 #! /bin/zsh
@@ -33,7 +33,7 @@ function spectrum_ls() {
 
 ############################################
 #
-# "Most victory is simply walking around" 
+# "Most victory is simply walking around"
 #  - George Washington
 #
 ### Zephyr's Theme ##########################
@@ -54,12 +54,12 @@ PROMPT='[%n@%m]%2~ $(prompt_fix_for_git)>> '
 
 #############################################
 #
-# Every age has its own poetry; in every age 
+# Every age has its own poetry; in every age
 # the circumstances of history choose a nation,
-# a race, a class to take up the torch by creating 
-# situations that can be expressed or transcended 
+# a race, a class to take up the torch by creating
+# situations that can be expressed or transcended
 # only through poetry.
-# 
+#
 # - Sartre
 #
 ### Vim Mode ################################
@@ -80,7 +80,7 @@ bindkey -v
 #############################################
 #
 # The Nao that can be expressed is not the eternal Nao
-# The name that can be defined is not the unchanging name. 
+# The name that can be defined is not the unchanging name.
 # - The Nao of Noisebridge
 #
 ### ECL #####################################
@@ -91,7 +91,7 @@ bindkey '\C-x\C-e' edit-command-line
 
 #############################################
 #
-# "That shit's cray" 
+# "That shit's cray"
 #  - Kanye West
 #
 ### Aliasing ################################
@@ -118,14 +118,19 @@ alias l='ls -la'
 alias ll='ls -l'
 
 # # mkdir & cd to it
-function mcd() { 
-  mkdir -p "$1" && cd "$1"; 
+function mcd() {
+  mkdir -p "$1" && cd "$1";
 }
-
-alias ta="tmux attach-session"
+alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
+
+alias mxc='mix compile'
+alias mxd='mix deps'
+alias mxg='mix deps.get'
+alias mxdc='mix deps.compile'
+alias mxdu='mix deps.update'
 
 ############################################
 #
@@ -213,9 +218,9 @@ alias hpodder='nocorrect hpodder'
 
 #############################################
 #
-# Weeks of programming can save you hours of 
+# Weeks of programming can save you hours of
 #  planning.
-#  - Ritchie 
+#  - Ritchie
 #
 ### Directory Shortcuts #####################
 
@@ -225,9 +230,9 @@ setopt pushd_ignore_dups
 
 #############################################
 #
-#  In theory, there is no difference between 
+#  In theory, there is no difference between
 #   theory and practice, but not in practice.
-#   - Anonymous 
+#   - Anonymous
 #
 ### Git #####################################
 
@@ -304,7 +309,7 @@ git_prompt_status() {
 
 #compare the provided version of git to the version installed and on path
 #prints 1 if input version <= installed version
-#prints -1 otherwise 
+#prints -1 otherwise
 function git_compare_version() {
   local INPUT_GIT_VERSION=$1;
   local INSTALLED_GIT_VERSION
@@ -380,8 +385,8 @@ alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
 #  the excess returns to momentum
 #  strategies based on data availability
 #  confirms this prediction.#
-#  
-#  - Social Science Research Network 
+#
+#  - Social Science Research Network
 #
 ### SSH #################################
 
@@ -398,7 +403,7 @@ function _plugin__start_agent()
   . ${_plugin__ssh_env} > /dev/null
 
   # load identies
-  zstyle -a :omz:plugins:ssh-agent identities identities 
+  zstyle -a :omz:plugins:ssh-agent identities identities
   echo starting...
   /usr/bin/ssh-add $HOME/.ssh/${^identities}
 }
@@ -406,23 +411,23 @@ function _plugin__start_agent()
 zstyle -b :omz:plugins:ssh-agent agent-forwarding _plugin__forwarding
 
 if [[ ${_plugin__forwarding} == "yes" && -n "$SSH_AUTH_SOCK" ]]; then
-  
+
   # Add a nifty symlink for screen/tmux if agent forwarding
-  # 
+  #
   [[ -L $SSH_AUTH_SOCK ]] || ln -sf "$SSH_AUTH_SOCK" /tmp/ssh-agent-$USER-screen
-  
+
 elif [ -f "${_plugin__ssh_env}" ]; then
 
   # Source SSH settings, if applicable
-  # 
+  #
   . ${_plugin__ssh_env} > /dev/null
-  
+
   ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
 
     _plugin__start_agent;
-    
+
   }
-  
+
 else
   _plugin__start_agent;
 fi
@@ -435,7 +440,7 @@ unset _plugin__ssh_env
 
 #############################################
 #
-# "Those who do not remember history are 
+# "Those who do not remember history are
 #  doomed to repeat it."
 #  - Cicero
 #
@@ -459,8 +464,8 @@ setopt share_history # share command history data
 
 #############################################
 #
-# 
-# If I had eight hours to chop down a tree, 
+#
+# If I had eight hours to chop down a tree,
 #  I would spend 6 hours sharpening an axe.
 #  - Anonymous
 #
@@ -520,7 +525,7 @@ setopt prompt_subst
 
 
 #############################################
-# 
+#
 # "Thats all folks"
 #   - Bugs Bunny
 #
@@ -547,7 +552,7 @@ export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu
 
 ############################################
 #
-# Face the facts of being what you are, for 
+# Face the facts of being what you are, for
 #  that is what changes what you are.
 #  - Kierkegaard
 #
@@ -566,8 +571,8 @@ fi
 
 ### Closing words ###########################
 #
-# Isn't it a pleasure to study and practice 
-#  what you have learned? 
+# Isn't it a pleasure to study and practice
+#  what you have learned?
 #  - Confucious
 #
 #############################################
