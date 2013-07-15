@@ -1,12 +1,15 @@
-Config { font = "xft:Fixed-14"
-       , borderColor = "black"
-       , border = TopB
-       , bgColor = "white"
-       , fgColor = "black"
-       , position = Top
-       , lowerOnStart = True
-       , commands = [ Run StdinReader ]
-       , sepChar = "%"
-       , alignSep = "}{"
-       , template = "%StdinReader% }{ <fc=#000000>%date%</fc>"
-       }
+Config {
+    font         = "xft:Monospace:pixelsize=14,-*-*-*-r-*-*-16-*-*-*-*-*-*-*",
+    bgColor      = "#ffffff",
+    fgColor      = "#000000",
+    position     = TopSize C 100 26,
+    lowerOnStart = True,
+    commands     = [
+        Run StdinReader,
+        Run Date "%a %b %_d %Y <fc=#7071B8>%H:%M:%S</fc>" "date" 10
+        ],
+    sepChar      = "%",
+    alignSep     = "}{",
+    template     = "%StdinReader% }{ %date% || %acpi%"
+}
+
