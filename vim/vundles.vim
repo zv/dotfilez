@@ -35,6 +35,14 @@ Bundle "groenewege/vim-less.git"
 Bundle "itspriddle/vim-jquery.git"
 "@EndType
 
+"@BeginType: Snippets
+Bundle "garbas/vim-snipmate.git"
+Bundle "honza/vim-snippets"
+" Bundle "carlosgaldino/elixir-snippets"
+Bundle "MarcWeber/vim-addon-mw-utils.git"
+Bundle "tomtom/tlib_vim.git"
+"@EndType
+
 "@utility: sj and sk to split and join {} and [] into {\n} etc.
 Bundle "AndrewRadev/splitjoin.vim"
 "@utility: ,a to align text by a character
@@ -45,15 +53,10 @@ Bundle "gregsexton/gitv"
 "Try it with ,t or ,b to fuzzy search for files or buffers.
 "@image: 'https://a248.e.akamai.net/camo.github.com/0a0b4c0d24a44d381cbad420ecb285abc2aaa4cb/687474703a2f2f692e696d6775722e636f6d2f7949796e722e706e67 '
 Bundle "kien/ctrlp.vim"
-"@utility: Origami for Vim Folds (Make fold markers less of a hassle)
-"@image: 'https://github.com/kshenoy/vim-origami/blob/images/vim-origami_4.png?raw=true'
-Bundle "kshenoy / vim-origami"
 "@utility: ,T to bring up a tagbar on the right.
 Bundle "majutsushi/tagbar"
 "@utility: Select more than a single word with * or #.
 Bundle "nelstrom/vim-visual-star-search"
-"@Automatically close brackets, parenthesis, etc.
-Bundle "Raimondi/delimitMate"
 "@utility: The original NERDTree file browser
 Bundle "scrooloose/nerdtree"
 "@utilty: A utility
