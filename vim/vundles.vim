@@ -74,7 +74,8 @@ Bundle "skwp/greplace.vim"
 "@image: 'https://a248.e.akamai.net/camo.github.com/311e2034c078b3d7a53497020cda7b3bedda249d/687474703a2f2f6f6935342e74696e797069632e636f6d2f3279797365666d2e6a7067' 
 Bundle "skwp/vim-easymotion"
 "@image: 'https://a248.e.akamai.net/camo.github.com/63f9947cac196ec7e6e3d790fd3cd1e1463a7b9b/687474703a2f2f692e696d6775722e636f6d2f4d737549422e706e67'
-Bundle "skwp/vim-powerline.git"
+Bundle 'bling/vim-airline'
+"Bundle "skwp/vim-powerline.git"
 "@utility: 'Multiple cursors (Use with Ctrl-N)'
 "@image: 'https://github.com/terryma/vim-multiple-cursors/raw/master/assets/example1.gif?raw=true'
 Bundle "terryma/vim-multiple-cursors"
