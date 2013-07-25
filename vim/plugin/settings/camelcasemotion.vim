@@ -1,8 +1,8 @@
 map W <Plug>CamelCaseMotion_w
 " Beginning
-map B ^ 
+map B <Plug>CamelCaseMotion_b 
 " End
-map E $
+map E <Plug>CamelCaseMotion_e
 
 sunmap W
 sunmap B
