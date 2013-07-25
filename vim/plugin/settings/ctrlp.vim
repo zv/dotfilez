@@ -12,7 +12,6 @@ let g:ctrlp_map = ',t'
 
 " Additional mapping for buffer search
 nnoremap ,b :CtrlPBuffer<cr>
-nnoremap <C-b> :CtrlPBuffer<cr>
 
 "Cmd-(m)ethod - jump to a method (tag in current file)
 map ,m :CtrlPBufTag<CR>
