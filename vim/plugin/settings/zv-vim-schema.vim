@@ -1,8 +1,8 @@
 " Make it beautiful - colors and fonts
 " 
-colorscheme desert 
 
 if has("gui_running")
+  colorscheme desert 
   set t_Co=256
   set guifont=Terminus\ 12
   set guioptions=agit
@@ -15,6 +15,7 @@ if has("gui_running")
   " (the numbers don't show up) so I made it a VimEnter event
   autocmd VimEnter * set guitablabel=%N:\ %t\ %M
 else
+  colorscheme default 
   "dont load csapprox if we no gui support - silences an annoying warning
   let g:CSApprox_loaded = 1
 endif
