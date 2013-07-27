@@ -4,5 +4,5 @@
   ignore = dirty
 [submodule "vim/bundle/gmarik-vundle"]
 	path = vim/bundle/gmarik-vundle
-	url = git@github.com:gmarik/vundle.git
+	url = git://github.com/gmarik/vundle.git
   ignore = dirty
