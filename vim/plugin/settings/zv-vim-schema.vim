@@ -2,9 +2,12 @@
 " 
 
 if has("gui_running")
-  colorscheme desert 
+  "colorscheme desert 
+  set background=dark
+  colorscheme solarized
+
   set t_Co=256
-  set guifont=Terminus\ 12
+  set guifont=Terminus\ 14
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
   " set guioptions=aegitTm
