@@ -83,3 +83,27 @@ endfunction
 " For programming languages using a semi colon at the end of statement.
 autocmd FileType c,cpp,css,java,javascript,perl,jade nmap <silent> ;; :call <SID>appendSemiColon()<CR>
 autocmd FileType c,cpp,css,java,javascript,perl,jade inoremap <silent> ;; <ESC>:call <SID>appendSemiColon()<CR>a
+
+
+
+" Convert Items in selection to Camel/Snake case 
+"
+":tabe
+function! ConvertToSnake()
+  execute '%s#\C\(\<\u[a-z0-9]\+\|[a-z0-9]\+\)\(\u\)#\l\1_\l\2#g' 
+endfunction
+function! ConvertToCamel()
+  execute '%s#_\(\l\)#\u\1#g'
+endfunction
+
+function! ConvertLineToSnake()
+  execute 's#\C\(\<\u[a-z0-9]\+\|[a-z0-9]\+\)\(\u\)#\l\1_\l\2#g' 
+endfunction
+function! ConvertLineToCamel()
+  execute 's#_\(\l\)#\u\1#g'
+endfunction
+
+command! ConvertSnake :call ConvertToSnake()
+command! ConvertCamel :call ConvertToCamel()
+command! ConvertSnakeLine :call ConvertLineToSnake()
+command! ConvertCamelLine :call ConvertLineToCamel()
