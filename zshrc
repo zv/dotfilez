@@ -131,6 +131,7 @@ alias mxd='mix deps'
 alias mxg='mix deps.get'
 alias mxdc='mix deps.compile'
 alias mxdu='mix deps.update'
+alias mxt='mix test'
 
 ############################################
 #
@@ -392,8 +393,8 @@ alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
 #  - Social Science Research Network
 #
 ### SSH #################################
-
 local _plugin__ssh_env=$HOME/.ssh/environment-$HOST
+ssh_identities=("id_rsa" "id_rsa_old") 
 local _plugin__forwarding
 
 function _plugin__start_agent()
@@ -405,24 +406,16 @@ function _plugin__start_agent()
   chmod 600 ${_plugin__ssh_env}
   . ${_plugin__ssh_env} > /dev/null
 
-  # load identies
-  zstyle -a :omz:plugins:ssh-agent identities identities
   echo starting...
-  /usr/bin/ssh-add $HOME/.ssh/${^identities}
+  for id in "${ssh_identities[@]}"
+  do 
+    /usr/bin/ssh-add $HOME/.ssh/${id}
+  done
 }
 
-zstyle -b :omz:plugins:ssh-agent agent-forwarding _plugin__forwarding
-
-if [[ ${_plugin__forwarding} == "yes" && -n "$SSH_AUTH_SOCK" ]]; then
-
-  # Add a nifty symlink for screen/tmux if agent forwarding
-  #
-  [[ -L $SSH_AUTH_SOCK ]] || ln -sf "$SSH_AUTH_SOCK" /tmp/ssh-agent-$USER-screen
-
-elif [ -f "${_plugin__ssh_env}" ]; then
+if [ -f "${_plugin__ssh_env}" ]; then
 
   # Source SSH settings, if applicable
-  #
   . ${_plugin__ssh_env} > /dev/null
 
   ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
