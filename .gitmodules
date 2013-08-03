@@ -2,7 +2,6 @@
 	path = zsh/rupa-z
 	url = git://github.com/rupa/z.git
   ignore = dirty
-[submodule "vim/bundle/gmarik-vundle"]
-	path = vim/bundle/gmarik-vundle
+[submodule "vim/bundle/vundle"]
+	path = vim/bundle/vundle
 	url = git://github.com/gmarik/vundle.git
-  ignore = dirty
