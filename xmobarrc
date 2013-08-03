@@ -1,7 +1,7 @@
 Config {
     font         = "xft:Monospace:pixelsize=14,-*-*-*-r-*-*-16-*-*-*-*-*-*-*",
-    bgColor      = "#ffffff",
-    fgColor      = "#000000",
+    bgColor      = "#1c1c1c",
+    fgColor      = "#ffffff",
     position     = TopSize C 100 26,
     lowerOnStart = True,
     commands     = [

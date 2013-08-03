@@ -1,3 +1,5 @@
+ForwardAgent no
+
 #Host iota.offblast.org
   #user zv
   #DynamicForward 5050

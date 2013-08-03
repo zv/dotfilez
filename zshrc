@@ -50,7 +50,13 @@ prompt_fix_for_git() {
   fi
 }
 
-PROMPT='[%n@%m]%2~ $(prompt_fix_for_git)>> '
+zv_prompt() {
+  prompt_fix_for_git 
+  #rvm_prompt_info
+  #elixir_prompt_info
+}
+
+PROMPT='[%n@%m]%2~ $(zv_prompt)>> '
 
 #############################################
 #
@@ -140,11 +146,13 @@ alias ll='ls -l'
 function mcd() {
   mkdir -p "$1" && cd "$1";
 }
+
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 
+# Elixir Mix
 alias mxc='mix compile'
 alias mxd='mix deps'
 alias mxg='mix deps.get'
@@ -220,8 +228,6 @@ zstyle ':completion::complete:*' cache-path ~/.oh-my-zsh/cache/
 # "Some men are not born for this age, they
 #  are men who deserve a better century than
 #  the one they inhabit. Still, the sage has
-#  one virtue -- he is timeless."
-#  - Baltasar Gracian
 #
 ## Corrections ##############################
 
@@ -478,7 +484,6 @@ setopt inc_append_history
 setopt share_history # share command history data
 
 #############################################
-#
 #
 # If I had eight hours to chop down a tree,
 #  I would spend 6 hours sharpening an axe.
@@ -752,6 +757,15 @@ if [ -f $HOME/.rvm/scripts/rvm ]; then
   source $HOME/.rvm/scripts/rvm
 fi
 
+# get the name of the ruby version
+function rvm_prompt_info() {
+  [ -f $HOME/.rvm/bin/rvm-prompt ] || return
+  local rvm_prompt
+  rvm_prompt=$($HOME/.rvm/bin/rvm-prompt ${ZSH_THEME_RVM_PROMPT_OPTIONS} 2>/dev/null)
+  [[ "${rvm_prompt}x" == "x" ]] && return
+  echo "${ZSH_THEME_RVM_PROMPT_PREFIX:=(}${rvm_prompt}${ZSH_THEME_RVM_PROMPT_SUFFIX:=)}"
+}
+
 ### Closing words ###########################
 #
 # Isn't it a pleasure to study and practice
@@ -760,7 +774,6 @@ fi
 #
 #############################################
 
-export PATH="$HOME/bin:/opt/vagrant/bin:/usr/local/bin:$HOME/go/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/bin:$HOME/go/bin:$PATH"
 export GOPATH=$HOME/Development/go
 export GOROOT=$HOME/go
-

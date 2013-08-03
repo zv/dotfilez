@@ -25,7 +25,8 @@ main = do
      xmonad $ (maybe desktopConfig desktop session) { terminal = "urxvt"
                                                     , logHook = dynamicLogWithPP sjanssenPP 
                                                         { ppOutput = hPutStrLn xmproc
-                                                        , ppTitle = xmobarColor "black" "" . shorten 50
+                                                        , ppCurrent = xmobarColor "black" "white"
+                                                        , ppTitle = xmobarColor "white" "" . shorten 50
                                                         }
                                                      , layoutHook=avoidStruts $ layoutHook defaultConfig
                                                      , manageHook=manageHook defaultConfig <+> manageDocks
