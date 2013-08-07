@@ -3,8 +3,6 @@
 " Jump to tag in vertical split - ,F
 " Open Changed files - ,ocf
 " Strip trailing whitespace - ,w
-" Intelligently close window - Q
-" Automatically append semicolon - filetypes: c, p
 
 " Change ruby hash syntax 1.9 to 2.0 hash syntax
 function! s:ChangeHashSyntax(line1,line2)
@@ -55,21 +53,6 @@ function! <SID>StripTrailingWhitespaces()
 endfunction
 command! StripTrailingWhitespaces call <SID>StripTrailingWhitespaces()
 nmap ,w :StripTrailingWhitespaces<CR>
-
-" If there isn't one, append a semi colon to the end of the current line.
-function! s:appendSemiColon()
-  if getline('.') !~ ';$'
-    let original_cursor_position = getpos('.')
-    exec("s/$/;/")
-    call setpos('.', original_cursor_position)
-  endif
-endfunction
-
-" For programming languages using a semi colon at the end of statement.
-autocmd FileType c,cpp,css,java,javascript,perl,jade nmap <silent> ;; :call <SID>appendSemiColon()<CR>
-autocmd FileType c,cpp,css,java,javascript,perl,jade inoremap <silent> ;; <ESC>:call <SID>appendSemiColon()<CR>a
-
-
 
 " Convert Items in selection to Camel/Snake case 
 "
