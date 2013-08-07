@@ -1,10 +1,9 @@
 " Make it beautiful - colors and fonts
-" 
 
 if has("gui_running")
   "colorscheme desert 
-  set background=dark
   colorscheme solarized
+  set background=dark
 
   set t_Co=256
   set guifont=Terminus\ 14

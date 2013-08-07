@@ -56,21 +56,6 @@ endfunction
 command! StripTrailingWhitespaces call <SID>StripTrailingWhitespaces()
 nmap ,w :StripTrailingWhitespaces<CR>
 
-
-" Use Q to intelligently close a window
-function! CloseWindowOrKillBuffer()
-  let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
-
-  if number_of_windows_to_this_buffer > 1
-    wincmd c
-  else
-    bdelete
-  endif
-endfunction
-
-nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
-
-
 " If there isn't one, append a semi colon to the end of the current line.
 function! s:appendSemiColon()
   if getline('.') !~ ';$'
