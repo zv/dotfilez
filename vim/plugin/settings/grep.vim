@@ -12,6 +12,7 @@ function! GetVisual()
         return selection
 endfunction
 
-"grep for 'def foo'
+"grep for definition of file (Elixir/Ruby) 
 nnoremap <silent> ,gd :GitGrep 'def <cword>'<CR>
 
+"nnoremap <silent> ,rg :grep -R <cword> 
