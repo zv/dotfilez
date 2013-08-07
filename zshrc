@@ -381,7 +381,7 @@ alias grh='git reset HEAD'
 alias grhh='git reset HEAD --hard'
 
 # Lists all files that have been ignored with git update-index
-alias gignorelist='git ls-files -v | grep "^h"'
+alias git-ignorelog='git ls-files -v | grep "^h"'
 
 # Will return the current branch name
 # Usage example: git pull origin $(current_branch)
