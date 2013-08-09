@@ -32,11 +32,8 @@ function spectrum_ls() {
 }
 
 ############################################
-#
-# "Most victory is simply walking around"
-#  - George Washington
-#
-### Zephyr's Theme ##########################
+#  Theme 
+#############################################
 
 ZEPHYR_THEME_GIT_PROMPT_PREFIX="%{$reset_color%}%{$fg[white]%}["
 ZEPHYR_THEME_GIT_PROMPT_SUFFIX="]%{$reset_color%}"
@@ -59,16 +56,8 @@ zv_prompt() {
 PROMPT='[%n@%m]%2~ $(zv_prompt)>> '
 
 #############################################
-#
-# Every age has its own poetry; in every age
-# the circumstances of history choose a nation,
-# a race, a class to take up the torch by creating
-# situations that can be expressed or transcended
-# only through poetry.
-#
-# - Sartre
-#
-### Vim Mode ################################
+#   Vim Mode
+#############################################
 
 function zle-line-init zle-keymap-select {
   zle reset-prompt
@@ -83,9 +72,7 @@ zle -N zle-keymap-select
 bindkey -v
 
 #############################################
-#
 # Vim vundle helpers 
-#
 #############################################
 
 function vundle () {
@@ -103,23 +90,16 @@ function vundle-clean () {
 
 
 #############################################
-#
-# The Nao that can be expressed is not the eternal Nao
-# The name that can be defined is not the unchanging name.
-# - The Nao of Noisebridge
-#
-### ECL #####################################
+# Edit Comman Line 
+#############################################
 
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
 
 #############################################
-#
-# "That shit's cray"
-#  - Kanye West
-#
-### Aliasing ################################
+# Aliasing 
+#############################################
 
 # Push and pop directories on directory stack
 alias pu='pushd'
@@ -160,13 +140,10 @@ alias mxdc='mix deps.compile'
 alias mxdu='mix deps.update'
 alias mxt='mix test'
 
+
 ############################################
-#
-# "A little knowledge is a dangerous thing,
-# but so is alot"
-# - Albert Einstein
-#
-### Completions ############################
+#   Completions 
+############################################
 
 unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
@@ -224,12 +201,8 @@ zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path ~/.oh-my-zsh/cache/
 
 #############################################
-#
-# "Some men are not born for this age, they
-#  are men who deserve a better century than
-#  the one they inhabit. Still, the sage has
-#
-## Corrections ##############################
+#  Corrections 
+#############################################
 
 setopt correct_all
 
@@ -243,24 +216,16 @@ alias ebuild='nocorrect ebuild'
 alias hpodder='nocorrect hpodder'
 
 #############################################
-#
-# Weeks of programming can save you hours of
-#  planning.
-#  - Ritchie
-#
-### Directory Shortcuts #####################
+# Directory Shortcuts 
+#############################################
 
 setopt auto_name_dirs
 setopt auto_pushd
 setopt pushd_ignore_dups
 
 #############################################
-#
-#  In theory, there is no difference between
-#   theory and practice, but not in practice.
-#   - Anonymous
-#
-### Git #####################################
+#   Git 
+#############################################
 
 # get the name of the branch we are on
 function git_prompt_info() {

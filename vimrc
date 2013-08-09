@@ -59,12 +59,6 @@ set expandtab
 set nowrap       "Don't wrap lines
 set linebreak    "Wrap lines at convenient points
 
-" ================ Folds ============================
-
-set foldmethod=indent "fold based on indent
-set foldnestmax=3       "deepest fold is 3 levels
-set nofoldenable        "dont fold by default
-
 " ================ Completion =======================
 
 set wildmode=list:longest,
