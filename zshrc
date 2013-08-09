@@ -111,6 +111,7 @@ alias -- -='cd -'
 
 # Super user
 alias _='sudo'
+alias _bex='bundle exec'
 
 # Show history
 alias history='fc -l 1'
@@ -401,7 +402,9 @@ function _plugin__start_agent()
   echo starting...
   for id in "${ssh_identities[@]}"
   do 
-    /usr/bin/ssh-add $HOME/.ssh/${id}
+    if [ -f $HOME/.ssh/${id} ]; then
+      /usr/bin/ssh-add $HOME/.ssh/${id}
+    fi
   done
 }
 
@@ -534,7 +537,7 @@ bindkey "^[m" copy-prev-shell-word
 setopt long_list_jobs
 
 # Less 4 lyfe
-export PAGER=less
+export PAGER="less -R"
 export LC_CTYPE=$LANG
 
 # vim for manpages
