@@ -3,7 +3,7 @@ DOTFILES = aprc gemrc gitconfig erlang pryrc \
 	  Xdefaults xmodmaprc gdbinit tmux.conf xpdfrc \
 		iex ctags editrc
 
-DOTDIRS = vim xmonad zsh
+DOTDIRS = vim xmonad zsh pentadactyl
 
 install: 
 	git submodule update --init
