@@ -3,7 +3,7 @@ DOTFILES = aprc gemrc gitconfig erlang pryrc \
 	  Xdefaults xmodmaprc gdbinit tmux.conf xpdfrc \
 		iex ctags editrc
 
-DOTDIRS = vim xmonad
+DOTDIRS = vim xmonad zsh
 
 install: 
 	git submodule update --init
@@ -27,11 +27,9 @@ key:
 	chmod 0600 ~/.ssh/config ~/.ssh/id_rsa
 
 clean: 
-	$(foreach file, $(DOTFILES), rm -f ~/.$(file);)
-	rm -rf ~/.vim
-	rm -rf ~/.xmonad
+	$(foreach file, $(DOTFILES), rm -f $(HOME)/.$(file);)
+	$(foreach directory, $(DOTDIRS), rm -rf $(HOME)/.$(directory);)
 
-# make a ziparoo of these dotfiles
 dotfilez.tar.gz:
 	tar cvf dotfilez.tar * 
 	gzip -9c dotfilez.tar >> dotfilez.tar.gz
