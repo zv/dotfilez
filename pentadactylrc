@@ -1,4 +1,3 @@
-set hintkeys=asdfg;lkjhqwertyuiop
 map -b j 5j
 map -b k 5k
 
@@ -10,3 +9,14 @@ map -b d <scroll-page-down>
 map -b u <C-b>
 
 map -b a <C-jk>
+
+
+bmark -keyword gssl https://encrypted.google.com/search?sclient=psy&hl=en&safe=off&site=webhp&source=hp&q=%s&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl=
+set defsearch=gssl
+
+colorscheme solarized-dark
+
+hi -a Hint font-size: 10pt !important
+hi -a Hint background: white !important
+hi -a Hint color: black !important
+set hintkeys=asdfglkjhqwertyuiop
