@@ -1,4 +1,4 @@
-let g:ctrlp_extensions = ['filetype', 'funky', 'cmdline', 'yanking']
+let g:ctrlp_extensions = ['yanking']
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 
 " Use the git index if we're in a git repo.
@@ -17,10 +17,3 @@ nnoremap ,b :CtrlPBuffer<cr>
 map ,4 :CtrlPBufTag<CR>
 " Yankring
 map ,yr :CtrlPYankring<CR>
-" Command history (as in :Q)
-map ,Q :CtrlPYankring<CR>
-map ,mru :CtrlPMRUFiles
-" Functions
-nnoremap <Leader>fu :CtrlPFunky<CR>
-" Tags
-nnoremap <c-]> :CtrlPtjump<cr>
