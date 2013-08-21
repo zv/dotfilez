@@ -19,6 +19,9 @@ set virtualedit+=block           " permit virtual edits
 
 syntax on "turn on syntax highlighting
 
+" Sets light/dark background
+let color_scheme = 'solarized_dark'
+
 " =============== Vundle Initialization ===============
 if filereadable(expand("~/.vim/vundles.vim"))
   source ~/.vim/vundles.vim
