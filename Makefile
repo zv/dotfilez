@@ -3,15 +3,22 @@ DOTFILES = aprc gemrc gitconfig erlang pryrc \
 	  Xdefaults xmodmaprc gdbinit tmux.conf xpdfrc \
 		iex ctags editrc
 
-DOTDIRS = vim xmonad zsh pentadactyl
+DOTDIRS = vim xmonad zsh pentadactyl tmux
 
 install: 
 	git submodule update --init
+	# Install our files
 	$(foreach file, $(DOTFILES), ln -sf $(PWD)/$(file) $(HOME)/.$(file);)
+	# Install our directories
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	ln -sf $(HOME)/.Xdefaults $(HOME)/.Xresources
+	# Run Vundle from the command line
 	vim +BundleInstall +qall
 
+select: 
+
+# Will backup your existing stuff to ~/.dotfilez_backups
+# does not work well at this point.
 backup: 
 	mkdir -p ~/.dotfilez_backups/`date %+F`
 	ls $(DOTFILES) | xargs -n 1 readlink -f | xargs -n 1 basename | xargs -t -n 1 -I {} cp -f `pwd`/{} ~/.dotfilez_backups/`date %+F` 
@@ -26,10 +33,12 @@ key:
 	chown `whoami` ~/.ssh/config
 	chmod 0600 ~/.ssh/config ~/.ssh/id_rsa
 
+# Clean out the dotfiles I installed. This could also kill your stuff
 clean: 
 	$(foreach file, $(DOTFILES), rm -f $(HOME)/.$(file);)
 	$(foreach directory, $(DOTDIRS), rm -rf $(HOME)/.$(directory);)
 
+# make a tar of these nice dotfiles
 dotfilez.tar.gz:
 	tar cvf dotfilez.tar * 
 	gzip -9c dotfilez.tar >> dotfilez.tar.gz
