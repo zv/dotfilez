@@ -9,9 +9,6 @@ urxvt*scrollTtyOutput: false
 urxvt*scrollWithBuffer: false 
 urxvt*scrollTtyKeypress: true
 
-! Ive finally done it and just gone full solarized
-! Common
-
 #define S_yellow        #b58900
 #define S_orange        #cb4b16
 #define S_red           #dc322f
@@ -20,8 +17,13 @@ urxvt*scrollTtyKeypress: true
 #define S_blue          #268bd2
 #define S_cyan          #2aa198
 #define S_green         #859900
-! 
-!!Dark
+
+! Truthy values are dark, conversely light easiest to use math here rather than
+! #define null, etc. lul. 
+!
+! so just to be clear, true statements are dark colors, false are light.
+
+#if 1 == 2 
 #define S_base03        #002b36
 #define S_base02        #073642
 #define S_base01        #586e75
@@ -30,20 +32,17 @@ urxvt*scrollTtyKeypress: true
 #define S_base1         #93a1a1
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
-!!EndDark
- 
-! 
-! Light
-! #define S_base03        #fdf6e3
-! #define S_base02        #eee8d5
-! #define S_base01        #93a1a1
-! #define S_base00        #839496
-! #define S_base0         #657b83
-! #define S_base1         #586e75
-! #define S_base2         #073642
-! #define S_base3         #002b36
-! ! EndLight 
-! 
+#else
+#define S_base03        #fdf6e3
+#define S_base02        #eee8d5
+#define S_base01        #93a1a1
+#define S_base00        #839496
+#define S_base0         #657b83
+#define S_base1         #586e75
+#define S_base2         #073642
+#define S_base3         #002b36
+#endif
+
 urxvt.background:              S_base03
 urxvt.foreground:              S_base0
 urxvt.fading:                  40
