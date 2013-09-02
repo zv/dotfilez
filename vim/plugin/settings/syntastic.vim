@@ -10,4 +10,4 @@ let g:syntastic_auto_loc_list=1
 "don't care about warnings
 let g:syntastic_quiet_warnings=0
 
-let g:syntastic_coffee_checkers=['']
+let g:syntastic_coffee_checkers = ['coffee']

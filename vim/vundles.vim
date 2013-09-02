@@ -75,8 +75,8 @@ Bundle "gregsexton/gitv"
 "@image: 'https://a248.e.akamai.net/camo.github.com/0a0b4c0d24a44d381cbad420ecb285abc2aaa4cb/687474703a2f2f692e696d6775722e636f6d2f7949796e722e706e67 '
 Bundle "kien/ctrlp.vim"
 Bundle "sgur/ctrlp-extensions.vim"
-Bundle "tacahiroy/ctrlp-funky"
-Bundle "ivalkeen/vim-ctrlp-tjump"
+"Bundle "tacahiroy/ctrlp-funky"
+"Bundle "ivalkeen/vim-ctrlp-tjump"
 "@utility: ,T to bring up a tagbar on the right.
 Bundle "majutsushi/tagbar"
 
@@ -142,9 +142,6 @@ Bundle "vim-scripts/camelcasemotion.git"
 Bundle "vim-scripts/matchit.zip.git"
 "@utility: 'ShowMarks shows marks in a file (added with 'X where x is any
 "char) '
-" Commented out because of it's limited utility in comparision to it's keymap
-" space.
-"Bundle "xsunsmile/showmarks.git"
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
