@@ -141,6 +141,9 @@ alias mxdc='mix deps.compile'
 alias mxdu='mix deps.update'
 alias mxt='mix test'
 
+# Switch Users, maining RTP.
+alias sudovim='sudo vim -c "set runtimepath+=/home/zv/.vim" -u /home/zv/.vimrc'
+
 
 ############################################
 #   Completions 
@@ -557,6 +560,15 @@ fpath=(~/.zsh/completion $fpath)
 autoload -U compinit
 compinit -i
 
+############################################
+#  Node 
+#############################################
+
+eval "$(npm completion 2>/dev/null)"
+
+function node-docs {
+  open "http://nodejs.org/docs/$(node --version)/api/all.html#all_$1"
+}
 
 #############################################
 #
@@ -746,6 +758,7 @@ function rvm_prompt_info() {
 #
 #############################################
 
-export PATH="$HOME/bin:/usr/local/bin:$HOME/go/bin:$PATH"
-export GOPATH=$HOME/Development/go
-export GOROOT=$HOME/go
+export PATH="$HOME/bin:/usr/local/bin:$PATH"
+#export PATH=":$PATH:$HOME/go/bin"
+#export GOPATH=$HOME/Development/go
+#export GOROOT=$HOME/go
