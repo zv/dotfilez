@@ -1,7 +1,8 @@
-urxvt*font:       xft:Monospace:size=12:antialias=true
-urxvt*boldFont:     xft:Monospace:size=12:antialias=true
-urxvt*italicFont:   xft:Monospace:size=12:antialias=true
-urxvt*bolditalicFont: xft:Monospace:size=12:antialias=true
+urxvt*font:       xft:Monospace:size=11:antialias=true
+urxvt*boldFont:     xft:Monospace:size=11:antialias=true
+urxvt*italicFont:   xft:Monospace:size=11:antialias=true
+urxvt*bolditalicFont: xft:Monospace:size=11:antialias=true
+
 urxvt*scrollBar:   false
 urxvt*saveLines: 20000 
 urxvt*internalBorder: 6
