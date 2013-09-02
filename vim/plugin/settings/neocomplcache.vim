@@ -1,5 +1,3 @@
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
@@ -10,7 +8,7 @@ let g:neocomplcache_min_syntax_length = 4
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
 " default # of completions is 100, that's crazy
-let g:neocomplcache_max_list = 25 
+let g:neocomplcache_max_list = 7 
 
 " Enable heavy features.
 " Use camel case completion. (slow)
@@ -29,14 +27,8 @@ let g:neocomplcache_dictionary_filetype_lists = {
 " the one in rails.vim, otherwise this plugin will crap out
 let g:neocomplcache_force_overwrite_completefunc = 1
 
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
 " Plugin key-mappings.
-
 inoremap <expr><C-g>     neocomplcache#undo_completion()
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
@@ -48,6 +40,7 @@ function! s:my_cr_function()
   " For no inserting <CR> key.
   return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 endfunction
+
 " <TAB>: completion.
 "inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
@@ -73,15 +66,17 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType erlang set omnifunc=erlangcomplete#Complete
-
 let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
 
 " autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 " let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 " Ruby can get really slow, so let's not even bother.
 let g:neocomplcache_omni_patterns['ruby'] = ''
+
+" XML?
+let g:neocomplcache_omni_patterns['xml'] = ''
 
 " Prevent hanging with python: https://github.com/skwp/dotfiles/issues/163
 let g:neocomplcache_omni_patterns['python'] = ''
