@@ -8,6 +8,11 @@
 # P.C. Shyamshankar <sykora@lucentbeing.com>
 # Copied from http://github.com/sykora/etc/blob/master/zsh/functions/spectrum/
 
+# Load our completion functions
+fpath=(~/.zsh/completion $fpath)
+
+
+
 typeset -Ag FX FG BG
 
 FX=(
@@ -72,30 +77,13 @@ zle -N zle-keymap-select
 bindkey -v
 
 #############################################
-# Vim vundle helpers 
-#############################################
-
-function vundle () {
-  vim -c "execute \"BundleInstall\" | q | q"
-}
-
-function vundle-update () {
-  vim -c "execute \"BundleInstall!\" | q | q"
-}
-
-function vundle-clean () {
-  vim -c "execute \"BundleClean!\" | q | q"
-}
-
-
-
-#############################################
 # Edit Comman Line 
 #############################################
 
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
+
 
 #############################################
 # Aliasing 
@@ -144,6 +132,8 @@ alias mxt='mix test'
 # Switch Users, maining RTP.
 alias sudovim='sudo vim -c "set runtimepath+=/home/zv/.vim" -u /home/zv/.vimrc'
 
+# so fuckin sick of this
+alias mongostart='sudo service mongod start'
 
 ############################################
 #   Completions 
@@ -227,212 +217,6 @@ setopt auto_name_dirs
 setopt auto_pushd
 setopt pushd_ignore_dups
 
-#############################################
-#   Git 
-#############################################
-
-# get the name of the branch we are on
-function git_prompt_info() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_SUFFIX"
-}
-
-
-# Checks if working tree is dirty
-parse_git_dirty() {
-  local SUBMODULE_SYNTAX=''
-  if [[ $POST_1_7_2_GIT -gt 0 ]]; then
-        SUBMODULE_SYNTAX="--ignore-submodules=dirty"
-  fi
-  if [[ -n $(git status -s ${SUBMODULE_SYNTAX}  2> /dev/null) ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
-  else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
-  fi
-}
-
-
-# Checks if there are commits ahead from remote
-function git_prompt_ahead() {
-  if $(echo "$(git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
-    echo "$ZSH_THEME_GIT_PROMPT_AHEAD"
-  fi
-}
-
-# Formats prompt string for current git commit short SHA
-function git_prompt_short_sha() {
-  SHA=$(git rev-parse --short HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
-}
-
-# Formats prompt string for current git commit long SHA
-function git_prompt_long_sha() {
-  SHA=$(git rev-parse HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
-}
-
-# Get the status of the working tree
-git_prompt_status() {
-  INDEX=$(git status --porcelain 2> /dev/null)
-  STATUS=""
-  if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^A  ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
-  elif $(echo "$INDEX" | grep '^M  ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^ M ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^R  ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_RENAMED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
-  elif $(echo "$INDEX" | grep '^AD ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
-  fi
-  echo $STATUS
-}
-
-#compare the provided version of git to the version installed and on path
-#prints 1 if input version <= installed version
-#prints -1 otherwise
-function git_compare_version() {
-  local INPUT_GIT_VERSION=$1;
-  local INSTALLED_GIT_VERSION
-  INPUT_GIT_VERSION=(${(s/./)INPUT_GIT_VERSION});
-  INSTALLED_GIT_VERSION=($(git --version));
-  INSTALLED_GIT_VERSION=(${(s/./)INSTALLED_GIT_VERSION[3]});
-
-  for i in {1..3}; do
-    if [[ $INSTALLED_GIT_VERSION[$i] -lt $INPUT_GIT_VERSION[$i] ]]; then
-      echo -1
-      return 0
-    fi
-  done
-  echo 1
-}
-
-#this is unlikely to change so make it all statically assigned
-POST_1_7_2_GIT=$(git_compare_version "1.7.2")
-#clean up the namespace slightly by removing the checker function
-unset -f git_compare_version
-
-# Git aliases
-alias g='git'
-alias gst='git status'
-alias gl='git pull'
-alias gup='git fetch && git rebase'
-alias gp='git push'
-gdv() { git diff -w "$@" | view - }
-alias gc='git commit -v'
-alias gca='git commit -v -a'
-alias gco='git checkout'
-alias gcm='git checkout master'
-alias gb='git branch'
-alias gba='git branch -a'
-alias gcount='git shortlog -sn'
-alias gcp='git cherry-pick'
-alias glg='git log --stat --max-count=5'
-alias glgg='git log --graph --max-count=5'
-alias gss='git status -s'
-alias ga='git add'
-alias gm='git merge'
-alias grh='git reset HEAD'
-alias grhh='git reset HEAD --hard'
-
-alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
-
-# Lists all files that have been ignored with git update-index
-alias git-ignorelog='git ls-files -v | grep "^h"'
-
-# Will return the current branch name
-# Usage example: git pull origin $(current_branch)
-function current_branch() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo ${ref#refs/heads/}
-}
-
-# Apply the latest stash made inside this branch
-alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
-
-
-#############################################
-#  I prove that if markets are efficient,
-#  meaning current prices fully reflect all
-#  information available in past prices,
-#  then P = NP, meaning every computational
-#  problem whose solution can be verified
-#  in polynomial time can also be solved
-#  in polynomial time. I also prove the
-#  converse by showing how we can
-#  “program” the market to solve
-#  NP-complete problems. Since P probably
-#  does not equal NP, markets are
-#  probably not efficient. Specifically,
-#  markets become increasingly
-#  inefficient as the time series
-#  lengthens or becomes more frequent. An
-#  illustration by way of partitioning
-#  the excess returns to momentum
-#  strategies based on data availability
-#  confirms this prediction.#
-#
-#  - Social Science Research Network
-#
-### SSH #################################
-local _plugin__ssh_env=$HOME/.ssh/environment-$HOST
-ssh_identities=("id_rsa" "id_rsa_old") 
-local _plugin__forwarding
-
-function _plugin__start_agent()
-{
-  local -a identities
-
-  # start ssh-agent and setup environment
-  /usr/bin/env ssh-agent | sed 's/^echo/#echo/' > ${_plugin__ssh_env}
-  chmod 600 ${_plugin__ssh_env}
-  . ${_plugin__ssh_env} > /dev/null
-
-  echo starting...
-  for id in "${ssh_identities[@]}"
-  do 
-    if [ -f $HOME/.ssh/${id} ]; then
-      /usr/bin/ssh-add $HOME/.ssh/${id}
-    fi
-  done
-}
-
-if [ -f "${_plugin__ssh_env}" ]; then
-
-  # Source SSH settings, if applicable
-  . ${_plugin__ssh_env} > /dev/null
-
-  ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-
-    _plugin__start_agent;
-
-  }
-
-else
-  _plugin__start_agent;
-fi
-
-# tidy up after ourselves
-unfunction _plugin__start_agent
-unset _plugin__forwarding
-unset _plugin__ssh_env
-
-# Faster SSH forwarding
-alias ssh-x='ssh -c arcfour,blowfish-cbc -XC'
 
 #############################################
 #
@@ -498,7 +282,7 @@ bindkey "\e[3~" delete-char
 # ls colors
 autoload colors; colors;
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export LS_COLORS
+
 
 # Ain't beepin' dog
 setopt no_beep
@@ -518,8 +302,16 @@ ZSH_THEME_GIT_PROMPT_CLEAN=""               # Text to display if the branch is c
 # Setup the prompt with pretty colors
 setopt prompt_subst
 
-export GREP_OPTIONS='--color=auto'
-export GREP_COLOR='1;32'
+
+# 10 years I've been listenining to this list prompt and today I am fucking done!
+export LISTPROMPT=''
+
+# Syntax highlightin' 
+source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# The crazier the better!
+export GREP_COLORS="38;5;230:sl=38;5;240:cs=38;5;100:mt=38;5;161:fn=38;5;197:ln=38;5;212:bn=38;5;44:se=38;5;166"
+eval `dircolors ~/.zsh/LS_COLORS`
 
 #############################################
 #
@@ -528,6 +320,7 @@ export GREP_COLOR='1;32'
 #
 ### But wait, theres more ##################
 
+export EDITOR='vim' # didn't see that one coming.
 
 # smart urls
 autoload -U url-quote-magic
@@ -546,6 +339,13 @@ export LC_CTYPE=$LANG
 # vim for manpages
 export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
+# make related items
+export CFLAGS="-march=native -mtune=native -O2 -pipe"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed"
+export MAKEFLAGS="-j4"
+
+
 
 ############################################
 #
@@ -553,202 +353,23 @@ export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu
 #  that is what changes what you are.
 #  - Kierkegaard
 #
-#### Autocompletion ########################
+#### Autocompletion and associates #########
  
-fpath=(~/.zsh/completion $fpath)
 
 autoload -U compinit
 compinit -i
 
-############################################
-#  Node 
-#############################################
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-eval "$(npm completion 2>/dev/null)"
 
-function node-docs {
-  open "http://nodejs.org/docs/$(node --version)/api/all.html#all_$1"
-}
-
-#############################################
-#
-#  Go is like a better C from the guys that
-#  didn't bring you C++
-#  - Rob Pike 
-#
-### Golang #################################
-
-# gc
-prefixes=(5 6 8)
-for p in $prefixes; do
-  compctl -g "*.${p}" ${p}l
-  compctl -g "*.go" ${p}g
+for function in ~/.zsh/functions/*; do
+  source $function
 done
 
-# standard go tools
-compctl -g "*.go" gofmt
 
-# gccgo
-compctl -g "*.go" gccgo
-
-# go tool
-__go_tool_complete() {
-  typeset -a commands build_flags
-  commands+=(
-    'build[compile packages and dependencies]'
-    'clean[remove object files]'
-    'doc[run godoc on package sources]'
-    'fix[run go tool fix on packages]'
-    'fmt[run gofmt on package sources]'
-    'get[download and install packages and dependencies]'
-    'help[display help]'
-    'install[compile and install packages and dependencies]'
-    'list[list packages]'
-    'run[compile and run Go program]'
-    'test[test packages]'
-    'tool[run specified go tool]'
-    'version[print Go version]'
-    'vet[run go tool vet on packages]'
-  )
-  if (( CURRENT == 2 )); then
-    # explain go commands
-    _values 'go tool commands' ${commands[@]}
-    return
-  fi
-  build_flags=(
-    '-a[force reinstallation of packages that are already up-to-date]'
-    '-n[print the commands but do not run them]'
-    "-p[number of parallel builds]:number"
-    '-x[print the commands]'
-    "-work[print temporary directory name and keep it]"
-    "-gcflags[flags for 5g/6g/8g]:flags"
-    "-ldflags[flags for 5l/6l/8l]:flags"
-    "-gccgoflags[flags for gccgo]:flags"
-  )
-  __go_list() {
-      local expl importpaths
-      declare -a importpaths
-      importpaths=($(go list ${words[$CURRENT]}... 2>/dev/null))
-      _wanted importpaths expl 'import paths' compadd "$@" - "${importpaths[@]}"
-  }
-  case ${words[2]} in
-  clean|doc)
-      _arguments -s -w : '*:importpaths:__go_list'
-      ;;
-  fix|fmt|list|vet)
-      _alternative ':importpaths:__go_list' ':files:_path_files -g "*.go"'
-      ;;
-  install)
-      _arguments -s -w : ${build_flags[@]} \
-        "-v[show package names]" \
-  '*:importpaths:__go_list'
-      ;;
-  get)
-      _arguments -s -w : \
-        ${build_flags[@]}
-      ;;
-  build)
-      _arguments -s -w : \
-        ${build_flags[@]} \
-        "-v[show package names]" \
-        "-o[output file]:file:_files" \
-        "*:args:{ _alternative ':importpaths:__go_list' ':files:_path_files -g \"*.go\"' }"
-      ;;
-  test)
-      _arguments -s -w : \
-        ${build_flags[@]} \
-        "-c[do not run, compile the test binary]" \
-        "-i[do not run, install dependencies]" \
-        "-v[print test output]" \
-        "-x[print the commands]" \
-        "-short[use short mode]" \
-        "-parallel[number of parallel tests]:number" \
-        "-cpu[values of GOMAXPROCS to use]:number list" \
-        "-run[run tests and examples matching regexp]:regexp" \
-        "-bench[run benchmarks matching regexp]:regexp" \
-        "-benchtime[run each benchmark during n seconds]:duration" \
-        "-timeout[kill test after that duration]:duration" \
-        "-cpuprofile[write CPU profile to file]:file:_files" \
-        "-memprofile[write heap profile to file]:file:_files" \
-        "-memprofilerate[set heap profiling rate]:number" \
-        "*:args:{ _alternative ':importpaths:__go_list' ':files:_path_files -g \"*.go\"' }"
-      ;;
-  help)
-      _values "${commands[@]}" \
-        'gopath[GOPATH environment variable]' \
-        'importpath[description of import paths]' \
-        'remote[remote import path syntax]' \
-        'testflag[description of testing flags]' \
-        'testfunc[description of testing functions]'
-      ;;
-  run)
-      _arguments -s -w : \
-          ${build_flags[@]} \
-          '*:file:_path_files -g "*.go"'
-      ;;
-  tool)
-      if (( CURRENT == 3 )); then
-          _values "go tool" $(go tool)
-          return
-      fi
-      case ${words[3]} in
-      [568]g)
-          _arguments -s -w : \
-              '-I[search for packages in DIR]:includes:_path_files -/' \
-              '-L[show full path in file:line prints]' \
-              '-S[print the assembly language]' \
-              '-V[print the compiler version]' \
-              '-e[no limit on number of errors printed]' \
-              '-h[panic on an error]' \
-              '-l[disable inlining]' \
-              '-m[print optimization decisions]' \
-              '-o[file specify output file]:file' \
-              '-p[assumed import path for this code]:importpath' \
-              '-u[disable package unsafe]' \
-              "*:file:_files -g '*.go'"
-          ;;
-      [568]l)
-          local O=${words[3]%l}
-          _arguments -s -w : \
-              '-o[file specify output file]:file' \
-              '-L[search for packages in DIR]:includes:_path_files -/' \
-              "*:file:_files -g '*.[ao$O]'"
-          ;;
-      dist)
-          _values "dist tool" banner bootstrap clean env install version
-          ;;
-      *)
-          # use files by default
-          _files
-          ;;
-      esac
-      ;;
-  esac
-}
-
-compdef __go_tool_complete go
-
-#############################################
-#
-# The chief cause of problems is solutions
-#  - Sevareid 
-#
-#### RVM ####################################
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-if [ -f $HOME/.rvm/scripts/rvm ]; then
-  source $HOME/.rvm/scripts/rvm
-fi
-
-# get the name of the ruby version
-function rvm_prompt_info() {
-  [ -f $HOME/.rvm/bin/rvm-prompt ] || return
-  local rvm_prompt
-  rvm_prompt=$($HOME/.rvm/bin/rvm-prompt ${ZSH_THEME_RVM_PROMPT_OPTIONS} 2>/dev/null)
-  [[ "${rvm_prompt}x" == "x" ]] && return
-  echo "${ZSH_THEME_RVM_PROMPT_PREFIX:=(}${rvm_prompt}${ZSH_THEME_RVM_PROMPT_SUFFIX:=)}"
-}
+# don't care much for these, but you can read about the highlighters in the
+# functions dir.
+ZSH_HIGHLIGHT_HIGHLIGHTERS=()
 
 ### Closing words ###########################
 #
@@ -759,6 +380,7 @@ function rvm_prompt_info() {
 #############################################
 
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
+
 #export PATH=":$PATH:$HOME/go/bin"
 #export GOPATH=$HOME/Development/go
 #export GOROOT=$HOME/go
