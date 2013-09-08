@@ -57,15 +57,14 @@ set tags=./tags;$HOME
 
 " ================ Indentation ======================
 
-set shiftwidth=2
 set softtabstop=2 " insert mode tab and backspace use 2 spaces
-set tabstop=2     " actual tabs occupy 8 characters
-
-set autoindent
-set smartindent
+set shiftwidth=2
+set tabstop=8     " actual tabs occupy 8 characters
 set smarttab
 
-set expandtab
+set autoindent   " copy previous line's indent
+set smartindent  " intdent intelligently
+set expandtab    " I prefer spaces to tabs.
 set nowrap       "Don't wrap lines
 set linebreak    "Wrap lines at convenient points
 
