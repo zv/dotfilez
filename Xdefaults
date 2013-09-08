@@ -1,13 +1,13 @@
-urxvt*font:       xft:Monospace:size=11:antialias=true
-urxvt*boldFont:     xft:Monospace:size=11:antialias=true
-urxvt*italicFont:   xft:Monospace:size=11:antialias=true
-urxvt*bolditalicFont: xft:Monospace:size=11:antialias=true
+urxvt*font:       xft:Terminus:size=13:antialias=true
+urxvt*boldFont:     xft:Terminus:size=13:antialias=true
+urxvt*italicFont:   xft:Terminus:size=13:antialias=true
+urxvt*bolditalicFont: xft:Terminus:size=13:antialias=true
 
 urxvt*scrollBar:   false
-urxvt*saveLines: 20000 
+urxvt*saveLines: 20000
 urxvt*internalBorder: 6
 urxvt*scrollTtyOutput: false
-urxvt*scrollWithBuffer: false 
+urxvt*scrollWithBuffer: false
 urxvt*scrollTtyKeypress: true
 
 #define S_yellow        #b58900
@@ -20,11 +20,11 @@ urxvt*scrollTtyKeypress: true
 #define S_green         #859900
 
 ! Truthy values are dark, conversely light easiest to use math here rather than
-! #define null, etc. lul. 
+! #define null, etc. lul.
 !
 ! so just to be clear, true statements are dark colors, false are light.
 
-#if 1 == 2 
+#if 1 == 1
 ! Dark
 #define S_base03        #002b36
 #define S_base02        #073642
@@ -35,7 +35,7 @@ urxvt*scrollTtyKeypress: true
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
 ! End Dark
-#else 
+#else
 ! Light
 #define S_base03        #fdf6e3
 #define S_base02        #eee8d5
