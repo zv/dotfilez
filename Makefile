@@ -6,12 +6,13 @@ DOTFILES = aprc gemrc gitconfig erlang pryrc \
 DOTDIRS = vim xmonad zsh pentadactyl tmux
 
 install: 
-	git submodule update --init
+	git submodule update --init --recursive
 	# Install our files
 	$(foreach file, $(DOTFILES), ln -sf $(PWD)/$(file) $(HOME)/.$(file);)
 	# Install our directories
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
-	ln -sf $(HOME)/.Xdefaults $(HOME)/.Xresources
+	ln -s $(HOME)/.Xdefaults $(HOME)/.Xresources
+	ln -s $(HOME)/.Xsession $(HOME)/.xinit
 	# Run Vundle from the command line
 	vim +BundleInstall +qall
 
