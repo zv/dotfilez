@@ -16,6 +16,8 @@ nnoremap ,S :%s//g<left><left>
 " Re hard wrap paragraph.
 nnoremap ,qw gqip
 
+nnoremap ,sm :set modifiable<CR>
+
 " Reselect text ater indent/unindent.
 vnoremap < <gv
 vnoremap > >gv

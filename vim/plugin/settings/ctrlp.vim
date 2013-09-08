@@ -4,6 +4,8 @@ let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 " Use the git index if we're in a git repo.
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
 
+let g:ctrlp_match_window = 'order:ttb,max:20'
+
 " Default to filename searches - so that appctrl will find application controller
 let g:ctrlp_by_filename = 1
 
@@ -17,3 +19,4 @@ nnoremap ,b :CtrlPBuffer<cr>
 map ,4 :CtrlPBufTag<CR>
 " Yankring
 map ,yr :CtrlPYankring<CR>
+
