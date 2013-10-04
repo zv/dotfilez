@@ -14,16 +14,16 @@ import qualified Data.Map as M
 
 import System.IO
 
-mykeys (XConfig {modMask = modm}) = M.fromList $ 
-  [ ((modm , xK_x), sendMessage ToggleStruts) 
-  , ((modm,  xK_g ), withFocused toggleBorder) 
+mykeys (XConfig {modMask = modm}) = M.fromList $
+  [ ((modm , xK_x), sendMessage ToggleStruts)
+  , ((modm,  xK_g ), withFocused toggleBorder)
   ]
 
 main = do
-     xmproc  <- spawnPipe "/usr/bin/xmobar" 
+     xmproc  <- spawnPipe "/usr/bin/xmobar"
      session <- getEnv "DESKTOP_SESSION"
      xmonad $ (maybe desktopConfig desktop session) { terminal = "urxvt"
-                                                    , logHook = dynamicLogWithPP sjanssenPP 
+                                                    , logHook = dynamicLogWithPP sjanssenPP
                                                         { ppOutput = hPutStrLn xmproc
                                                         , ppCurrent = xmobarColor "black" "white"
                                                         , ppTitle = xmobarColor "white" "" . shorten 50
@@ -31,6 +31,7 @@ main = do
                                                      , layoutHook=avoidStruts $ layoutHook defaultConfig
                                                      , manageHook=manageHook defaultConfig <+> manageDocks
                                                      , keys = \c -> mykeys c `M.union` keys defaultConfig c
-                                                    , focusedBorderColor = "#FF0000" 
+                                                    , normalBorderColor = "#FF0000"
+                                                    , focusedBorderColor = "#1c1c1c"
                                                     }
 desktop _ = desktopConfig
