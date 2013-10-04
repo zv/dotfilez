@@ -10,6 +10,8 @@ urxvt*scrollTtyOutput: false
 urxvt*scrollWithBuffer: false
 urxvt*scrollTtyKeypress: true
 
+urxvt.cursorBlink:       true
+
 #define S_yellow        #b58900
 #define S_orange        #cb4b16
 #define S_red           #dc322f
@@ -19,11 +21,8 @@ urxvt*scrollTtyKeypress: true
 #define S_cyan          #2aa198
 #define S_green         #859900
 
-! Truthy values are dark, conversely light easiest to use math here rather than
-!
-! so just to be clear, true statements are dark colors, false are light.
-
-#if 1 == 1
+#define DARK true
+#ifdef DARK
 ! Dark
 #define S_base03        #002b36
 #define S_base02        #073642
@@ -51,7 +50,6 @@ urxvt.background:              S_base03
 urxvt.foreground:              S_base0
 urxvt.fading:                  40
 urxvt.fadeColor:               S_base03
-urxvt.cursorColor:             S_base1
 urxvt.pointerColorBackground:  S_base01
 urxvt.pointerColorForeground:  S_base1
 
