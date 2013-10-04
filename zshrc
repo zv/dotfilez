@@ -37,7 +37,7 @@ function spectrum_ls() {
 }
 
 ############################################
-#  Theme 
+#  Theme
 #############################################
 
 ZEPHYR_THEME_GIT_PROMPT_PREFIX="%{$reset_color%}%{$fg[white]%}["
@@ -52,13 +52,17 @@ prompt_fix_for_git() {
   fi
 }
 
-zv_prompt() {
-  prompt_fix_for_git 
-  #rvm_prompt_info
-  #elixir_prompt_info
+# shows a slightly different prompt for vicmd vs other ZLE command modes to let
+# you know what you are dealing with.
+zle_vim_prompt_notifier() {
+  if [ "$KEYMAP" = vicmd ]; then
+    print "%F{001}>>%f"
+  else
+    print ">>"
+  fi
 }
 
-PROMPT='[%n@%m]%2~ $(zv_prompt)>> '
+PROMPT='[%n@%m]%2~ $(prompt_fix_for_git) $(zle_vim_prompt_notifier) '
 
 #############################################
 #   Vim Mode
@@ -77,7 +81,7 @@ zle -N zle-keymap-select
 bindkey -v
 
 #############################################
-# Edit Comman Line 
+# Edit Comman Line
 #############################################
 
 autoload -U edit-command-line
@@ -86,7 +90,7 @@ bindkey '\C-x\C-e' edit-command-line
 
 
 #############################################
-# Aliasing 
+# Aliasing
 #############################################
 
 # Push and pop directories on directory stack
@@ -136,7 +140,7 @@ alias sudovim='sudo vim -c "set runtimepath+=/home/zv/.vim" -u /home/zv/.vimrc'
 alias mongostart='sudo service mongod start'
 
 ############################################
-#   Completions 
+#   Completions
 ############################################
 
 unsetopt menu_complete   # do not autoselect the first completion entry
@@ -195,7 +199,7 @@ zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path ~/.oh-my-zsh/cache/
 
 #############################################
-#  Corrections 
+#  Corrections
 #############################################
 
 setopt correct_all
@@ -209,8 +213,10 @@ alias heroku='nocorrect heroku'
 alias ebuild='nocorrect ebuild'
 alias hpodder='nocorrect hpodder'
 
+alias bower='noglob bower'
+
 #############################################
-# Directory Shortcuts 
+# Directory Shortcuts
 #############################################
 
 setopt auto_name_dirs
@@ -306,7 +312,7 @@ setopt prompt_subst
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
-# Syntax highlightin' 
+# Syntax highlightin'
 source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # The crazier the better!
@@ -354,7 +360,7 @@ export MAKEFLAGS="-j4"
 #  - Kierkegaard
 #
 #### Autocompletion and associates #########
- 
+
 
 autoload -U compinit
 compinit -i
@@ -367,8 +373,8 @@ for function in ~/.zsh/functions/*; do
 done
 
 
-# don't care much for these, but here they are 
-# main cursor bracket pattern root 
+# don't care much for these, but here they are
+# main cursor bracket pattern root
 # specified as such (main brackets pattern cursor
 ZSH_HIGHLIGHT_HIGHLIGHTERS=()
 
