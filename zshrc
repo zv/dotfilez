@@ -1,17 +1,15 @@
+#!/usr/bin/env zsh
 # This is zv's ZSHRC.
 # haq the plan8
 # meow nyan meow nyan meow
 # 2013
 
-#! /bin/zsh
 # A script to make using 256 colors in zsh less painful.
 # P.C. Shyamshankar <sykora@lucentbeing.com>
 # Copied from http://github.com/sykora/etc/blob/master/zsh/functions/spectrum/
 
 # Load our completion functions
 fpath=(~/.zsh/completion $fpath)
-
-
 
 typeset -Ag FX FG BG
 
@@ -25,8 +23,8 @@ FX=(
 )
 
 for color in {000..255}; do
-    FG[$color]="%{[38;5;${color}m%}"
-    BG[$color]="%{[48;5;${color}m%}"
+  FG[$color]="%{[38;5;${color}m%}"
+  BG[$color]="%{[48;5;${color}m%}"
 done
 
 # Show all 256 colors with color number
@@ -225,13 +223,8 @@ setopt pushd_ignore_dups
 
 
 #############################################
-#
-# "Those who do not remember history are
-#  doomed to repeat it."
-#  - Cicero
-#
 ### History #################################
-
+#############################################
 # Where I store my shit
 HISTFILE=$HOME/.zsh_history
 
@@ -249,12 +242,8 @@ setopt inc_append_history
 setopt share_history # share command history data
 
 #############################################
-#
-# If I had eight hours to chop down a tree,
-#  I would spend 6 hours sharpening an axe.
-#  - Anonymous
-#
 ### Bindings ################################
+#############################################
 
 bindkey '\ew' kill-region
 bindkey -s '\el' "ls\n"
@@ -279,18 +268,14 @@ bindkey "\e[3~" delete-char
 
 
 #############################################
-#
-# "Where lesser men make excuses, I make a path"
-#   - Hannibal Barca
-#
 ### Colors from the beyond! #################
+#############################################
 
 # ls colors
-autoload colors; colors;
+autoload -U colors && colors;
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
-
-# Ain't beepin' dog
+# Stop the beep insanity
 setopt no_beep
 
 # Automatic CD on directory specification
@@ -308,7 +293,6 @@ ZSH_THEME_GIT_PROMPT_CLEAN=""               # Text to display if the branch is c
 # Setup the prompt with pretty colors
 setopt prompt_subst
 
-
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
@@ -320,11 +304,8 @@ export GREP_COLORS="38;5;230:sl=38;5;240:cs=38;5;100:mt=38;5;161:fn=38;5;197:ln=
 eval `dircolors ~/.zsh/LS_COLORS`
 
 #############################################
-#
-# "Thats all folks"
-#   - Bugs Bunny
-#
 ### But wait, theres more ##################
+#############################################
 
 export EDITOR='vim' # didn't see that one coming.
 
@@ -351,16 +332,9 @@ export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed"
 export MAKEFLAGS="-j4"
 
-
-
 ############################################
-#
-# Face the facts of being what you are, for
-#  that is what changes what you are.
-#  - Kierkegaard
-#
 #### Autocompletion and associates #########
-
+############################################
 
 autoload -U compinit
 compinit -i
@@ -376,15 +350,9 @@ done
 # don't care much for these, but here they are
 # main cursor bracket pattern root
 # specified as such (main brackets pattern cursor
-ZSH_HIGHLIGHT_HIGHLIGHTERS=()
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 
 ### Closing words ###########################
-#
-# Isn't it a pleasure to study and practice
-#  what you have learned?
-#  - Confucious
-#
-#############################################
 
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
