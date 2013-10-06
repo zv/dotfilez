@@ -3,14 +3,10 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" note from zv
-" all of these wierd markups are for documentation generation, you don't have
-" to pay attention.
-
 Bundle "gmarik/vundle"
-Bundle "altercation/vim-colors-solarized" 
+Bundle "altercation/vim-colors-solarized"
 
-"@BeginType: TextObjects   
+"@BeginType: TextObjects
 Bundle "coderifous/textobj-word-column.vim"
 Bundle "kana/vim-textobj-datetime"
 Bundle "kana/vim-textobj-entire"
@@ -19,6 +15,7 @@ Bundle "kana/vim-textobj-line"
 Bundle "austintaylor/vim-indentobject"
 Bundle "kana/vim-textobj-user"
 Bundle "lucapette/vim-textobj-underscore"
+Bundle "vim-scripts/argtextobj.vim"
 "@EndType
 
 "@BeginType: Languages and Scripts

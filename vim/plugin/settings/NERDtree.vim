@@ -13,3 +13,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 " Disable the scrollbars (NERDTree)
 set guioptions-=r
 set guioptions-=L
+
+" find your file in the nerdtree
+nnoremap <silent> <C-\> :NERDTreeFind<CR>
