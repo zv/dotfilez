@@ -34,8 +34,14 @@ let mapleader=","
 " check my spelling
 set spelllang=en_us
 
-" Sets light/dark background
-let color_scheme='solarized_dark'
+" The terminal handles colors differently so we need to have a bit of unclean
+" logic in another file handle the loading based on if we're in a GUI or not.
+" 'desert' or 'default' give what you'd expect, 'solarized_dark' and
+" 'solarized_light' are special codes for setting the colorscheme and
+" background.
+let color_scheme='solarized_light'
+" Don't need this w/ solarized, but useful to set sometimes with other params.
+"set background=dark
 
 " =============== Vundle Initialization ===============
 if filereadable(expand("~/.vim/vundles.vim"))
