@@ -65,7 +65,8 @@ Bundle "honza/vim-snippets"
 "@EndType
 
 
-"@utility: sj and sk to split and join {} and [] into {\n} etc.
+" Tools
+Bundle "rking/ag.vim"
 Bundle "AndrewRadev/splitjoin.vim"
 "@utility: ,a to align text by a character
 Bundle "godlygeek/tabular"

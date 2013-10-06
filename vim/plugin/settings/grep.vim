@@ -1,18 +1,10 @@
+" TODO: `which` the location of ag instead of statically filling it in.
+" ag is pretty fast.
+set grepprg=/usr/local/bin/ag
+let g:agprg="/usr/local/bin/ag --column"
+
 "git grep the current word using K (mnemonic Kurrent)
-nnoremap <silent> K :GitGrep <cword><CR>
-function! GetVisual()
-        let reg_save = getreg('"')
-        let regtype_save = getregtype('"')
-        let cb_save = &clipboard
-        set clipboard&
-        normal! ""gvy
-        let selection = getreg('"')
-        call setreg('"', reg_save, regtype_save)
-        let &clipboard = cb_save
-        return selection
-endfunction
+nnoremap <silent> K :Ag <cword><CR>
 
-"grep for definition of file (Elixir/Ruby) 
-nnoremap <silent> ,gd :GitGrep 'def <cword>'<CR>
-
-"nnoremap <silent> ,rg :grep -R <cword> 
+" old map for grepping
+nnoremap ,gg :Ag ""<left>
