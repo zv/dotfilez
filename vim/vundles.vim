@@ -38,23 +38,9 @@ Bundle "vim-ruby/vim-ruby.git"
 "Bundle "itspriddle/vim-jquery.git"
 "@EndType
 
-"@BeginType: Snippets
-"Bundle "Shougo/unite.vim"
-" Dispatches external commands (unite dependency) 
-"Bundle "Shougo/vimproc.vim"
-"@utility A utility for fast structured markup coding
-Bundle "rstacruz/sparkup"
-
-"@utility: Vinarise is a hex editing tool for vim
-Bundle "Shougo/vinarise.vim"
-
-"@utility: Crazy good completion.
-"@image:'https://a248.e.akamai.net/camo.github.com/9fc2701fcb8b4a54ab9e0d0ff2902b11aadb825f/687474703a2f2f322e62702e626c6f6773706f742e636f6d2f5f63693279426e717a4a674d2f54443150546f6c6b5442492f41414141414141414144552f6b6e4a33656e69754857492f73313630302f6f6d6e695f636f6d706c6574652e706e67' 
-"Bundle "shougo/neocomplcache"
-" copletion for javascript
-Bundle "teramako/jscomplete-vim"
-Bundle "Shougo/neocomplete.vim"
-Bundle 'Shougo/neosnippet'
+" Completion
+Bundle "Valloric/YouCompleteMe"
+Bundle "Shougo/neosnippet"
 Bundle "honza/vim-snippets"
 
 
