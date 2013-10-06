@@ -84,8 +84,9 @@ Bundle "tpope/vim-unimpaired"
 
 Bundle "vim-scripts/camelcasemotion.git"
 Bundle "vim-scripts/matchit.zip.git"
-"@utility: 'ShowMarks shows marks in a file (added with 'X where x is any
-"char) '
+
+Bundle "beloglazov/vim-online-thesaurus"
+
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
