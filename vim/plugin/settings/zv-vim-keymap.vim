@@ -5,22 +5,31 @@ xnoremap p pgvy
 " FIXME: will not properly repeat when you use a dot (tie into repeat.vim)
 nnoremap ,ow "_diwhp
 
-" y copies line 
+" y copies line
 nnoremap Y y$
 
 " Faster substitute.
 nnoremap ,S :%s//g<left><left>
+vmap ,s :s//g<left><left>
+
+nmap <Space> <C-d>
+nmap <BS> <C-u>
 
 " Re hard wrap paragraph.
 nnoremap ,qw gqip
 
 nnoremap ,sm :set modifiable<CR>
 
-" Reselect text ater indent/unindent.
+" Reselect text after indent/unindent.
 vnoremap < <gv
 vnoremap > >gv
 
-" Surround with ", ', (), [], {} and #{} by simply ,CHARACTER 
+" mnemonic -- 'lose lines'
+" This gets rid of all those inexplictable double newlines that keep appearing
+" all over my scripts.
+nnoremap ,ll :%s#^\n^\n#\r#g<CR>
+
+" Surround with ", ', (), [], {} and #{} by simply ,CHARACTER
 """"""""""""""""""""""""""""""""""""""""""""""""""
 map ,# ysiw#
 vmap ,# c#{<C-R>"}<ESC>
@@ -40,9 +49,9 @@ map ,} ysiw}
 map ,{ ysiw{
 vmap ,} c{ <C-R>" }<ESC>
 vmap ,{ c{<C-R>"}<ESC>
-" 
+"
 
-" give paste a chance (don't overwrite your register with whats pasted) 
+" give paste a chance (don't overwrite your register with whats pasted)
 function! RestoreRegister()
   let @" = s:restore_reg
   return ''
@@ -59,12 +68,6 @@ vnoremap <silent> <expr> P <sid>Repl()
 " toggle your qfix
 nmap <silent> ,qc :cclose<CR>
 nmap <silent> ,qo :copen<CR>
-
-" find your file in the nerdtree 
-nnoremap <silent> <C-\> :NERDTreeFind<CR>
-
-" grep in a git repoz :)
-nnoremap ,gg :GitGrep ""<left>
 
 " use ,F to jump to tag in a vertical split
 nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
@@ -84,18 +87,15 @@ nnoremap <silent> <C-l> <C-w>l
 nnoremap <silent> <C-k> <C-w>k
 nnoremap <silent> <C-j> <C-w>j
 
-" Zoom in and out of current window with ,gz
-map <silent> ,gz <C-w>o
-
-" Create window splits easier. 
+" Create window splits easier.
 nnoremap <silent> vv <C-w>v
 nnoremap <silent> ss <C-w>s
 
 " Resize windows with arrow keys
-nnoremap <C-Up>        10<C-w>+ 
+nnoremap <C-Up>        10<C-w>+
 nnoremap <C-Down>      10<C-w>-
-nnoremap <C-Left>      10<C-w>< 
-nnoremap <C-Right>     10<C-w>> 
+nnoremap <C-Left>      10<C-w><
+nnoremap <C-Right>     10<C-w>>
 
 " copy current filename into system clipboard - mnemonic: (c)urrent(f)ilename
 " this is helpful to paste someone the path you're looking at
@@ -123,8 +123,13 @@ nmap <silent> ,rs yy:<C-f>p<C-c><CR>
 nmap ,a :Tabularize /
 vmap ,a :Tabularize /
 
-" turn {\n} into {} 
+
+" turn {\n} into {}
 nmap sj :SplitjoinSplit<cr>
 
 "turn {} into { " }
 nmap sk :SplitjoinJoin<cr>
+
+
+" Format JSON
+nmap <Leader>fjs !python -m json.tool<CR>
