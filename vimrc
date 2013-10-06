@@ -8,27 +8,31 @@ filetype plugin indent on
 
 " ================ General Config ====================
 
-set number                       " Line numbers are good:
-set ruler " but where you are is better
+set number                     " Line numbers are good:
+set ruler                      " but where you are is better
 set backspace=indent,eol,start " Allow backspace in insert mode
 set history=1000               " Store lots of :cmdline history
-set showcmd                      " Show incomplete cmds down the bottom
+set showcmd                    " Show incomplete cmds down the bottom
 set shortmess=aIoO             " Show short messages, no intro.
-set showmode                     " Show current mode down the bottom
-set directory-=.                 " I don't want my swap files in `cwd`!
+set showmode                   " Show current mode down the bottom
 set gcr=a:blinkon0             " Disable cursor blink
-set visualbell                   " No sounds
-set autoread                     " Reload files changed outside vim
-set hidden                       " Hidden Buffers
+set visualbell                 " No sounds
+set directory-=.               " No .swp/swo etc. in `cwd`
+set autoread                   " Reload files changed outside vim
+set hidden                     " Hidden Buffers
 set encoding=utf8              " Yes, really
 set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
-set clipboard=unnamed          " yank and paste with the system clipboard where normal systems don't do this
 
-set list                                                     " show trailing whitespace
+set list                       " show trailing whitespace
+" thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
 
+" I enjoy the use of comma as my leader
+let mapleader=","
 
+" check my spelling
+set spelllang=en_us
 
 " Sets light/dark background
 let color_scheme='solarized_dark'
@@ -47,9 +51,13 @@ set ignorecase       "Ignore Case
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
-
-silent !mkdir ~/.vim/backups > /dev/null 2>&1
-set undodir=~/.vim/backups
+" silent !mkdir ~/.vim/backups > /dev/null 2>&1
+" set undodir=~/.vim/backups
+"
+" While it is nice to have this stuff available across boots, tmpfs is a
+" better place for this sort of data on a machine with degrading writes.
+silent !mkdir /tmp/.backups > /dev/null 2>&1
+set undodir=/tmp/.backups
 set undofile
 
 " ==================  Ctags  ========================
@@ -75,6 +83,30 @@ set foldnestmax=3       "deepest fold is 3 levels
 set nofoldenable        "dont fold by default
 
 " ================ Completion =======================
+
+" Display candidate supplement.
+set nowildmenu
+set wildmode=longest,list,full
+set wildignore+=*vim/backups*
+set wildignore+=*sass-cache*
+set wildignore+=*.beam
+set wildignore+=vendor/rails/**
+set wildignore+=vendor/cache/**
+set wildignore+=*.gem
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=*.beam
+set wildignore+=*.aux,*.out,*.toc
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg
+set wildignore+=*.luac
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest
+set wildignore+=*.pyc
+set wildignore+=*.spl
+set wildignore+=*~,#*#,*.sw?,%*,*=
+
+" Can supplement a tag in a command-line.
+set wildoptions=tagfile
+
 
 " ================ Scrolling ========================
 

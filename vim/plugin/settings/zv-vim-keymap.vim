@@ -1,6 +1,4 @@
-let mapleader=","
-
-" stop the visual paste insanity 
+" stop the visual paste insanity
 xnoremap p pgvy
 
 " ,ow = 'overwrite word', replace a word with what's in the yank buffer
