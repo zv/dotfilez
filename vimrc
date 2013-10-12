@@ -91,7 +91,7 @@ set nofoldenable        "dont fold by default
 " ================ Completion =======================
 
 " Display candidate supplement.
-set nowildmenu
+set wildmenu
 set wildmode=longest,list,full
 set wildignore+=*vim/backups*
 set wildignore+=*sass-cache*

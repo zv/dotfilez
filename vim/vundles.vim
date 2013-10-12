@@ -49,7 +49,9 @@ Bundle "itspriddle/vim-jquery.git"
 
 " Completion
 Bundle "Valloric/YouCompleteMe"
-Bundle "Shougo/neosnippet"
+"Bundle "Shougo/neocomplete"
+"Bundle "Shougo/neocomplcache"
+"Bundle "Shougo/neosnippet"
 Bundle "honza/vim-snippets"
 
 " Filename completion
