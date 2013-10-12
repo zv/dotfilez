@@ -39,7 +39,7 @@ set spelllang=en_us
 " 'desert' or 'default' give what you'd expect, 'solarized_dark' and
 " 'solarized_light' are special codes for setting the colorscheme and
 " background.
-let color_scheme='solarized_light'
+let color_scheme='solarized_dark'
 " Don't need this w/ solarized, but useful to set sometimes with other params.
 "set background=dark
 
