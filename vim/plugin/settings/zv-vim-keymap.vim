@@ -12,12 +12,18 @@ nnoremap Y y$
 nnoremap ,S :%s//g<left><left>
 vmap ,s :s//g<left><left>
 
+" Space to move a half page down and backspace to reverse
 nmap <Space> <C-d>
 nmap <BS> <C-u>
+
+
+"git grep the current word using K (mnemonic Kurrent)
+nnoremap <silent> K :Ag <cword><CR>
 
 " Re hard wrap paragraph.
 nnoremap ,qw gqip
 
+" Set ourselves as modifiable
 nnoremap ,sm :set modifiable<CR>
 
 " Reselect text after indent/unindent.
