@@ -57,6 +57,9 @@ vmap ,} c{ <C-R>" }<ESC>
 vmap ,{ c{<C-R>"}<ESC>
 "
 
+" Ctrl-l in insert mode for hashrocket
+imap <C-l> =>
+
 " give paste a chance (don't overwrite your register with whats pasted)
 function! RestoreRegister()
   let @" = s:restore_reg
