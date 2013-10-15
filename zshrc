@@ -134,8 +134,13 @@ alias mxt='mix test'
 # Switch Users, maining RTP.
 alias sudovim='sudo vim -c "set runtimepath+=/home/zv/.vim" -u /home/zv/.vimrc'
 
-# so fuckin sick of this
+# so sick of this
 alias mongostart='sudo service mongod start'
+
+# rlwrap node
+
+alias node="env NODE_NO_READLINE=1 rlwrap node"
+
 
 ############################################
 #   Completions
