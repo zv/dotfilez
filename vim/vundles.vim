@@ -32,7 +32,6 @@ Bundle "vim-ruby/vim-ruby.git"
 " javascript; things like javascript.
 Bundle 'jelera/vim-javascript-syntax'
 Bundle "pangloss/vim-javascript"
-Bundle "rmanalan/jshint.vim"
 Bundle "marijnh/tern_for_vim"
 Bundle "nono/vim-handlebars"
 Bundle "kchmck/vim-coffee-script"
