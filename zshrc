@@ -107,6 +107,7 @@ alias _bex='bundle exec'
 alias history='fc -l 1'
 
 # List direcory contents
+alias ls='ls -la --color=auto'
 alias lsa='ls -lah'
 alias l='ls -la'
 
@@ -355,7 +356,7 @@ done
 # don't care much for these, but here they are
 # main cursor bracket pattern root
 # specified as such (main brackets pattern cursor
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_HIGHLIGHTERS=()
 
 ### Closing words ###########################
 
@@ -364,3 +365,5 @@ export PATH="$HOME/bin:/usr/local/bin:$PATH"
 #export PATH=":$PATH:$HOME/go/bin"
 #export GOPATH=$HOME/Development/go
 #export GOROOT=$HOME/go
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
