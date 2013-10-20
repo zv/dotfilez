@@ -2,8 +2,8 @@
 # Load resources
 # xrdb -merge .Xresources
 # Set the background color
-xsetroot -solid white 
- 
+xsetroot -solid white
+
 # remap capslock
 xmodmap /home/zv/.xmodmaprc &
 

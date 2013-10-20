@@ -1,5 +1,5 @@
 Config {
-    font         = "xft:Monospace:pixelsize=14,-*-*-*-r-*-*-16-*-*-*-*-*-*-*",
+    font         = "xft:Terminus:pixelsize=16,-*-*-*-r-*-*-16-*-*-*-*-*-*-*",
     bgColor      = "#1c1c1c",
     fgColor      = "#ffffff",
     position     = TopSize C 100 26,
