@@ -13,6 +13,7 @@ install:
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	ln -s $(HOME)/.Xdefaults $(HOME)/.Xresources
 	ln -s $(HOME)/.Xsession $(HOME)/.xinit
+	ln -s $(HOME)/.Xsession $(HOME)/.xinitrc
 	# Run Vundle from the command line
 	vim +BundleInstall +qall
 
