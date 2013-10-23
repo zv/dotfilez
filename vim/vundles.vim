@@ -50,8 +50,9 @@ Bundle "dsawardekar/ember.vim"
 "@EndType
 
 " Completion
-Bundle "Valloric/YouCompleteMe"
-"Bundle "Shougo/neocomplete"
+"Bundle "Valloric/YouCompleteMe"
+Bundle "Shougo/neosnippet"
+Bundle "Shougo/neocomplete"
 "Bundle "Shougo/neocomplcache"
 "Bundle "Shougo/neosnippet"
 Bundle "honza/vim-snippets"
