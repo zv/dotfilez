@@ -98,7 +98,7 @@ nnoremap <silent> <C-j> <C-w>j
 
 " Create window splits easier.
 nnoremap <silent> vv <C-w>v
-nnoremap <silent> ss <C-w>s
+" nnoremap <silent> ss <C-w>s
 
 " Resize windows with arrow keys
 nnoremap <C-Up>        10<C-w>+
@@ -131,13 +131,6 @@ nmap <silent> ,rs yy:<C-f>p<C-c><CR>
 " Hit leader a then type a character you want to align by
 nmap ,a :Tabularize /
 vmap ,a :Tabularize /
-
-
-" turn {\n} into {}
-nmap sj :SplitjoinSplit<cr>
-
-"turn {} into { " }
-nmap sk :SplitjoinJoin<cr>
 
 
 " Format JSON
