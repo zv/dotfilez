@@ -1,16 +1,15 @@
-urxvt*font:       xft:Monospace:size=12:antialias=true
-urxvt*boldFont:     xft:Monospace:size=12:antialias=true
-urxvt*italicFont:   xft:Monospace:size=12:antialias=true
-urxvt*bolditalicFont: xft:Monospace:size=12:antialias=true
+urxvt*font:                xft:Inconsolata:size=14
+urxvt*boldFont:            xft:Inconsolata:size=14:antialias=true
+urxvt*italicFont:          xft:Inconsolata:size=14:antialias=true
+urxvt*bolditalicFont:      xft:Inconsolata:size=14:antialias=true
 
-urxvt*scrollBar:   false
-urxvt*saveLines: 20000
-urxvt*internalBorder: 6
-urxvt*scrollTtyOutput: false
-urxvt*scrollWithBuffer: false
-urxvt*scrollTtyKeypress: true
-
-urxvt.cursorBlink:       true
+urxvt*scrollBar:           false
+urxvt*saveLines:           20000
+urxvt*internalBorder:      6
+urxvt*scrollTtyOutput:     false
+urxvt*scrollWithBuffer:    false
+urxvt*scrollTtyKeypress:   true
+urxvt.cursorBlink:         true
 
 #define S_yellow        #b58900
 #define S_orange        #cb4b16
@@ -21,6 +20,7 @@ urxvt.cursorBlink:       true
 #define S_cyan          #2aa198
 #define S_green         #859900
 
+! defines solarized light/dark
 #define DARK true
 #ifdef DARK
 ! Dark
@@ -69,3 +69,21 @@ urxvt.color12:                 S_base0
 urxvt.color13:                 S_violet
 urxvt.color14:                 S_base1
 urxvt.color15:                 S_base3
+
+! Enables tabs in URXVT (nice for tmux sessions)
+#define TABS true
+! Shift+ ↑: names a tab
+! Shift+ ↓ new tab
+! Shift+ ← go to left tab
+! Shift+ → go to right tab
+! Ctrl+ ← move tab to the left
+! Ctrl+ → move tab to the right
+! Ctrl+D: close tab
+#ifdef TABS
+  URxvt.perl-ext-common:  default,tabbed
+  URxvt.tabbed.tabbar-fg: 10
+  URxvt.tabbed.tabbar-bg: 0
+  URxvt.tabbed.tab-fg:    15
+  URxvt.tabbed.tab-bg:    0
+#endif
+

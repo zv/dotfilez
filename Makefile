@@ -1,7 +1,7 @@
 DOTFILES = aprc gemrc gitconfig erlang pryrc \
 	  zshrc xmobarrc xsession vimrc pentadactylrc \
 	  Xdefaults xmodmaprc gdbinit tmux.conf xpdfrc \
-	  iex ctags editrc gitignore
+	  iex ctags editrc gitignore inputrc
 
 DOTDIRS = vim xmonad zsh pentadactyl tmux
 
@@ -13,6 +13,7 @@ install:
 	$(foreach directory, $(DOTDIRS), ln -sf $(PWD)/$(directory) $(HOME)/.$(directory);)
 	ln -s $(HOME)/.Xdefaults $(HOME)/.Xresources
 	ln -s $(HOME)/.Xsession $(HOME)/.xinit
+	ln -s $(HOME)/.Xsession $(HOME)/.xinitrc
 	# Run Vundle from the command line
 	vim +BundleInstall +qall
 

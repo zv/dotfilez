@@ -20,7 +20,7 @@ if has("gui_running")
   end
 
   set t_Co=256
-  set guifont=Monospace\ 11
+  set guifont=Terminus\ 14
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
   " set guioptions=aegitTm
