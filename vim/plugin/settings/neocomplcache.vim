@@ -66,5 +66,4 @@ if exists(":NeoComplCacheEnable")
   " XML?
   " autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
   let g:neocomplcache_omni_patterns['xml'] = ''
-
 endif

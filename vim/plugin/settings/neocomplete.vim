@@ -1,12 +1,12 @@
 if exists(":NeoCompleteEnable")
   let g:acp_enableAtStartup = 0
-  " Use neocomplete.  
+  " Use neocomplete.
   let g:neocomplete#enable_at_startup = 1
   " Use smartcase.
   let g:neocomplete#enable_smart_case = 1
 
   " Set minimum syntax keyword length.
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
+  let g:neocomplete#sources#syntax#min_keyword_length = 2
 
   let g:neocomplete#auto_completion_start_length = 2
 
@@ -47,6 +47,8 @@ if exists(":NeoCompleteEnable")
   let g:neocomplete#delimiter_patterns.cpp = ['::']
   let g:neocomplete#delimiter_patterns.ruby = ['.', '::']
 
+  " Cache when buffer is opened
+  autocmd BufReadPost,BufEnter,BufWritePost :neocompleteCachingBuffer <buffer>
 
   " Plugin key-mappings.
   inoremap <expr><C-u>     neocomplete#undo_completion()
@@ -77,12 +79,13 @@ if exists(":NeoCompleteEnable")
   autocmd FileType erlang setlocal omnifunc=erlangcomplete#Complete
   autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
-  " if !exists('g:neocomplete#force_omni_input_patterns')
-  "   let g:neocomplete#force_omni_input_patterns = {}
-  " endif
+  " Enable heavy omni completion.
+  if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+  endif
+  let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 
   " let g:neocomplete#force_overwrite_completefunc = 1
-  " let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
   " let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
   " let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
   " let g:neocomplete#force_omni_input_patterns.objc = '[^.[:digit:] *\t]\%(\.\|->\)\w*'

@@ -25,6 +25,7 @@ Bundle "jnwhiteh/vim-golang"
 Bundle "jimenezrick/vimerl"
 Bundle "elixir-lang/vim-elixir"
 Bundle "mattonrails/vim-mix"
+
 " rubes
 " Disabled for the time being
 "Bundle "tpope/vim-rails.git"
@@ -36,6 +37,8 @@ Bundle "marijnh/tern_for_vim"
 Bundle "nono/vim-handlebars"
 Bundle "kchmck/vim-coffee-script"
 Bundle "itspriddle/vim-jquery.git"
+Bundle "dsawardekar/ember.vim"
+
 " other
 " These below have been disabled for performance
 "Bundle "uarun/vim-protobuf"

@@ -6,5 +6,7 @@ let g:agprg="/usr/local/bin/ag --column"
 "git grep the current word using K (mnemonic Kurrent)
 nnoremap <silent> K :Ag <cword><CR>
 
-" old map for grepping
-nnoremap ,gg :Ag ""<left>
+" git grep
+nnoremap ,gg :Ggrep ""<left>
+" ag
+nnoremap ,gr Ag ""<left>
