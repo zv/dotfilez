@@ -46,11 +46,27 @@ Bundle "itspriddle/vim-jquery.git"
 "Bundle "adimit/prolog.vim"
 "@EndType
 
+
+" So here's what going on here. YouCompleteMe requires newer features in VIM,
+" not (at this point) readily available in most package managers. As a
+" consequence, when using this on systems that I only spend brief amounts of
+" time on, it is not worth it to compile and build NPM. On the other hand,
+" neocomplcache is still pretty good but can get very slow  (still good
+" autocompletion). Even more confusing is the third dark knight (Neocomplete)
+" which is arguably the best of all of the but requires some bleeding edge
+" stuff that requires you compile your own build on practically every
+" distribution (save OSX, again, go figures).
+"
+" Neo* plays best with other Neo* software. YCM plays best with ultisnips.
+
 " Completion
-Bundle "Valloric/YouCompleteMe"
-"Bundle "Shougo/neocomplete"
+"Bundle "Valloric/YouCompleteMe"
+Bundle "Shougo/neocomplete"
 "Bundle "Shougo/neocomplcache"
-"Bundle "Shougo/neosnippet"
+
+" Skippets
+Bundle "Shougo/neosnippet"
+"Bundle "MarcWeber/ultisnips"
 Bundle "honza/vim-snippets"
 
 " Filename completion
