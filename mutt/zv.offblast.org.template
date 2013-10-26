@@ -1,0 +1,12 @@
+# vim: ft=muttrc:
+set from      = "zv@offblast.org"
+set mbox      = "+zv.offblast.org/archive"
+set postponed = "+zv.offblast.org/drafts"
+unset record
+
+# smtp config
+set smtp_url  = "smtps://zv@smtp.offblast.org"
+
+# this is replaced and copied somewhere w/ this swapped out
+set smtp_pass = $ZV_OFFBLAST_ORG_PASSWORD
+source ~/.mutt/zv.offblast.org.private.muttrc
