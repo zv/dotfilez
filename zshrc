@@ -214,7 +214,7 @@ alias tl="tmux list-sessions"
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 # Switch Users, maining RTP.
-alias sudovim='sudo vim -c "set runtimepath+=/home/zv/.vim" -u /home/zv/.vimrc'
+alias sudovim='sudo vim -c "set runtimepath+=$HOME/.vim" -u $HOME/.vimrc'
 alias mongostart='sudo service mongod start'    # so sick of this
 alias node="env NODE_NO_READLINE=1 rlwrap node" # rlwrap node
 
