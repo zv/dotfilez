@@ -1,22 +1,27 @@
 if exists(":NeoCompleteEnable")
+  " Don't care much for the scratch buffer.
+  set completeopt=menuone
+
   let g:acp_enableAtStartup = 0
   " Use neocomplete.
   let g:neocomplete#enable_at_startup = 1
-  " Use smartcase.
-  let g:neocomplete#enable_smart_case = 1
+
+  " 100 is the default and 100 is ridiculous.
+  let g:neocomplete#max_list = 10
+
+  " Use smartcase. (by default will infercase)
+  " let g:neocomplete#enable_smart_case = 1
 
   " Set minimum syntax keyword length.
   let g:neocomplete#sources#syntax#min_keyword_length = 2
 
-  let g:neocomplete#auto_completion_start_length = 2
+  let g:neocomplete#auto_completion_start_length = 3
 
   let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
   let g:neocomplete#sources#buffer#disabled_pattern = '\.log'
 
-  " Use smartcase.
-  let g:neocomplete#enable_smart_case       = 1
-  " Use fuzzy completion.
-  let g:neocomplete#enable_fuzzy_completion = 1
+  " Use fuzzy completion. (slow)
+  " let g:neocomplete#enable_fuzzy_completion = 1
 
   " Snagged from yasuoza/dotfiles
   let g:neocomplcache_dictionary_filetype_lists = {
@@ -71,19 +76,21 @@ if exists(":NeoCompleteEnable")
   inoremap <expr><C-e>  neocomplete#cancel_popup()
 
   " Enable omni completion.
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd Filetype c,cpp  setlocal omnifunc=omni#cpp#complete#Main
-  autocmd FileType erlang setlocal omnifunc=erlangcomplete#Complete
-  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType javascript    setlocal omnifunc=tern#Complete
+  autocmd FileType coffee        setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType ruby          setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType erlang        setlocal omnifunc=erlangcomplete#Complete
+  autocmd FileType c             setlocal omnifunc=ccomplete#Complete
 
   " Enable heavy omni completion.
   if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
   endif
-  let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+  " Caveat Emptor -- This omnipattern is hyperslow!!!!
+  "let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 
   " let g:neocomplete#force_overwrite_completefunc = 1
   " let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
