@@ -13,9 +13,6 @@ if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
 
-" Enable preview window
-let g:neosnippet#enable_preview = 1
-
 " Enable snipMate compatibility feature.
 let g:neosnippet#enable_snipmate_compatibility = 1
 
