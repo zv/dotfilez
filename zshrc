@@ -634,7 +634,7 @@ source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 eval `dircolors ~/.zsh/LS_COLORS`
 
 #############################################
-### But wait, theres more ##################
+### Utilities et al.
 #############################################
 
 # ZSHENV stuff
@@ -699,4 +699,9 @@ for home_bin in ~/bin; do
 done
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-export PATH=$PATH:/usr/local/plan9/bin
+export PATH=$PATH:/usr/local/plan9/bin # Plan9 binaries
+
+# Load in our erlang man pages (if we have them)
+if [ -d "/usr/lib64/erlang/man/" ]; then
+    export MANPATH="$(manpath):/usr/lib64/erlang/man"
+fi
