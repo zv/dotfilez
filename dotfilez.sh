@@ -4,7 +4,7 @@
 # I make absolutely zero promises on how this will work with OSX coreutils
 # or any other OS toolchain currently experiencing a time warp to late '80s
 
-if [ "$1" == "interactive" ]; then
+if [ "$1" == "install" ]; then
     git ls-tree --name-only HEAD | \
         grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' | \
         xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
