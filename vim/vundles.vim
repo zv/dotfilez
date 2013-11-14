@@ -51,10 +51,9 @@ Bundle "dsawardekar/ember.vim"
 
 " Completion
 "Bundle "Valloric/YouCompleteMe"
-Bundle "Shougo/neosnippet"
 Bundle "Shougo/neocomplete"
 "Bundle "Shougo/neocomplcache"
-"Bundle "Shougo/neosnippet"
+Bundle "Shougo/neosnippet"
 Bundle "honza/vim-snippets"
 
 " Filename completion
@@ -115,4 +114,4 @@ function! WhatsThatPluginAgain()
 endfunction
 
 " ,fb for find bundle
-" nnoremap ,fb :call WhatsThatPluginAgain()<cr>
+nnoremap ,fb :call WhatsThatPluginAgain()<cr>
