@@ -55,7 +55,7 @@ set viminfo='100,f1  "Save up to 100 marks, enable capital marks
 set smartcase        "Smart Case Search
 set ignorecase       "Ignore Case
 
-" ================ Persistent Undo ==================
+" ================ Swap & Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
 " silent !mkdir ~/.vim/backups > /dev/null 2>&1
 " set undodir=~/.vim/backups
@@ -63,8 +63,12 @@ set ignorecase       "Ignore Case
 " While it is nice to have this stuff available across boots, tmpfs is a
 " better place for this sort of data on a machine with degrading writes.
 silent !mkdir /tmp/.backups > /dev/null 2>&1
-set undodir=/tmp/.backups
+silent !mkdir /tmp/.undodir > /dev/null 2>&1
+set undodir=/tmp/.undodir
 set undofile
+
+set backupdir=/tmp/.backups
+set directory=/tmp/.backups
 
 " ==================  Ctags  ========================
 set tags=./tags;$HOME
