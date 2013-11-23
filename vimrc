@@ -8,6 +8,7 @@ filetype plugin indent on
 
 " ================ General Config ====================
 
+set shell=zsh
 set number                     " Line numbers are good:
 set ruler                      " but where you are is better
 set backspace=indent,eol,start " Allow backspace in insert mode
@@ -23,6 +24,8 @@ set encoding=utf8              " Yes, really
 set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
 set list                       " show trailing whitespace
+set relativenumber
+
 " thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
 
