@@ -17,13 +17,11 @@ set shortmess=aIoO             " Show short messages, no intro.
 set showmode                   " Show current mode down the bottom
 set gcr=a:blinkon0             " Disable cursor blink
 set visualbell                 " No sounds
-set directory-=.               " No .swp/swo etc. in `cwd`
 set autoread                   " Reload files changed outside vim
 set hidden                     " Hidden Buffers
 set encoding=utf8              " Yes, really
 set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
-
 set list                       " show trailing whitespace
 " thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
@@ -55,7 +53,7 @@ set viminfo='100,f1  "Save up to 100 marks, enable capital marks
 set smartcase        "Smart Case Search
 set ignorecase       "Ignore Case
 
-" ================ Swap & Persistent Undo ==================
+" ================ Vim Files      ==================
 " Keep undo history across sessions, by storing in file.
 " silent !mkdir ~/.vim/backups > /dev/null 2>&1
 " set undodir=~/.vim/backups
@@ -66,7 +64,6 @@ silent !mkdir /tmp/.backups > /dev/null 2>&1
 silent !mkdir /tmp/.undodir > /dev/null 2>&1
 set undodir=/tmp/.undodir
 set undofile
-
 set backupdir=/tmp/.backups
 set directory=/tmp/.backups
 
@@ -74,7 +71,6 @@ set directory=/tmp/.backups
 set tags=./tags;$HOME
 
 " ================ Indentation ======================
-
 set softtabstop=2 " insert mode tab and backspace use 2 spaces
 set shiftwidth=2
 set tabstop=8     " actual tabs occupy 8 characters
@@ -89,7 +85,6 @@ set cindent       " start c lang indent mode
 " thanks lang-guides!
 if has("autocmd")
   autocmd FileType apache     setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType aspvbs     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cs         setlocal sw=4 sts=4 ts=4 et
@@ -98,20 +93,14 @@ if has("autocmd")
   autocmd FileType diff       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
   autocmd FileType html       setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType javascript setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType php        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType haml       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType sh         setlocal sw=4 sts=4 ts=4 et
   autocmd FileType sql        setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType vb         setlocal sw=4 sts=4 ts=4 et
   autocmd FileType vim        setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType wsh        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType xhtml      setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType xml        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType yaml       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType zsh        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType scala      setlocal sw=2 sts=2 ts=2 et
@@ -126,29 +115,20 @@ set nofoldenable        "dont fold by default
 
 " ================ Completion =======================
 
+" set complete=.,w,b,u,t,i " This should be default
+set completeopt=menu,longest,preview
+
 " Display candidate supplement.
 set wildmenu
-set wildmode=longest,list,full
-set wildignore+=*vim/backups*
-set wildignore+=*sass-cache*
-set wildignore+=*.beam
-set wildignore+=vendor/rails/**
-set wildignore+=vendor/cache/**
-set wildignore+=*.gem
-set wildignore+=log/**
-set wildignore+=tmp/**
-set wildignore+=*.beam
-set wildignore+=*.aux,*.out,*.toc
-set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg
-set wildignore+=*.luac
-set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest
-set wildignore+=*.pyc
-set wildignore+=*.spl
-set wildignore+=*~,#*#,*.sw?,%*,*=
+set wildmode=longest:list,full
+set wildignore+=*.o,*.obj,.git,*.a,*.so,*.lo,*.class,*.beam,deps/*,Mnesia.*,*.hi
+set wildignore+=vendor/*,*vim/backups*,*sass-cache*,*.beam,vendor/rails/**,
+set wildignore+=vendor/cache/**,*.gem,log/**,tmp/**,*.beam,*.aux,*.out,*.toc,*.jpg
+set wildignore+=*.bmp,*.gif,*.png,*.jpeg,*.luac,*.o,*.obj,*.exe,*.dll,*.manifest
+set wildignore+=*.pyc,*.spl,*~,#*#,*.sw?,%*,*=
 
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
-
 
 " ================ Scrolling ========================
 

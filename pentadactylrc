@@ -1,3 +1,4 @@
+
 map -b j 5j
 map -b k 5k
 
@@ -5,11 +6,10 @@ map -b J gT
 map -b K gt
 
 map -b x d
-map -b d <scroll-page-down> 
+map -b d <scroll-page-down>
 map -b u <C-b>
 
 map -b a <C-jk>
-
 
 bmark -keyword gssl https://encrypted.google.com/search?sclient=psy&hl=en&safe=off&site=webhp&source=hp&q=%s&pbx=1&oq=&aq=&aqi=&aql=&gs_sm=&gs_upl=
 set defsearch=gssl

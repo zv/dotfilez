@@ -3,20 +3,8 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-Bundle "gmarik/vundle"
+Bundle 'gmarik/vundle'
 Bundle "altercation/vim-colors-solarized"
-
-"@BeginType: TextObjects
-Bundle "coderifous/textobj-word-column.vim"
-Bundle "kana/vim-textobj-datetime"
-Bundle "kana/vim-textobj-entire"
-Bundle "kana/vim-textobj-function"
-Bundle "kana/vim-textobj-line"
-Bundle "austintaylor/vim-indentobject"
-Bundle "kana/vim-textobj-user"
-Bundle "lucapette/vim-textobj-underscore"
-Bundle "vim-scripts/argtextobj.vim"
-"@EndType
 
 "@BeginType: Languages and Scripts
 " golang
@@ -25,10 +13,7 @@ Bundle "jnwhiteh/vim-golang"
 Bundle "jimenezrick/vimerl"
 Bundle "elixir-lang/vim-elixir"
 Bundle "mattonrails/vim-mix"
-
 " rubes
-" Disabled for the time being
-"Bundle "tpope/vim-rails.git"
 Bundle "vim-ruby/vim-ruby.git"
 " javascript; things like javascript.
 Bundle 'jelera/vim-javascript-syntax'
@@ -37,17 +22,6 @@ Bundle "marijnh/tern_for_vim"
 Bundle "nono/vim-handlebars"
 Bundle "kchmck/vim-coffee-script"
 Bundle "itspriddle/vim-jquery.git"
-Bundle "dsawardekar/ember.vim"
-
-" other
-" These below have been disabled for performance
-"Bundle "uarun/vim-protobuf"
-"Bundle "tpope/vim-liquid.git"
-"Bundle "groenewege/vim-less.git"
-"Bundle "claco/jasmine.vim"
-"Bundle "vim-scripts/asmx86"
-"Bundle "adimit/prolog.vim"
-"@EndType
 
 " Completion
 "Bundle "Valloric/YouCompleteMe"

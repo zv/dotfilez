@@ -636,7 +636,6 @@ eval `dircolors ~/.zsh/LS_COLORS`
 #############################################
 ### Utilities et al.
 #############################################
-
 # ZSHENV stuff
 export EDITOR='vim' # didn't see that one coming.
 export VISUAL'vim'
@@ -703,5 +702,5 @@ export PATH=$PATH:/usr/local/plan9/bin # Plan9 binaries
 
 # Load in our erlang man pages (if we have them)
 if [ -d "/usr/lib64/erlang/man/" ]; then
-    export MANPATH="$(manpath):/usr/lib64/erlang/man"
+    # export MANPATH="$(manpath):/usr/lib64/erlang/man"
 fi
