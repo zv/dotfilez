@@ -11,6 +11,7 @@ Bundle "altercation/vim-colors-solarized"
 Bundle "jnwhiteh/vim-golang"
 " erlang & elixir
 Bundle "jimenezrick/vimerl"
+
 Bundle "elixir-lang/vim-elixir"
 Bundle "mattonrails/vim-mix"
 " rubes
@@ -18,7 +19,6 @@ Bundle "vim-ruby/vim-ruby.git"
 " javascript; things like javascript.
 Bundle 'jelera/vim-javascript-syntax'
 Bundle "pangloss/vim-javascript"
-" Bundle "marijnh/tern_for_vim"
 Bundle "nono/vim-handlebars"
 Bundle "digitaltoad/vim-jade"
 Bundle "kchmck/vim-coffee-script"
@@ -28,9 +28,6 @@ Bundle "itspriddle/vim-jquery.git"
 " At this point I've given up on all autocompletion and gone back to Wildmenu.
 " Good riddance (Although I keep config files that will automatically work
 " with YCM & NeoComplete & Neocomplcache)
-"Bundle "Valloric/YouCompleteMe"
-"Bundle "Shougo/neocomplete"
-"Bundle "Shougo/neocomplcache"
 "Bundle "Shougo/neosnippet"
 "Bundle "honza/vim-snippets"
 
@@ -52,8 +49,6 @@ Bundle "skwp/greplace.vim"
 Bundle "skwp/vim-easymotion"
 Bundle "justinmk/vim-sneak"
 Bundle "bling/vim-airline"
-Bundle "terryma/vim-multiple-cursors"
-Bundle "mattn/emmet-vim"
 
 " Git tools (Fugitive is later)
 Bundle "gregsexton/gitv"
