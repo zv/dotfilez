@@ -58,7 +58,7 @@ vmap ,{ c{<C-R>"}<ESC>
 "
 
 " Ctrl-l in insert mode for hashrocket
-" imap <C-l> =>
+imap <C-l> =>
 
 " give paste a chance (don't overwrite your register with whats pasted)
 function! RestoreRegister()

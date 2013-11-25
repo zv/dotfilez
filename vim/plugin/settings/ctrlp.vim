@@ -12,7 +12,7 @@ let g:ctrlp_match_window = 'order:ttb,max:20'
 let g:ctrlp_by_filename = 1
 
 " See if we can replace CtrlP w/ CtrlPMixed
-"nnoremap ,p :CtrlPMixed<cr>
+nnoremap ,p :CtrlPMixed<cr>
 " Additional mapping for buffer search
 " nnoremap ,b :CtrlPBuffer<cr>
 " nnoremap ,m :CtrlPMRU<cr>
