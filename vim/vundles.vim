@@ -18,21 +18,17 @@ Bundle "vim-ruby/vim-ruby.git"
 " javascript; things like javascript.
 Bundle 'jelera/vim-javascript-syntax'
 Bundle "pangloss/vim-javascript"
-" Bundle "marijnh/tern_for_vim"
+Bundle "marijnh/tern_for_vim"
 Bundle "nono/vim-handlebars"
-Bundle "digitaltoad/vim-jade"
 Bundle "kchmck/vim-coffee-script"
 Bundle "itspriddle/vim-jquery.git"
 
 " Completion
-" At this point I've given up on all autocompletion and gone back to Wildmenu.
-" Good riddance (Although I keep config files that will automatically work
-" with YCM & NeoComplete & Neocomplcache)
 "Bundle "Valloric/YouCompleteMe"
-"Bundle "Shougo/neocomplete"
+Bundle "Shougo/neocomplete"
 "Bundle "Shougo/neocomplcache"
-"Bundle "Shougo/neosnippet"
-"Bundle "honza/vim-snippets"
+Bundle "Shougo/neosnippet"
+Bundle "honza/vim-snippets"
 
 " Filename completion
 Bundle "kien/ctrlp.vim"
@@ -40,20 +36,18 @@ Bundle "sgur/ctrlp-extensions.vim"
 
 " Tools
 Bundle "rking/ag.vim"
-
-"Bundle "godlygeek/tabular"
-Bundle 'junegunn/vim-easy-align'
-
+Bundle "AndrewRadev/splitjoin.vim"
+Bundle "godlygeek/tabular"
 Bundle "majutsushi/tagbar"
 Bundle "scrooloose/nerdtree"
 Bundle "scrooloose/syntastic"
 Bundle "sjl/gundo.vim"
 Bundle "skwp/greplace.vim"
 Bundle "skwp/vim-easymotion"
-Bundle "justinmk/vim-sneak"
 Bundle "bling/vim-airline"
 Bundle "terryma/vim-multiple-cursors"
 Bundle "mattn/emmet-vim"
+Bundle "justinmk/vim-sneak"
 
 " Git tools (Fugitive is later)
 Bundle "gregsexton/gitv"

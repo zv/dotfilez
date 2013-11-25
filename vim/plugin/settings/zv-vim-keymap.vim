@@ -1,13 +1,3 @@
-" This map actually cannot be disabled as it exists on all US keyboards.
-map <C-[> <Esc>
-
-
-"" Vim completion mapping
-inoremap <C-f> <C-x><C-f>
-inoremap <C-o> <C-x><C-o>
-inoremap <C-l> <C-x><C-l>
-"" End vim completion mapping
-
 " stop the visual paste insanity
 xnoremap p pgvy
 
@@ -139,7 +129,8 @@ nmap <silent> ,vr :so %<CR>
 nmap <silent> ,rs yy:<C-f>p<C-c><CR>
 
 " Hit leader a then type a character you want to align by
-vnoremap <silent> ,a :EasyAlign<Enter>
+nmap ,a :Tabularize /
+vmap ,a :Tabularize /
 
 
 " Format JSON
