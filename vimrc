@@ -1,4 +1,5 @@
 filetype on " long story.
+filetype off
 
 set nocompatible " rube would be proud
 
@@ -22,14 +23,17 @@ set hidden                     " Hidden Buffers
 set encoding=utf8              " Yes, really
 set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
+set list                       " show trailing whitespace
 set relativenumber
 
 " thanks florian fritz :)
-set list                       " show trailing whitespace
 set listchars=tab:▸\ ,trail:▫
 
 " I enjoy the use of comma as my leader
 let mapleader=","
+
+" check my spelling
+set spelllang=en_us
 
 " The terminal handles colors differently so we need to have a bit of unclean
 " logic in another file handle the loading based on if we're in a GUI or not.
@@ -113,9 +117,9 @@ set foldnestmax=3       "deepest fold is 3 levels
 set nofoldenable        "dont fold by default
 
 " ================ Completion =======================
+
 " set complete=.,w,b,u,t,i " This should be default
-" adding longest to completeopt permits for typing it out
-set completeopt=menu,preview
+set completeopt=menu,longest,preview
 
 " Display candidate supplement.
 set wildmenu
@@ -125,6 +129,7 @@ set wildignore+=vendor/*,*vim/backups*,*sass-cache*,*.beam,vendor/rails/**,
 set wildignore+=vendor/cache/**,*.gem,log/**,tmp/**,*.beam,*.aux,*.out,*.toc,*.jpg
 set wildignore+=*.bmp,*.gif,*.png,*.jpeg,*.luac,*.o,*.obj,*.exe,*.dll,*.manifest
 set wildignore+=*.pyc,*.spl,*~,#*#,*.sw?,%*,*=
+
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
 
