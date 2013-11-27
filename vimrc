@@ -1,8 +1,4 @@
-filetype on " long story.
-filetype off
-
 set nocompatible " rube would be proud
-
 syntax enable "turn on syntax highlighting
 filetype plugin indent on
 
@@ -23,7 +19,7 @@ set hidden                     " Hidden Buffers
 set encoding=utf8              " Yes, really
 set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
-
+set relativenumber
 set list                       " show trailing whitespace
 " thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
@@ -126,6 +122,20 @@ set nofoldenable        "dont fold by default
 
 " ================ Completion =======================
 
+" The default is ".,w,b,u,t,i", which means to scan:
+"    1. the current buffer
+"    2. buffers in other windows
+"    3. other loaded buffers
+"    4. unloaded buffers
+"    5. tags
+"    6. included files
+
+set complete=.,b,u,t,i
+" I want to only match the longest substring so I can type to complete.
+set completeopt=menu,longest,preview
+" Maximum is infinite entries, I am ok with just 25 completions.
+set pumheight=35
+
 " Display candidate supplement.
 set wildmenu
 set wildmode=longest,list,full
@@ -148,7 +158,6 @@ set wildignore+=*~,#*#,*.sw?,%*,*=
 
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
-
 
 " ================ Scrolling ========================
 

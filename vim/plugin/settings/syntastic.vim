@@ -5,7 +5,7 @@ let g:syntastic_auto_loc_list         = 2        " Only show errors when I ask
 let g:syntastic_disabled_filetypes    = ['html']
 let g:syntastic_cpp_check_header      = 1
 let g:syntastic_cpp_no_include_search = 1
-let g:syntastic_coffee_checkers       = ['coffee']
+" let g:syntastic_coffee_checkers       = ['coffee']
 
 if has('unix')
   let g:syntastic_error_symbol         = '★'

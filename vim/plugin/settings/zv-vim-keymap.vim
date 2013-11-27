@@ -17,8 +17,6 @@ nmap <Space> <C-d>
 nmap <BS> <C-u>
 
 
-"git grep the current word using K (mnemonic Kurrent)
-nnoremap <silent> K :Ag <cword><CR>
 
 " Re hard wrap paragraph.
 nnoremap ,qw gqip
@@ -56,9 +54,6 @@ map ,{ ysiw{
 vmap ,} c{ <C-R>" }<ESC>
 vmap ,{ c{<C-R>"}<ESC>
 "
-
-" Ctrl-l in insert mode for hashrocket
-imap <C-l> =>
 
 " give paste a chance (don't overwrite your register with whats pasted)
 function! RestoreRegister()

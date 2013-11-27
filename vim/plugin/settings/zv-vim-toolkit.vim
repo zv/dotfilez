@@ -1,4 +1,4 @@
-" Toolkit index 
+" Toolkit index
 " Change ruby hash syntax - :ChangeHashSyntax
 " Jump to tag in vertical split - ,F
 " Open Changed files - ,ocf

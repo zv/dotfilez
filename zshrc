@@ -700,8 +700,3 @@ done
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 export PATH=$PATH:/usr/local/plan9/bin # Plan9 binaries
-
-# Load in our erlang man pages (if we have them)
-if [ -d "/usr/lib64/erlang/man/" ]; then
-    export MANPATH="$(manpath):/usr/lib64/erlang/man"
-fi

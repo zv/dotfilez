@@ -33,7 +33,7 @@ Bundle "vim-ruby/vim-ruby.git"
 " javascript; things like javascript.
 Bundle 'jelera/vim-javascript-syntax'
 Bundle "pangloss/vim-javascript"
-Bundle "marijnh/tern_for_vim"
+" Bundle "marijnh/tern_for_vim"
 Bundle "nono/vim-handlebars"
 Bundle "kchmck/vim-coffee-script"
 Bundle "itspriddle/vim-jquery.git"
@@ -51,7 +51,7 @@ Bundle "dsawardekar/ember.vim"
 
 " Completion
 "Bundle "Valloric/YouCompleteMe"
-Bundle "Shougo/neocomplete"
+"Bundle "Shougo/neocomplete"
 "Bundle "Shougo/neocomplcache"
 Bundle "Shougo/neosnippet"
 Bundle "honza/vim-snippets"
@@ -73,8 +73,7 @@ Bundle "skwp/vim-easymotion"
 Bundle "bling/vim-airline"
 Bundle "edkolev/tmuxline.vim"
 Bundle "terryma/vim-multiple-cursors"
-Bundle "mattn/emmet-vim"
-Bundle "justinmk/vim-sneak"
+" Bundle "justinmk/vim-sneak"
 
 " Git tools (Fugitive is later)
 Bundle "gregsexton/gitv"

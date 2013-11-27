@@ -20,6 +20,7 @@ if has("gui_running")
   end
 
   set t_Co=256
+  " set guifont=Terminus\ 12
   set guifont=Inconsolata\ 11
   set guioptions=agit
   " If you want your toolbar and tabs back just add 
@@ -31,7 +32,9 @@ if has("gui_running")
   " (the numbers don't show up) so I made it a VimEnter event
   autocmd VimEnter * set guitablabel=%N:\ %t\ %M
 else
-  colorscheme desert
+  " colorscheme desert
+  colorscheme solarized
+  set background=dark
   "dont load csapprox if we no gui support - silences an annoying warning
   let g:CSApprox_loaded = 1
 endif
