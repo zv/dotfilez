@@ -1,3 +1,16 @@
+"" Vim completion mapping
+" Complete filename
+inoremap <C-f> <C-x><C-f>
+" C-k for komplete
+inoremap <C-k> <C-x><C-o>
+" Complete line
+inoremap <C-l> <C-x><C-l>
+
+" Insert word currently under cursor in command mode
+cnoremap <C-k> <C-r><C-w>
+" tcsh style!
+cnoremap <C-a> <Home>
+
 " stop the visual paste insanity
 xnoremap p pgvy
 
@@ -72,6 +85,8 @@ vnoremap <silent> <expr> P <sid>Repl()
 " toggle your qfix
 nmap <silent> ,qc :cclose<CR>
 nmap <silent> ,qo :copen<CR>
+nmap <silent> ,lc :lclose<CR>
+nmap <silent> ,lo :lopen<CR>
 
 " use ,F to jump to tag in a vertical split
 nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
@@ -123,10 +138,12 @@ nmap <silent> ,vr :so %<CR>
 " run script
 nmap <silent> ,rs yy:<C-f>p<C-c><CR>
 
+nmap ,sk :SplitjoinSplit<cr>
+nmap ,sj :SplitjoinJoin<cr>
+
 " Hit leader a then type a character you want to align by
 nmap ,a :Tabularize /
 vmap ,a :Tabularize /
-
 
 " Format JSON
 nmap <Leader>fjs !python -m json.tool<CR>

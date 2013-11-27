@@ -54,18 +54,18 @@ endfunction
 command! StripTrailingWhitespaces call <SID>StripTrailingWhitespaces()
 nmap ,w :StripTrailingWhitespaces<CR>
 
-" Convert Items in selection to Camel/Snake case 
+" Convert Items in selection to Camel/Snake case
 "
 ":tabe
 function! ConvertToSnake()
-  execute '%s#\C\(\<\u[a-z0-9]\+\|[a-z0-9]\+\)\(\u\)#\l\1_\l\2#g' 
+  execute '%s#\C\(\<\u[a-z0-9]\+\|[a-z0-9]\+\)\(\u\)#\l\1_\l\2#g'
 endfunction
 function! ConvertToCamel()
   execute '%s#_\(\l\)#\u\1#g'
 endfunction
 
 function! ConvertLineToSnake()
-  execute 's#\C\(\<\u[a-z0-9]\+\|[a-z0-9]\+\)\(\u\)#\l\1_\l\2#g' 
+  execute 's#\C\(\<\u[a-z0-9]\+\|[a-z0-9]\+\)\(\u\)#\l\1_\l\2#g'
 endfunction
 function! ConvertLineToCamel()
   execute 's#_\(\l\)#\u\1#g'
@@ -76,14 +76,20 @@ command! ConvertCamel :call ConvertToCamel()
 command! ConvertSnakeLine :call ConvertLineToSnake()
 command! ConvertCamelLine :call ConvertLineToCamel()
 
+" Space parens before and after func args
+function! SpaceFuncArgs()
+  execute '%s/(\(\S.*\S\))/( \1 )/g'
+endfunction
+
+command! SpaceArgs :call SpaceFuncArgs()
 
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" git_diff_aware_gf 
+" git_diff_aware_gf
 " Gdiff aware gf!
 "
-" Shamelessly borrowed from yasuaoza 
+" Shamelessly borrowed from yasuaoza
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <expr> gf  <SID>do_git_diff_aware_gf('gf')
 nnoremap <expr> gF  <SID>do_git_diff_aware_gf('gF')

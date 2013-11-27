@@ -648,6 +648,7 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
+
 # file rename magick
 bindkey "^[m" copy-prev-shell-word
 
