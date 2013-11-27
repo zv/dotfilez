@@ -1,7 +1,8 @@
-urxvt*font:                xft:Inconsolata:size=12
-urxvt*boldFont:            xft:Inconsolata:size=12:antialias=true
-urxvt*italicFont:          xft:Inconsolata:size=12:antialias=true
-urxvt*bolditalicFont:      xft:Inconsolata:size=12:antialias=true
+urxvt*font:                xft:Terminus:size=13
+! urxvt*font:                xft:Terminus:size=15
+urxvt*boldFont:            xft:Terminus:size=13:antialias=true
+urxvt*italicFont:          xft:Terminus:size=13:antialias=true
+urxvt*bolditalicFont:      xft:Terminus:size=13:antialias=true
 
 urxvt*scrollBar:           false
 urxvt*saveLines:           20000
