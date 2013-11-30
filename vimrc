@@ -1,6 +1,7 @@
 set nocompatible " rube would be proud
 syntax enable "turn on syntax highlighting
 filetype plugin indent on
+let mapleader=","
 
 " ================ General Config ====================
 
@@ -21,11 +22,16 @@ set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
 set relativenumber
 set list                       " show trailing whitespace
+set gdefault                   " Search globally by default
+
 " thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
 
-" I enjoy the use of comma as my leader
-let mapleader=","
+set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode
+
+set switchbuf=useopen           " reveal already opened files from the
+                                " quickfix window instead of opening new
+                                " buffers
 
 " check my spelling
 set spelllang=en_us
@@ -86,21 +92,23 @@ set cindent       " start c lang indent mode
 if has("autocmd")
   autocmd FileType apache     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType aspvbs     setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cs         setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType go         setlocal sw=4 sts=4 ts=4 et
   autocmd FileType css        setlocal sw=2 sts=2 ts=2 et
   autocmd FileType diff       setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType erlang     setlocal sw=2 sts=2 ts=2 et
   autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType go         setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType haml       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType html       setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType javascript setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType php        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType ruby       setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType haml       setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType scala      setlocal sw=2 sts=2 ts=2 et
   autocmd FileType sh         setlocal sw=4 sts=4 ts=4 et
   autocmd FileType sql        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType vb         setlocal sw=4 sts=4 ts=4 et
@@ -110,7 +118,6 @@ if has("autocmd")
   autocmd FileType xml        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType yaml       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType zsh        setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType scala      setlocal sw=2 sts=2 ts=2 et
 endif
 
 
@@ -129,10 +136,9 @@ set nofoldenable        "dont fold by default
 "    4. unloaded buffers
 "    5. tags
 "    6. included files
-
 set complete=.,b,u,t,i
 " I want to only match the longest substring so I can type to complete.
-set completeopt=menu,longest,preview
+set completeopt=menu
 " Maximum is infinite entries, I am ok with just 25 completions.
 set pumheight=35
 
