@@ -6,112 +6,64 @@ call vundle#rc()
 Bundle "gmarik/vundle"
 Bundle "altercation/vim-colors-solarized"
 
-"@BeginType: TextObjects
-Bundle "coderifous/textobj-word-column.vim"
-Bundle "kana/vim-textobj-datetime"
-Bundle "kana/vim-textobj-entire"
-Bundle "kana/vim-textobj-function"
-Bundle "kana/vim-textobj-line"
-Bundle "austintaylor/vim-indentobject"
-Bundle "kana/vim-textobj-user"
-Bundle "lucapette/vim-textobj-underscore"
-Bundle "vim-scripts/argtextobj.vim"
-"@EndType
-
-"@BeginType: Languages and Scripts
-" golang
+" Languages and Scripts
 Bundle "jnwhiteh/vim-golang"
-" erlang & elixir
 Bundle "jimenezrick/vimerl"
 Bundle "elixir-lang/vim-elixir"
 Bundle "mattonrails/vim-mix"
-
-" rubes
-" Disabled for the time being
-"Bundle "tpope/vim-rails.git"
-Bundle "vim-ruby/vim-ruby.git"
-" javascript; things like javascript.
-Bundle 'jelera/vim-javascript-syntax'
 Bundle "pangloss/vim-javascript"
-" Bundle "marijnh/tern_for_vim"
-Bundle "nono/vim-handlebars"
 Bundle "kchmck/vim-coffee-script"
-Bundle "itspriddle/vim-jquery.git"
-Bundle "dsawardekar/ember.vim"
+Bundle "nono/vim-handlebars"
 
-" other
-" These below have been disabled for performance
-"Bundle "uarun/vim-protobuf"
-"Bundle "tpope/vim-liquid.git"
-"Bundle "groenewege/vim-less.git"
-"Bundle "claco/jasmine.vim"
-"Bundle "vim-scripts/asmx86"
-"Bundle "adimit/prolog.vim"
-"@EndType
+if executable('nasm')
+  Bundle "vim-scripts/asmx86"
+endif
 
-" Completion
-"Bundle "Valloric/YouCompleteMe"
-"Bundle "Shougo/neocomplete"
-"Bundle "Shougo/neocomplcache"
-Bundle "Shougo/neosnippet"
-Bundle "honza/vim-snippets"
+if executable('ipl')
+  Bundle "adimit/prolog.vim"
+endif
 
-" Filename completion
-Bundle "kien/ctrlp.vim"
-Bundle "sgur/ctrlp-extensions.vim"
+" Snippets
+Bundle 'Shougo/neosnippet'
+Bundle 'honza/vim-snippets'
 
 " Tools
-Bundle "rking/ag.vim"
+Bundle "airblade/vim-gitgutter"
 Bundle "AndrewRadev/splitjoin.vim"
+Bundle "bling/vim-airline"
+Bundle "edkolev/tmuxline.vim"
 Bundle "godlygeek/tabular"
+Bundle "gregsexton/gitv"
+Bundle "kien/ctrlp.vim"
 Bundle "majutsushi/tagbar"
 Bundle "scrooloose/nerdtree"
 Bundle "scrooloose/syntastic"
+Bundle "kien/ctrlp.vim"
+Bundle "sgur/ctrlp-extensions.vim"
 Bundle "sjl/gundo.vim"
 Bundle "skwp/greplace.vim"
 Bundle "skwp/vim-easymotion"
-Bundle "bling/vim-airline"
-Bundle "edkolev/tmuxline.vim"
 Bundle "terryma/vim-multiple-cursors"
-" Bundle "justinmk/vim-sneak"
-
-" Git tools (Fugitive is later)
-Bundle "gregsexton/gitv"
-Bundle "airblade/vim-gitgutter"
-
-" tpope"s various bundle"s of joy
+Bundle "tpope/vim-commentary"
 Bundle "tpope/vim-endwise.git"
 Bundle "tpope/vim-fugitive"
 Bundle "tpope/vim-git"
 Bundle "tpope/vim-repeat.git"
-Bundle "tpope/vim-commentary"
 Bundle "tpope/vim-surround.git"
 Bundle "tpope/vim-unimpaired"
-" end tpope
-
 Bundle "vim-scripts/camelcasemotion.git"
 Bundle "vim-scripts/matchit.zip.git"
+" Bundle "justinmk/vim-sneak"
 
+if executable('ag')
+  Bundle 'mileszs/ack.vim'
+  let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
+elseif executable('ack-grep')
+  let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+  Bundle 'mileszs/ack.vim'
+elseif executable('ack')
+  Bundle 'mileszs/ack.vim'
+endif
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
-
-" I wrote this little plugin to quickly pull up the github
-" for a Bundle.
-function! WhatsThatPluginAgain()
-  let uri = matchstr(getline("."), '^Bundle ')
-  echo uri
-  if uri != ""
-    let isbundle = substitute(getline("."), '^Bundle "', "", 'g')
-    let unbundled = substitute(isbundle, '"', "", 'g')
-    let unbundled = substitute(unbundled, '\.git', "", 'g')
-    " let unbundled = substitute(unbundled, '\.vim', "", 'g')
-    let url = substitute(unbundled, "^", "https://github.com/", 'g')
-    silent exec "!google-chrome '".url."'"
-  else
-    echo "I can't even pretend this line has a URL in it"
-  endif
-endfunction
-
-" ,fb for find bundle
-nnoremap ,fb :call WhatsThatPluginAgain()<cr>
