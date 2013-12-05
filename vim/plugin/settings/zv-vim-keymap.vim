@@ -1,10 +1,11 @@
+" Execute normal mode command w/ Ctrl-L
+inoremap <C-l> <C-o>
+
 "" Vim completion mapping
 " Complete filename
 inoremap <C-f> <C-x><C-f>
-" C-k for komplete
-inoremap <C-k> <C-x><C-o>
-" Complete line
-inoremap <C-l> <C-x><C-l>
+" C-l for omnicomplete
+inoremap <C-o> <C-x><C-o>
 
 " Insert word currently under cursor in command mode
 cnoremap <C-k> <C-r><C-w>

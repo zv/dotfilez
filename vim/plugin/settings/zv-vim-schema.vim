@@ -5,7 +5,6 @@ if has("gui_running")
               \' > ~/.gtkrc-2.0'
   exe 'silent !echo ''widget "vim-main-window.*GtkForm" style "vimfix"'''.
               \' >> ~/.gtkrc-2.0'
-  " finally! after all these years those borders go away.
 
   " Just a quick old switch-a-roo.
   if color_scheme == 'solarized_dark'
@@ -23,13 +22,6 @@ if has("gui_running")
   " set guifont=Terminus\ 12
   set guifont=Inconsolata\ 11
   set guioptions=agit
-  " If you want your toolbar and tabs back just add 
-  " set guioptions=aegitTm
-  " max headroom = 0
-  "set guiheadroom=0
-  " Show tab number (useful for Cmd-1, Cmd-2.. mapping)
-  " For some reason this doesn't work as a regular set command,
-  " (the numbers don't show up) so I made it a VimEnter event
   autocmd VimEnter * set guitablabel=%N:\ %t\ %M
 else
   " colorscheme desert

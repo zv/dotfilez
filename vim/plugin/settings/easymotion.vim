@@ -13,9 +13,5 @@ call EasyMotion#InitOptions({
 \ , 'hl_group_shade'  : 'EasyMotionShade'
 \ })
 
-" Make EasyMotion more yellow, less red
-hi clear EasyMotionTarget
-hi! EasyMotionTarget guifg=red
-
 nmap ,<ESC> ,,w
 nmap ,<S-ESC> ,,b

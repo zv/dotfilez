@@ -114,3 +114,39 @@ function! s:do_git_diff_aware_gf(command)
   endif
 endfunction
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Diff saved version and current buffer
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Identify what a bundle plugin is by hovering over it.
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! WhatsThatPluginAgain()
+  let uri = matchstr(getline("."), '^Bundle ')
+  echo uri
+  if uri != ""
+    let isbundle = substitute(getline("."), '^Bundle "', "", 'g')
+    let unbundled = substitute(isbundle, '"', "", 'g')
+    let unbundled = substitute(unbundled, '\.git', "", 'g')
+    " let unbundled = substitute(unbundled, '\.vim', "", 'g')
+    let url = substitute(unbundled, "^", "https://github.com/", 'g')
+    silent exec "!google-chrome '".url."'"
+  else
+    echo "I can't even pretend this line has a URL in it"
+  endif
+endfunction
+
+" ,fb for find bundle
+nnoremap ,fb :call WhatsThatPluginAgain()<cr>

@@ -22,7 +22,6 @@ set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
 set relativenumber
 set list                       " show trailing whitespace
-set gdefault                   " Search globally by default
 
 " thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
