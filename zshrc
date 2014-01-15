@@ -216,7 +216,14 @@ alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 # Switch Users, maining RTP.
 alias sudovim='sudo vim -c "set runtimepath+=$HOME/.vim" -u $HOME/.vimrc'
 alias mongostart='sudo service mongod start'    # so sick of this
-alias node="env NODE_NO_READLINE=1 rlwrap node" # rlwrap node
+# alias node="env NODE_NO_READLINE=1 rlwrap node" # rlwrap node
+
+alias xslock='xscreensaver-command -lock'
+
+# NMCLI aliases
+
+alias lstwifi='nmcli dev wifi'
+alias conwifi='nmcli dev wifi connect'
 
 # # mkdir & cd to it
 function mcd() {
@@ -345,16 +352,15 @@ export PATH=$PATH:$AWS_ELB_HOME/bin
 export PATH=$PATH:$AWS_AUTO_SCALING_HOME/bin
 export PATH=$PATH:$EC2_HOME/bin
 
-if [ -e "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc19.x86_64/jre" ]; then
-    export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc19.x86_64/jre"
+if [ -e "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre" ]; then
+    export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre"
 else
     # give it our best shot
-    echo "WE'RE TRYING TO FIND JAVA MANUALLY, CHANGE THIS PLEASE"
-    echo "LOOK IN ~/.ZSHRC AND CHANGE THIS RIGHT NOW"
-    export JAVA_HOME=$(dirname `find / -wholename "*/jre/bin/java" 2>/dev/null`)
+    echo "Couldn't find java"
+    #echo "WE'RE TRYING TO FIND JAVA MANUALLY, CHANGE THIS PLEASE"
+    #echo "LOOK IN ~/.ZSHRC AND CHANGE THIS RIGHT NOW"
+    # export JAVA_HOME=$(dirname `find / -wholename "*/jre/bin/java" 2>/dev/null`)
 fi
-
-
 
 ############################################
 #  Completions
@@ -692,8 +698,8 @@ eval `dircolors ~/.zsh/LS_COLORS`
 #############################################
 
 # ZSHENV stuff
-export EDITOR='vim' # didn't see that one coming.
-export VISUAL'vim'
+#export EDITOR='vim' # didn't see that one coming.
+#export VISUAL'vim'
 export PAGER='less'
 export LANG='en_US.UTF-8'
 export LESS='-F -g -i -M -R -S -w -X -z-4'
@@ -714,7 +720,8 @@ export PAGER="less -R"
 export LC_CTYPE=$LANG
 
 # vim for manpages
-export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+# for some reason col -b no longer correctly strips ANSI escape characters.
+export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 # make related items
 export CFLAGS="-march=native -mtune=native -O2 -pipe"
@@ -742,11 +749,11 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=()
 
 ### Closing words ###########################
 
-export PATH="$HOME/bin:/usr/local/bin:$PATH"
+# Add go to path
+export GOPATH=$HOME/Development/go
+export PATH=$PATH:$GOPATH/bin
 
-#export PATH=":$PATH:$HOME/go/bin"
-#export GOPATH=$HOME/Development/go
-#export GOROOT=$HOME/go
+export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
 # Recursively add anything I've got in ~/bin
 for home_bin in ~/bin; do
@@ -754,4 +761,6 @@ for home_bin in ~/bin; do
 done
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-export PATH=$PATH:/usr/local/plan9/bin # Plan9 binaries
+# expor tPATH=$PATH:/usr/local/plan9/bin # Plan9 binaries
+# rt GOPATH=$HOME/go
+#   export PATH=$PATH:$GOPATH/bin
