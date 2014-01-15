@@ -39,7 +39,7 @@ set $ARMOPCODES = 1
 set $X86FLAVOR = 0
 
 set confirm off
-set verbose off
+set verbose on
 set output-radix 0x10
 set input-radix 0x10
 
@@ -171,7 +171,7 @@ Or else you can use directly the break command (break [NSControl stringValue])
 end
 
 
-define bpc 
+define bpc
     if $argc != 1
         help bpc
     else
@@ -342,7 +342,7 @@ define flagsarm
         printf "v "
         set $_v_flag = 0
     end
-    # Sticky overflow (Q), bit 27    
+    # Sticky overflow (Q), bit 27
     if ($cpsr->q & 1)
         printf "Q "
         set $_q_flag = 1
@@ -370,7 +370,7 @@ define flagsarm
         set $_e_flag = 0
     end
     # Imprecise abort disable bit (A), bit 8
-    # The A bit is set to 1 automatically. It is used to disable imprecise data aborts. 
+    # The A bit is set to 1 automatically. It is used to disable imprecise data aborts.
     # It might not be writable in the Nonsecure state if the AW bit in the SCR register is reset.
     if ($cpsr->a & 1)
         printf "A "
@@ -389,7 +389,7 @@ define flagsarm
         set $_i_flag = 0
     end
     # FIQ disable bit (F), bit 6
-    # When the F bit is set to 1, FIQ interrupts are disabled. 
+    # When the F bit is set to 1, FIQ interrupts are disabled.
     # FIQ can be nonmaskable in the Nonsecure state if the FW bit in SCR register is reset.
     if ($cpsr->f & 1)
         printf "F "
@@ -547,7 +547,7 @@ define regarm
         echo \033[0m
     end
     printf "  0x%08X  ", $r0
-    
+
     echo \033[32m
     printf "R1:"
     if ($r1 != $oldr1 && $SHOWREGCHANGES == 1)
@@ -584,7 +584,7 @@ define regarm
         echo \033[0m
     end
     printf "  0x%08X  ", $r4
-    
+
     echo \033[32m
     printf "R5:"
     if ($r5 != $oldr5 && $SHOWREGCHANGES == 1)
@@ -724,7 +724,7 @@ define regx64
     echo \033[32m
     printf "RSP:"
     if ($rsp != $oldrsp && $SHOWREGCHANGES == 1)
-        echo \033[31m        
+        echo \033[31m
     else
         echo \033[0m
     end
@@ -883,7 +883,7 @@ define regx86
     echo \033[32m
 	printf "EAX:"
     if ($eax != $oldeax && $SHOWREGCHANGES == 1)
-   	 	echo \033[31m   	 	
+   	 	echo \033[31m
    	else
    	 	echo \033[0m
    	end
@@ -891,8 +891,8 @@ define regx86
    	# EBX
     echo \033[32m
    	printf "EBX:"
-   	if ($ebx != $oldebx && $SHOWREGCHANGES == 1) 
-	    echo \033[31m   		
+   	if ($ebx != $oldebx && $SHOWREGCHANGES == 1)
+	    echo \033[31m
    	else
 	    echo \033[0m
    	end
@@ -901,7 +901,7 @@ define regx86
     echo \033[32m
    	printf "ECX:"
    	if ($ecx != $oldecx && $SHOWREGCHANGES == 1)
-	    echo \033[31m	    
+	    echo \033[31m
 	else
 	    echo \033[0m
 	end
@@ -926,7 +926,7 @@ define regx86
 	echo \033[32m
     printf "ESI:"
     if ($esi != $oldesi && $SHOWREGCHANGES == 1)
-	    echo \033[31m	    
+	    echo \033[31m
 	else
 	    echo \033[0m
 	end
@@ -935,7 +935,7 @@ define regx86
 	echo \033[32m
     printf "EDI:"
 	if ($edi != $oldedi && $SHOWREGCHANGES == 1)
-	    echo \033[31m	    
+	    echo \033[31m
 	else
 	    echo \033[0m
 	end
@@ -953,7 +953,7 @@ define regx86
 	echo \033[32m
     printf "ESP:"
 	if ($esp != $oldesp && $SHOWREGCHANGES == 1)
-	    echo \033[31m	    
+	    echo \033[31m
 	else
 	    echo \033[0m
     end
@@ -1016,7 +1016,7 @@ define reg
 	    end
     else
         if ($64BITS == 1)
-            regx64 
+            regx64
         else
             regx86
         end
@@ -1092,7 +1092,7 @@ define smallregisters
     	set $si  = $rsi & 0xffff
     	# from rdi
     	set $edi = $rdi & 0xffffffff
-    	set $di  = $rdi & 0xffff		
+    	set $di  = $rdi & 0xffff
     #32 bits stuff
     else
 	    # from eax
@@ -1114,7 +1114,7 @@ define smallregisters
     	# from esi
     	set $si = $esi & 0xffff
     	# from edi
-	    set $di = $edi & 0xffff		
+	    set $di = $edi & 0xffff
      end
 end
 document smallregisters
@@ -1200,14 +1200,14 @@ define dis
     end
     if $argc == 2
         disassemble $arg0 $arg1
-    end 
+    end
     if $argc > 2
         help dis
     end
 end
 document dis
 Disassemble a specified section of memory.
-Default is to disassemble the function surrounding the PC (program counter) of selected frame. 
+Default is to disassemble the function surrounding the PC (program counter) of selected frame.
 With one argument, ADDR1, the function surrounding this address is dumped.
 Two arguments are taken as a range of memory to dump.
 Usage: dis <ADDR1> <ADDR2>
@@ -1270,7 +1270,7 @@ define hexdump
 end
 document hexdump
 Display a 16-byte hex/ASCII dump of memory starting at address ADDR.
-Optional parameter is the number of lines to display if you want more than one. 
+Optional parameter is the number of lines to display if you want more than one.
 Usage: hexdump ADDR [nr lines]
 end
 
@@ -1459,7 +1459,7 @@ define dumpjump
 	        	set $_conditional = *(unsigned char *)($pc+1) ^ 0xD0
         		dumpjumphelper
         	end
-        end 
+        end
 ##################### X86
     else
         ## grab the first two bytes from the instruction so we can determine the jump instruction
@@ -1479,7 +1479,7 @@ define dumpjump
             	# cf != 0 or zf != 0
            		echo \033[31m
            		printf "  Jump is NOT taken (c!=0 or z!=0)"
-          	end 
+          	end
         end
         ## opcode 0x73: JAE, JNB, JNC (jump if CF=0)
         ## opcode 0x0F83: JNC, JNB, JAE (jump if CF=0)
@@ -1492,7 +1492,7 @@ define dumpjump
             	# cf != 0
            		echo \033[31m
    		        printf "  Jump is NOT taken (c!=0)"
-          	end 
+          	end
         end
         ## opcode 0x72: JB, JC, JNAE (jump if CF=1)
         ## opcode 0x0F82: JNAE, JB, JC
@@ -1505,7 +1505,7 @@ define dumpjump
             	# cf != 1
            		echo \033[31m
    		        printf "  Jump is NOT taken (c!=1)"
-          	end 
+          	end
         end
         ## opcode 0x76: JBE, JNA (jump if CF=1 or ZF=1)
         ## opcode 0x0F86: JBE, JNA
@@ -1518,7 +1518,7 @@ define dumpjump
             	# cf != 1 or zf != 1
            		echo \033[31m
            		printf "  Jump is NOT taken (c!=1 or z!=1)"
-          	end 
+          	end
         end
         ## opcode 0xE3: JCXZ, JECXZ, JRCXZ (jump if CX=0 or ECX=0 or RCX=0)
         if ($_byte1 == 0xE3)
@@ -1529,7 +1529,7 @@ define dumpjump
           	else
    	    	    echo \033[31m
        	    	printf "  Jump is NOT taken (cx!=0 or ecx!=0)"
-          	end 
+          	end
         end
         ## opcode 0x74: JE, JZ (jump if ZF=1)
         ## opcode 0x0F84: JZ, JE, JZ (jump if ZF=1)
@@ -1542,7 +1542,7 @@ define dumpjump
                 # ZF = 0
            		echo \033[31m
    		        printf "  Jump is NOT taken (z!=1)"
-          	end 
+          	end
         end
         ## opcode 0x7F: JG, JNLE (jump if ZF=0 and SF=OF)
         ## opcode 0x0F8F: JNLE, JG (jump if ZF=0 and SF=OF)
@@ -1554,7 +1554,7 @@ define dumpjump
          	else
    		        echo \033[31m
    		        printf "  Jump is NOT taken (z!=0 or s!=o)"
-  	        end 
+  	        end
         end
         ## opcode 0x7D: JGE, JNL (jump if SF=OF)
         ## opcode 0x0F8D: JNL, JGE (jump if SF=OF)
@@ -1566,7 +1566,7 @@ define dumpjump
   	        else
    		        echo \033[31m
    		        printf "  Jump is NOT taken (s!=o)"
-  	        end 
+  	        end
         end
         ## opcode: 0x7C: JL, JNGE (jump if SF != OF)
         ## opcode: 0x0F8C: JNGE, JL (jump if SF != OF)
@@ -1578,7 +1578,7 @@ define dumpjump
   	        else
         		echo \033[31m
    		        printf "  Jump is NOT taken (s=o)"
-  	        end 
+  	        end
         end
         ## opcode 0x7E: JLE, JNG (jump if ZF = 1 or SF != OF)
         ## opcode 0x0F8E: JNG, JLE (jump if ZF = 1 or SF != OF)
@@ -1590,7 +1590,7 @@ define dumpjump
   	        else
    		        echo \033[31m
    	        	printf "  Jump is NOT taken (zf!=1 or sf=of)"
-  	        end 
+  	        end
         end
         ## opcode 0x75: JNE, JNZ (jump if ZF = 0)
         ## opcode 0x0F85: JNE, JNZ (jump if ZF = 0)
@@ -1603,7 +1603,7 @@ define dumpjump
                 # ZF = 1
    		        echo \033[31m
    	        	printf "  Jump is NOT taken (z!=0)"
-  	        end 
+  	        end
         end
         ## opcode 0x71: JNO (OF = 0)
         ## opcode 0x0F81: JNO (OF = 0)
@@ -1616,7 +1616,7 @@ define dumpjump
                 # OF != 0
            		echo \033[31m
            		printf "  Jump is NOT taken (o!=0)"
-          	end 
+          	end
         end
         ## opcode 0x7B: JNP, JPO (jump if PF = 0)
         ## opcode 0x0F8B: JPO (jump if PF = 0)
@@ -1629,7 +1629,7 @@ define dumpjump
                 # PF != 0
            		echo \033[31m
    		        printf "  Jump is taken (p!=0)"
-          	end 
+          	end
         end
         ## opcode 0x79: JNS (jump if SF = 0)
         ## opcode 0x0F89: JNS (jump if SF = 0)
@@ -1642,7 +1642,7 @@ define dumpjump
                  # SF != 0
            		echo \033[31m
    		        printf "  Jump is NOT taken (s!=0)"
-          	end 
+          	end
         end
         ## opcode 0x70: JO (jump if OF=1)
         ## opcode 0x0F80: JO (jump if OF=1)
@@ -1655,7 +1655,7 @@ define dumpjump
                 # OF != 1
            		echo \033[31m
    		        printf "  Jump is NOT taken (o!=1)"
-          	end 
+          	end
         end
         ## opcode 0x7A: JP, JPE (jump if PF=1)
         ## opcode 0x0F8A: JP, JPE (jump if PF=1)
@@ -1668,7 +1668,7 @@ define dumpjump
                  # PF = 0
            		echo \033[31m
    		        printf "  Jump is NOT taken (p!=1)"
-          	end 
+          	end
         end
         ## opcode 0x78: JS (jump if SF=1)
         ## opcode 0x0F88: JS (jump if SF=1)
@@ -1681,7 +1681,7 @@ define dumpjump
                  # SF != 1
            		echo \033[31m
            		printf "  Jump is NOT taken (s!=1)"
-          	end 
+          	end
         end
     end
 end
@@ -1840,7 +1840,7 @@ end
 # initialize variable
 set $displayobjectivec = 0
 
-define context 
+define context
     echo \033[34m
     if $SHOWCPUREGISTERS == 1
 	    printf "----------------------------------------"
@@ -1914,8 +1914,8 @@ define context
 	    		printf "[ObjectiveC]\n"
       	    	echo \033[0m\033[30m
       		    x/s $objectivec
-         	end   
-         	set $displayobjectivec = 0     
+         	end
+         	set $displayobjectivec = 0
         end
         if $displayobjectivec == 1
             echo \033[34m
@@ -1926,8 +1926,8 @@ define context
 	    	echo \033[34m\033[1m
 		    printf "[ObjectiveC]\n"
           	echo \033[0m\033[30m
-          	x/s $objectivec 
-        end   
+          	x/s $objectivec
+        end
     end
     echo \033[0m
 # and this is the end of this little crap
@@ -1946,7 +1946,7 @@ define context
     echo \033[0m
     set $context_i = $CONTEXTSIZE_CODE
     if ($context_i > 0)
-        if ($SETCOLOUR1STLINE == 1)	
+        if ($SETCOLOUR1STLINE == 1)
 	        echo \033[32m
     	    x /i $pc
 	        echo \033[0m
@@ -2090,8 +2090,8 @@ define stepoframework
         # bl and bx opcodes
         # bx Rn  => ARM bits 27-20: 0 0 0 1 0 0 1 0 , bits 7-4: 0 0 0 1 ; Thumb bits: 15-7: 0 1 0 0 0 1 1 1 0
         # blx Rn => ARM bits 27-20: 0 0 0 1 0 0 1 0 , bits 7-4: 0 0 1 1 ; Thumb bits: 15-7: 0 1 0 0 0 1 1 1 1
-        # bl # => ARM bits 27-24: 1 0 1 1 ; Thumb bits: 15-11: 1 1 1 1 0 
-        # blx # => ARM bits 31-25: 1 1 1 1 1 0 1 ; Thumb bits: 15-11: 1 1 1 1 0 
+        # bl # => ARM bits 27-24: 1 0 1 1 ; Thumb bits: 15-11: 1 1 1 1 0
+        # blx # => ARM bits 31-25: 1 1 1 1 1 0 1 ; Thumb bits: 15-11: 1 1 1 1 0
         set $_nextaddress = 0
 
         # ARM Mode
@@ -2113,7 +2113,7 @@ define stepoframework
         	set $_bit6 = ($_branchesint >> 0x6) & 1
         	set $_bit5 = ($_branchesint >> 0x5) & 1
         	set $_bit4 = ($_branchesint >> 0x4) & 1
-	
+
             #	set $_lastbyte = *(unsigned char *)($pc+3)
             #	set $_bits2724 = $_lastbyte & 0x1
             #	set $_bits3128 = $_lastbyte >> 4
@@ -2124,7 +2124,7 @@ define stepoframework
             #	set $_previousbyte = *(unsigned char *)($pc+2)
             #	set $_bits2320 = $_previousbyte >> 4
             #	printf "bits2724: %x bits2320: %x\n", $_bits2724, $_bits2320
-	
+
         	if ($_bit27 == 0 && $_bit26 == 0 && $_bit25 == 0 && $_bit24 == 1 && $_bit23 == 0 && $_bit22 == 0 && $_bit21 == 1 && $_bit20 == 0 && $_bit7 == 0 && $_bit6 == 0 && $_bit5 == 0 && $_bit4 == 1)
 		        printf "Found a bx Rn\n"
         		set $_nextaddress = $pc+0x4
@@ -2146,7 +2146,7 @@ define stepoframework
             # 32 bits instructions in Thumb are divided into two half words
         	set $_hw1 = *(unsigned short*)($pc)
         	set $_hw2 = *(unsigned short*)($pc+2)
-	
+
         	# bl/blx (immediate)
         	# hw1: bits 15-11: 1 1 1 1 0
         	# hw2: bits 15-14: 1 1 ; BL bit 12: 1 ; BLX bit 12: 0
@@ -2156,7 +2156,7 @@ define stepoframework
 		        end
         	end
         end
-        # if we have found a call to bypass we set a temporary breakpoint on next instruction and continue 
+        # if we have found a call to bypass we set a temporary breakpoint on next instruction and continue
         if ($_nextaddress != 0)
             tbreak *$_nextaddress
             continue
@@ -2190,10 +2190,10 @@ define stepoframework
                 end
                 # call *0x??(%ebp) (0xFF55??) || call *0x??(%esi) (0xFF56??) || call *0x??(%edi) (0xFF5F??) || call *0x??(%ebx)
                 # call *0x??(%edx) (0xFF52??) || call *0x??(%ecx) (0xFF51??) || call *0x??(%edi) (0xFF57??) || call *0x??(%eax) (0xFF50??)
-                if ($_byte2 == 0x55 || $_byte2 == 0x56 || $_byte2 == 0x5F || $_byte2 == 0x53 || $_byte2 == 0x52 || $_byte2 == 0x51 || $_byte2 == 0x57 || $_byte2 == 0x50) 
+                if ($_byte2 == 0x55 || $_byte2 == 0x56 || $_byte2 == 0x5F || $_byte2 == 0x53 || $_byte2 == 0x52 || $_byte2 == 0x51 || $_byte2 == 0x57 || $_byte2 == 0x50)
                     set $_nextaddress = $pc + 0x3
                 end
-                # call *0x????????(%ebx) (0xFF93????????) || 
+                # call *0x????????(%ebx) (0xFF93????????) ||
                 if ($_byte2 == 0x93 || $_byte2 == 0x94 || $_byte2 == 0x90 || $_byte2 == 0x92 || $_byte2 == 0x95)
                     set $_nextaddress = $pc + 6
                 end
@@ -2211,7 +2211,7 @@ define stepoframework
                end
             end
         end
-        # if we have found a call to bypass we set a temporary breakpoint on next instruction and continue 
+        # if we have found a call to bypass we set a temporary breakpoint on next instruction and continue
         if ($_nextaddress != 0)
             if ($arg0 == 1)
                 thbreak *$_nextaddress
@@ -2447,7 +2447,7 @@ define nop
     if ($argc > 2 || $argc == 0)
         help nop
     end
-  
+
     if $ARM == 1
         if ($argc == 1)
             if ($cpsr->t &1)
@@ -2471,8 +2471,8 @@ define nop
 			    	set *(int *)$addr = 0xe1a00000
 			    	set $addr = $addr + 4
 			    end
-		    end			
-        end 
+		    end
+        end
     else
         if ($argc == 1)
     	    set *(unsigned char *)$arg0 = 0x90
@@ -2496,7 +2496,7 @@ define null
     if ( $argc >2 || $argc == 0)
         help null
     end
- 
+
     if ($argc == 1)
 	    set *(unsigned char *)$arg0 = 0
     else
@@ -2627,11 +2627,11 @@ define get_insn_type
                 set $INSN_TYPE = 2
             end
         end
-        if ($_byte1 == 0xFF)        
+        if ($_byte1 == 0xFF)
             # opcode extension
             set $_byte2 = *(unsigned char *)($arg0 + 1)
             set $_opext = ($_byte2 & 0x38)
-            if ($_opext == 0x10 || $_opext == 0x18) 
+            if ($_opext == 0x10 || $_opext == 0x18)
                 # "call"
                 set $INSN_TYPE = 3
             end
@@ -2655,11 +2655,11 @@ define step_to_call
     set $_saved_ctx = $SHOW_CONTEXT
     set $SHOW_CONTEXT = 0
     set $SHOW_NEST_INSN = 0
- 
+
     set logging file /dev/null
     set logging redirect on
     set logging on
- 
+
     set $_cont = 1
     while ($_cont > 0)
         stepi
@@ -2677,11 +2677,11 @@ define step_to_call
 
     set $SHOW_CONTEXT = $_saved_ctx
     set $SHOW_NEST_INSN = 0
- 
+
     set logging file ~/gdb.txt
     set logging redirect off
     set logging on
- 
+
     printf "step_to_call command stopped at:\n  "
     x/i $pc
     printf "\n"
@@ -2704,7 +2704,7 @@ define trace_calls
     set $SHOW_NEST_INSN = 0
     set $_nest = 1
     set listsize 0
-  
+
     set logging overwrite on
     set logging file ~/gdb_trace_calls.txt
     set logging on
@@ -2746,7 +2746,7 @@ define trace_calls
 
     set $SHOW_CONTEXT = $_saved_ctx
     set $SHOW_NEST_INSN = 0
- 
+
     printf "Done, check ~/gdb_trace_calls.txt\n"
 end
 document trace_calls
@@ -2756,7 +2756,7 @@ end
 
 
 define trace_run
- 
+
     printf "Tracing...please wait...\n"
 
     set $_saved_ctx = $SHOW_CONTEXT
@@ -2837,7 +2837,7 @@ end
 define hook-stop
 # Display instructions formats
     set disassembly-flavor intel
-    context 
+    context
     # this makes 'context' be called at every BP/step
 end
 document hook-stop
@@ -2866,7 +2866,7 @@ define assemble
     printf " Do not forget to use NASM assembler syntax!\n"
     echo \033[0m
     printf "End with a line saying just \"end\".\n"
-    
+
     if ($argc)
 	    if ($64BITS == 1)
 		    # argument specified, assemble instructions into memory at address specified.
@@ -3072,7 +3072,7 @@ end
 define tip_syntax
     printf "\n"
     printf "\t    INTEL SYNTAX                        AT&T SYNTAX\n"
-    printf "\tmnemonic dest, src, imm            mnemonic src, dest, imm\n" 
+    printf "\tmnemonic dest, src, imm            mnemonic src, dest, imm\n"
     printf "\t[base+index*scale+disp]            disp(base, index, scale)\n"
     printf "\tregister:      eax                 register:      %%eax\n"
     printf "\timmediate:     0xFF                immediate:     $0xFF\n"
@@ -3289,7 +3289,7 @@ end
 #	  - Removed restrictions on type of addresses in the "dd" command - Thanks to Plouj for the warning :-)
 #	   I don't know what was the original thinking behind those :-)
 #	  - Modified the assemble command to support 64bits - You will need to recompile nasm since the version shipped with OS X doesn't supports 64bits (www.nasm.us).
-#	   Assumes that the new binary is installed at /usr/local/bin - modify the variable at the top if you need so. 
+#	   Assumes that the new binary is installed at /usr/local/bin - modify the variable at the top if you need so.
 #	   It will assemble based on the target arch being debugged. If you want to use gdb for a quick asm just use the 32bits or 64bits commands to set your target.
 #      Thanks to snare for the warning and original patch :-)
 #	  - Added "asm" command - it's a shortcut to the "assemble" command.
@@ -3320,7 +3320,7 @@ end
 #
 # 	Version 7.3.1 (29/06/2010) - fG!
 #	  Added enablelib/disablelib command to quickly set the stop-on-solib-events trick
-#	  Implemented the stepoh command equivalent to the stepo but using hardware breakpoints 
+#	  Implemented the stepoh command equivalent to the stepo but using hardware breakpoints
 #	  More fixes to stepo
 #
 #	Version 7.3 (16/04/2010) - fG!
@@ -3413,7 +3413,7 @@ end
 #     Add global variables to allow user to control stack, data and code window sizes
 #     Increase readability for registers
 #     Some corrections (hexdump, ddump, context, cfp, assemble, gas_asm, tips, prompt)
-#   
+#
 #   Version 6.1-color-user
 #     Took the Gentoo route and ran sed s/user/user/g
 #
