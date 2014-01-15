@@ -238,6 +238,14 @@ function psu {
   ps -U "${1:-$USER}" -o 'pid,%cpu,%mem,command' "${(@)argv[2,-1]}"
 }
 
+# Displays some git related author statistics
+function authorstats {
+    gitauth=$1;
+    git log --author=$gitauth --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+    echo ''
+}
+
+
 ############################################
 #  Mix
 ############################################
@@ -298,8 +306,6 @@ alias yumU='sudo yum upgrade'      # Upgrades packages.
 #export GREP_COLOR='37;45'
 export GREP_COLORS="38;5;230:sl=38;5;240:cs=38;5;100:mt=38;5;161:fn=38;5;197:ln=38;5;212:bn=38;5;44:se=38;5;166"
 export GREP_OPTIONS='--color=auto'
-
-alias rg="grep -R"
 
 ############################################
 #  GPG
