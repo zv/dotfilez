@@ -22,6 +22,7 @@ set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
 set relativenumber
 set list                       " show trailing whitespace
+set lazyredraw "  Lazy is as lazy does!
 
 " thanks florian fritz :)
 set listchars=tab:▸\ ,trail:▫
@@ -66,13 +67,16 @@ set ignorecase       "Ignore Case
 "
 " While it is nice to have this stuff available across boots, tmpfs is a
 " better place for this sort of data on a machine with degrading writes.
+set undofile
+set backup
+set noswapfile " welcome to the year 2000.
+
 silent !mkdir /tmp/.backups > /dev/null 2>&1
 silent !mkdir /tmp/.undodir > /dev/null 2>&1
 set undodir=/tmp/.undodir
-set undofile
-
 set backupdir=/tmp/.backups
 set directory=/tmp/.backups
+set backupskip=/tmp/*,/private/tmp/*
 
 " ==================  Ctags  ========================
 set tags=./tags;$HOME
@@ -125,9 +129,9 @@ endif
 
 " ================ Folds ============================
 
+set nofoldenable        "dont fold by default
 set foldmethod=indent "fold based on indent
 set foldnestmax=3       "deepest fold is 3 levels
-set nofoldenable        "dont fold by default
 
 " ================ Completion =======================
 
@@ -163,13 +167,19 @@ set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest
 set wildignore+=*.pyc
 set wildignore+=*.spl
 set wildignore+=*~,#*#,*.sw?,%*,*=
+set wildignore+=.hg,.git,.svn
+set wildignore+=*.DS_Store    " OSX bullshit
+set wildignore+=migrations    " Django migrations
+set wildignore+=*.pyc         " Python byte code
+set wildignore+=*.orig        " Merge resolution files
+
 
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
 
 " ================ Scrolling ========================
 
-set scrolloff=3         "Start scrolling when we're 8 lines away from margins
+set scrolloff=3     "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
 
