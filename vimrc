@@ -35,6 +35,9 @@ set switchbuf=useopen           " reveal already opened files from the
 " check my spelling
 set spelllang=en_us
 
+" Long lines make syntax reallyyyy slow.
+set synmaxcol=512
+
 " The terminal handles colors differently so we need to have a bit of unclean
 " logic in another file handle the loading based on if we're in a GUI or not.
 " 'desert' or 'default' give what you'd expect, 'solarized_dark' and
@@ -135,9 +138,9 @@ set nofoldenable        "dont fold by default
 "    4. unloaded buffers
 "    5. tags
 "    6. included files
-set complete=.,b,u,t,i
+set complete=.,w,b,u,t
 " I want to only match the longest substring so I can type to complete.
-set completeopt=menu
+set completeopt=longest,menuone,preview
 " Maximum is infinite entries, I am ok with just 25 completions.
 set pumheight=35
 
