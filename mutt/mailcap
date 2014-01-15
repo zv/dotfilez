@@ -1,6 +1,0 @@
-application/octet-stream ; echo %s "can be anything..."                    ; copiousoutput
-text/html                ; /usr/bin/elinks -dump %s ; nametemplate=%s.html ; copiousoutput
-application/pdf          ; /usr/bin/xpdf %s                             ; copiousoutput
-image/*                  ; /usr/bin/mirage %s                              ; copiousoutput
-audio/*                  ; /usr/bin/vlc %s                             ; copiousoutput
-video/*                  ; /usr/bin/vlc %s                             ; copiousoutput
