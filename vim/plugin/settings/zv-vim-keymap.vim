@@ -1,10 +1,19 @@
-" Execute normal mode command w/ Ctrl-L
+" Execute one command in normal mode
 inoremap <C-l> <C-o>
+
+set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode
+nnoremap <F3> :set list!<CR>
+nnoremap <F4> :GitGutterToggle<CR>
+
+" Easier to type, and I never use the default behavior.
+noremap H ^
+noremap L $
+vnoremap L g_
 
 "" Vim completion mapping
 " Complete filename
 inoremap <C-f> <C-x><C-f>
-" C-l for omnicomplete
+" C-o for omnicomplete
 inoremap <C-o> <C-x><C-o>
 
 " Insert word currently under cursor in command mode
@@ -30,7 +39,8 @@ vmap ,s :s//g<left><left>
 nmap <Space> <C-d>
 nmap <BS> <C-u>
 
-
+" A Classic
+cnoremap w!! w !sudo tee % >/dev/null
 
 " Re hard wrap paragraph.
 nnoremap ,qw gqip
@@ -139,12 +149,6 @@ nmap <silent> ,vr :so %<CR>
 " run script
 nmap <silent> ,rs yy:<C-f>p<C-c><CR>
 
-nmap ,sk :SplitjoinSplit<cr>
-nmap ,sj :SplitjoinJoin<cr>
-
 " Hit leader a then type a character you want to align by
 nmap ,a :Tabularize /
 vmap ,a :Tabularize /
-
-" Format JSON
-nmap <Leader>fjs !python -m json.tool<CR>

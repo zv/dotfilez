@@ -5,6 +5,7 @@ if has("gui_running")
               \' > ~/.gtkrc-2.0'
   exe 'silent !echo ''widget "vim-main-window.*GtkForm" style "vimfix"'''.
               \' >> ~/.gtkrc-2.0'
+  " finally! after all these years those borders go away.
 
   " Just a quick old switch-a-roo.
   if color_scheme == 'solarized_dark'

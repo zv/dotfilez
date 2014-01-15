@@ -21,7 +21,6 @@ let g:tmuxline_separators = {
     \ 'right_alt' : '-',
     \ 'space' : ' '}
 
-
-if !has("gui_running")
+if !has("gui_running") && exists(":Tmuxline")
   autocmd VimEnter * :Tmuxline powerline full
 endif

@@ -1,8 +1,10 @@
-" Toolkit index
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Change ruby hash syntax - :ChangeHashSyntax
 " Jump to tag in vertical split - ,F
 " Open Changed files - ,ocf
 " Strip trailing whitespace - ,w
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" Toolkit index
 
 " Change ruby hash syntax 1.9 to 2.0 hash syntax
 function! s:ChangeHashSyntax(line1,line2)
@@ -37,7 +39,6 @@ command! OpenChangedFiles :call OpenChangedFiles()
 
 nnoremap ,ocf :OpenChangedFiles<CR>
 
-
 " via: http://rails-bestpractices.com/posts/60-remove-trailing-whitespace
 " Strip trailing whitespace
 function! <SID>StripTrailingWhitespaces()
@@ -71,19 +72,18 @@ function! ConvertLineToCamel()
   execute 's#_\(\l\)#\u\1#g'
 endfunction
 
-command! ConvertSnake :call ConvertToSnake()
-command! ConvertCamel :call ConvertToCamel()
-command! ConvertSnakeLine :call ConvertLineToSnake()
-command! ConvertCamelLine :call ConvertLineToCamel()
+command! SnakeConv :call ConvertToSnake()
+command! CamelConv :call ConvertToCamel()
+command! SnakeConvLine :call ConvertLineToSnake()
+command! CamelConvLine :call ConvertLineToCamel()
 
 " Space parens before and after func args
 function! SpaceFuncArgs()
   execute '%s/(\(\S.*\S\))/( \1 )/g'
 endfunction
 
+command! ArgSpace :call SpaceFuncArgs()
 command! SpaceArgs :call SpaceFuncArgs()
-
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " git_diff_aware_gf
@@ -113,7 +113,6 @@ function! s:do_git_diff_aware_gf(command)
     return a:command
   endif
 endfunction
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Diff saved version and current buffer
@@ -150,3 +149,66 @@ endfunction
 
 " ,fb for find bundle
 nnoremap ,fb :call WhatsThatPluginAgain()<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use Q to intelligently close a window
+" (if there are multiple windows into the same buffer)
+" or kill the buffer entirely if it's the last window looking into that buffer
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! CloseWindowOrKillBuffer()
+  let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
+
+  " We should never bdelete a nerd tree
+  if matchstr(expand("%"), 'NERD') == 'NERD'
+    wincmd c
+    return
+  endif
+
+  if number_of_windows_to_this_buffer > 1
+    wincmd c
+  else
+    bdelete
+  endif
+endfunction
+
+nnoremap <C-q><C-k> :q!<CR>
+
+nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Insert multiple inclusion gates for IFDEFs (h, hpp)
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! s:insert_gates()
+  let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
+  execute "normal! i#ifndef " . gatename
+  execute "normal! o#define " . gatename . " "
+  execute "normal! Go#endif /* " . gatename . " */"
+  normal! kk
+endfunction
+autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Prevent everything from going wrong when I load a huge file.
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Protect large files from sourcing and other overhead.
+" Files become read only
+if !exists("my_auto_commands_loaded")
+  let my_auto_commands_loaded = 1
+  " Large files are > 10M
+  " Set options:
+  " eventignore+=FileType (no syntax highlighting etc
+  " assumes FileType always on)
+  " noswapfile (save copy of file)
+  " bufhidden=unload (save memory when other file is viewed)
+  " buftype=nowritefile (is read-only)
+  " undolevels=-1 (no undo possible)
+  let g:LargeFile = 1024 * 1024 * 10
+  augroup LargeFile
+    autocmd BufReadPre * let f=expand("<afile>") | if getfsize(f) > g:LargeFile | set eventignore+=FileType | setlocal noswapfile bufhidden=unload buftype=nowrite undolevels=-1 | else | set eventignore-=FileType | endif
+    augroup END
+  endif
