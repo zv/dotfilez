@@ -1,4 +1,4 @@
-#compdef manage.py
+#compdef manage.py django-admin.py
 # ------------------------------------------------------------------------------
 # Description
 # -----------
@@ -16,11 +16,8 @@
 # ------------------------------------------------------------------------------
 
 
-_managepy-adminindex(){
-  _arguments -s : \
-    $nul_args \
-    '*::directory:_directories' && ret=0
-}
+_managepy-cleanup(){}
+_managepy-compilemessages(){}
 
 _managepy-createcachetable(){
   _arguments -s : \
@@ -79,6 +76,8 @@ _managepy-loaddata(){
     $nul_args && ret=0
 }
 
+_managepy-makemessages(){}
+
 _managepy-reset(){
   _arguments -s : \
     '--noinput[tells Django to NOT prompt the user for input of any kind.]' \
@@ -136,6 +135,16 @@ _managepy-sqlreset(){}
 _managepy-sqlsequencereset(){}
 _managepy-startapp(){}
 
+_managepy-startproject(){
+  _arguments -s : \
+    "(-v --verbosity)"{-v,--verbosity}"[Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output.]:Verbosity:((0\:minimal 1\:normal 2\:verbose 4\:very\ verbose))" \
+    '--template[The path or URL to load the template from.]:file:_files' \
+    "(-e --extension)"{-e,--extension}"[The file extension(s) to render (default: "py").  Separate multiple extensions with commas, or use -e multiple times.]" \
+    "(-n --name)"{-n,--name}"[The file name(s) to render. Separate multiple extensions with commas, or use -n multiple times. --version show program\'s version number and exit]:file:_files" \
+    $nul_args \
+    '*::args:_gnu_generic'
+}
+
 _managepy-syncdb() {
   _arguments -s : \
     '--verbosity=-[verbosity level; 0=minimal output, 1=normal output, 2=all output.]:Verbosity:((0\:minimal 1\:normal 2\:all))' \
@@ -164,11 +173,17 @@ _managepy-validate() {
     $nul_args && ret=0
 }
 
+_managepy-changepassword(){}
+_managepy-createsuperuser(){}
+_managepy-collectstatic(){}
+_managepy-findstatic(){}
+
 _managepy-commands() {
   local -a commands
   
   commands=(
-    'adminindex:prints the admin-index template snippet for the given app name(s).'
+    'cleanup:Can be run as a cronjob or directly to clean out old data from the database (only expired sessions at the moment).'
+    'compilemessages:Compiles .po files to .mo files for use with builtin gettext support.'
     'createcachetable:creates the table needed to use the SQL cache backend.'
     'dbshell:runs the command-line client for the current DATABASE_ENGINE.'
     "diffsettings:displays differences between the current settings.py and Django's default settings."
@@ -177,6 +192,7 @@ _managepy-commands() {
     'help:manage.py help.'
     'inspectdb:Introspects the database tables in the given database and outputs a Django model module.'
     'loaddata:Installs the named fixture(s) in the database.'
+    'makemessages:Runs over the entire source tree of the current directory and pulls out all strings marked for translation.'
     'reset:Executes ``sqlreset`` for the given app(s) in the current database.'
     'runfcgi:Run this project as a fastcgi (or some other protocol supported by flup) application,'
     'runserver:Starts a lightweight Web server for development.'
@@ -191,11 +207,20 @@ _managepy-commands() {
     'sqlreset:Prints the DROP TABLE SQL, then the CREATE TABLE SQL, for the given app name(s).'
     'sqlsequencereset:Prints the SQL statements for resetting sequences for the given app name(s).'
     "startapp:Creates a Django app directory structure for the given app name in this project's directory."
+    "startproject:Creates a Django project directory structure for the given project name in the current directory or the given destination."
     "syncdb:Create the database tables for all apps in INSTALLED_APPS whose tables haven't already been created."
     'test:Runs the test suite for the specified applications, or the entire site if no apps are specified.'
     'testserver:Runs a development server with data from the given fixture(s).'
     'validate:Validates all installed models.'
   )
+  if [[ $words[1] =~ "manage.py$" ]]; then
+    commands=($commands
+      "changepassword:Change a user's password for django.contrib.auth."
+      'createsuperuser:Used to create a superuser.'
+      'collectstatic:Collect static files in a single location.'
+      'findstatic:Finds the absolute paths for the given static file(s).'
+    )
+  fi
   
   _describe -t commands 'manage.py command' commands && ret=0
 }

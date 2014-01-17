@@ -127,7 +127,7 @@ _setuppy_build() {
     "-f[forcibly build everything (ignore file timestamps)]" \
     "--executable=[specify final destination interpreter path (build.py)]" \
     "-e[specify final destination interpreter path (build.py)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_build_py] )) ||
@@ -142,7 +142,7 @@ _setuppy_build_py() {
     "-O[also compile with optimization: -O1 for \"python -O\", -O2 for \"python -OO\", and -O0 to disable \[default: -O0\]]" \
     "--force[forcibly build everything (ignore file timestamps)]" \
     "-f[forcibly build everything (ignore file timestamps)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_build_ext] )) ||
@@ -180,7 +180,7 @@ _setuppy_build_ext() {
     "--swig-opts=[list of SWIG command line options]" \
     "--swig=[path to the SWIG executable]" \
     "--user[add user include, library and rpath]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_build_clib] )) ||
@@ -196,7 +196,7 @@ _setuppy_build_clib() {
     "-f[forcibly build everything (ignore file timestamps)]" \
     "--compiler=[specify the compiler type]" \
     "-c[specify the compiler type]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_build_scripts] )) ||
@@ -208,7 +208,7 @@ _setuppy_build_scripts() {
     "-f[forcibly build everything (ignore file timestamps]" \
     "--executable=[specify final destination interpreter path]" \
     "-e[specify final destination interpreter path]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_clean] )) ||
@@ -223,7 +223,7 @@ _setuppy_clean() {
     "--bdist-base=[temporary directory for built distributions]" \
     "--all[remove all build output, not just temporary by-products]" \
     "-a[remove all build output, not just temporary by-products]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_install] )) ||
@@ -232,7 +232,7 @@ _setuppy_install() {
     "--prefix=[installation prefix]" \
     "--exec-prefix=[(Unix only) prefix for platform-specific files]" \
     "--home=[(Unix only) home directory to install under]" \
-    "--user[install in user site-package '/home/hattori/.local/lib/python2.7/site-packages']" \
+    "--user[install in user site-package]" \
     "--install-base=[base installation directory (instead of --prefix or --home)]" \
     "--install-platbase=[base installation directory for platform-specific files (instead of --exec-prefix or --home)]" \
     "--root=[install everything relative to this alternate root directory]" \
@@ -251,10 +251,9 @@ _setuppy_install() {
     "-f[force installation (overwrite any existing files)]" \
     "--skip-build[skip rebuilding everything (for testing/debugging)]" \
     "--record=[filename in which to record list of installed files]" \
-    "--install-layout=[installation layout to choose (known values: deb, unix)]" \
     "--old-and-unmanageable[Try not to use this!]" \
     "--single-version-externally-managed[used by system package builders to create 'flat' eggs]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_install_lib] )) ||
@@ -272,7 +271,7 @@ _setuppy_install_lib() {
     "--optimize=[also compile with optimization: -O1 for \"python -O\", -O2 for \"python -OO\", and -O0 to disable \[default: -O0\]]" \
     "-O[also compile with optimization: -O1 for \"python -O\", -O2 for \"python -OO\", and -O0 to disable \[default: -O0\]]" \
     "--skip-build[skip the build steps]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_install_headers] )) ||
@@ -282,7 +281,7 @@ _setuppy_install_headers() {
     "-d[directory to install header files to]" \
     "--force[force installation (overwrite existing files)]" \
     "-f[force installation (overwrite existing files)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_install_scripts] )) ||
@@ -295,7 +294,7 @@ _setuppy_install_scripts() {
     "--force[force installation (overwrite existing files)]" \
     "-f[force installation (overwrite existing files)]" \
     "--skip-build[skip the build steps]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_install_data] )) ||
@@ -306,7 +305,7 @@ _setuppy_install_data() {
     "--root=[install everything relative to this alternate root directory]" \
     "--force[force installation (overwrite existing files)]" \
     "-f[force installation (overwrite existing files)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_sdist] )) ||
@@ -317,7 +316,7 @@ _setuppy_sdist() {
     "-k[keep the distribution tree around after creating archive file(s)]" \
     "--dist-dir=[directory to put the source distribution archive(s) in \[default: dist\]]" \
     "-d[directory to put the source distribution archive(s) in \[default: dist\]]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_register] )) ||
@@ -328,7 +327,7 @@ _setuppy_register() {
     "--show-response[display full response text from server]" \
     "--list-classifiers[list the valid Trove classifiers]" \
     "--strict[Will stop the registering if the meta-data are not fully compliant]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_bdist] )) ||
@@ -346,7 +345,7 @@ _setuppy_bdist() {
     "-u[Owner name used when creating a tar file \[default: current user\]]" \
     "--group=[Group name used when creating a tar file \[default: current group\]]" \
     "-g[Group name used when creating a tar file \[default: current group\]]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_bdist_dumb] )) ||
@@ -368,7 +367,7 @@ _setuppy_bdist_dumb() {
     "-u[Owner name used when creating a tar file \[default: current user\]]" \
     "--group=[Group name used when creating a tar file \[default: current group\]]" \
     "-g[Group name used when creating a tar file \[default: current group\]]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_bdist_rpm] )) ||
@@ -418,7 +417,7 @@ _setuppy_bdist_rpm() {
     "--force-arch=[Force an architecture onto the RPM build process]" \
     "--quiet[Run the INSTALL phase of RPM building in quiet mode]" \
     "-q[Run the INSTALL phase of RPM building in quiet mode]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_bdist_wininst] )) ||
@@ -444,7 +443,7 @@ _setuppy_bdist_wininst() {
     "--install-script=[basename of installation script to be run afterinstallation or before deinstallation]" \
     "--pre-install-script=[Fully qualified filename of a script to be run before any files are installed.  This script need not be in the distribution]" \
     "--user-access-control=[specify Vista's UAC handling - 'none'/default=no handling, 'auto'=use UAC if target Python installed for all users, 'force'=always use UAC]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_upload] )) ||
@@ -457,7 +456,7 @@ _setuppy_upload() {
     "-s[sign files to upload using gpg]" \
     "--identity=[GPG identity used to sign files]" \
     "-i[GPG identity used to sign files]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_check] )) ||
@@ -469,7 +468,7 @@ _setuppy_check() {
     "-r[Checks if long string meta-data syntax are reStructuredText-compliant]" \
     "--strict[Will exit with an error if a check fails]" \
     "-s[Will exit with an error if a check fails]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_alias] )) ||
@@ -483,7 +482,7 @@ _setuppy_alias() {
     "-u[save options to the current user's pydistutils.cfg file]" \
     "--filename=[configuration file to use (default=setup.cfg)]" \
     "-f[configuration file to use (default=setup.cfg)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_bdist_egg] )) ||
@@ -499,7 +498,7 @@ _setuppy_bdist_egg() {
     "--dist-dir=[directory to put final built distributions in]" \
     "-d[directory to put final built distributions in]" \
     "--skip-build[skip rebuilding everything (for testing/debugging)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_develop] )) ||
@@ -524,9 +523,6 @@ _setuppy_develop() {
     "-i[base URL of Python Package Index]" \
     "--find-links=[additional URL(s) to search for packages]" \
     "-f[additional URL(s) to search for packages]" \
-    "--delete-conflicting[no longer needed; don't use this]" \
-    "-D[no longer needed; don't use this]" \
-    "--ignore-conflicts-at-my-risk[no longer needed; don't use this]" \
     "--build-directory=[download/extract/build in DIR; keep the results]" \
     "-b[download/extract/build in DIR; keep the results]" \
     "--optimize=[also compile with optimization: -O1 for \"python -O\", -O2 for \"python -OO\", and -O0 to disable \[default: -O0\]]" \
@@ -545,15 +541,12 @@ _setuppy_develop() {
     "--local-snapshots-ok[allow building eggs from local checkouts]" \
     "-l[allow building eggs from local checkouts]" \
     "--version[print version information and exit]" \
-    "--install-layout=[installation layout to choose (known values: deb)]" \
-    "--force-installation-into-system-dir[force installation into /usr]" \
-    "-0[force installation into /usr]" \
     "--no-find-links[Don't load find-links defined in packages being installed]" \
-    "--user[install in user site-package '/home/hattori/.local/lib/python2.7/site-packages']" \
+    "--user[install in user site-package]" \
     "--uninstall[Uninstall this source package]" \
     "-u[Uninstall this source package]" \
     "--egg-path=[Set the path to be used in the .egg-link file]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_easy_install] )) ||
@@ -578,9 +571,6 @@ _setuppy_easy_install() {
     "-i[base URL of Python Package Index]" \
     "--find-links=[additional URL(s) to search for packages]" \
     "-f[additional URL(s) to search for packages]" \
-    "--delete-conflicting[no longer needed; don't use this]" \
-    "-D[no longer needed; don't use this]" \
-    "--ignore-conflicts-at-my-risk[no longer needed; don't use this]" \
     "--build-directory=[download/extract/build in DIR; keep the results]" \
     "-b[download/extract/build in DIR; keep the results]" \
     "--optimize=[also compile with optimization: -O1 for \"python -O\", -O2 for \"python -OO\", and -O0 to disable \[default: -O0\]]" \
@@ -599,12 +589,9 @@ _setuppy_easy_install() {
     "--local-snapshots-ok[allow building eggs from local checkouts]" \
     "-l[allow building eggs from local checkouts]" \
     "--version[print version information and exit]" \
-    "--install-layout=[installation layout to choose (known values: deb)]" \
-    "--force-installation-into-system-dir[force installation into /usr]" \
-    "-0[force installation into /usr]" \
     "--no-find-links[Don't load find-links defined in packages being installed]" \
-    "--user[install in user site-package '/home/hattori/.local/lib/python2.7/site-packages']" \
-    "*::setup.py commands:_setuppy"
+    "--user[install in user site-package]" \
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_egg_info] )) ||
@@ -622,7 +609,7 @@ _setuppy_egg_info() {
     "-R[Don't add subversion revision ID \[default\]]" \
     "--no-date[Don't include date stamp \[default\]]" \
     "-D[Don't include date stamp \[default\]]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_rotate] )) ||
@@ -634,7 +621,7 @@ _setuppy_rotate() {
     "-d[directory where the distributions are]" \
     "--keep=[number of matching distributions to keep]" \
     "-k[number of matching distributions to keep]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_saveopts] )) ||
@@ -646,7 +633,7 @@ _setuppy_saveopts() {
     "-u[save options to the current user's pydistutils.cfg file]" \
     "--filename=[configuration file to use (default=setup.cfg)]" \
     "-f[configuration file to use (default=setup.cfg)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_setopt] )) ||
@@ -666,7 +653,7 @@ _setuppy_setopt() {
     "-u[save options to the current user's pydistutils.cfg file]" \
     "--filename=[configuration file to use (default=setup.cfg)]" \
     "-f[configuration file to use (default=setup.cfg)]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_test] )) ||
@@ -676,7 +663,7 @@ _setuppy_test() {
     "-m[Run 'test_suite' in specified module]" \
     "--test-suite=[Test suite to run (e.g. 'some_module.test_suite')]" \
     "-s[Test suite to run (e.g. 'some_module.test_suite')]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_install_egg_info] )) ||
@@ -684,7 +671,7 @@ _setuppy_install_egg_info() {
   _arguments -s \
     "--install-dir=[directory to install to]" \
     "-d[directory to install to]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 (( $+functions[_setuppy_upload_docs] )) ||
@@ -694,7 +681,7 @@ _setuppy_upload_docs() {
     "-r[url of repository \[default: http://pypi.python.org/pypi\]]" \
     "--show-response[display full response text from server]" \
     "--upload-dir=[directory to upload]" \
-    "*::setup.py commands:_setuppy"
+    "*::setup.py commands:_setup.py"
 }
 
 _setup.py "$@"

@@ -1,120 +1,135 @@
 #compdef gradle gradlew
+# ------------------------------------------------------------------------------
+# Copyright (c) 2011 Github zsh-users - http://github.com/zsh-users
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of the zsh-users nor the
+#       names of its contributors may be used to endorse or promote products
+#       derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL ZSH-USERS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# ------------------------------------------------------------------------------
+# Description
+# -----------
+#
+#  Completion script for Gradle 1.0-milestone-5 (http://www.gradle.org).
+#
+#  Status: incomplete (see TODO/FIXME tags)
+#
+# ------------------------------------------------------------------------------
+# Authors
+# -------
+#
+#  * Julien Nicoulaud <julien.nicoulaud@gmail.com>
+#
+# ------------------------------------------------------------------------------
 
-local curcontext="$curcontext" ret=1 state state_descr line
-local gradle_inspect=yes cache_policy tag_order
-local -A opt_args
-local -a gradle_group_tasks gradle_all_tasks
 
-# Set the caching policy to invalidate cache if the build file is newer than the cache.
-_gradle_caching_policy() {
-    [[ $gradle_buildfile -nt $1 ]]
+_gradle() {
+  typeset -A opt_args
+  local context state line
+
+  local curcontext="$curcontext"
+
+  _arguments \
+    '(- 1 *)'{-?,-h,--help}'[show help message]' \
+    '(-a --no-rebuild)'{-a,--no-rebuild}'[do not rebuild project dependencies]' \
+    '(-b --build-file)'{-b,--build-file}'[specify the build file]:build file:_gradle_scripts' \
+    '(-C --cache)'{-C,--cache}'[specify how compiled build scripts should be cached]:cache strategy:((rebuild\:rebuild\ the\ cache on\:use\ the\ cache\ \(default\)))' \
+    '(-c --settings-file)'{-c,--settings-file}'[speciy the settings file]:settings file:_gradle_scripts' \
+    '*'{-D-,--system-prop}'[set system property of the JVM]:property:_gradle_properties' \
+    '(-d --debug -q --quiet -i --info)'{-d,--debug}'[log in debug mode (includes normal stacktrace)]' \
+    '(--foreground --no-daemon --stop)--daemon[use the Gradle daemon to run the build, starts the daemon if not running]' \
+    '(-e --embedded)'{-e,--embedded}'[specify an embedded build script]:embedded build script' \
+    '(--daemon --no-daemon --stop)--foreground[start the Gradle daemon in the foreground]' \
+    '(-g --gradle-user-home)'{-g,--gradle-user-home}'[specify the gradle user home directory]: :_files -/' \
+    '--gui[launch a GUI application]' \
+    '(-I --init-script)'{-I,--init-script}'[specify an initialization script]:init script:_gradle_scripts' \
+    '(-i --info -q --quiet -d --debug)'{-i,--info}'[set log level to info]' \
+    '(-m --dry-run)'{-m,--dry-run}'[run the builds with all task actions disabled]' \
+    '(-n --dependencies)'{-n,--dependencies}'[show list of all project dependencies]' \
+    '--no-color[do not use color in the console output]' \
+    '(--daemon --foreground --stop)--no-daemon[do not use the Gradle daemon to run the build]' \
+    '--no-opt[ignore any task optimization]' \
+    '*'{-P-,--project-prop}'[set project property for the build script]:property:_gradle_properties' \
+    '(-p --project-dir)'{-p,--project-dir}'[specify the start directory for Gradle]: :_files -/' \
+    '--profile[profile build execution time and generate a report in the <build_dir>/reports/profile directory]' \
+    '(-q --quiet -d --debug -i --info)'{-q,--quiet}'[log errors only]' \
+    '(-r --properties)'{-r,--properties}'[show list of all available project properties]' \
+    '(-S --full-stacktrace)'{-S,--full-stacktrace}'[print out the full (very verbose) stacktrace for any exceptions]' \
+    '(-s --stacktrace)'{-s,--stacktrace}'[print out the stacktrace also for user exceptions]' \
+    '(--daemon --foreground)--stop[stop the Gradle daemon if it is running]' \
+    '(-t --tasks)'{-t,--tasks}'[show list of available tasks]' \
+    '(-u --no-search-upward)'{-u,--no-search-upward}'[don'\''t search in parent folders for a settings.gradle file]' \
+    '(-v --version)'{-v,--version}'[print version info]' \
+    '(-x --exclude-task)*'{-x,--exclude-task}'[specify a task to be excluded from execution]:task:_gradle_tasks' \
+    '*: :_gradle_tasks'
 }
 
-zstyle -s ":completion:*:*:$service:*" cache-policy cache_policy || \
-    zstyle ":completion:*:*:$service:*" cache-policy _gradle_caching_policy
+(( $+functions[_gradle_tasks] )) ||
+_gradle_tasks() {
+  local alternatives task_group task_group_name task_group_tasks
+  local project="${PREFIX%:*}"
+  alternatives=("project:project:_gradle_projects -qS:")
+  for task_group in ${(M)${(ps:\n\n:)"$($service --daemon --quiet --no-color ${project}:tasks 2>/dev/null)"}:#*[[:space:]]\-[[:space:]]*}; do
+    task_group_name="${${${task_group%%---*}%[[:space:]]tasks[[:space:]]*}:l}"
+    task_group_tasks=(${(q)${(f)${task_group##*---}}/[[:space:]]\-[[:space:]]/:})
+    alternatives+=("${task_group_name//[[:space:]]/-}-task:${task_group_name} task:((${task_group_tasks[@]}))")
+  done
+  _alternative "${alternatives[@]}"
+}
 
-# By default, we only complete main tasks (belonging to a group). Secondary tasks are
-# completed if no main tasks are found.
-zstyle -a ":completion:*:*:$service:*" tag-order tag_order || \
-    zstyle ":completion:*:*:$service:*" tag-order 'gradle_group' 'gradle_all'
+(( $+functions[_gradle_projects] )) ||
+_gradle_projects() {
+  local project="${PREFIX%:*}"
+  local projects; projects=(${${${(M)${(f)"$($service --daemon --quiet --no-color ${project}:projects 2>/dev/null)"}:#*--- Project\ \':*}#*\'}%\'*})
+  _multi_parts $@ : projects
+}
 
-# The completion inspects the current build file to find tasks to complete. Setting
-# this style to 'no' or 'false' turns off inspection. In that case only the built-in tasks
-# are completed.
-zstyle -T ":completion:*:*:$service:*" gradle-inspect || gradle_inspect=no
+(( $+functions[_gradle_scripts] )) ||
+_gradle_scripts() {
+  _files -g '*.gradle*'
+}
 
-_arguments -C \
-    '(-)'{-\?,-h,--help}'[Shows a help message.]' \
-    {-a,--no-rebuild}'[Do not rebuild project dependencies.]' \
-    {-b,--build-file}'[Specifies the build file.]:build file:_files -g "*.gradle(-.)"' \
-    {-C,--cache}'[Specifies how compiled build scripts should be cached.]:cache policy:(on rebuild)' \
-    {-c,--settings-file}'[Specifies the settings file.]:settings file:_files -g "*.properties(-.)"' \
-    '--continue[Continues task execution after a task failure.]' \
-    \*{-D+,--system-prop}'[Set system property of the JVM (e.g. -Dmyprop=myvalue).]:system property (prop=val):' \
-    '(-i --info -q --quiet)'{-d,--debug}'[Log in debug mode (includes normal stacktrace).]' \
-    '(--nodaemon)--daemon[Uses the Gradle daemon to run the build. Starts the daemon if not running.]' \
-    '--foreground[Starts the Gradle daemon in the foreground.]' \
-    {-g,--gradle-user-home}'[Specifies the gradle user home directory.]:home directory:_directories' \
-    '(-)--gui[Launches the Gradle GUI.]' \
-    {-I,--init-script}'[Specifies an initialization script.]:init script:_files -g "*.gradle(-.)"' \
-    '(-d --debug -q --quiet)'{-i,--info}'[Set log level to info.]' \
-    {-m,--dry-run}'[Runs the builds with all task actions disabled.]' \
-    '--no-color[Do not use color in the console output.]' \
-    '(--daemon)--no-daemon[Do not use the Gradle daemon to run the build.]' \
-    '--no-opt[Ignore any task optimization.]' \
-    '--offline[The build should operate without accessing network resources.]' \
-    \*{-P+,--project-prop}'[Set project property for the build script (e.g. -Pmyprop=myvalue).]:project property (prop=val):' \
-    {-p,--project-dir}'[Specifies the start directory for Gradle.]:start directory:_directories' \
-    '--parallel[Build projects in parallel. Gradle will attempt to determine the optimal number of executor threads to use.]' \
-    '--parallel-threads[Build projects in parallel, using the specified number of executor threads.]' \
-    '--profile[Profiles build execution time and generates a report in the <build_dir>/reports/profile directory.]' \
-    '--project-cache-dir[Specifies the project-specific cache directory.]:cache directory:_directories' \
-    '(-d --debug -i --info)'{-q,--quiet}'[Log errors only.]' \
-    '--recompile-scripts[Force build script recompiling.]' \
-    '--refresh[Refresh the state of resources of the type(s) specified.]:refresh policy:(dependencies)' \
-    '--refresh-dependencies[Refresh the state of dependencies.]' \
-    '--rerun-tasks[Ignore previously cached task results.]' \
-    '(-S --full-stacktrace)'{-s,--stacktrace}'[Print out the stacktrace for all exceptions.]' \
-    '(-s --stacktrace)'{-S,--full-stacktrace}'[Print out the full (very verbose) stacktrace for all exceptions.]' \
-    '(-)--stop[Stops the Gradle daemon if it is running.]' \
-    {-u,--no-search-upward}"[Don't search in parent folders for a settings.gradle file.]" \
-    '(-)'{-v,--version}'[Print version info.]' \
-    {-x,--exclude-task}'[Specify a task to be excluded from execution.]:task to exclude:->alltask' \
-    '*:task:->task' \
-    && ret=0
+(( $+functions[_gradle_properties] )) ||
+_gradle_properties() {
+  local ret=1
+  if compset -P '*='; then
+    _message -e property-values 'property value' && ret=0
+  else
+    _wanted property-names expl 'property name' _gradle_property_names -qS= && ret=0
+  fi
+  return ret
+}
 
-if [[ $words[CURRENT] != -* ]]; then
-    if [[ $gradle_inspect == yes ]]; then
-        # If a build file is specified after '-b' or '--build-file', use this file. Otherwise,
-        # default is the file 'build.gradle' in the current directory.
-        local gradle_buildfile=${${(v)opt_args[(i)-b|--build-file]}:-build.gradle}
+(( $+functions[_gradle_property_names] )) ||
+_gradle_property_names() {
+  local property_names; property_names=(${${(M)${(f)"$($service --daemon --quiet --no-color :properties 2>/dev/null)"}:#*:*}%%:*})
+  _describe -t property_names 'property name' property_names "$@"
+}
 
-        if [[ -f $gradle_buildfile ]]; then
-            # Cache name is constructed from the absolute path of the build file.
-            local cache_name=${${gradle_buildfile:a}//[^[:alnum:]]/_}
-            if _cache_invalid $cache_name || ! _retrieve_cache $cache_name; then
-                zle -R "Generating cache from $gradle_buildfile"
-                local outputline
-                local -a match mbegin mend
-                # Run gradle/gradlew and retrieve possible tasks.
-                for outputline in ${(f)"$($service --build-file $gradle_buildfile -q tasks --all)"}; do
-                    if [[ $outputline == [[:blank:]]#(#b)([[:alnum:]]##)' - '(*) ]]; then
-                        # The descriptions of main tasks start at beginning of line, descriptions of
-                        # secondary tasks are indented.
-                        if [[ $outputline == [[:alnum:]]* ]]; then
-                            gradle_group_tasks+=( "$match[1]:$match[2]" )
-                        else
-                            gradle_all_tasks+=( "$match[1]:$match[2]" )
-                        fi
-                    fi
-                done
-                _store_cache $cache_name gradle_group_tasks gradle_all_tasks
-            fi
+_gradle "$@"
 
-            if [[ $state == task ]]; then
-                _tags gradle_group gradle_all
-                while _tags; do
-                    # Offer main tasks and secondary tasks in different tags.
-                    _requested gradle_group && _describe 'group tasks' gradle_group_tasks && ret=0
-                    _requested gradle_all && _describe 'secondary tasks' gradle_all_tasks && ret=0
-                    (( ret )) || break
-                done
-            elif [[ $state == alltask ]]; then
-                # After '--exclude-task', we don't make a distinction between main tasks and
-                # secondary tasks.
-                _describe 'all tasks' gradle_group_tasks -- gradle_all_tasks && ret=0
-            fi
-        fi
-    else
-        _describe 'built-in tasks' '(
-            "dependencies:Displays all dependencies declared in root project."
-            "dependencyInsight:Displays the insight into a specific dependency in root project."
-            "help:Displays a help message."
-            "projects:Displays the sub-projects of root project."
-            "properties:Displays the properties of root project."
-            "tasks:Displays the tasks runnable from root project."
-            )' && ret=0
-    fi
-fi
-
-return ret
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et
