@@ -1,6 +1,9 @@
 aws
 gnupg
 ssh
+keys.tar.gz
+keys.tar
+secrets.tar.gz
 
 credentials.sh
 vim/.netrwhist
