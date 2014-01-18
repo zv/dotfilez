@@ -20,9 +20,10 @@ if [ "$1" == "backup" ]; then
     cp -r ~/.xmonad ~/.dotfilez_backups/`date %+F`/.xmonad
 fi
 
-# e.x ./dotfiles secrets extract || ./dotfiles secrets link
+# pack/extract/link keys etc.
 if [ "$1" == "secrets" ]; then
     if [ "$2" == "extract" ]; then
+        gpg --verify keys.enc.sig keys.enc
         gpg --output secrets.tar.gz --decrypt keys.enc
         tar -xvf secrets.tar.gz
         rm secrets.tar.gz
@@ -34,10 +35,9 @@ if [ "$1" == "secrets" ]; then
     fi
 
     if [ "$2" == "repack" ]; then
-        echo 'tarring our secrets'
-        tar -czf keys.tar.gz aws gnupg ssh
+        tar -cvzf keys.tar.gz --exclude="aws-*" --exclude="ec2-*" aws gnupg ssh
         gpg --symmetric --cipher-algo AES256 --armor -o keys.enc keys.tar.gz
+        gpg --output keys.enc.sig --armor --detach-sig keys.enc
         rm keys.tar.gz
-        echo 'done'
     fi
 fi
