@@ -10,6 +10,10 @@ noremap H ^
 noremap L $
 vnoremap L g_
 
+imap <D-k> _
+
+inoremap <C-D> <Esc>:call setline(".",substitute(getline(line(".")),'^\s*',matchstr(getline(line(".")-1),'^\s*'),''))<CR>I
+
 "" Vim completion mapping
 " Complete filename
 inoremap <C-f> <C-x><C-f>
