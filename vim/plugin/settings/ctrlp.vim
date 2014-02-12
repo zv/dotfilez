@@ -1,11 +1,14 @@
+let g:ctrlp_extensions = ['yankring', 'changes']
+
 " See if we can replace CtrlP w/ CtrlPMixed
 nnoremap ,p :CtrlPMixed<cr>
 " Additional mapping for buffer search
 nnoremap ,b :CtrlPBuffer<cr>
-" Yankring
-nnoremap ,yr :CtrlPYankring<CR>
 
-let g:ctrlp_extensions = ['yanking']
+" Yankring (no longer can use ctrlp because of kdl threading changes, thanks
+" obama)
+command! CtrlPYankring call ctrlp#init(ctrlp#yankring#id())
+nnoremap ,yr :CtrlPYankring<CR>
 
 " Use the git index if we're in a git repo.
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others']
