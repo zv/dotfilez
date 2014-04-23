@@ -10,3 +10,6 @@
 	path = zsh/zsh-syntax-highlighting
 	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
 	ignore = dirty
+[submodule "lib/ag"]
+	path = lib/ag
+	url = https://github.com/ggreer/the_silver_searcher.git
