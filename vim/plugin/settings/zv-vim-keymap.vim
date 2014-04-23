@@ -53,7 +53,7 @@ nnoremap Y y$
 
 " Faster substitute.
 nnoremap ,S :%s//g<left><left>
-vmap ,s :s//g<left><left>
+vmap ,S :s//g<left><left>
 
 " Space to move a half page down and backspace to reverse
 nmap <Space> <C-d>
