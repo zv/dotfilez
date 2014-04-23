@@ -172,3 +172,8 @@ nmap <silent> ,rs yy:<C-f>p<C-c><CR>
 " Hit leader a then type a character you want to align by
 nmap ,a :Tabularize /
 vmap ,a :Tabularize /
+
+" Correctly man in gvim
+if has("gui_running")
+  nnoremap K :<C-U>exe "Man" v:count "<C-R><C-W>"<CR>
+endif
