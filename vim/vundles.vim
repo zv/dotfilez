@@ -19,6 +19,7 @@ Bundle 'wting/rust.vim'
 " Snippets
 Bundle 'Shougo/neosnippet'
 Bundle 'honza/vim-snippets'
+Bundle 'Shougo/neosnippet-snippets'
 
 " Tools
 Bundle "airblade/vim-gitgutter"
