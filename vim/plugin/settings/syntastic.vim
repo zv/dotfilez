@@ -1,3 +1,10 @@
+" ensure our assembly is 64 bitaroos when we have em
+if executable('arch')
+  if system('arch') == 'x86_64'
+    let g:syntastic_nasm_nasm_post_args = '-X gnu -f elf64'
+  endif
+endif
+
 "mark syntax errors with :signs
 let g:syntastic_enable_signs=1
 "automatically jump to the error when saving the file
