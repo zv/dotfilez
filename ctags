@@ -1,4 +1,7 @@
+--tag-relative=yes
 --extra=+f
+--verbose=yes
+--totals=yes
 
 --exclude=.git
 --exclude=.svn
