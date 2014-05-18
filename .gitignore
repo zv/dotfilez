@@ -7,14 +7,17 @@ secrets.tar.gz
 
 credentials.sh
 vim/.netrwhist
-vim/bundle
 vim/backups
+vim/bundle
 xmonad/xmonad
 xmonad/xmonad-x86_64-linux
 xmonad/xmonad.errors
 xmonad/xmonad.hi
 xmonad/xmonad.o
 pentadactyl/info/default
+
+lib/ag
+lib/vim
 
 " for YCM
 *.pyc
