@@ -581,7 +581,8 @@ alias mkdir='nocorrect mkdir'
 alias mv='nocorrect mv'
 alias mysql='nocorrect mysql'
 alias rm='nocorrect rm'
-alias nmcli'nocorrect nmcli'
+alias -g nmcli'nocorrect nmcli'
+alias ip='nocorrect ip'
 
 # Disable globbing.
 alias fc='noglob fc'
