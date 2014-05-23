@@ -8,6 +8,10 @@ if [ "$1" == "install" ]; then
     git ls-tree --name-only HEAD | \
         grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' | \
         xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
+    # compile our prompt here...
+    if [[ -x $(dirname erlc) ]]; then
+        erlc -o ebin ebin/zv_prompt.erl
+    fi
     ln -s $HOME/.Xresources $HOME/.Xdefaults
 fi
 
