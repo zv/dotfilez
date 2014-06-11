@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+#
 # This is zv's ZSHRC.
 # haq the plan8
 # meow nyan meow nyan meow
@@ -7,6 +8,7 @@
 ############################################
 #  Environment
 ############################################
+typeset -gU cdpath fpath path mailpath
 
 setopt BRACE_CCL          # Allow brace character class list expansion.
 setopt COMBINING_CHARS    # Combine zero-length punctuation characters
@@ -20,6 +22,28 @@ setopt NOTIFY             # Report status of background jobs immediately.
 unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
 unsetopt HUP              # Don't kill jobs on shell exit.
 unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
+
+setopt EXTENDED_GLOB
+setopt BARE_GLOB_QUAL
+
+# Add go to path
+export GOPATH=$HOME/Development/go
+
+path=(
+    ~/bin
+    $GOPATH/bin
+    /usr/local/{bin,sbin}
+    /usr/local/plan9/bin # Plan9 binaries
+    $path
+)
+
+# Load our completion functions
+fpath=(
+    ~/.zsh/zsh-completions/src
+    $fpath
+)
+
+for fn (~/.zsh/functions/*.zsh) source $fn
 
 #####################################################################
 #  Spectrum (A script to make using 256 colors in zsh less painful.)
@@ -95,18 +119,6 @@ function spectrum_ls() {
 #  Theme
 #############################################
 
-ZEPHYR_THEME_GIT_PROMPT_PREFIX="%{$reset_color%}%{$fg[white]%}["
-ZEPHYR_THEME_GIT_PROMPT_SUFFIX="]%{$reset_color%}"
-ZEPHYR_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}●%{$reset_color%}"
-ZEPHYR_THEME_GIT_PROMPT_CLEAN=""
-
-prompt_fix_for_git() {
-    local cb=$(current_branch)
-    if [ -n "$cb" ]; then
-        echo "- $ZEPHYR_THEME_GIT_PROMPT_PREFIX$(current_branch)$(parse_git_dirty)$ZEPHYR_THEME_GIT_PROMPT_SUFFIX"
-    fi
-}
-
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
 # you know what you are dealing with.
 zle_vim_prompt_notifier() {
@@ -117,13 +129,19 @@ zle_vim_prompt_notifier() {
     fi
 }
 
-PROMPT='[%n@%m]%2~ $(prompt_fix_for_git) $(zle_vim_prompt_notifier) '
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' actionformats '- [%b|%F{green}%a%f|%F{cyan}%i%f] '
+zstyle ':vcs_info:*' stagedstr '%F{028}+%f'
+zstyle ':vcs_info:*' unstagedstr '*'
+zstyle ':vcs_info:*' formats '- [%b%u%c] '
+zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
+precmd () { vcs_info }
 
-# I am not predisposed to using multikey commands, as a consequence I would
-# prefer it if vicmd immediately changed when I hit <ESC> <C-]> etc.
-# If `bindkey -L` shows that you do not share this predisposition, removing
-# this will simply just slow down mode switching marginally.
-export KEYTIMEOUT=1
+PROMPT='[%n@%m] %2~ ${vcs_info_msg_0_}$(zle_vim_prompt_notifier) '
+
+export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
 
 #############################################
 #  Vim & ZSH Line Editor
@@ -165,25 +183,10 @@ bindkey -M "viins" ' ' magic-space
 #############################################
 # Aliasing
 #############################################
-
-alias pu='pushd'         # Push on directory stack
-alias po='popd'          # Pop dstack
 alias ...='cd ../..'     # Basic directory operations
 alias -- -='cd -'        # This has always irritated me
 alias _='sudo'           # Super user
-alias _bex='bundle exec' # Bundle Exec
 alias history='fc -l 1'  # Show history
-# LS
-alias l='ls -1A'         # Lists in one column, hidden files.
-alias ll='ls -lh'        # Lists human readable sizes.
-alias lr='ll -R'         # Lists human readable sizes, recursively.
-alias la='ll -A'         # Lists human readable sizes, hidden files.
-alias lm='la | "$PAGER"' # Lists human readable sizes, hidden files through pager.
-alias lx='ll -XB'        # Lists sorted by extension (GNU only).
-alias lk='ll -Sr'        # Lists sorted by size, largest last.
-alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
-alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
-alias sl='ls'            # I often screw this up.
 
 alias edittmp='vim $(mktemp)' # I often edit temporary files
 # I occassionally want to convert man pages to pdfs, this is my hacky way to do
@@ -343,7 +346,6 @@ fi
 export AWS_DEFAULT_REGION=us-west-1
 export EC2_URL=https://ec2.us-west-1.amazonaws.com
 
-PATH+=$AWS_CLOUDWATCH_HOME/bin:$AWS_ELB_HOME/bin:$AWS_AUTO_SCALING_HOME/bin:$EC2_HOME/bin
 
 if [ -e "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre" ]; then
     export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre"
@@ -355,14 +357,14 @@ else
     # export JAVA_HOME=$(dirname `find / -wholename "*/jre/bin/java" 2>/dev/null`)
 fi
 
+path+={$AWS_CLOUDWATCH_HOME,$AWS_ELB_HOME,$AWS_AUTO_SCALING_HOME,$EC2_HOME}/bin
+
 ############################################
 #  Completions
 ############################################
 # Amazon AWS completion
 source $HOME/.zsh/functions/amazon_ec2_completion.zsh
 
-# Load our completion functions
-fpath=($HOME/.zsh/zsh-completions/src $fpath)
 
 unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
@@ -644,7 +646,7 @@ eval `dircolors ~/.zsh/LS_COLORS`
 #############################################
 
 # ZSHENV stuff
-#export EDITOR='vim' # didn't see that one coming.
+export EDITOR='vim' # didn't see that one coming.
 #export VISUAL'vim'
 export PAGER='less'
 export LANG='en_US.UTF-8'
@@ -654,15 +656,10 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
-
 # file rename magick
 bindkey "^[m" copy-prev-shell-word
 
-# Long list of Jobs
-setopt long_list_jobs
-
 # Less 4 lyfe
-export PAGER="less -R"
 export LC_CTYPE=$LANG
 
 # vim for manpages
@@ -691,33 +688,3 @@ autoload -U compinit
 compinit -i
 
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-for function in ~/.zsh/functions/*; do
-    source $function
-done
-
-# don't care much for these, but here they are
-# main cursor bracket pattern root
-# specified as such (main brackets pattern cursor
-ZSH_HIGHLIGHT_HIGHLIGHTERS=()
-
-### Closing words ###########################
-
-# Add go to path
-export GOPATH=$HOME/Development/go
-
-PATH+=:$GOPATH/bin
-PATH="$HOME/bin:/usr/local/bin:$PATH"
-
-# Recursively add anything I've got in ~/bin
-for home_bin in ~/bin; do
-    PATH+=":$home_bin"
-done
-
-export prakts=$HOME/Development/practice
-export prvumain=$HOME/Development/purveu-main
-
-PATH+=:$HOME/.rvm/bin # Add RVM to PATH for scripting
-PATH+=:/usr/local/plan9/bin # Plan9 binaries
-
-export PATH
