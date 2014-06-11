@@ -8,20 +8,14 @@
 #  Environment
 ############################################
 
-#
-# General
-#
-
 setopt BRACE_CCL          # Allow brace character class list expansion.
-setopt COMBINING_CHARS    # Combine zero-length punctuation characters (accents)
+setopt COMBINING_CHARS    # Combine zero-length punctuation characters
                           # with the base character.
-setopt RC_QUOTES          # Allow 'Henry''s Garage' instead of 'Henry'\''s Garage'.
+setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
 unsetopt MAIL_WARNING     # Don't print a warning message if a mail file has been accessed.
 
-#
-# Jobs
-#
-
+setopt LONG_LIST_JOBS     # List jobs in the long format by default.
+setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
 setopt NOTIFY             # Report status of background jobs immediately.
 unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
 unsetopt HUP              # Don't kill jobs on shell exit.
@@ -124,6 +118,12 @@ zle_vim_prompt_notifier() {
 }
 
 PROMPT='[%n@%m]%2~ $(prompt_fix_for_git) $(zle_vim_prompt_notifier) '
+
+# I am not predisposed to using multikey commands, as a consequence I would
+# prefer it if vicmd immediately changed when I hit <ESC> <C-]> etc.
+# If `bindkey -L` shows that you do not share this predisposition, removing
+# this will simply just slow down mode switching marginally.
+export KEYTIMEOUT=1
 
 #############################################
 #  Vim & ZSH Line Editor
