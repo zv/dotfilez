@@ -36,8 +36,8 @@ unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
 typeset -gA FX FG BG
 
 FX=(
-                                        none                         "\e[00m"
-                                        normal                       "\e[22m"
+  none                      "\e[00m"
+  normal                    "\e[22m"
   bold                      "\e[01m"    no-bold                      "\e[22m"
   faint                     "\e[02m"    no-faint                     "\e[22m"
   standout                  "\e[03m"    no-standout                  "\e[23m"
@@ -116,8 +116,8 @@ prompt_fix_for_git() {
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
 # you know what you are dealing with.
 zle_vim_prompt_notifier() {
-    if [ "$KEYMAP" = vicmd ]; then
-        print "%F{001}>>%f"
+    if [[ "$KEYMAP" == vicmd ]]; then
+        print "%F{red}>>%f"
     else
         print ">>"
     fi
@@ -162,27 +162,6 @@ bindkey -M vicmd "/" history-incremental-pattern-search-forward
 # Expand history on space.
 bindkey -M "viins" ' ' magic-space
 
-# Expands .... to ../..
-function expand-dot-to-parent-directory-path {
-  if [[ $LBUFFER = *.. ]]; then
-    LBUFFER+='/..'
-  else
-    LBUFFER+='.'
-  fi
-}
-zle -N expand-dot-to-parent-directory-path
-bindkey -M "viins" "." expand-dot-to-parent-directory-path
-
-# Inserts 'sudo ' at the beginning of the line.
-function prepend-sudo {
-  if [[ "$BUFFER" != su(do|)\ * ]]; then
-    BUFFER="sudo $BUFFER"
-    (( CURSOR += 5 ))
-  fi
-}
-zle -N prepend-sudo
-bindkey -M "viins" "\C-X\C-S" prepend-sudo
-
 #############################################
 # Aliasing
 #############################################
@@ -202,10 +181,36 @@ alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias lm='la | "$PAGER"' # Lists human readable sizes, hidden files through pager.
 alias lx='ll -XB'        # Lists sorted by extension (GNU only).
 alias lk='ll -Sr'        # Lists sorted by size, largest last.
-alias lt='ll -tr'        # Lists sorted by date, most recent last.
 alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
 alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
 alias sl='ls'            # I often screw this up.
+
+alias edittmp='vim $(mktemp)' # I often edit temporary files
+# I occassionally want to convert man pages to pdfs, this is my hacky way to do
+# it.
+function man2pdf {
+  man -Tps "$argv[1]" | ps2pdf - "$argv[1]"_man.pdf
+}
+
+# Wikipedia over DNS.
+function firewalkipedia {
+    dig +short txt "$argv[1]".wp.dg.cx
+}
+
+# do a quick check on the fastest DNS servers around
+function DNScheck() {
+    for x in "208.67.222.222" "208.67.220.220" "198.153.192.1" "198.153.194.1" "156.154.70.1" "156.154.71.1" "8.8.8.8" "8.8.4.4" "4.2.2.2"; do
+    (echo -n "$x "; dig @"$x" "$*"|grep Query);
+    done;
+}
+
+# Network Manager aliases
+alias wifi="nmcli -f SSID,BSSID,CHAN,SIGNAL,BARS,ACTIVE dev wifi"
+alias connect="nmcli dev wifi connect"
+
+#############################################
+# Convienence Funcs
+#############################################
 
 # Tmux
 alias ta="tmux attach-session -t"
@@ -265,31 +270,20 @@ alias mxdu='mix deps.update'
 alias mxt='mix test'
 
 ############################################
-#  Package Management (dpkg)
+# SystemD
 ############################################
 
-alias debc='sudo apt-get clean && sudo apt-get autoclean'     # Cleans the cache.
-alias debf='apt-file search --regexp'                         # Displays a file's package.
-alias debi='sudo apt-get install'                             # Installs packages from repositories.
-alias debI='sudo dpkg -i'                                     # Installs packages from files.
-alias debq='apt-cache show'                                   # Displays package information.
-alias debu='sudo apt-get update'                              # Updates the package lists.
-alias debU='sudo apt-get update && sudo apt-get dist-upgrade' # Upgrades outdated packages.
-alias debx='sudo apt-get remove'                              # Removes packages.
+user_commands=(
+  list-units is-active status show help list-unit-files
+  is-enabled list-jobs show-environment)
 
-# Removes packages, their configuration, and unneeded dependencies.
-alias debX='sudo apt-get remove --purge && sudo apt-get autoremove --purge'
-# Creates a basic deb package.
-alias deb-build='time dpkg-buildpackage -rfakeroot -us -uc'
-# Removes all kernel images and headers, except for the ones in use.
-alias deb-kclean='sudo aptitude remove -P "?and(~i~nlinux-(ima|hea) ?not(~n`uname -r`))"'
+sudo_commands=(
+  start stop reload restart try-restart isolate kill
+  reset-failed enable disable reenable preset mask unmask
+  link load cancel set-environment unset-environment)
 
-# Searches for packages.
-if (( $+commands[aptitude] )); then
-    alias debs='aptitude -F "* %p -> %d \n(%v/%V)" --no-gui --disable-columns search'
-else
-    alias debs='apt-cache search'
-fi
+for c in $user_commands; do; alias sc-$c="systemctl $c"; done
+for c in $sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
 
 ############################################
 #  Package Management (Yum)
@@ -303,8 +297,10 @@ alias yumL='yum list installed'    # Lists installed packages.
 alias yumq='yum info'              # Displays package information.
 alias yumr='sudo yum remove'       # Removes package(s).
 alias yums='yum search'            # Searches for a package.
+alias yumsc='yum search -C'        # Search in cache
 alias yumu='sudo yum update'       # Updates packages.
 alias yumU='sudo yum upgrade'      # Upgrades packages.
+alias yumfl='repoquery -lq'        # (f)ile (l)ist a package
 
 ############################################
 #  Grep
@@ -323,15 +319,15 @@ source "$HOME/.zsh/functions/gpg.zsh"
 ############################################
 #  Amazon AWS
 ############################################
-export AWS_AUTO_SCALING_HOME="$HOME/aws/aws-autoscaling"
-export AWS_ELB_HOME="$HOME/aws/aws-elastic_load_balacing"
-export AWS_CLOUDWATCH_HOME="$HOME/aws/aws-cloudwatch"
-export EC2_HOME="$HOME/aws/ec2-api-tools"
+export AWS_AUTO_SCALING_HOME="$HOME/.aws/aws-autoscaling"
+export AWS_ELB_HOME="$HOME/.aws/aws-elastic_load_balacing"
+export AWS_CLOUDWATCH_HOME="$HOME/.aws/aws-cloudwatch"
+export EC2_HOME="$HOME/.aws/ec2-api-tools"
 
 # Build up the various credential files & environment variables required by the
 # AWS toolchain.
-export AWS_CONFIG_FILE=$HOME/.aws
-export AWS_CREDENTIAL_FILE="$HOME/aws/credentials"
+export AWS_CONFIG_FILE=$HOME/.aws/config
+export AWS_CREDENTIAL_FILE="$HOME/.aws/credentials"
 export AWS_ACCESS_KEY=$(cat $AWS_CONFIG_FILE | grep -A 2 "default"  |
                    grep "^aws_access_key_id" | cut -d= -f2)
 
@@ -347,10 +343,7 @@ fi
 export AWS_DEFAULT_REGION=us-west-1
 export EC2_URL=https://ec2.us-west-1.amazonaws.com
 
-export PATH=$PATH:$AWS_CLOUDWATCH_HOME/bin
-export PATH=$PATH:$AWS_ELB_HOME/bin
-export PATH=$PATH:$AWS_AUTO_SCALING_HOME/bin
-export PATH=$PATH:$EC2_HOME/bin
+PATH+=$AWS_CLOUDWATCH_HOME/bin:$AWS_ELB_HOME/bin:$AWS_AUTO_SCALING_HOME/bin:$EC2_HOME/bin
 
 if [ -e "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre" ]; then
     export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre"
@@ -369,7 +362,7 @@ fi
 source $HOME/.zsh/functions/amazon_ec2_completion.zsh
 
 # Load our completion functions
-fpath=(~/.zsh/completion $fpath)
+fpath=($HOME/.zsh/zsh-completions/src $fpath)
 
 unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
@@ -393,8 +386,10 @@ zstyle ':completion:*' list-colors ''
 bindkey -M menuselect '^o' accept-and-infer-next-history
 
 zstyle ':completion:*:*:*:*:*' menu select
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+# zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:kill:*:processes' command 'ps --forest -e -o pid,user,tty,cmd'
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
+
 
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
@@ -454,7 +449,7 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Environmental Variables
-zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
+# zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
 # Populate hostname completion.
 zstyle -e ':completion:*:hosts' hosts 'reply=(
@@ -512,54 +507,6 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
-# NPM completion
-COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
-COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
-export COMP_WORDBREAKS
-
-if type complete &>/dev/null; then
-  _npm_completion () {
-    local si="$IFS"
-    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
-                           COMP_LINE="$COMP_LINE" \
-                           COMP_POINT="$COMP_POINT" \
-                           npm completion -- "${COMP_WORDS[@]}" \
-                           2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  complete -F _npm_completion npm
-elif type compdef &>/dev/null; then
-  _npm_completion() {
-    si=$IFS
-    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
-                 COMP_LINE=$BUFFER \
-                 COMP_POINT=0 \
-                 npm completion -- "${words[@]}" \
-                 2>/dev/null)
-    IFS=$si
-  }
-  compdef _npm_completion npm
-elif type compctl &>/dev/null; then
-  _npm_completion () {
-    local cword line point words si
-    read -Ac words
-    read -cn cword
-    let cword-=1
-    read -l line
-    read -ln point
-    si="$IFS"
-    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-                       COMP_LINE="$line" \
-                       COMP_POINT="$point" \
-                       npm completion -- "${words[@]}" \
-                       2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  compctl -K _npm_completion npm
-fi
-###-end-npm-completion-###
-
-
 #############################################
 #  Corrections
 #############################################
@@ -581,7 +528,7 @@ alias mkdir='nocorrect mkdir'
 alias mv='nocorrect mv'
 alias mysql='nocorrect mysql'
 alias rm='nocorrect rm'
-alias -g nmcli'nocorrect nmcli'
+alias nmcli'nocorrect nmcli'
 alias ip='nocorrect ip'
 
 # Disable globbing.
@@ -682,14 +629,12 @@ ZSH_THEME_GIT_PROMPT_SUFFIX=")"             # At the very end of the prompt
 ZSH_THEME_GIT_PROMPT_DIRTY="*"              # Text to display if the branch is dirty
 ZSH_THEME_GIT_PROMPT_CLEAN=""               # Text to display if the branch is clean
 
+
 # Setup the prompt with pretty colors
 setopt prompt_subst
 
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
-
-# Syntax highlightin'
-source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # The crazier the better!
 eval `dircolors ~/.zsh/LS_COLORS`
@@ -724,10 +669,18 @@ export LC_CTYPE=$LANG
 # for some reason col -b no longer correctly strips ANSI escape characters.
 export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
-# make related items
-export CFLAGS="-march=native -mtune=native -O2 -pipe"
+alias info="info --vi-keys"
+
+##########################################
+#### Build and Automake settings #########
+##########################################
+export CXX=g++
+export CC=gcc
+export AR=ar
+export CFLAGS="-march=native -mtune=native -O2 -pipe -Wall"
 export CXXFLAGS="$CFLAGS"
-export LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed"
+# export LDFLAGS="--cref -O2"
+export LIBS="-lm -lcrypto"
 export MAKEFLAGS="-j4"
 
 ############################################
@@ -752,16 +705,19 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=()
 
 # Add go to path
 export GOPATH=$HOME/Development/go
-export PATH=$PATH:$GOPATH/bin
 
-export PATH="$HOME/bin:/usr/local/bin:$PATH"
+PATH+=:$GOPATH/bin
+PATH="$HOME/bin:/usr/local/bin:$PATH"
 
 # Recursively add anything I've got in ~/bin
 for home_bin in ~/bin; do
     PATH+=":$home_bin"
 done
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-# expor tPATH=$PATH:/usr/local/plan9/bin # Plan9 binaries
-# rt GOPATH=$HOME/go
-#   export PATH=$PATH:$GOPATH/bin
+export prakts=$HOME/Development/practice
+export prvumain=$HOME/Development/purveu-main
+
+PATH+=:$HOME/.rvm/bin # Add RVM to PATH for scripting
+PATH+=:/usr/local/plan9/bin # Plan9 binaries
+
+export PATH
