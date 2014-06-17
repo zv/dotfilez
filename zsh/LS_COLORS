@@ -5,7 +5,7 @@ DIR                   38;5;30
 DOOR                  38;5;127
 EXEC                  38;5;166;1
 FIFO                  38;5;126
-FILE                  38;5;253
+FILE                  38;5;007
 LINK                  target
 MULTIHARDLINK         38;5;220;1
 # "NORMAL don't reset the bold attribute -
@@ -197,8 +197,7 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 .MOV                  38;5;42
 .3gp                  38;5;134
 .3g2                  38;5;133
-.asf                  38;5;25
-.avi                  38;5;114
+.avi                  38;5;25
 .divx                 38;5;112
 .f4v                  38;5;125
 .flv                  38;5;131
@@ -220,24 +219,17 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 .S3M                  38;5;71;1
 .aac                  38;5;137
 .cue                  38;5;112
-.dat                  38;5;165
 .dts                  38;5;100;1
 .fcm                  38;5;41
 .flac                 38;5;166;1
 .m3u                  38;5;172
 .m4                   38;5;196;3
 .m4a                  38;5;137;1
-.mid                  38;5;102
-.midi                 38;5;102
-.mod                  38;5;72
-.mp3                  38;5;191
-.oga                  38;5;95
+.mp3                  38;5;92
 .ogg                  38;5;96
 .s3m                  38;5;71;1
 .sid                  38;5;69;1
 .spl                  38;5;173
-.wv                   38;5;149
-.wvc                  38;5;149
 # fonts
 .afm                  38;5;58
 .pfb                  38;5;58
@@ -250,7 +242,7 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 .bin                  38;5;249
 .pid                  38;5;160
 .state                38;5;124
-.swo                  38;5;236
+# .swo                  38;5;236
 .swp                  38;5;241
 .tmp                  38;5;244
 .un~                  38;5;240
@@ -258,7 +250,7 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 .zwc                  38;5;240
 # databases
 .db                   38;5;60
-.dump                 38;5;119
+.dump                 38;5;52
 .sqlite               38;5;60
 .typelib              38;5;60
 # (compressed) archives
