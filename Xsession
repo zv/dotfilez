@@ -13,3 +13,7 @@ xhost local:
 xmonad
 
 autocutsel &
+
+if (xrandr | grep "HDMI2 connected"); then
+    xrandr --output HDMI2 --left-of eDP1 --primary --auto
+fi
