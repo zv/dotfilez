@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Load resources
 # xrdb -merge .Xresources
 # Set the background color
