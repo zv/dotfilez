@@ -1,16 +1,18 @@
-URxvt*font: xft:Terminus:size=14
-! URxvt*font: xft:Terminus:size=15
-URxvt*boldFont: xft:Terminus:size=14
-URxvt*italicFont: xft:Terminus:size=14
-URxvt*bolditalicFont: xft:Terminus:size=14
+! Xft.dpi:       96
+! Xft.antialias: false
+! Xft.rgba:      rgb
+! Xft.hinting:   true
+! Xft.hintstyle: hintslight
 
-URxvt*scrollBar: false
-URxvt*saveLines: 20000
-URxvt*internalBorder: 6
-URxvt*scrollTtyOutput: false
-URxvt*scrollWithBuffer: false
-URxvt*scrollTtyKeypress: true
-URxvt.cursorBlink: true
+URxvt.font: xft:Terminus:size=14
+
+URxvt.scrollBar:         false
+URxvt.saveLines:         40000
+URxvt.internalBorder:    6
+URxvt.scrollTtyOutput:   false
+URxvt.scrollWithBuffer:  false
+URxvt.scrollTtyKeypress: true
+URxvt.cursorBlink:       true
 
 #define S_yellow #b58900
 #define S_orange #cb4b16
@@ -22,7 +24,7 @@ URxvt.cursorBlink: true
 #define S_green #859900
 
 ! defines solarized light/dark
-#define DARK true
+#define DARK
 #ifdef DARK
 ! Dark
 #define S_base03 #002b36
