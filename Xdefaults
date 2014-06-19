@@ -6,6 +6,10 @@ Xft.hintstyle: hintslight
 
 *font: xft:Terminus:size=15
 
+Xpdf*foreground:        black
+Xpdf*background:        white
+Xpdf*urlCommand:        /usr/bin/firefox %s
+
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
 URxvt.internalBorder:    6
