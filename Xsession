@@ -1,11 +1,14 @@
 #!/bin/sh
 # Load resources
-# xrdb -merge .Xresources
 # Set the background color
+[[ $(xrandr | grep "HDMI2 connected") ]] &&  xrandr --output HDMI2 --left-of eDP1 --primary --auto
+
 xsetroot -solid white
 
 # remap capslock
-xmodmap /home/zv/.xmodmaprc &
+xmodmap -e "remove Lock = Caps_Lock"
+xmodmap -e "keysym Caps_Lock = Control_L"
+xmodmap -e "add Control = Control_L"
 
 ## Fire up apps
 xscreensaver -no-splash &
@@ -13,7 +16,3 @@ xhost local:
 xmonad
 
 autocutsel &
-
-if (xrandr | grep "HDMI2 connected"); then
-    xrandr --output HDMI2 --left-of eDP1 --primary --auto
-fi
