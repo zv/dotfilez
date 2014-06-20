@@ -1,13 +1,13 @@
 ## Installing
 To get a file by file install prompt for each dotfile, simply run
-sh
 
     $ ./dotfilez.sh install
 
 
 ## Public Keys
 
-The following public keys are available inside this repository
+The following public keys are available inside this repository. Naturally, I
+accept and prefer gpg encrypted messages.
 
 - **GPG** (*zv.gpg.pub*)
 <pre>
