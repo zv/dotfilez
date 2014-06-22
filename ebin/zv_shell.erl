@@ -13,6 +13,6 @@
 prompt_func([{history, N}]) -> prompt_func(self(), node(), N).
 
 prompt_func(Pid, 'nonode@nohost', N) ->
-    io_lib:format(?Purple "~p " ?White "~B> " ?Reset, [Pid, N]);
+    io_lib:format(?Purple "~p " ?Green "~B> " ?Reset, [Pid, N]);
 prompt_func(Pid, Node, N) ->
-    io_lib:format(?Purple "~p " ?Blue "(~s) " ?White "~B>> " ?Reset, [Pid, Node, N]).
+    io_lib:format(?Purple "~p " ?White "~s " ?Green "~B$ " ?Reset, [Pid, Node, N]).

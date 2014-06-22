@@ -1,11 +1,11 @@
 %% Zealous Zeph's .erlang
 %% -*- mode: erlang; erlang-indent-level: 2 -*-
-io:format("Booting Erlang\n").
+%% io:format("Booting Erlang\n").
 
-code:add_patha(filename:join(os:getenv("HOME"), ".ebin")).
-shell:prompt_func({zv_shell, prompt_func}).
+%%code:add_patha(filename:join(os:getenv("HOME"), ".ebin")).
+%%shell:prompt_func({zv_shell, prompt_func}).
 
-shell:results(2).
+%% shell:results(2).
 
 %% Start sasl
 %io:format("starting erl-sasl~n").
