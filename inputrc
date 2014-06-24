@@ -1,1 +1,6 @@
+$include /etc/inputrc
+
+set keymap vi
 set editing-mode vi
+set show-all-if-ambiguous on
+set visible-stats on
