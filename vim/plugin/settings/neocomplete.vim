@@ -21,7 +21,7 @@ if exists(":NeoCompleteEnable")
   let g:neocomplete#sources#buffer#disabled_pattern = '\.log'
 
   " Use fuzzy completion. (slow)
-  let g:neocomplete#enable_fuzzy_completion = 1
+  let g:neocomplete#enable_fuzzy_completion = 0
 
   " Snagged from yasuoza/dotfiles
   let g:neocomplcache_dictionary_filetype_lists = {

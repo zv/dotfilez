@@ -10,3 +10,7 @@ abbr x86pause void __builtin_ia32_pause (void)
 
 abbr cdl console.log
 abbr pdl Purveu.log
+
+" Guillemets 
+abbr lbraket «
+abbr rbraket »

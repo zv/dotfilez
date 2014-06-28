@@ -20,18 +20,18 @@ set hidden                     " Hidden Buffers
 set encoding=utf8              " Yes, really
 set columns=80                 " Set column width at 80
 set selection=old              " Stop that annoying thing where vim selects the next line
-set relativenumber
+set relativenumber             " Relative line numbers
 set list                       " show trailing whitespace
-set lazyredraw "  Lazy is as lazy does!
-
-" thanks florian fritz :)
-set listchars=tab:▸\ ,trail:▫
+set lazyredraw                 " Lazy is as lazy does!
+set path+=/usr/include/linux;/usr/include
 
 set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode
 
 set switchbuf=useopen           " reveal already opened files from the
                                 " quickfix window instead of opening new
                                 " buffers
+
+set browsedir=buffer            " Open Dialog should default to current buffer
 
 " check my spelling
 set spelllang=en_us
@@ -173,7 +173,6 @@ set wildignore+=migrations    " Django migrations
 set wildignore+=*.pyc         " Python byte code
 set wildignore+=*.orig        " Merge resolution files
 
-
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
 
@@ -189,4 +188,5 @@ for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
 endfor
 
 " ================ Vim as MAN ========================
+
 runtime ftplugin/man.vim
