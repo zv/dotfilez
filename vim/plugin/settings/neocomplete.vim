@@ -1,6 +1,5 @@
 if exists(":NeoCompleteEnable")
   " Don't care much for the scratch buffer.
-  set completeopt=menuone
 
   let g:acp_enableAtStartup = 0
   " Use neocomplete.

@@ -82,27 +82,30 @@ set backupskip=/tmp/*,/private/tmp/*
 set tags=./tags;$HOME
 
 " ================ Indentation ======================
-
-set softtabstop=2 " insert mode tab and backspace use 2 spaces
-set shiftwidth=2
-set tabstop=8     " actual tabs occupy 8 characters
+"
+set expandtab     " I prefer spaces to tabs.
 set smarttab      " tab inserts tab when already tabbed!
+set copyindent    " preserve document structure
+set preserveindent
+set softtabstop=2 " insert mode tab and backspace use 2 spaces
+set shiftwidth=4
+set tabstop=4     " actual tabs occupy 8 characters
 set autoindent    " copy previous line's indent
 set smartindent   " intdent intelligently
-set expandtab     " I prefer spaces to tabs.
 set nowrap        " Don't wrap lines
 set linebreak     " Wrap lines at convenient points
 set cindent       " start c lang indent mode
 
+" thanks florian fritz :)
+set listchars=tab:»·,trail:·
+
 " thanks lang-guides!
 if has("autocmd")
-  autocmd FileType apache     setlocal sw=4 sts=4 ts=4 et
-  autocmd FileType aspvbs     setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType c          setlocal sw=4 sts=4 ts=4 et
   autocmd FileType cs         setlocal sw=4 sts=4 ts=4 et
   autocmd FileType css        setlocal sw=2 sts=2 ts=2 et
-  autocmd FileType diff       setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType diff       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType erlang     setlocal sw=2 sts=2 ts=2 et
   autocmd FileType eruby      setlocal sw=4 sts=4 ts=4 et
   autocmd FileType go         setlocal sw=4 sts=4 ts=4 et
@@ -110,6 +113,7 @@ if has("autocmd")
   autocmd FileType html       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType javascript setlocal sw=2 sts=2 ts=2 et
   autocmd FileType java       setlocal sw=4 sts=4 ts=4 et
+  autocmd FileType nginx      setlocal sw=4 sts=4 ts=4 et
   autocmd FileType perl       setlocal sw=4 sts=4 ts=4 et
   autocmd FileType php        setlocal sw=4 sts=4 ts=4 et
   autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
@@ -129,12 +133,11 @@ endif
 
 " ================ Folds ============================
 
-set nofoldenable        "dont fold by default
-set foldmethod=indent "fold based on indent
-set foldnestmax=3       "deepest fold is 3 levels
+" set nofoldenable        "dont fold by default
+" set foldmethod=indent "fold based on indent
+" set foldnestmax=3       "deepest fold is 3 levels
 
 " ================ Completion =======================
-
 " The default is ".,w,b,u,t,i", which means to scan:
 "    1. the current buffer
 "    2. buffers in other windows
