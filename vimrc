@@ -147,7 +147,7 @@ endif
 "    6. included files
 set complete=.,w,b,u,t
 " I want to only match the longest substring so I can type to complete.
-set completeopt=longest,menuone,preview
+set completeopt=longest,menuone
 " Maximum is infinite entries, I am ok with just 25 completions.
 set pumheight=35
 

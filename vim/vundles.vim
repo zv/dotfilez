@@ -55,8 +55,8 @@ if executable('ipl')
 endif
 
 if ( has('lua') && (v:version > 703 || v:version == 703 && has('patch885')) )
-  " Bundle 'Shougo/neocomplete'
-  " Bundle 'Rip-Rip/clang_complete'
+  Bundle 'Shougo/neocomplete'
+  Bundle 'Rip-Rip/clang_complete'
 endif
 
 if executable('ag')

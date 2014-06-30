@@ -29,10 +29,11 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
-
 "" Vim completion mapping
 " Complete filename
 inoremap <C-f> <C-x><C-f>
+inoremap <expr><C-x><C-f>
+      \ neocomplete#start_manual_complete('file')
 " C-o for omnicomplete
 inoremap <C-o> <C-x><C-o>
 

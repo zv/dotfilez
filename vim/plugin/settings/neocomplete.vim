@@ -77,34 +77,35 @@ if exists(":NeoCompleteEnable")
   inoremap <expr><C-u>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
   " Enable omni completion.
-  autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript    setlocal omnifunc=tern#Complete
-  autocmd FileType coffee        setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType ruby          setlocal omnifunc=rubycomplete#Complete
-  autocmd FileType c             setlocal omnifunc=ccomplete#Complete
+  autocmd FileType css           set omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown set omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript    set omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType coffee        set omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python        set omnifunc=pythoncomplete#Complete
+  autocmd FileType ruby          set omnifunc=rubycomplete#Complete
+  autocmd FileType c             set omnifunc=ccomplete#Complete
 
   " Enable heavy omni completion.
   if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
   endif
 
-  let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-  let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+  let g:neocomplete#sources#omni#input_patterns.c =
+        \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+  let g:neocomplete#sources#omni#input_patterns.cpp =
+        \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
   if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
   endif
-
-  "let g:neocomplete#force_overwrite_completefunc = 1
-  let g:neocomplete#force_omni_input_patterns.erlang = '\<[[:digit:][:alnum:]_-]\+:[[:digit:][:alnum:]_-]*'
-  let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-  let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+  let g:neocomplete#force_overwrite_completefunc = 1
+  let g:neocomplete#force_omni_input_patterns.c =
+         \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+  let g:neocomplete#force_omni_input_patterns.cpp =
+          \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
 
   " Clang Complete Options
   let g:clang_complete_auto = 0
   let g:clang_auto_select = 0
-  let g:clang_use_library = 1
-  let g:clang_jumpto_declaration_key = ""
+  "let g:clang_use_library = 1
 endif
