@@ -38,7 +38,7 @@ inoremap <expr><C-x><C-f>
 inoremap <C-o> <C-x><C-o>
 
 " Insert word currently under cursor in command mode
-cnoremap <C-k> <C-r><C-w>
+cnoremap <C-y> <C-r><C-w>
 " tcsh style!
 cnoremap <C-a> <Home>
 
@@ -48,6 +48,12 @@ xnoremap p pgvy
 " ,ow = 'overwrite word', replace a word with what's in the yank buffer
 " FIXME: will not properly repeat when you use a dot (tie into repeat.vim)
 nnoremap ,ow "_diwhp
+
+" Select a tag
+" (t)ag (f)ollow
+nnoremap ,tf g]
+" (t)ag (preview)
+nnoremap ,tp <C-w>g}
 
 " y copies line
 nnoremap Y y$
@@ -169,6 +175,11 @@ nmap <silent> ,vr :so %<CR>
 
 " run script
 nmap <silent> ,rs yy:<C-f>p<C-c><CR>
+
+" paste from x11 buffer
+nmap ,xp "*P
+" paste from global buffer
+nmap ,P "+P
 
 " Hit leader a then type a character you want to align by
 nmap ,a :Tabularize /
