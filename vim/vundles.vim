@@ -12,9 +12,11 @@ Bundle "jimenezrick/vimerl"
 Bundle "elixir-lang/vim-elixir"
 Bundle "mattonrails/vim-mix"
 Bundle "pangloss/vim-javascript"
+Bundle "othree/javascript-libraries-syntax.vim"
 Bundle "kchmck/vim-coffee-script"
 Bundle "nono/vim-handlebars"
 Bundle 'wting/rust.vim'
+Bundle "lambdatoast/elm.vim"
 
 " Snippets
 Bundle 'Shougo/neosnippet'
@@ -25,10 +27,10 @@ Bundle 'Shougo/neosnippet-snippets'
 Bundle "airblade/vim-gitgutter"
 Bundle "AndrewRadev/splitjoin.vim"
 Bundle "bling/vim-airline"
-Bundle "edkolev/tmuxline.vim"
+" Bundle "edkolev/tmuxline.vim"
 Bundle "godlygeek/tabular"
+Bundle "mattn/emmet-vim"
 
-Bundle "kien/ctrlp.vim"
 Bundle "majutsushi/tagbar"
 Bundle "scrooloose/nerdtree"
 Bundle "scrooloose/syntastic"
@@ -40,6 +42,10 @@ Bundle "terryma/vim-multiple-cursors"
 Bundle "tpope/vim-commentary"
 Bundle "tpope/vim-endwise.git"
 Bundle "tpope/vim-repeat.git"
+" Possibly interesting
+" Bundle "wellle/targets.vim"
+" c-x o  to zoom in and out of window.
+Bundle "itspriddle/ZoomWin"
 Bundle "tpope/vim-surround.git"
 Bundle "tpope/vim-unimpaired"
 Bundle "vim-scripts/camelcasemotion.git"
@@ -59,15 +65,8 @@ if ( has('lua') && (v:version > 703 || v:version == 703 && has('patch885')) )
   Bundle 'Rip-Rip/clang_complete'
 endif
 
-if executable('ag')
-  Bundle 'mileszs/ack.vim'
-  let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
-elseif executable('ack-grep')
-  let g:ackprg="ack-grep -H --nocolor --nogroup --column"
-  Bundle 'mileszs/ack.vim'
-elseif executable('ack')
-  Bundle 'mileszs/ack.vim'
-endif
+Bundle 'mileszs/ack.vim'
+let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
 
 if executable('git')
   Bundle "gregsexton/gitv"
