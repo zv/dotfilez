@@ -125,6 +125,13 @@ function current_branch() {
   echo ${ref#refs/heads/}
 }
 
+# Displays some git related author statistics
+function authorstats {
+    gitauth=$1;
+    git log --author=$gitauth --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+    echo ''
+}
+
 # Apply the latest stash made inside this branch
 alias gsalatest="git stash list | grep $(current_branch) | cut -d ':' -f 1"
 

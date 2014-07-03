@@ -253,14 +253,6 @@ function psu {
   ps -U "${1:-$USER}" -o 'pid,%cpu,%mem,command' "${(@)argv[2,-1]}"
 }
 
-# Displays some git related author statistics
-function authorstats {
-    gitauth=$1;
-    git log --author=$gitauth --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
-    echo ''
-}
-
-
 ############################################
 #  Mix
 ############################################
