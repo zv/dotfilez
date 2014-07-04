@@ -1,13 +1,12 @@
 #!/usr/bin/env zsh
-#
 # This is zv's ZSHRC.
 # haq the plan8
 # meow nyan meow nyan meow
 # 2013
 
-############################################
+#
 #  Environment
-############################################
+#
 typeset -gU cdpath fpath path mailpath
 
 setopt BRACE_CCL          # Allow brace character class list expansion.
@@ -26,12 +25,43 @@ unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
 setopt EXTENDED_GLOB
 setopt BARE_GLOB_QUAL
 
-# Add go to path
-export GOPATH=$HOME/Development/go
+setopt correct_all # Correct commands
+
+# Disable correction.
+for cmd (
+    ack cd cp ebuild gcc gist grep heroku
+    ln man mkdir mv mysql rm nmcli ip ag
+    git
+) alias $cmd="nocorrect $cmd"
+
+# Disable globbing.
+for cmd (
+    fc find ftp history locate rake rsync
+    scp sftp git
+) alias $cmd="noglob $cmd"
+
+export EDITOR='vim'
+export VISUAL='vim'
+export PAGER='less'
+export LANG='en_US.UTF-8'
+export LESS='-F -g -i -M -R -S -w -X -z-4'
+export LC_CTYPE=$LANG
+
+# vim for manpages
+export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
+# build stuff
+export CXX=g++
+export CC=gcc
+export AR=ar
+
+# go
+export GOROOT=$HOME/Development/go
+export GOPATH=$HOME/Development/golang
 
 path=(
     ~/bin
-    $GOPATH/bin
+    $GOROOT/bin
     /usr/local/{bin,sbin}
     /usr/local/plan9/bin # Plan9 binaries
     $path
@@ -45,79 +75,15 @@ fpath=(
 
 for fn (~/.zsh/functions/*.zsh) source $fn
 
-#####################################################################
-#  Spectrum (A script to make using 256 colors in zsh less painful.)
-#  P.C. Shyamshankar <sykora@lucentbeing.com>
-#  http://github.com/sykora/etc/blob/master/zsh/functions/spectrum/
-#####################################################################
-
-typeset -gA FX FG BG
-
-FX=(
-  none                      "\e[00m"
-  normal                    "\e[22m"
-  bold                      "\e[01m"    no-bold                      "\e[22m"
-  faint                     "\e[02m"    no-faint                     "\e[22m"
-  standout                  "\e[03m"    no-standout                  "\e[23m"
-  underline                 "\e[04m"    no-underline                 "\e[24m"
-  blink                     "\e[05m"    no-blink                     "\e[25m"
-  fast-blink                "\e[06m"    no-fast-blink                "\e[25m"
-  reverse                   "\e[07m"    no-reverse                   "\e[27m"
-  conceal                   "\e[08m"    no-conceal                   "\e[28m"
-  strikethrough             "\e[09m"    no-strikethrough             "\e[29m"
-  gothic                    "\e[20m"    no-gothic                    "\e[22m"
-  double-underline          "\e[21m"    no-double-underline          "\e[22m"
-  proportional              "\e[26m"    no-proportional              "\e[50m"
-  overline                  "\e[53m"    no-overline                  "\e[55m"
-
-                                        no-border                    "\e[54m"
-  border-rectangle          "\e[51m"    no-border-rectangle          "\e[54m"
-  border-circle             "\e[52m"    no-border-circle             "\e[54m"
-
-                                        no-ideogram-marking          "\e[65m"
-  underline-or-right        "\e[60m"    no-underline-or-right        "\e[65m"
-  double-underline-or-right "\e[61m"    no-double-underline-or-right "\e[65m"
-  overline-or-left          "\e[62m"    no-overline-or-left          "\e[65m"
-  double-overline-or-left   "\e[63m"    no-double-overline-or-left   "\e[65m"
-  stress                    "\e[64m"    no-stress                    "\e[65m"
-
-                                        font-default                 "\e[10m"
-  font-first                "\e[11m"    no-font-first                "\e[10m"
-  font-second               "\e[12m"    no-font-second               "\e[10m"
-  font-third                "\e[13m"    no-font-third                "\e[10m"
-  font-fourth               "\e[14m"    no-font-fourth               "\e[10m"
-  font-fifth                "\e[15m"    no-font-fifth                "\e[10m"
-  font-sixth                "\e[16m"    no-font-sixth                "\e[10m"
-  font-seventh              "\e[17m"    no-font-seventh              "\e[10m"
-  font-eigth                "\e[18m"    no-font-eigth                "\e[10m"
-  font-ninth                "\e[19m"    no-font-ninth                "\e[10m"
-)
-
-FG[none]="$FX[none]"
-BG[none]="$FX[none]"
-colors=(black red green yellow blue magenta cyan white)
-for color in {0..255}; do
-    if (( $color >= 0 )) && (( $color < $#colors )); then
-        index=$(( $color + 1 ))
-        FG[$colors[$index]]="\e[38;5;${color}m"
-        BG[$colors[$index]]="\e[48;5;${color}m"
-    fi
-
-    FG[$color]="\e[38;5;${color}m"
-    BG[$color]="\e[48;5;${color}m"
-done
-unset color{s,} index
-
-# Show all 256 colors with color number
-function spectrum_ls() {
-  for code in {000..255}; do
-    print -P -- "$code: %F{$code}Test%f"
-  done
-}
-
 ############################################
 #  Theme
 #############################################
+#
+function spectrum_ls() {
+    for code in {000..255}; do
+        print -P -- "$code: %F{$code}Test%f"
+    done
+}
 
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
 # you know what you are dealing with.
@@ -502,41 +468,6 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 #############################################
-#  Corrections
-#############################################
-
-setopt correct_all
-
-# Disable correction.
-alias ack='nocorrect ack'
-alias cd='nocorrect cd'
-alias cp='nocorrect cp'
-alias ebuild='nocorrect ebuild'
-alias gcc='nocorrect gcc'
-alias gist='nocorrect gist'
-alias grep='nocorrect grep'
-alias heroku='nocorrect heroku'
-alias ln='nocorrect ln'
-alias man='nocorrect man'
-alias mkdir='nocorrect mkdir'
-alias mv='nocorrect mv'
-alias mysql='nocorrect mysql'
-alias rm='nocorrect rm'
-alias nmcli'nocorrect nmcli'
-alias ip='nocorrect ip'
-
-# Disable globbing.
-alias fc='noglob fc'
-alias find='noglob find'
-alias ftp='noglob ftp'
-alias history='noglob history'
-alias locate='noglob locate'
-alias rake='noglob rake'
-alias rsync='noglob rsync'
-alias scp='noglob scp'
-alias sftp='noglob sftp'
-
-#############################################
 # Directories
 #############################################
 
@@ -551,9 +482,8 @@ alias d='dirs -v'
 for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
 #############################################
-### History #################################
+# History
 #############################################
-# Where I store my shit
 HISTFILE=$HOME/.zsh_history
 
 # Lines to store
@@ -574,109 +504,3 @@ setopt hist_save_no_dups         # do not write a duplicate event to the history
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
-
-#############################################
-### Bindings ################################
-#############################################
-
-bindkey '\ew' kill-region
-bindkey -s '\el' "ls\n"
-bindkey -s '\e.' "..\n"
-bindkey '^r' history-incremental-search-backward
-bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
-
-# make search up and down work, so partially type and hit up/down to find relevant stuff
-bindkey '^[[A' up-line-or-search
-bindkey '^[[B' down-line-or-search
-bindkey ' ' magic-space    # also do history expansion on space
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
-bindkey '^[[Z' reverse-menu-complete
-
-# Make the delete key work instead of outputting a ~
-bindkey '^?' backward-delete-char
-bindkey "^[[3~" delete-char
-bindkey "^[3;5~" delete-char
-bindkey "\e[3~" delete-char
-
-#############################################
-### Colors from the beyond! #################
-#############################################
-
-# ls colors
-autoload -U colors && colors;
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
-
-# Stop the beep insanity
-setopt no_beep
-
-# Automatic CD on directory specification
-setopt auto_cd
-
-# CD into variable from var name
-setopt cdablevarS
-
-# git theming default: Variables for theming the git info prompt
-ZSH_THEME_GIT_PROMPT_PREFIX="git:("         # Prefix at the very beginning of the prompt, before the branch name
-ZSH_THEME_GIT_PROMPT_SUFFIX=")"             # At the very end of the prompt
-ZSH_THEME_GIT_PROMPT_DIRTY="*"              # Text to display if the branch is dirty
-ZSH_THEME_GIT_PROMPT_CLEAN=""               # Text to display if the branch is clean
-
-
-# Setup the prompt with pretty colors
-setopt prompt_subst
-
-# 10 years I've been listenining to this list prompt and today I am fucking done!
-export LISTPROMPT=''
-
-# The crazier the better!
-eval `dircolors ~/.zsh/LS_COLORS`
-
-#############################################
-### Utilities et al.
-#############################################
-
-# ZSHENV stuff
-export EDITOR='vim' # didn't see that one coming.
-#export VISUAL'vim'
-export PAGER='less'
-export LANG='en_US.UTF-8'
-export LESS='-F -g -i -M -R -S -w -X -z-4'
-
-# smart urls
-autoload -U url-quote-magic
-zle -N self-insert url-quote-magic
-
-# file rename magick
-bindkey "^[m" copy-prev-shell-word
-
-# Less 4 lyfe
-export LC_CTYPE=$LANG
-
-# vim for manpages
-# for some reason col -b no longer correctly strips ANSI escape characters.
-export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
-
-alias info="info --vi-keys"
-
-##########################################
-#### Build and Automake settings #########
-##########################################
-export CXX=g++
-export CC=gcc
-export AR=ar
-export CFLAGS="-march=native -mtune=native -O2 -pipe -Wall"
-export CXXFLAGS="$CFLAGS"
-# export LDFLAGS="--cref -O2"
-export LIBS="-lm -lcrypto"
-export MAKEFLAGS="-j4"
-
-############################################
-#### Autocompletion and associates #########
-############################################
-
-autoload -U compinit
-compinit -i
-
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
