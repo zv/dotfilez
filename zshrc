@@ -85,6 +85,7 @@ function spectrum_ls() {
     done
 }
 
+export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
 # you know what you are dealing with.
 zle_vim_prompt_notifier() {
@@ -96,12 +97,13 @@ zle_vim_prompt_notifier() {
 }
 
 autoload -Uz vcs_info
+base_vcs_style='%c%b%u%f'
 zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' actionformats '- [%b|%F{green}%a%f|%F{cyan}%i%f] '
-zstyle ':vcs_info:*' stagedstr '%F{028}+%f'
+zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
+zstyle ':vcs_info:*' stagedstr '%F{028}'
 zstyle ':vcs_info:*' unstagedstr '*'
-zstyle ':vcs_info:*' formats '- [%b%u%c] '
+zstyle ':vcs_info:*' formats "- [$base_vcs_style] "
 zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
 precmd () { vcs_info }
 
