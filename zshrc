@@ -109,7 +109,26 @@ precmd () { vcs_info }
 
 PROMPT='[%n@%m] %2~ ${vcs_info_msg_0_}$(zle_vim_prompt_notifier) '
 
-export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
+# ls colors
+autoload -U colors && colors;
+
+# Stop the beep insanity
+setopt no_beep
+
+# Automatic CD on directory specification
+setopt auto_cd
+
+# CD into variable from var name
+setopt cdablevarS
+
+# Setup the prompt with pretty colors
+setopt prompt_subst
+
+# 10 years I've been listenining to this list prompt and today I am fucking done!
+export LISTPROMPT=''
+
+# The crazier the better!
+eval `dircolors ~/.zsh/LS_COLORS`
 
 #############################################
 #  Vim & ZSH Line Editor
@@ -126,8 +145,9 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-# bindkey -e is emacs mode
 bindkey -v
+
+bindkey "^[m" copy-prev-shell-word
 
 # Edit command in an external editor.
 bindkey -M vicmd "v" edit-command-line
@@ -135,9 +155,6 @@ bindkey -M vicmd "v" edit-command-line
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
-
-# Edit command in an external editor.
-bindkey -M vicmd "v" edit-command-line
 
 # Undo/Redo
 bindkey -M vicmd "u" undo
@@ -148,21 +165,44 @@ bindkey -M vicmd "/" history-incremental-pattern-search-forward
 # Expand history on space.
 bindkey -M "viins" ' ' magic-space
 
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
+bindkey '\ew' kill-region
+bindkey -s '\el' "ls\n"
+bindkey -s '\e.' "..\n"
+bindkey '^r' history-incremental-search-backward
+bindkey "^[[5~" up-line-or-history
+bindkey "^[[6~" down-line-or-history
+
+# make search up and down work, so partially type and hit up/down to find relevant stuff
+bindkey '^[[A' up-line-or-search
+bindkey '^[[B' down-line-or-search
+bindkey ' ' magic-space    # also do history expansion on space
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey '^[[Z' reverse-menu-complete
+
+# Make the delete key work instead of outputting a ~
+bindkey '^?' backward-delete-char
+bindkey "^[[3~" delete-char
+bindkey "^[3;5~" delete-char
+bindkey "\e[3~" delete-char
+
 #############################################
 # Aliasing
 #############################################
 alias ...='cd ../..'     # Basic directory operations
 alias -- -='cd -'        # This has always irritated me
 alias _='sudo'           # Super user
-alias history='fc -l 1'  # Show history
+alias info="info --vi-keys"
+alias -g pr="print"
+alias -g gr="grep"
 
-alias edittmp='vim $(mktemp)' # I often edit temporary files
-# I occassionally want to convert man pages to pdfs, this is my hacky way to do
-# it.
+# I occassionally want to convert man pages to pdfs, this is my hacky way to do it.
 function man2pdf {
-  man -Tps "$argv[1]" | ps2pdf - "$argv[1]"_man.pdf
+    man -Tps "$argv[1]" | ps2pdf - "$argv[1]"_man.pdf
 }
-
 # Wikipedia over DNS.
 function firewalkipedia {
     dig +short txt "$argv[1]".wp.dg.cx
@@ -175,13 +215,11 @@ function DNScheck() {
     done;
 }
 
-# Network Manager aliases
-alias wifi="nmcli -f SSID,BSSID,CHAN,SIGNAL,BARS,ACTIVE dev wifi"
-alias connect="nmcli dev wifi connect"
+alias nocapspty='sudo loadkeys =(sudo dumpkeys && echo "keycode 58 = Control")'
 
-#############################################
-# Convienence Funcs
-#############################################
+# Network Manager aliases
+alias wifi="nmcli -f SSID,BSSID,CHAN,SECURITY,SIGNAL,BARS,ACTIVE dev wifi"
+alias connect="nmcli dev wifi connect"
 
 # Tmux
 alias ta="tmux attach-session -t"
@@ -190,16 +228,12 @@ alias tl="tmux list-sessions"
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 # Switch Users, maining RTP.
-alias sudovim='sudo vim -c "set runtimepath+=$HOME/.vim" -u $HOME/.vimrc'
-alias mongostart='sudo service mongod start'    # so sick of this
-# alias node="env NODE_NO_READLINE=1 rlwrap node" # rlwrap node
+alias sudovim='sudo -E vim' # -c "set runtimepath+=$HOME/.vim" -u $HOME/.vimrc'
 
-alias xslock='xscreensaver-command -lock'
+alias screenlock='xscreensaver-command -lock'
 
-# NMCLI aliases
+alias tuidbg="gdb -tui -nh"
 
-alias lstwifi='nmcli dev wifi'
-alias conwifi='nmcli dev wifi connect'
 
 # # mkdir & cd to it
 function mcd() {
@@ -236,22 +270,24 @@ alias mxt='mix test'
 # SystemD
 ############################################
 
-user_commands=(
+typeset sc_user_commands sc_sudo_commands
+sc_user_commands=(
   list-units is-active status show help list-unit-files
   is-enabled list-jobs show-environment)
 
-sudo_commands=(
+sc_sudo_commands=(
   start stop reload restart try-restart isolate kill
   reset-failed enable disable reenable preset mask unmask
   link load cancel set-environment unset-environment)
 
-for c in $user_commands; do; alias sc-$c="systemctl $c"; done
-for c in $sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
+for c in $sc_user_commands; do; alias sc-$c="systemctl $c"; done
+for c in $sc_sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
 
 ############################################
 #  Package Management (Yum)
 ############################################
 
+typeset yum_commands
 alias yumc='sudo yum clean all'    # Cleans the cache.
 alias yumh='yum history'           # Displays history.
 alias yumi='sudo yum install'      # Installs package(s).
@@ -269,15 +305,8 @@ alias yumfl='repoquery -lq'        # (f)ile (l)ist a package
 #  Grep
 ############################################
 
-#export GREP_COLOR='37;45'
-export GREP_COLORS="38;5;230:sl=38;5;240:cs=38;5;100:mt=38;5;161:fn=38;5;197:ln=38;5;212:bn=38;5;44:se=38;5;166"
+export GREP_COLORS="37;45"
 export GREP_OPTIONS='--color=auto'
-
-############################################
-#  GPG
-############################################
-
-source "$HOME/.zsh/functions/gpg.zsh"
 
 ############################################
 #  Amazon AWS
