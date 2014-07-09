@@ -335,46 +335,32 @@ fi
 export AWS_DEFAULT_REGION=us-west-1
 export EC2_URL=https://ec2.us-west-1.amazonaws.com
 
-
-if [ -e "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre" ]; then
-    export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.60-2.4.3.0.fc20.x86_64/jre"
-else
-    # give it our best shot
-    echo "Couldn't find java"
-    #echo "WE'RE TRYING TO FIND JAVA MANUALLY, CHANGE THIS PLEASE"
-    #echo "LOOK IN ~/.ZSHRC AND CHANGE THIS RIGHT NOW"
-    # export JAVA_HOME=$(dirname `find / -wholename "*/jre/bin/java" 2>/dev/null`)
-fi
-
 path+={$AWS_CLOUDWATCH_HOME,$AWS_ELB_HOME,$AWS_AUTO_SCALING_HOME,$EC2_HOME}/bin
 
+
 ############################################
-#  Completions
+#  Modules & Completions
 ############################################
-# Amazon AWS completion
-source $HOME/.zsh/functions/amazon_ec2_completion.zsh
 
+autoload -U compinit
+compinit -i
 
-unsetopt menu_complete   # do not autoselect the first completion entry
-unsetopt flowcontrol
-setopt auto_menu         # show completion menu on succesive tab press
-setopt complete_in_word
-setopt always_to_end
+zmodload zsh/complist
+zmodload zsh/mathfunc
+zmodload zsh/system
 
-zmodload -i zsh/complist
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+unsetopt MENU_COMPLETE   # do not autoselect the first completion entry
+unsetopt FLOWCONTROL
+setopt AUTO_MENU         # show completion menu on succesive tab press
+setopt COMPLETE_IN_WORD
+setopt ALWAYS_TO_END
 
 ## case-insensitive (all),partial-word and then substring completion
-if [ "x$CASE_SENSITIVE" = "xtrue" ]; then
-  zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-  unset CASE_SENSITIVE
-else
-  zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-fi
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 zstyle ':completion:*' list-colors ''
-
-# should this be in keybindings?
-bindkey -M menuselect '^o' accept-and-infer-next-history
 
 zstyle ':completion:*:*:*:*:*' menu select
 # zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
@@ -386,13 +372,8 @@ zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm 
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 cdpath=(.)
 
-# Use caching so that commands like apt and dpkg complete are useable
-zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache/
-
-# Use caching to make completion for cammands such as dpkg and apt usable.
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
+# Use caching so that commands like yum are useable
+zstyle ':completion::complete:*' use-cache yes
 
 # Case-insensitive (all), partial-word, and then substring completion.
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
