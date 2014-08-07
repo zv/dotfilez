@@ -1,4 +1,4 @@
-;;; javascript setup--- Key chord setup
+;;; javascript.el - JavaScript setup
 ;;; Commentary:
 ;   Enable js3-mode and other javascript settings
 ;;; Code:
@@ -28,6 +28,7 @@
           (define-key evil-normal-state-map "gt" 'tern-get-type)
           (define-key evil-normal-state-map "gd" 'tern-find-definition)
           (setq flycheck-idle-change-delay 1.0)
+          (setq tab-always-indent t)
           (linum-mode 1)))
 
         ;; https://github.com/Fuco1/smartparens/issues/239
@@ -47,6 +48,8 @@
 
 (prelude-require-package 'tern)
 (add-hook 'js3-mode-hook (lambda () (tern-mode t)))
+
+(add-hook 'js3-mode-hook (lambda () (abbrev-mode 1)))
 
 (prelude-require-package 'company-tern)
 
@@ -86,13 +89,36 @@
 (add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
 (add-to-list 'auto-mode-alist '("\\Cakefile$" . coffee-mode))
 
-(add-hook 'js3-mode-hook (lambda () (abbrev-mode 1)))
+(eval-after-load 'coffee-mode
+  '(progn
+     ;; CoffeeScript uses two spaces.
+     (setq coffee-tab-width 2)
 
+     ;; If you don't have js2-mode
+     (setq coffee-js-mode 'js3-mode)
 
-; (defun coffee-custom ()
-;   "coffee-mode-hook"
+     ;; If you don't want your compiled files to be wrapped
+     (setq coffee-args-compile '("-c" "--bare"))
+
+     ;; *Messages* spam
+     (setq coffee-debug-mode t)
+
+     ;; Emacs key binding
+     (define-key coffee-mode-map [(meta r)] 'coffee-compile-buffer)
+
+     (setq coffee-command "coffee")
+
+     (defun prelude-coffee-mode-defaults ()
+       "coffee-mode-defaults"
+       ;; Compile '.coffee' files on every save
+       (and (buffer-file-name)
+            (file-exists-p (buffer-file-name))
+            (file-exists-p (coffee-compiled-file-name (buffer-file-name)))
+            (coffee-cos-mode t))
+       (subword-mode +1))
+
+     (setq prelude-coffee-mode-hook 'prelude-coffee-mode-defaults)
+    )
+)
+
 ;
-;   ;; Emacs key binding
-;   (define-key coffee-mode-map [(meta r)] 'coffee-compile-buffer))
-;
-; (add-hook 'coffee-mode-hook '(lambda () (coffee-custom)))
