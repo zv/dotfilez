@@ -23,7 +23,7 @@
 #
 ### SSH #################################
 local _plugin__ssh_env=$HOME/.ssh/environment-$HOST
-ssh_identities=("id_rsa" "id_rsa_old") 
+ssh_identities=("id_rsa")
 local _plugin__forwarding
 
 function _plugin__start_agent()
@@ -37,7 +37,7 @@ function _plugin__start_agent()
 
   echo starting...
   for id in "${ssh_identities[@]}"
-  do 
+  do
     if [ -f $HOME/.ssh/${id} ]; then
       /usr/bin/ssh-add $HOME/.ssh/${id}
     fi
