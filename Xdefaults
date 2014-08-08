@@ -1,10 +1,11 @@
 Xft.dpi:       96
-! Xft.antialias: false
+!Xft.antialias: false
 Xft.rgba:      rgb
 Xft.hinting:   true
 Xft.hintstyle: hintslight
 
-*font: xft:Terminus:size=15
+URxvt.font: xft:Inconsolata:size=11
+Emacs.font: Inconsolata-11
 
 Xpdf*foreground:        black
 Xpdf*background:        white
@@ -17,6 +18,10 @@ URxvt.scrollTtyOutput:   false
 URxvt.scrollWithBuffer:  false
 URxvt.scrollTtyKeypress: true
 URxvt.cursorBlink:       true
+
+URxvt.colorIT:      #87af5f
+URxvt.colorBD:      #d7d7d7
+URxvt.colorUL:      #87afd7
 
 #define S_yellow #b58900
 #define S_orange #cb4b16
@@ -31,6 +36,7 @@ URxvt.cursorBlink:       true
 #define DARK
 #ifdef DARK
 ! Dark
+!
 #define S_base03 #002b36
 #define S_base02 #073642
 #define S_base01 #586e75
