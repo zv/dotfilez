@@ -8,6 +8,15 @@
 (autoload 'js3-mode "js3" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js3-mode))
 
+(defun add-semicolon-to-end-of-line ()
+  "You'll never guess what this does"
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (insert ";")
+    )
+  )
+
 (add-hook 'js3-mode-hook
         (lambda ()
           (setq js3-auto-indent-p t
@@ -26,6 +35,8 @@
                 js3-square-indent-offset 4)
 
           (define-key evil-normal-state-map "gt" 'tern-get-type)
+          (define-key evil-insert-state-map (kbd "C-;") 'add-semicolon-to-end-of-line)
+          (define-key evil-normal-state-map (kbd "C-;") 'add-semicolon-to-end-of-line)
           (define-key evil-normal-state-map "gd" 'tern-find-definition)
           (setq flycheck-idle-change-delay 1.0)
           (setq tab-always-indent t)
