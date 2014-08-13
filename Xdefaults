@@ -4,12 +4,10 @@ Xft.rgba:      rgb
 Xft.hinting:   true
 Xft.hintstyle: hintslight
 
-URxvt.font: xft:Inconsolata:size=11
-Emacs.font: Inconsolata-11
+URxvt.font: xft:Inconsolata:size=12
+Emacs.font: Inconsolata-12
 
-Xpdf*foreground:        black
-Xpdf*background:        white
-Xpdf*urlCommand:        /usr/bin/firefox %s
+*urlCommand:        /usr/bin/google-chrome %s
 
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
