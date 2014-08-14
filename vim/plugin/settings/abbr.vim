@@ -1,16 +1,15 @@
 " abbreviations, believe it.
-"
-abbr packed __attribute__ ((__packed__))
-abbr packedstruct struct __attribute__ ((__packed__)) PACKED_STRUCT {<CR>};
-
-abbr asmstart global _start ; section .text; _start:
-
-" generates a pause instruction
-abbr x86pause void __builtin_ia32_pause (void)
+autocmd BufRead,BufNewFile *.c* iabbr packed __attribute__ ((__packed__))
+autocmd BufRead,BufNewFile *.c* iabbr packedstruct struct __attribute__ ((__packed__)) PACKED_STRUCT {<CR>};
 
 abbr cdl console.log
 abbr pdl Purveu.log
 
-" Guillemets 
+" Guillemets
 abbr lbraket «
 abbr rbraket »
+
+" close our stuff
+iabbr (C ( )<Left><Left>
+iabbr {C { }<Left><Left>
+iabbr [C [ ]<Left><Left>

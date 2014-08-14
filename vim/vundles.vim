@@ -17,12 +17,14 @@ Bundle "kchmck/vim-coffee-script"
 Bundle "nono/vim-handlebars"
 Bundle 'wting/rust.vim'
 Bundle "lambdatoast/elm.vim"
+Bundle 'digitaltoad/vim-jade'
+Bundle 'groenewege/vim-less'
 
 " Snippets
 Bundle 'Shougo/neosnippet'
 Bundle 'honza/vim-snippets'
 Bundle 'Shougo/neosnippet-snippets'
-
+ 
 " Tools
 Bundle "airblade/vim-gitgutter"
 Bundle "AndrewRadev/splitjoin.vim"

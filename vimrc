@@ -35,7 +35,6 @@ set browsedir=buffer            " Open Dialog should default to current buffer
 
 " check my spelling
 set spelllang=en_us
-
 " Long lines make syntax reallyyyy slow.
 set synmaxcol=512
 
