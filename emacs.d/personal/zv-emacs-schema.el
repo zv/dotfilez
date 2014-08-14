@@ -6,10 +6,12 @@
 (setq x-underline-at-descent-line t)
 
 ; Default Font
-(set-frame-font "Inconsolata-11")
-; (set-frame-font "Terminus-14")
 
-
+;;;
+; Undo Tree
+;;;
+(setq undo-tree-auto-save-history t)
+(setq undo-tree-history-directory-alist '((".*" . "/tmp/undo-list")))
 
 ;;;
 ; Solarized
