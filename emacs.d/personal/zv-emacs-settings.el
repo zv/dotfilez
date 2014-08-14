@@ -18,6 +18,12 @@
 (setq split-width-threshold 110)
 
 ;;;
+; Elm Lang
+;;;
+(prelude-require-package 'elm-mode)
+(require 'elm-mode)
+
+;;;
 ; Org Mode
 ;;;
 (add-to-list 'auto-mode-alist '("diary$" . org-mode))
