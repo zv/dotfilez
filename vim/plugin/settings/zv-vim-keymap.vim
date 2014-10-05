@@ -120,11 +120,15 @@ endfunction
 " NB: this supports "rp that replaces the selection by the contents of @r
 vnoremap <silent> <expr> P <sid>Repl()
 
-" toggle your qfix
+" toggle your qfix / location list
 nmap <silent> ,qc :cclose<CR>
 nmap <silent> ,qo :copen<CR>
 nmap <silent> ,lc :lclose<CR>
 nmap <silent> ,lo :lopen<CR>
+" Move about the location/error list
+nmap <silent> ,ln :lnext<CR>
+nmap <silent> ,lp :lprev<CR>
+nmap <silent> ,le :Errors<CR>
 
 " use ,F to jump to tag in a vertical split
 nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
