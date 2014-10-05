@@ -235,26 +235,17 @@ alias screenlock='xscreensaver-command -lock'
 
 alias tuidbg="gdb -tui -nh"
 
-
 # # mkdir & cd to it
 function mcd() {
   mkdir -p "$1" && cd "$1";
-}
-
-# Changes to a directory and lists its contents.
-function cdls {
-  builtin cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
-}
-
-# Prints columns 1 2 3 ... n.
-function slit {
-  awk "{ print ${(j:,:):-\$${^@}} }"
 }
 
 # Displays user owned processes status.
 function psu {
   ps -U "${1:-$USER}" -o 'pid,%cpu,%mem,command' "${(@)argv[2,-1]}"
 }
+
+alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
 
 ############################################
 #  Mix
@@ -287,20 +278,24 @@ for c in $sc_sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
 ############################################
 #  Package Management (Yum)
 ############################################
+typeset -A yum_commands
 
-typeset yum_commands
-alias yumc='sudo yum clean all'    # Cleans the cache.
-alias yumh='yum history'           # Displays history.
-alias yumi='sudo yum install'      # Installs package(s).
-alias yuml='yum list'              # Lists packages.
-alias yumL='yum list installed'    # Lists installed packages.
-alias yumq='yum info'              # Displays package information.
-alias yumr='sudo yum remove'       # Removes package(s).
-alias yums='yum search'            # Searches for a package.
-alias yumsc='yum search -C'        # Search in cache
-alias yumu='sudo yum update'       # Updates packages.
-alias yumU='sudo yum upgrade'      # Upgrades packages.
-alias yumfl='repoquery -lq'        # (f)ile (l)ist a package
+yum_commands=(
+    yumc 'sudo yum clean all'    # Cleans the cache.
+    yumh 'yum history'           # Displays history.
+    yumi 'sudo yum install'      # Installs package(s).
+    yuml 'yum list'              # Lists packages.
+    yumL 'yum list installed'    # Lists installed packages.
+    yumq 'yum info'              # Displays package information.
+    yumr 'sudo yum remove'       # Removes package(s).
+    yums 'yum search'            # Searches for a package.
+    yumsc 'yum search -C'        # Search in cache
+    yumu 'sudo yum update'       # Updates packages.
+    yumU 'sudo yum upgrade'      # Upgrades packages.
+    yumfl 'repoquery -lq'        # (f)ile (l)ist a package
+)
+
+for c in ${(@k)yum_commands}; do; alias $c="$yum_commands[$c]"; done
 
 ############################################
 #  Grep
@@ -338,6 +333,44 @@ export EC2_URL=https://ec2.us-west-1.amazonaws.com
 
 path+={$AWS_CLOUDWATCH_HOME,$AWS_ELB_HOME,$AWS_AUTO_SCALING_HOME,$EC2_HOME}/bin
 
+############################################
+#  Git
+############################################
+
+# Git aliases
+alias g='git'
+alias gst='git status'
+alias gl='git pull'
+alias gup='git fetch && git rebase'
+alias gp='git push'
+gdv() { git diff -w "$@" | view - }
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+alias gco='git checkout'
+alias gcm='git checkout master'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gcount='git shortlog -sn'
+alias gcp='git cherry-pick'
+alias glg='git log --stat --max-count=5'
+alias glgg='git log --graph --max-count=5'
+alias gss='git status -s'
+alias ga='git add'
+alias gm='git merge'
+alias grh='git reset HEAD'
+alias grhh='git reset HEAD --hard'
+
+alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
+
+# Lists all files that have been ignored with git update-index
+alias git-ignorelog='git ls-files -v | grep "^h"'
+
+# Displays some git related author statistics
+function authorstats {
+    gitauth=$1;
+    git log --author=$gitauth --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+    echo ''
+}
 
 ############################################
 #  Modules & Completions
