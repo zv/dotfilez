@@ -23,6 +23,7 @@ main = do
      xmproc  <- spawnPipe "/usr/bin/xmobar"
      session <- getEnv "DESKTOP_SESSION"
      xmonad $ (maybe desktopConfig desktop session) { terminal = "/usr/bin/urxvt"
+                                                    , modMask = mod4Mask
                                                     , logHook = dynamicLogWithPP sjanssenPP
                                                         { ppOutput = hPutStrLn xmproc
                                                         , ppCurrent = xmobarColor "black" "white"
@@ -31,7 +32,7 @@ main = do
                                                      , layoutHook=avoidStruts $ layoutHook defaultConfig
                                                      , manageHook=manageHook defaultConfig <+> manageDocks
                                                      , keys = \c -> mykeys c `M.union` keys defaultConfig c
-                                                    , normalBorderColor = "#FF0000"
+                                                    , normalBorderColor = "#f0f0f0"
                                                     , focusedBorderColor = "#1c1c1c"
                                                     }
 desktop _ = desktopConfig
