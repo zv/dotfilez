@@ -60,6 +60,7 @@ export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 
 path=(
+    /usr/local/pgsql/bin
     ~/bin
     $GOROOT/bin
     /usr/local/{bin,sbin}
@@ -70,6 +71,7 @@ path=(
 # Load our completion functions
 fpath=(
     ~/.zsh/zsh-completions/src
+    ~/.zsh/completion
     $fpath
 )
 
@@ -78,7 +80,6 @@ for fn (~/.zsh/functions/*.zsh) source $fn
 ############################################
 #  Theme
 #############################################
-#
 function spectrum_ls() {
     for code in {000..255}; do
         print -P -- "$code: %F{$code}Test%f"
