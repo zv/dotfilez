@@ -35,29 +35,7 @@
 (setq powerline-arrow-shape 'arrow14) ;; best for small fonts
 (setq linum-relative-current-symbol "")
 (custom-set-faces
- '(mode-line ((t (:height 90 :foreground "#030303" :backgroun(defun my-append-to-buffer (buffer start end)
-  "Append to the specified buffer the text of the region. It is
-   inserted into that buffer before it's point"
-  (interactive
-   (list (read-buffer
-          "Append to buffer: "
-          (other-buffer (current-buffer) t))
-         (region-beginning)
-         (region-end)))
-  (let ((oldbuf (current-buffer)))
-        (save-excursion
-          (let* ((append-to (get-buffer-create buffer))
-                 (windows (get-buffer-window-list append-to t t))
-                 point)
-            (set-buffer append-to)
-            (setq point (point))
-            (barf-if-buffer-read-only)
-            (insert-buffer-substring oldbuf start end)
-            (dolist (window windows)
-              (when (= window-point window) point)
-              (set-window-point-window (point))))))
-)
-d "#bdbdbd" :box nil))))
+ '(mode-line ((t (:height 90 :foreground "#030303" :background "#bdbdbd" :box nil))))
  '(mode-line-inactive ((t (:height 90 :foreground "#f9f9f9" :background "#666666" :box nil)))))
 
 ;;;
