@@ -11,6 +11,7 @@ install_deps() {
     # Development tools
     yum -y groupinstall 'Development Tools'
     yum -y groupinstall 'C Development Tools and Libraries'
+
     # Haskell
     yum -y install haskell-platform
     cabal configure
@@ -30,22 +31,11 @@ install_deps() {
     cd ../..
     # Misc
     yum -y install aircrack-ng bvi clang-devel dnsenum dnsmap ettercap-gtk
-    flawfinder gcc-go hping3 htop htop john libvirt lua-devel luajit-devel
-    mtr ncrack ncrack nmap ntop p0f rats rlwrap rpmdevtools rxvt-unicode
+    flawfinder gcc-go hping3 htop john libvirt lua-devel luajit-devel
+    mtr ncrack ncrack nmap ntop p0f mutt rats rlwrap rpmdevtools rxvt-unicode
     scapy scrot socat tmux unhide weechat wireshark xbacklight xmonad
-    xscreensaver yersinia zsh
-    yum build-dep vim-X11
-    mkdir lib/vim
-    cd lib/vim
-    wget ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2
-    tar jxvf vim-*.tar.bz2
-    rm -f vim-*.tar.bz2
-    ./configure --with-features=huge --with-compiledby="zv <zv@nxvr.org>"
-    --enable-luainterp=dynamic --with-luajit --enable-rubyinterp --enable-gui=gnome2
-    --enable-pythoninterp --enable-python3interp --enable-cscope
-    --enable-multibyte --enable-xim --with-x=yes --disable-netbeans
-    make && make install
-    cd ../..
+    xscreensaver yersinia zsh yum build-dep vim-X11 emacs ack
+    # Add ag
 }
 
 
@@ -56,23 +46,14 @@ case $1 in
         git ls-tree --name-only HEAD | \
             grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' | \
             xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
-        # compile our prompt here...
+        # compile erlang our prompt here...
         if [[ -x $(dirname erlc) ]]; then
             erlc -o ebin ebin/zv_shell.erl
         fi
         ln -s $HOME/.Xresources $HOME/.Xdefaults
         ;;
-    backup)
-        mkdir -p ~/.dotfilez_backups/`date %+F`
-        ls $(DOTFILES) | xargs -n 1 readlink -f | \
-            xargs -n 1 basename | \
-            xargs -t -n 1 -I {} cp -f `pwd`/{} ~/.dotfilez_backups/`date %+F`
-        cp -r ~/.vim ~/.dotfilez_backups/`date %+F`/.vim
-        cp -r ~/.xmonad ~/.dotfilez_backups/`date %+F`/.xmonad
-        ;;
-
-        # pack/extract/link keys etc.
-        secrets)
+    # pack/extract/link keys etc.
+    secrets)
         case $2 in
             extract)
                 gpg --verify keys.enc.sig keys.enc
@@ -86,8 +67,8 @@ case $1 in
                     xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
                 ;;
 
-            repack)
-                tar -cvzf keys.tar.gz --exclude="aws-*" --exclude="ec2-*" aws gnupg ssh
+            repack) # Pack all my secrets
+                tar -cvzf keys.tar.gz --exclude="aws-*" --exclude="ec2-*" aws gnupg/*(.) ssh
                 gpg --symmetric --cipher-algo AES256 --armor -o keys.enc keys.tar.gz
                 gpg --output keys.enc.sig --armor --detach-sig keys.enc
                 rm keys.tar.gz
