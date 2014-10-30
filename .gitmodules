@@ -16,3 +16,47 @@
 [submodule "zsh/zsh-completions"]
 	path = zsh/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "extensions/pylookup"]
+	path = emacs.d/spacemacs/extensions/pylookup
+	url = http://github.com/syl20bnr/pylookup
+[submodule "extensions/projmake-mode"]
+	path = emacs.d/extensions/projmake-mode
+	url = http://github.com/ericbmerritt/projmake-mode
+[submodule "extensions/revive"]
+	path = emacs.d/spacemacs/extensions/revive
+	url = http://github.com/vedang/revive-mode.git
+[submodule "extensions/helm-c-moccur"]
+	path = emacs.d/extensions/helm-c-moccur
+	url = http://github.com/syl20bnr/helm-c-moccur
+[submodule "extensions/solarized-theme"]
+	path = emacs.d/spacemacs/extensions/solarized-theme
+	url = http://github.com/syl20bnr/solarized-emacs
+  ignore = dirty
+[submodule "extensions/evil-plugins"]
+	path = emacs.d/spacemacs/extensions/evil-plugins
+	url = http://github.com/tarao/evil-plugins
+[submodule "extensions/nose"]
+	path = emacs.d/spacemacs/extensions/nose
+	url = http://github.com/syl20bnr/nose.el
+[submodule "snippets"]
+	path = emacs.d/spacemacs/snippets
+	url = http://github.com/syl20bnr/yasnippet-snippets
+  ignore = dirty
+[submodule "extensions/use-package"]
+	path = emacs.d/spacemacs/extensions/use-package
+	url = http://github.com/jwiegley/use-package
+[submodule "extensions/emoji-cheat-sheet"]
+	path = emacs.d/spacemacs/extensions/emoji-cheat-sheet
+	url = http://github.com/ShingoFukuyama/emacs-emoji-cheat-sheet
+[submodule "spacemacs/extensions/evil-org-mode"]
+	path = emacs.d/spacemacs/extensions/evil-org-mode
+	url = http://github.com/syl20bnr/evil-org-mode
+[submodule "spacemacs/extensions/helm-rcirc"]
+	path = emacs.d/spacemacs/extensions/helm-rcirc
+	url = http://github.com/syl20bnr/helm-rcirc
+[submodule "spacemacs/extensions/spray"]
+	path = emacs.d/spacemacs/extensions/spray
+	url = http://github.com/syl20bnr/spray
+[submodule "contrib/syl20bnr/extensions/o-blog"]
+	path = emacs.d/contrib/syl20bnr/extensions/o-blog
+	url = https://github.com/renard/o-blog.git
