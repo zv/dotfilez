@@ -1277,10 +1277,17 @@ DELETE-FUNC when calling CALLBACK.
 
 (defun spacemacs/init-helm ()
   (use-package helm
-    :idle (helm-mode 1)
-    :idle-priority 0
+    :defer t
+    :init
+    (evil-leader/set-key
+      ":"   'helm-M-x
+      "bs"  'helm-mini
+      "sl"  'helm-semantic-or-imenu
+      "hb"  'helm-bookmarks
+      "kil" 'helm-show-kill-ring)
     :config
     (progn
+      (helm-mode +1)
       ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed
       ;; discussion of these options.
       (setq helm-quick-update                     t
@@ -1290,12 +1297,6 @@ DELETE-FUNC when calling CALLBACK.
             helm-ff-search-library-in-sexp        t
             helm-ff-file-name-history-use-recentf t
             )
-      (evil-leader/set-key
-        ":"   'helm-M-x
-        "bs"  'helm-mini
-        "sl"  'helm-semantic-or-imenu
-        "hb"  'helm-bookmarks
-        "kil" 'helm-how-kill-ring)
       ;; alter helm-bookmark key bindings to be simpler
       (defun simpler-helm-bookmark-keybindings ()
         (define-key helm-bookmark-map (kbd "C-d") 'helm-bookmark-run-delete)
@@ -1376,21 +1377,23 @@ DELETE-FUNC when calling CALLBACK.
     :init
     (progn
       (ido-vertical-mode t)
-      (define-key ido-file-completion-map (kbd "C-d") 'ido-delete-file-at-head)
-      (define-key ido-file-completion-map (kbd "C-k") 'ido-prev-match)
-      (define-key ido-file-dir-completion-map (kbd "C-<return>") 'ido-select-text)
-      (define-key ido-file-dir-completion-map (kbd "C-h") 'ido-delete-backward-updir)
-      (define-key ido-file-dir-completion-map (kbd "C-j") 'ido-next-match)
-      (define-key ido-file-dir-completion-map (kbd "C-l") 'ido-exit-minibuffer)
-      (define-key ido-file-dir-completion-map (kbd "C-S-j") 'ido-next-match-dir)
-      (define-key ido-file-dir-completion-map (kbd "C-S-k") 'ido-prev-match-dir)
-      ;; more natural navigation keys: up, down to change current item
-      ;; left to go up dir
-      ;; right to open the selected item
-      (define-key ido-file-dir-completion-map (kbd "<up>") 'ido-prev-match)
-      (define-key ido-file-dir-completion-map (kbd "<down>") 'ido-next-match)
-      (define-key ido-file-dir-completion-map (kbd "<left>") 'ido-delete-backward-updir)
-      (define-key ido-file-dir-completion-map (kbd "<right>") 'ido-exit-minibuffer))))
+      (defadvice ido-vertical-define-keys (after spacemacs/ido-vertical-define-keys activate)
+        ;; overwrite the key bindings for ido vertical mode only
+        (define-key ido-completion-map (kbd "C-d") 'ido-delete-file-at-head)
+        (define-key ido-completion-map (kbd "C-k") 'ido-prev-match)
+        (define-key ido-completion-map (kbd "C-<return>") 'ido-select-text)
+        (define-key ido-completion-map (kbd "C-h") 'ido-delete-backward-updir)
+        (define-key ido-completion-map (kbd "C-j") 'ido-next-match)
+        (define-key ido-completion-map (kbd "C-l") 'ido-exit-minibuffer)
+        (define-key ido-completion-map (kbd "C-S-j") 'ido-next-match-dir)
+        (define-key ido-completion-map (kbd "C-S-k") 'ido-prev-match-dir)
+        ;; more natural navigation keys: up, down to change current item
+        ;; left to go up dir
+        ;; right to open the selected item
+        (define-key ido-completion-map (kbd "<up>") 'ido-prev-match)
+        (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
+        (define-key ido-completion-map (kbd "<left>") 'ido-delete-backward-updir)
+        (define-key ido-completion-map (kbd "<right>") 'ido-exit-minibuffer)))))
 
 (defun spacemacs/init-js2-mode ()
   (use-package js2-mode
@@ -1627,28 +1630,50 @@ DELETE-FUNC when calling CALLBACK.
     :defer t
     :mode ("\\.ps1\\'" . powershell-mode)))
 
+
 (defun spacemacs/init-projectile ()
   (use-package projectile
-    :commands (projectile-switch-to-buffer
-               projectile-invalidate-cache
-               projectile-dired
-               projectile-find-file
-               projectile-kill-buffers
-               projectile-grep
-               projectile-replace)
+    :commands projectile-global-mode
     :init
-    (evil-leader/set-key
-      "pC" 'projectile-invalidate-cache
-      "pd" 'projectile-dired
-      "pF" 'projectile-find-file
-      "pg" 'projectile-grep
-      "pk" 'projectile-kill-buffers
-      "pr" 'projectile-replace
-      "ps" 'projectile-switch-to-buffer)
+    (progn
+      (defun spacemacs/projectile-lazy-loading (func)
+        "Wrap FUNC in order to be able to lazy load projectile."
+        (let ((funcstr (symbol-name func)))
+          (eval `(defun ,(intern (format "spacemacs/%s" funcstr)) (arg)
+                   ,(format "Call %s" funcstr)
+                   (interactive "P")
+                   (projectile-global-mode)
+                   (call-interactively ',func arg)))))
+      (setq-default projectile-enable-caching t)
+      (mapc 'spacemacs/projectile-lazy-loading '(projectile-invalidate-cache
+                                                 projectile-dired
+                                                 projectile-find-file
+                                                 projectile-grep
+                                                 projectile-kill-buffers
+                                                 projectile-replace
+                                                 projectile-switch-to-buffer))
+      (evil-leader/set-key
+        "pc" 'projectile-commander
+        "pC" 'spacemacs/projectile-invalidate-cache
+        "pd" 'spacemacs/projectile-dired
+        "pF" 'spacemacs/projectile-find-file
+        "pg" 'spacemacs/projectile-grep
+        "pk" 'spacemacs/projectile-kill-buffers
+        "pr" 'spacemacs/projectile-replace
+        "ps" 'spacemacs/projectile-switch-to-buffer))
     :config
+    ;; maybe we want these
     (projectile-global-mode t)
     (setq projectile-cache-file "/tmp/projectile.cache")
-    (spacemacs//diminish projectile-mode " Ⓟ")))
+    (def-projectile-commander-method ?F
+      "Find file in project using helm."
+      (helm-projectile))
+    (def-projectile-commander-method ?r
+      "Replace a string in the project."
+      (projectile-replace))
+    (spacemacs//hide-lighter projectile-mode)))
+
+
 
 (defun spacemacs/init-python ()
   (use-package python
@@ -1862,9 +1887,10 @@ DELETE-FUNC when calling CALLBACK.
   (use-package tern-auto-complete
     :defer t
     :init
-    (progn
-      (tern-ac-setup)
-      (add-hook 'js2-mode-hook (lambda () (tern-mode t))))))
+    (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+    :config
+    (tern-ac-setup)))
+
 
 (defun spacemacs/init-undo-tree ()
   (use-package undo-tree
