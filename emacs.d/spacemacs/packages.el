@@ -1581,6 +1581,7 @@ DELETE-FUNC when calling CALLBACK.
                    ( interactive "p" )
                    ( evil-goto-first-line )
                    ( evil-next-line )
+                   ( evil-next-line )
                    ( neotree-change-root ))
                  (defun neotree-jump-to-parent (optional)
                    "Move up to our parent directory"
