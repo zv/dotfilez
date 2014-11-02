@@ -317,9 +317,11 @@ DELETE-FUNC when calling CALLBACK.
              (spacemacs/escape-state ',seq ',shadowed nil nil 'evil-exit-visual-state)))
         (define-key evil-motion-state-map key
           `(lambda () (interactive)
-             (let ((exit-func (if (eq 'help-mode major-mode)
-                                  'quit-window
-                                'evil-normal-state)))
+             (let ((exit-func (cond ((eq 'help-mode major-mode)
+                                     'quit-window)
+                                    ((eq 'neotree-mode major-mode)
+                                     'neotree-hide)
+                                    (t 'evil-normal-state))))
                (spacemacs/escape-state ',seq ',shadowed nil nil exit-func))))
         (eval-after-load 'evil-lisp-state
           `(define-key evil-lisp-state-map ,key
@@ -1228,6 +1230,7 @@ DELETE-FUNC when calling CALLBACK.
             (spacemacs/no-golden-ratio-for-buffers " *popwin-dummy*")))
       (add-to-list 'golden-ratio-inhibit-functions
                    'spacemacs/no-golden-ratio-guide-key)
+      (add-to-list 'golden-ratio-exclude-buffer-names " *NeoTree*")
 
       (spacemacs//diminish golden-ratio-mode " ⊞"))))
 
@@ -1588,6 +1591,8 @@ DELETE-FUNC when calling CALLBACK.
                :defer t
                :init
                (progn
+                 ;; Default neotree state is now evil-motion
+                 :; (add-to-list 'evil-motion-state-modes 'neotree-mode)
                  (setq neo-show-header             nil
                        neo-persist-show            nil)
                  (defun neotree-up-dir (optional)
