@@ -5,14 +5,10 @@
 
 xsetroot -solid white
 
-# remap capslock
-xmodmap -e "remove Lock = Caps_Lock"
-xmodmap -e "keysym Caps_Lock = Control_L"
-xmodmap -e "add Control = Control_L"
-
 ## Fire up apps
 xscreensaver -no-splash &
 xhost local:
 xmonad
 
 autocutsel &
+ssh-add
