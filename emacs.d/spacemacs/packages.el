@@ -1710,12 +1710,9 @@ DELETE-FUNC when calling CALLBACK.
     ;; maybe we want these
     (projectile-global-mode t)
     (setq projectile-cache-file "/tmp/projectile.cache")
-    (def-projectile-commander-method ?F
+    (def-projectile-commander-method ?h
       "Find file in project using helm."
       (helm-projectile))
-    (def-projectile-commander-method ?r
-      "Replace a string in the project."
-      (projectile-replace))
     (spacemacs//hide-lighter projectile-mode)))
 
 
