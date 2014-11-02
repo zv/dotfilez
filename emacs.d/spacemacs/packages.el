@@ -316,7 +316,10 @@ DELETE-FUNC when calling CALLBACK.
              (spacemacs/escape-state ',seq ',shadowed nil nil 'evil-exit-visual-state)))
         (define-key evil-motion-state-map key
           `(lambda () (interactive)
-             (spacemacs/escape-state ',seq ',shadowed nil nil 'evil-normal-state)))
+             (let ((exit-func (if (eq 'help-mode major-mode)
+                                  'quit-window
+                                'evil-normal-state)))
+               (spacemacs/escape-state ',seq ',shadowed nil nil exit-func))))
         (eval-after-load 'evil-lisp-state
           `(define-key evil-lisp-state-map ,key
              (lambda () (interactive)
@@ -1166,11 +1169,14 @@ DELETE-FUNC when calling CALLBACK.
   (use-package golden-ratio
     :defer t
     :init
-    (evil-leader/set-key "tg"
-      '(lambda () (interactive)
-         (if (symbol-value golden-ratio-mode)
-             (progn (golden-ratio-mode -1)(balance-windows))
-           (golden-ratio-mode))))
+    (progn
+      (defun spacemacs/toggle-golden-ratio ()
+        "Toggle golden-ratio mode on and off."
+        (interactive)
+        (if (symbol-value golden-ratio-mode)
+            (progn (golden-ratio-mode -1)(balance-windows))
+          (golden-ratio-mode)))
+      (evil-leader/set-key "tg" 'spacemacs/toggle-golden-ratio))
     :config
     (progn
       (setq golden-ratio-extra-commands
