@@ -58,3 +58,6 @@
 [submodule "emacs.d/extensions/helm-c-moccur"]
 	path = emacs.d/extensions/helm-c-moccur
 	url = http://github.com/syl20bnr/helm-c-moccur
+[submodule "emacs/spacemacs/extensions/evil-nerd-commenter"]
+	path = emacs/spacemacs/extensions/evil-nerd-commenter
+	url = https://github.com/redguardtoo/evil-nerd-commenter
