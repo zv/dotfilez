@@ -14,6 +14,8 @@
     cmake-mode
     csharp-mode
     coffee-mode
+    clojure-mode
+    cider
     dash
     diminish
     dired+
@@ -966,6 +968,29 @@ DELETE-FUNC when calling CALLBACK.
     ;; disable ido faces to see flx highlights.
     ;; (setq ido-use-faces nil)
     ))
+
+;; zv
+(defun spacemacs/init-clojure-mode ()
+  (use-package clojure-mode
+    :init
+    (progn
+      (defun zv-clojure-mode-defaults ()
+        (smartparens-strict-mode +1)
+        (rainbow-delimiters-mode +1))
+
+      (setq zv-clojure-mode-hook 'zv-clojure-mode-defaults)
+
+      (add-hook 'clojure-mode-hook (lambda () (run-hooks 'zv-clojure-mode-hook))))
+    ))
+
+;; zv
+(defun spacemacs/init-cider ()
+  (use-package cider
+    :init
+    (progn
+      (setq nrepl-log-messages t)
+      (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+    )))
 
 (defun spacemacs/init-flycheck ()
   (use-package flycheck
