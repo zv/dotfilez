@@ -1892,7 +1892,11 @@ DELETE-FUNC when calling CALLBACK.
       (spacemacs//diminish smartparens-mode " (Ⓢ)"))
     :config
     (progn
+      (setq sp-autoescape-string-quote nil)
+      (sp-pair "\'" nil :actions :rem)
+      (sp-pair "\"" nil :actions :rem)
       (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil))))
+
 
 (defun spacemacs/init-smeargle ()
   (use-package smeargle
