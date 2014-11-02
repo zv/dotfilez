@@ -1203,6 +1203,18 @@ DELETE-FUNC when calling CALLBACK.
                       ess-eval-buffer-and-go
                       ess-eval-function-and-go
                       ess-eval-line-and-go)))
+
+      ;; Disable auto-resizing for some buffers
+      (defun spacemacs/no-golden-ratio-for-buffers (bufname)
+        "Disable golden-ratio if BUFNAME is the name of a visible buffer."
+        (and (get-buffer bufname) (get-buffer-window bufname 'visible)))
+      (defun spacemacs/no-golden-ratio-guide-key ()
+        "Disable golden-ratio for guide-key popwin buffer."
+        (or (spacemacs/no-golden-ratio-for-buffers " *guide-key*")
+            (spacemacs/no-golden-ratio-for-buffers " *popwin-dummy*")))
+      (add-to-list 'golden-ratio-inhibit-functions
+                   'spacemacs/no-golden-ratio-guide-key)
+
       (spacemacs//diminish golden-ratio-mode " ⊞"))))
 
 (defun spacemacs/init-google-translate ()
@@ -1645,6 +1657,7 @@ DELETE-FUNC when calling CALLBACK.
       (popwin-mode 1)
       (evil-leader/set-key "wp" 'popwin:close-popup-window)
       (push '("*ert*"                      :dedicated t :position bottom :stick t :noselect t) popwin:special-display-config)
+      (push '("*Help*"                     :dedicated t :stick t) popwin:special-display-config)
       (push '("*grep*"                     :dedicated t :position bottom :stick t :noselect t) popwin:special-display-config)
       (push '("*nosetests*"                :dedicated t :position bottom :stick t :noselect t) popwin:special-display-config)
       (push '("^\*Flycheck.+\*$" :regexp t :dedicated t :position bottom :stick t :noselect t) popwin:special-display-config)
