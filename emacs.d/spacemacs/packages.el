@@ -282,7 +282,7 @@ DELETE-FUNC when calling CALLBACK.
       ;; moves `evil-insert-digraph' to C-i in order to free up C-k for
       ;; candidate selection in auto-complete.
       (define-key evil-insert-state-map (kbd "C-k") nil)
-      (define-key evil-insert-state-map (kbd "C-i") 'evil-insert-digraph)
+      ;; (define-key evil-insert-state-map (kbd "C-i") 'evil-insert-digraph)
       ;; escape state with a better key sequence than ESC
       (let* ((seq spacemacs-normal-state-sequence)
              (key (char-to-string (car spacemacs-normal-state-sequence)))
