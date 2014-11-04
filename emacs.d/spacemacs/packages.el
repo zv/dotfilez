@@ -50,6 +50,8 @@
     fringe-helper
     gist
     git-gutter-fringe
+    gitconfig-mode
+    gitignore-mode
     git-messenger
     git-timemachine
     ghc

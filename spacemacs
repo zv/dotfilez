@@ -135,6 +135,9 @@ This function is called at the very end of Spacemacs initialization."
   (zv/install/jade-mode)
   (zv/install/cider)
   (zv/install/clojure-mode)
+  ;; Install our git related modes
+  (use-package gitconfig-mode :mode "/\\.?gitconfig\\'")
+  (use-package gitignore-mode :mode "/\\.gitignore\\'")
 
   ;; Escape should escape things
   (define-key evil-normal-state-map [escape] 'keyboard-quit)
