@@ -696,6 +696,10 @@ DELETE-FUNC when calling CALLBACK.
  /usr/lib/gcc/i686-linux-gnu/4.7/include-fixed
  /usr/include/i386-linux-gnu
  /usr/include
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.3/../../../../include/c++/4.8.3
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.3/../../../../include/c++/4.8.3/x86_64-redhat-linux
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.3/../../../../include/c++/4.8.3/backward
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.3/include
  "
                      ))))))
 
