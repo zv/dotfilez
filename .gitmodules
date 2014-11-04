@@ -58,3 +58,6 @@
 [submodule "emacs.d/extensions/helm-c-moccur"]
 	path = emacs.d/extensions/helm-c-moccur
 	url = http://github.com/syl20bnr/helm-c-moccur
+[submodule "emacs.d/spacemacs/extensions/yasnippet-snippets"]
+	path = emacs.d/spacemacs/extensions/yasnippet-snippets
+	url = http://github.com/AndreaCrotti/yasnippet-snippets.git
