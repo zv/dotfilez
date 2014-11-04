@@ -1612,42 +1612,43 @@ DELETE-FUNC when calling CALLBACK.
 
 (defun spacemacs/init-neotree ()
   (use-package neotree
-               :defer t
-               :init
-               (progn
-                 ;; Default neotree state is now evil-motion
-                 :; (add-to-list 'evil-motion-state-modes 'neotree-mode)
-                 (setq neo-show-header             nil
-                       neo-persist-show            nil)
-                 (defun neotree-up-dir (optional)
-                   "(Hacky way to) Change our root to the parent directory in Neotree"
-                   ( interactive "p" )
-                   ( evil-goto-first-line )
-                   ( evil-next-line )
-                   ( evil-next-line )
-                   ( neotree-change-root ))
-                 (defun neotree-jump-to-parent (optional)
-                   "Move up to our parent directory"
-                   ( interactive "p" )
-                   ( search-backward-regexp "-\s.*/" )
-                   )
-                 (add-hook 'neotree-mode-hook
-                           (lambda ()
-                             (define-key evil-motion-state-local-map (kbd "TAB") 'neotree-enter)
-                             (define-key evil-motion-state-local-map (kbd "RET") 'neotree-enter)
-                             (define-key evil-motion-state-local-map (kbd "?") 'evil-search-backward)
-                             (define-key evil-motion-state-local-map (kbd "a") 'neotree-stretch-toggle)
-                             (define-key evil-motion-state-local-map (kbd "c") 'neotree-create-node)
-                             (define-key evil-motion-state-local-map (kbd "d") 'neotree-delete-node)
-                             (define-key evil-motion-state-local-map (kbd "g") 'neotree-refresh)
-                             (define-key evil-motion-state-local-map (kbd "H") 'neotree-hidden-file-toggle)
-                             (define-key evil-motion-state-local-map (kbd "K") 'kill-this-buffer)
-                             (define-key evil-motion-state-local-map (kbd "q") 'neotree-hide)
-                             (define-key evil-motion-state-local-map (kbd "r") 'neotree-rename-node)
-                             ))
-                     (evil-leader/set-key "ft" 'neotree-toggle)
-               ;; (define-key evil-normal-state-map ",N" 'neotree-toggle)
-               (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))
+    :defer t
+    :init
+    (progn
+      ;; Default neotree state is now evil-motion
+      :; (add-to-list 'evil-motion-state-modes 'neotree-mode)
+      (setq neo-show-header             nil
+            neo-persist-show            nil)
+      (defun neotree-up-dir (optional)
+        "(Hacky way to) Change our root to the parent directory in Neotree"
+        ( interactive "p" )
+        ( evil-goto-first-line )
+        ( evil-next-line )
+        ( evil-next-line )
+        ( neotree-change-root ))
+      (defun neotree-jump-to-parent (optional)
+        "Move up to our parent directory"
+        ( interactive "p" )
+        ( search-backward-regexp "-\s.*/" ))
+      (evil-leader/set-key "ft" 'neotree-toggle)
+      ;; (define-key evil-normal-state-map ",N" 'neotree-toggle)
+      (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))
+    :config
+    (add-hook 'neotree-mode-hook
+              (lambda ()
+                (define-key evil-motion-state-local-map (kbd "TAB") 'neotree-enter)
+                (define-key evil-motion-state-local-map (kbd "RET") 'neotree-enter)
+                (define-key evil-motion-state-local-map (kbd "?") 'evil-search-backward)
+                (define-key evil-motion-state-local-map (kbd "a") 'neotree-stretch-toggle)
+                (define-key evil-motion-state-local-map (kbd "c") 'neotree-create-node)
+                (define-key evil-motion-state-local-map (kbd "d") 'neotree-delete-node)
+                (define-key evil-motion-state-local-map (kbd "g") 'neotree-refresh)
+                (define-key evil-motion-state-local-map (kbd "H") 'neotree-hidden-file-toggle)
+                (define-key evil-motion-state-local-map (kbd "K") 'kill-this-buffer)
+                (define-key evil-motion-state-local-map (kbd "q") 'neotree-hide)
+                (define-key evil-motion-state-local-map (kbd "r") 'neotree-rename-node)
+                ))
+    )
   )
 
 (defun spacemacs/init-org ()
