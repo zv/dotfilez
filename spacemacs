@@ -22,6 +22,30 @@
 
 ;; Functions
 
+;; zv
+(defun zv/install/clojure-mode ()
+  (use-package clojure-mode
+    :init
+    (progn
+      (defun zv-clojure-mode-defaults ()
+        (smartparens-strict-mode +1)
+        (rainbow-delimiters-mode +1))
+
+      (setq zv-clojure-mode-hook 'zv-clojure-mode-defaults)
+
+      (add-hook 'clojure-mode-hook (lambda () (run-hooks 'zv-clojure-mode-hook))))
+    ))
+
+;; zv
+(defun zv/install/cider ()
+  (use-package cider
+    :init
+    (progn
+      (setq nrepl-log-messages t)
+      (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+    )))
+
+
 (defun zv/install/linum-relative ()
   "Setup linum-relative"
   (use-package linum-relative
@@ -77,15 +101,23 @@ This function is called at the very end of Spacemacs initialization."
 
   (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
-  (define-key evil-normal-state-map "\C-p" 'projectile-find-file)
-
+  (define-key evil-normal-state-map "\C-p" 'spacemacs/projectile-find-file)
+  (setq evil-cross-lines t)
+  
   (load-theme 'solarized-dark)
+
+  (setq-default
+   undo-tree-auto-save-history t
+   undo-tree-history-directory-alist `(("." . "/tmp/undo-tree-history"))
+  )
 
   (setq-default js2-global-externs '("module" "require" "buster"
                                      "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval"
                                      "clearInterval" "location" "__dirname" "console" "JSON"))
+
   (evil-set-initial-state 'Man-mode 'emacs)
 
+  (define-key evil-normal-state-map ",a" 'align-regexp)
 
   ;; H/L should go to the first / last non blank character respectively
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
@@ -93,7 +125,7 @@ This function is called at the very end of Spacemacs initialization."
   (define-key evil-normal-state-map "L" 'evil-last-non-blank)
   (define-key evil-normal-state-map "H" 'evil-first-non-blank)
 
-  (evil-leader/set-key "l" 'switch-to-next-buffer)
+  (evil-leader/set-key "l" 'previous-buffer)
 
   (define-key evil-normal-state-map "g]" 'helm-etags-select)
   (define-key evil-visual-state-map "g]" 'helm-etags-select)
@@ -101,6 +133,8 @@ This function is called at the very end of Spacemacs initialization."
   (zv/install/linum-relative)
   (zv/install/helm-ag)
   (zv/install/jade-mode)
+  (zv/install/cider)
+  (zv/install/clojure-mode)
 
   ;; Escape should escape things
   (define-key evil-normal-state-map [escape] 'keyboard-quit)
@@ -125,10 +159,20 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-case-fold-search nil)
  '(ahs-default-range (quote ahs-range-whole-buffer))
  '(ahs-idle-interval 0.25)
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#657b83")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(highlight-symbol-colors (--map (solarized-color-blend it "#fdf6e3" 0.25) (quote ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#586e75")
  '(js2-basic-offset 2)
  '(js2-bounce-indent-p t)
- '(ring-bell-function (quote ignore) t))
+ '(paradox-github-token t)
+ '(ring-bell-function (quote ignore) t)
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
+ '(term-default-bg-color "#fdf6e3")
+ '(term-default-fg-color "#657b83"))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
