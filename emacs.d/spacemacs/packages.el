@@ -1490,14 +1490,14 @@ DELETE-FUNC when calling CALLBACK.
      js2-include-node-externs         t
      js2-include-browser-externs      t
      )
-    (setq-default js2-global-externs '("module" "require" "buster"
+    (setq js2-global-externs '("module" "require" "buster"
                                        "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval"
                                        "clearInterval" "location" "__dirname" "console" "JSON"))
     :config
     (progn
       (add-hook 'js2-mode-hook
                 (lambda ()
-                  (flycheck-mode 1)
+                  ;; (flycheck-mode 1)
                   (defun add-semicolon-to-end-of-line ()
                     "Unsurprisingly, this adds a semicolon to the end of the line"
                     (interactive)
@@ -1765,7 +1765,7 @@ DELETE-FUNC when calling CALLBACK.
     :config
     ;; maybe we want these
     (projectile-global-mode t)
-    (setq projectile-cache-file "/tmp/projectile.cache")
+    (setq projectile-cache-file "~/.emacs.d/projectile.cache")
     (def-projectile-commander-method ?h
       "Find file in project using helm."
       (helm-projectile))
