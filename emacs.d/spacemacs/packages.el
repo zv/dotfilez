@@ -653,17 +653,29 @@ DELETE-FUNC when calling CALLBACK.
       (add-to-list 'completion-styles 'initials t)
       (evil-leader/set-key "ta" 'auto-complete-mode)
       ;; customization
-      (define-key ac-mode-map (kbd "C-j") 'ac-next)
-      (define-key ac-mode-map (kbd "C-k") 'ac-previous)
-      (define-key ac-mode-map (kbd "<S-tab>") 'ac-previous)
+      ;; (define-key ac-mode-map (kbd "C-j") 'ac-next)
+      ;; (define-key ac-mode-map (kbd "C-k") 'ac-previous)
+      (define-key ac-completing-map (kbd "C-j") 'ac-next)
+      (define-key ac-completing-map (kbd "C-k") 'ac-previous)
 
       (setq ac-auto-start 2
-            ac-delay 0.
+            ac-delay 0.5
             ac-quick-help-delay 1.
             ac-use-fuzzy t
             ac-fuzzy-enable t
             tab-always-indent 'complete ; use 'complete when auto-complete is disabled
             ac-dwim t)
+
+
+      (add-hook 'c-mode-common-hook (lambda ()
+                                      (require 'auto-complete-clang)
+                                      (setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources))
+                                      ))
+
+      (eval-after-load 'tern
+        '(progn
+           (require 'tern-auto-complete)
+           (tern-ac-setup)))
 
       (spacemacs//diminish auto-complete-mode " Ⓐ"))))
 
