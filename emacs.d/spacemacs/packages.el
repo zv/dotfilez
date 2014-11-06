@@ -401,7 +401,26 @@ DELETE-FUNC when calling CALLBACK.
       (unless (display-graphic-p)
         (require 'evil-terminal-cursor-changer))
       ;; initiate a search of the selected text
-      (use-package evil-visualstar)
+      (use-package evil-visualstar
+        :init
+        ;; neat trick, when we are not in visual mode we use ahs to search
+        (eval-after-load 'auto-highlight-symbol
+          '(progn
+             (define-key evil-normal-state-map (kbd "*") 'ahs-forward)
+             (define-key evil-normal-state-map (kbd "#") 'ahs-backward)
+             (define-key evil-motion-state-map (kbd "*") 'ahs-forward)
+             (define-key evil-motion-state-map (kbd "#") 'ahs-backward)
+             (eval-after-load 'evil-lisp-state
+               '(progn
+                  (define-key evil-normal-state-map (kbd "*") 'ahs-forward)
+                  (define-key evil-normal-state-map (kbd "#") 'ahs-backward))))))
+
+      ;; persistent search highlight like Vim hisearch
+      ;; (use-package evil-search-highlight-persist
+      ;;   :init
+      ;;   (global-evil-search-highlight-persist)
+      ;;   (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all))
+
       ;; add a lisp state
       (use-package evil-lisp-state
         :init
