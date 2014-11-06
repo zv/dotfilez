@@ -1397,8 +1397,8 @@ DELETE-FUNC when calling CALLBACK.
       ;; helm navigation on hjkl
       ;; (define-key helm-map (kbd "C-j") 'helm-next-line)
       ;; (define-key helm-map (kbd "C-k") 'helm-previous-line)
-      (define-key helm-map (kbd "C-h") 'helm-next-source)
-      (define-key helm-map (kbd "C-l") 'helm-previous-source)
+      (define-key helm-map (kbd "C-l") 'helm-next-source)
+      (define-key helm-map (kbd "C-h") 'helm-previous-source)
       ;; Use projectile as our helm completion system
       (setq projectile-completion-system 'helm)
       (eval-after-load "helm-mode" ; required
