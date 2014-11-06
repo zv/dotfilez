@@ -1620,15 +1620,13 @@ DELETE-FUNC when calling CALLBACK.
     :init
     (progn
       ;; Default neotree state is now evil-motion
-      :; (add-to-list 'evil-motion-state-modes 'neotree-mode)
+      (add-to-list 'evil-motion-state-modes 'neotree-mode)
       (setq neo-show-header             nil
             neo-persist-show            nil)
       (defun neotree-up-dir (optional)
+        (interactive "p")
         "(Hacky way to) Change our root to the parent directory in Neotree"
-        ( interactive "p" )
-        ( evil-goto-first-line )
-        ( evil-next-line )
-        ( evil-next-line )
+        ( search-backward "(up a dir)" )
         ( neotree-change-root ))
       (defun neotree-jump-to-parent (optional)
         "Move up to our parent directory"
@@ -1640,13 +1638,19 @@ DELETE-FUNC when calling CALLBACK.
     :config
     (add-hook 'neotree-mode-hook
               (lambda ()
-                (define-key evil-motion-state-local-map (kbd "TAB") 'neotree-enter)
+                ;; Jump to parent
+                (define-key evil-motion-state-local-map "p" 'neotree-jump-to-parent)
+                (define-key evil-motion-state-local-map "u" 'neotree-up-dir)
+                (define-key evil-motion-state-local-map "C" 'neotree-change-root)
+                (define-key evil-motion-state-local-map "I" 'neotree-hidden-file-toggle)
+                ;; end of added keybindings
                 (define-key evil-motion-state-local-map (kbd "RET") 'neotree-enter)
+                (define-key evil-motion-state-local-map (kbd "TAB") 'neotree-enter)
                 (define-key evil-motion-state-local-map (kbd "?") 'evil-search-backward)
                 (define-key evil-motion-state-local-map (kbd "a") 'neotree-stretch-toggle)
                 (define-key evil-motion-state-local-map (kbd "c") 'neotree-create-node)
                 (define-key evil-motion-state-local-map (kbd "d") 'neotree-delete-node)
-                (define-key evil-motion-state-local-map (kbd "g") 'neotree-refresh)
+                (define-key evil-motion-state-local-map (kbd "R") 'neotree-refresh)
                 (define-key evil-motion-state-local-map (kbd "H") 'neotree-hidden-file-toggle)
                 (define-key evil-motion-state-local-map (kbd "K") 'kill-this-buffer)
                 (define-key evil-motion-state-local-map (kbd "q") 'neotree-hide)
