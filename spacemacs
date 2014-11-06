@@ -144,6 +144,43 @@ Start `ielm' if it's not already running."
          "gp" 'helm-do-ag
          )))
 
+;; encrypt hook ------------------------------------------------------------------
+(defun zv/install/encrypt-hook ()
+  "Install a hook to encrypt some files after saving"
+  (setq zv-dotfiles         (expand-file-name "~/Development/dotfilez/")
+        zv-encrypt          (concat zv-dotfiles "enc/")
+        zv-encrypted-org    (concat zv-encrypt "org/")
+        zv-encrypted-gnupg  (concat zv-encrypt "gnupg/")
+        zv-encrypted-ssh    (concat zv-encrypt "ssh/"))
+
+  ;; The directories to check for changes and the destination for the encrypted file
+  (setq dirs-to-encrypt
+         ;;      Input Directory                 Output Directory
+        `((,(expand-file-name "~/.gnupg/")   . ,zv-encrypted-gnupg)
+          (,(expand-file-name org-directory) . ,zv-encrypted-org)
+          (,(concat zv-dotfiles "gnupg/")    . ,zv-encrypted-gnupg)
+          (,(concat zv-dotfiles "ssh/")      . ,zv-encrypted-ssh)
+          (,(expand-file-name "~/.ssh/")     . ,zv-encrypted-ssh)))
+
+  (add-hook 'after-save-hook
+            (lambda ()
+              ;; Check if we're in a directory to be encrypted
+              (let ((dir (assoc (file-name-directory (buffer-file-name)) dirs-to-encrypt)))
+                (when dir
+                  ;; Set our output file and output buffer
+                  (let* ((old-buffer  (current-buffer))
+                         (output-file (concat (cdr dir) (file-name-base (buffer-file-name))))
+                         ;; Use this crazy method for getting a key.
+                         (recipient   (epg-list-keys (epg-make-context epa-protocol)
+                                        "<zephyr.pellerin@gmail.com>" 'public)))
+                    ;; Copy our file
+                    (with-temp-file output-file
+                      (insert-buffer-substring old-buffer (point-min) (point-max)))
+                    ;; Encrypt our file
+                    (epa-encrypt-file output-file recipient)))))
+            )
+  )
+
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
 In Delete Selection mode, if the mark is active, just deactivate it;
@@ -163,6 +200,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
+  (require 'epa-mail)
 
   (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
@@ -201,6 +239,8 @@ This function is called at the very end of Spacemacs initialization."
   (zv/install/clojure-mode)
   (zv/install/cider)
   (zv/configure/elisp)
+
+  (zv/install/encrypt-hook)
   ;; Install our git related modes
   (use-package gitconfig-mode :mode "/\\.?gitconfig\\'")
   (use-package gitignore-mode :mode "/\\.gitignore\\'")
