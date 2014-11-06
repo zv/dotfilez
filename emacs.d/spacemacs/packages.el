@@ -698,7 +698,7 @@ DELETE-FUNC when calling CALLBACK.
            (require 'tern-auto-complete)
            (tern-ac-setup)))
 
-      (spacemacs//diminish auto-complete-mode " Ⓐ"))))
+      (spacemacs//diminish auto-complete-mode " ℀"))))
 
 (defun spacemacs/init-auto-complete-clang ()
   (use-package auto-complete-clang
@@ -759,7 +759,7 @@ DELETE-FUNC when calling CALLBACK.
            "sn"  (lambda () (interactive) (eval '(progn (ahs-highlight-now) (ahs-forward)) nil))
            "sN"  (lambda () (interactive) (eval '(progn (ahs-highlight-now) (ahs-backward)) nil))
            "ts" 'auto-highlight-symbol-mode))
-      (spacemacs//diminish auto-highlight-symbol-mode " Ⓗ")
+      (spacemacs//diminish auto-highlight-symbol-mode " ℍ")
       ;; micro-state to easily jump from a highlighted symbol to the others
       (dolist (sym '(ahs-forward
                      ahs-forward-definition
@@ -856,9 +856,9 @@ DELETE-FUNC when calling CALLBACK.
   ;; Minor modes abbrev --------------------------------------------------------
   (when (display-graphic-p)
     (eval-after-load "eproject"
-      '(diminish 'eproject-mode " eⓅ"))
+      '(diminish 'eproject-mode " ⚒"))
     (eval-after-load "flymake"
-      '(diminish 'flymake-mode " Ⓕ2")))
+      '(diminish 'flymake-mode " ㎙")))
   ;; Minor Mode (hidden) ------------------------------------------------------
   (eval-after-load 'elisp-slime-nav
     '(diminish 'elisp-slime-nav-mode))
@@ -1052,7 +1052,7 @@ DELETE-FUNC when calling CALLBACK.
                   'flycheck-mode)))
     :config
     (progn
-      (spacemacs//diminish flycheck-mode " Ⓕ")
+      (spacemacs//diminish flycheck-mode " ✓")
 
       (setq flycheck-check-syntax-automatically '(save mode-enabled)
             flycheck-standard-error-navigation nil)
@@ -1145,7 +1145,7 @@ DELETE-FUNC when calling CALLBACK.
       (add-hook 'markdown-mode-hook '(lambda () (flyspell-mode 1)))
       (add-hook 'text-mode-hook '(lambda () (flyspell-mode 1))))
     :config
-    (spacemacs//diminish flyspell-mode " Ⓢ")))
+    (spacemacs//diminish flyspell-mode " ⅍")))
 
 (defun spacemacs/init-gist ()
   (use-package gist
@@ -1944,7 +1944,7 @@ DELETE-FUNC when calling CALLBACK.
       (add-to-hooks 'smartparens-mode '(erlang-mode-hook
                                         markdown-mode-hook
                                         prog-mode-hook))
-      (spacemacs//diminish smartparens-mode " (Ⓢ)"))
+      (spacemacs//diminish smartparens-mode " ⒮"))
     :config
     (progn
       (setq sp-autoescape-string-quote nil)
@@ -1982,7 +1982,7 @@ DELETE-FUNC when calling CALLBACK.
     (progn
       (tagedit-add-experimental-features)
       (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))
-      (spacemacs//diminish tagedit-mode " Ⓣ"))))
+      (spacemacs//diminish tagedit-mode " ⤭"))))
 
 (defun spacemacs/init-tern-auto-complete ()
   (use-package tern-auto-complete
@@ -1990,8 +1990,9 @@ DELETE-FUNC when calling CALLBACK.
     :init
     (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
     :config
-    (tern-ac-setup)))
-
+    (progn
+    (tern-ac-setup)
+    (spacemacs//diminish tern-mode " ₮"))))
 
 (defun spacemacs/init-undo-tree ()
   (use-package undo-tree
@@ -2059,7 +2060,7 @@ DELETE-FUNC when calling CALLBACK.
                                                 erlang-mode-hook)))
     :config
     (progn
-      (spacemacs//diminish yas-minor-mode " Ⓨ")
+      (spacemacs//diminish yas-minor-mode " ₴")
       (require 'helm-c-yasnippet)
       (evil-leader/set-key "is" 'helm-yas-complete)
       (setq helm-c-yas-space-match-any-greedy t))))
