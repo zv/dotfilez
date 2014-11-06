@@ -1,7 +1,16 @@
+aws/*
 !aws/*.gpg
+!aws/*.asc
+gnupg/*
 !gnupg/gpg.conf
-!gnupg/*.gpg.gpg
+!gnupg/secring.gpg
+!gnupg/pubring.gpg
+!gnupg/trustring.gpg
+!gnupg/*.asc
+ssh/*
+!ssh/id_rsa.pub
 !ssh/*.gpg
+!ssh/*.asc
 
 keys.tar.gz
 keys.tar
