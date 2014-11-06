@@ -19,33 +19,98 @@
  ;; Not used for now.
  dotspacemacs-default-package-repository nil
 )
-
 ;; Functions
+;; programming mode ------------------------------------------------------------
+;; TODO: Doesn't work!
+(defun zv-font-lock-comment-annotations ()
+  "Highlight a bunch of well known comment annotations.
+This functions should be added to the hooks of major modes for programming."
+  (font-lock-add-keywords
+   nil '(("\\<\\(\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):\\)"
+          1 font-lock-warning-face t))))
 
-;; zv
+(defun zv/configure/prog-mode ()
+  ;; (add-hook 'prog-mode-hook (lambda () (run-hooks 'zv-font-lock-comment-annotations)))
+  )
+
+;; clojure ----------------------------------------------------------------------
+
+(defun zv-lisp-mode-defaults ()
+  (smartparens-strict-mode +1)
+  (rainbow-delimiters-mode +1))
+
+;; no need for whitespace-mode in iteractive
+(defun zv-interactive-lisp-mode-defaults ()
+  (smartparens-strict-mode +1)
+  (rainbow-delimiters-mode +1)
+  (whitespace-mode -1))
+
+
 (defun zv/install/clojure-mode ()
   (use-package clojure-mode
     :init
     (progn
-      (defun zv-clojure-mode-defaults ()
-        (smartparens-strict-mode +1)
-        (rainbow-delimiters-mode +1))
+      (add-hook 'clojure-mode-hook 'zv-lisp-mode-defaults))))
 
-      (setq zv-clojure-mode-hook 'zv-clojure-mode-defaults)
 
-      (add-hook 'clojure-mode-hook (lambda () (run-hooks 'zv-clojure-mode-hook))))
-    ))
-
-;; zv
 (defun zv/install/cider ()
   (use-package cider
     :init
     (progn
       (setq nrepl-log-messages t)
-      (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-    )))
+      (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode))))
 
+;; emacs lisp ------------------------------------------------------------
+(defun zv-visit-ielm ()
+  "Switch to default `ielm' buffer.
+Start `ielm' if it's not already running."
+  (interactive)
+  (zv-start-or-switch-to 'ielm "*ielm*"))
 
+(defun zv-conditional-emacs-lisp-checker ()
+  "Don't check doc style in Emacs Lisp test files."
+  (let ((file-name (buffer-file-name)))
+    (when (and file-name (string-match-p ".*-tests?\\.el\\'" file-name))
+      (setq-local flycheck-checkers '(emacs-lisp)))))
+
+(defun zv-emacs-lisp-mode-defaults ()
+  "Sensible defaults for `emacs-lisp-mode'."
+  (run-hooks 'zv-lisp-mode-defaults)
+  (turn-on-eldoc-mode)
+  (rainbow-mode +1)
+  (zv-conditional-emacs-lisp-checker))
+
+;; ielm is an interactive Emacs Lisp shell
+(defun zv-ielm-mode-defaults ()
+  "Sensible defaults for `ielm'."
+  (run-hooks 'zv-interactive-lisp-mode-defaults)
+  (turn-on-eldoc-mode))
+
+(defun conditionally-enable-smartparens-mode ()
+  "Enable `smartparens-mode' in the minibuffer, during `eval-expression'."
+  (if (eq this-command 'eval-expression)
+      (smartparens-mode 1)))
+
+(defun zv/configure/elisp ()
+  (add-to-list 'auto-mode-alist '("Cask\\'" . emacs-lisp-mode))
+  ;; Some key defs
+  (define-key emacs-lisp-mode-map (kbd "C-c C-z") 'zv-visit-ielm)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-c") 'eval-defun)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
+
+  (add-hook 'emacs-lisp-mode-hook 'zv-emacs-lisp-mode-defaults)
+  (add-hook 'ielm-mode-hook 'zv-ielm-mode-defaults)
+
+  ;; (eval-after-load "elisp-slime-nav"    '(diminish 'elisp-slime-nav-mode))
+  ;; (eval-after-load "rainbow-mode"       '(diminish 'rainbow-mode))
+  (spacemacs//diminish eldoc-mode " ∃")
+
+  ;; enable elisp-slime-nav-mode
+  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook)) (add-hook hook 'elisp-slime-nav-mode))
+  (add-hook 'minibuffer-setup-hook 'conditionally-enable-smartparens-mode)
+  )
+
+;; relative linum ------------------------------------------------------------
 (defun zv/install/linum-relative ()
   "Setup linum-relative"
   (use-package linum-relative
@@ -133,8 +198,9 @@ This function is called at the very end of Spacemacs initialization."
   (zv/install/linum-relative)
   (zv/install/helm-ag)
   (zv/install/jade-mode)
-  (zv/install/cider)
   (zv/install/clojure-mode)
+  (zv/install/cider)
+  (zv/configure/elisp)
   ;; Install our git related modes
   (use-package gitconfig-mode :mode "/\\.?gitconfig\\'")
   (use-package gitignore-mode :mode "/\\.gitignore\\'")
