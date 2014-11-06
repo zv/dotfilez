@@ -119,6 +119,7 @@ Start `ielm' if it's not already running."
           (global-linum-mode 1)
           (setq linum-relative-current-symbol ""))))
 
+;; jade-mode ------------------------------------------------------------------
 (defun zv/install/jade-mode ()
   "Setup jade-mode"
   (use-package jade-mode
@@ -147,38 +148,25 @@ Start `ielm' if it's not already running."
 ;; encrypt hook ------------------------------------------------------------------
 (defun zv/install/encrypt-hook ()
   "Install a hook to encrypt some files after saving"
-  (setq zv-dotfiles         (expand-file-name "~/Development/dotfilez/")
-        zv-encrypt          (concat zv-dotfiles "enc/")
-        zv-encrypted-org    (concat zv-encrypt "org/")
-        zv-encrypted-gnupg  (concat zv-encrypt "gnupg/")
-        zv-encrypted-ssh    (concat zv-encrypt "ssh/"))
+  ;; Previously I had written some much more complex code to
+  ;; accommodate src and dest directories, now this hook simply
+  ;; encrypts if it finds such a file. I am doing this out of
+  ;; expediency -- so if you do find yourself using this code be sure
+  ;; to check (the not very good) EasyPG code.
+  (setq zv-dotfiles      (expand-file-name "~/Development/dotfilez/")
+        dirs-to-encrypt `(,(expand-file-name "~/.gnupg/")
+                          ,(expand-file-name org-directory)
+                          ,(concat zv-dotfiles "gnupg/")
+                          ,(concat zv-dotfiles "ssh/")
+                          ,(expand-file-name "~/.ssh/")))
 
-  ;; The directories to check for changes and the destination for the encrypted file
-  (setq dirs-to-encrypt
-         ;;      Input Directory                 Output Directory
-        `((,(expand-file-name "~/.gnupg/")   . ,zv-encrypted-gnupg)
-          (,(expand-file-name org-directory) . ,zv-encrypted-org)
-          (,(concat zv-dotfiles "gnupg/")    . ,zv-encrypted-gnupg)
-          (,(concat zv-dotfiles "ssh/")      . ,zv-encrypted-ssh)
-          (,(expand-file-name "~/.ssh/")     . ,zv-encrypted-ssh)))
-
+  ;; Encrypt this file if it is in one of our `dirs-to-encrypt'
   (add-hook 'after-save-hook
             (lambda ()
-              ;; Check if we're in a directory to be encrypted
-              (let ((dir (assoc (file-name-directory (buffer-file-name)) dirs-to-encrypt)))
-                (when dir
-                  ;; Set our output file and output buffer
-                  (let* ((old-buffer  (current-buffer))
-                         (output-file (concat (cdr dir) (file-name-base (buffer-file-name))))
-                         ;; Use this crazy method for getting a key.
-                         (recipient   (epg-list-keys (epg-make-context epa-protocol)
-                                        "<zephyr.pellerin@gmail.com>" 'public)))
-                    ;; Copy our file
-                    (with-temp-file output-file
-                      (insert-buffer-substring old-buffer (point-min) (point-max)))
-                    ;; Encrypt our file
-                    (epa-encrypt-file output-file recipient)))))
-            )
+              (when (member (file-name-directory (buffer-file-name)) dirs-to-encrypt)
+                (let ((recipient   (epg-list-keys (epg-make-context epa-protocol)
+                                                  "<zephyr.pellerin@gmail.com>" 'public)))
+                  (epa-encrypt-file (buffer-file-name) recipient)))))
   )
 
 (defun minibuffer-keyboard-quit ()
