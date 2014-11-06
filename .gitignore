@@ -1,6 +1,8 @@
-aws
-gnupg
-ssh
+!aws/*.gpg
+!gnupg/gpg.conf
+!gnupg/*.gpg.gpg
+!ssh/*.gpg
+
 keys.tar.gz
 keys.tar
 secrets.tar.gz
@@ -20,13 +22,12 @@ pentadactyl/info/default
 lib/ag
 lib/vim
 
-emacs/flycheck*
 
 *.beam
 " for YCM
 *.pyc
 
-
+emacs/flycheck*
 emacs.d/auto-save-list/
 emacs.d/elpa/
 emacs.d/ac-comphist.dat
