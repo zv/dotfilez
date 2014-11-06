@@ -13,7 +13,6 @@ accept and prefer gpg encrypted messages.
 <pre>
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
-
 mQENBFJrVXsBCADBVWMF1RXntd24chyCJDK3xjQYkrOIk7GFJuGi/p1Pc7w+LI/5
 cplC9HI/hfBSzH5fBdsmf68nqFB9rBIm58sPt/fiGbudI7JqNeVhhw2MvtK9OVn8
 V7wnpKvdId2EdbTLFMWVOXlj9zqy2T3aEBBgDMZ6ziMqX6JP2FxGm+bGStZp/ZQ1
@@ -53,6 +52,6 @@ hPTY54fArcJ/Wq4=
 
 - **SSH/.authorized_keys** (*id_rsa.pub*)
 <pre>
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1w/7LA5izHI2q209TIltqjvbBxoc2Kmx4OC3UK7WJM9x7OoXnWAj6yZHSw7JrQv6FCRkgwYncKe/GKX88hIkiCxWcETWfRCmThRXgCthY5t3nq/TcFraj5sHcwC0aCLeiE2rFdgj3Fg5spnEGbdaGB9eQX5hA7uC6/brMX2PDg014tNlHCbF6HjfESQqSAjvQOAep+jJxvwzGa/BLQ2HGVI/s4rNpiPNgQvblzeO0Uwv7NZToAwdXCUKknKmIPIrGrexFulNR/nHJ6n0BciU03qNbABwmICpthf8txLjk12arm9floaHMudFHeeIeNf/ZZDE9mie3Hbze1JnBy9Kf zv@SIGSTKFLT
+rsh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1w/7LA5izHI2q209TIltqjvbBxoc2Kmx4OC3UK7WJM9x7OoXnWAj6yZHSw7JrQv6FCRkgwYncKe/GKX88hIkiCxWcETWfRCmThRXgCthY5t3nq/TcFraj5sHcwC0aCLeiE2rFdgj3Fg5spnEGbdaGB9eQX5hA7uC6/brMX2PDg014tNlHCbF6HjfESQqSAjvQOAep+jJxvwzGa/BLQ2HGVI/s4rNpiPNgQvblzeO0Uwv7NZToAwdXCUKknKmIPIrGrexFulNR/nHJ6n0BciU03qNbABwmICpthf8txLjk12arm9floaHMudFHeeIeNf/ZZDE9mie3Hbze1JnBy9Kf zv@SIGSTKFLT
 </pre>
 
