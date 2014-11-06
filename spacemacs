@@ -255,6 +255,7 @@ This function is called at the very end of Spacemacs initialization."
   (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
   (global-set-key [escape] 'evil-exit-emacs-state)
 
+  (setq exec-path (cons "/usr/local/bin" exec-path))
   (setq powerline-default-separator nil)
   )
 
@@ -273,10 +274,11 @@ This function is called at the very end of Spacemacs initialization."
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(edts-man-root "/home/zv/.emacs.d/edts/doc/17.3")
  '(highlight-symbol-colors (--map (solarized-color-blend it "#fdf6e3" 0.25) (quote ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
- '(js2-basic-offset 2)
- '(js2-bounce-indent-p t)
+ '(js2-basic-offset 2 t)
+ '(js2-bounce-indent-p t t)
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
