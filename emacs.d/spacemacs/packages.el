@@ -1665,16 +1665,24 @@ DELETE-FUNC when calling CALLBACK.
     :config
     (progn
       (require 'org-install)
-      (define-key global-map "\C-cl" 'org-store-link)
-      (define-key global-map "\C-ca" 'org-agenda)
+      ;; (define-key global-map "\C-cl" 'org-store-link)
+      ;; (define-key global-map "\C-ca" 'org-agenda)
+      (evil-leader/set-key
+        "oc" 'org-capture
+        "oa" 'org-agenda
+        "osl" 'org-store-link)
+      (setq org-directory "~/org")
+      (setq org-default-notes-file (concat org-directory "/notes.org"))
       (setq org-log-done t)
-      (setq org-agenda-files '("~/Dropbox/org"))
+      (setq org-agenda-files '("~/org"))
       (use-package org-bullets
         :config
         (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-      (use-package org-trello
-        :config
-        (add-hook 'org-mode-hook 'org-trello-mode))))
+      ;;;; disable org trello
+      ;; (use-package org-trello
+      ;;   :config
+      ;;   (add-hook 'org-mode-hook 'org-trello-mode))
+      ))
 
   (eval-after-load "org-agenda"
     '(progn
