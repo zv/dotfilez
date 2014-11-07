@@ -16,13 +16,6 @@ install_deps() {
     yum -y install haskell-platform
     cabal configure
     cabal install hoogle hlint hdevtools ghc-mok
-    # Erlang
-    # wget -qO - http://www.erlang.org/download/otp_src_17.0.tar.gz | tar zxvf -
-    # wget -qO - http://www.erlang.org/download/otp_doc_man_17.0.tar.gz | tar zxvf -
-    ### Elixir
-    #git clone https://github.com/elixir-lang/elixir.git
-    #cd elixir
-    #make clean test
     # ag
     yum -y install pkgconfig automake gcc zlib-devel pcre-devel xz-devel
     cd lib/ag
@@ -34,15 +27,27 @@ install_deps() {
     flawfinder gcc-go hping3 htop john libvirt lua-devel luajit-devel
     mtr ncrack ncrack nmap ntop p0f mutt rats rlwrap rpmdevtools rxvt-unicode
     scapy scrot socat tmux unhide weechat wireshark xbacklight xmonad
-    xscreensaver yersinia zsh yum build-dep vim-X11 emacs ack
-    # Add ag
+    screensaver yersinia zsh emacs ack the_silver_searcher vim-enhanced
 }
 
+## Make /tmp temporary
 
+setup_home() {
+    ## For my org files
+    mkdir ~/org
+}
+setup_tmpfs()  { cat "tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0" >> /etc/fstab }
+build_erlang() {
+    mkdir /tmp/erlang && cd /tmp/erlang
+    wget -qO - http://www.erlang.org/download/otp_src_17.3.tar.gz     | tar zxvf -
+    wget -qO - http://www.erlang.org/download/otp_doc_man_17.3.tar.gz | tar zxvf -
+}
+encrypt_setup() {
+    gpg2 -a -r "zv@nxvr.org" --encrypt-files id_rsa config known_hosts *.pem
+}
 
 case $1 in
     install)
-        # git clone https://github.com/gmarik/Vundle.vim.git vim/bundle/vundle
         git ls-tree --name-only HEAD | \
             grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' | \
             xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
@@ -55,24 +60,8 @@ case $1 in
     # pack/extract/link keys etc.
     secrets)
         case $2 in
-            extract)
-                gpg --verify keys.enc.sig keys.enc
-                gpg --output secrets.tar.gz --decrypt keys.enc
-                tar -xvf secrets.tar.gz
-                rm secrets.tar.gz
-                ;;
-
-            link)
-                ls | grep "aws$\|ssh$\|gnupg$" | \
-                    xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
-                ;;
-
-            repack) # Pack all my secrets
-                tar -cvzf keys.tar.gz --exclude="aws-*" --exclude="ec2-*" aws gnupg/*(.) ssh
-                gpg --symmetric --cipher-algo AES256 --armor -o keys.enc keys.tar.gz
-                gpg --output keys.enc.sig --armor --detach-sig keys.enc
-                rm keys.tar.gz
-                ;;
+            ls | grep "aws$\|ssh$\|gnupg$" | \
+                xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
         esac
         # End secrets moving block
         ;;
