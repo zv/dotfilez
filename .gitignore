@@ -11,12 +11,14 @@ ssh/*
 !ssh/id_rsa.pub
 !ssh/*.gpg
 !ssh/*.asc
+org/*
+!org/*.gpg
 
 keys.tar.gz
 keys.tar
 secrets.tar.gz
 
-*.elc
+zsh/cache
 credentials.sh
 vim/.netrwhist
 vim/backups
@@ -36,6 +38,9 @@ lib/vim
 " for YCM
 *.pyc
 
+*.elc
+
+emacs/ede-projects.el
 emacs/flycheck*
 emacs.d/auto-save-list/
 emacs.d/elpa/
