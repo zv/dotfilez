@@ -128,6 +128,64 @@ Start `ielm' if it's not already running."
       (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
       (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode)))))
 
+;; surround-keys ---------------------------------------------------------------
+(defun zv/configure/surround-keys ()
+  (defun surround-word (char &optional right-char)
+    "Surrounds word with char, or if right-char is supplied then
+     surrounded by char and right char respectively"
+    (save-excursion
+      (forward-word 1)
+      (if (not right-char) (insert char) (insert right-char))
+      (forward-word -1)
+      (insert char)))
+
+  (defun surround-word-single-quotes () (interactive) (surround-word "'"))
+  (defun surround-word-bracket () (interactive) (surround-word "[" "]"))
+  (defun surround-word-parens () (interactive) (surround-word "(" ")"))
+  (defun surround-word-angle-brackets () (interactive) (surround-word "<" ">"))
+  (define-key evil-normal-state-map ",'" 'surround-word-single-quotes)
+  (define-key evil-normal-state-map ",[" 'surround-word-bracket)
+  (define-key evil-normal-state-map ",(" 'surround-word-parens)
+  (define-key evil-normal-state-map ",<" 'surround-word-angle-brackets))
+
+;; speedbar --------------------------------------------------------------------
+(defun zv/configure/speedbar ()
+  (use-package speedbar
+    :config
+    (progn
+      (setq
+       speedbar-directory-button-trim-method  'trim
+       speedbar-hide-button-brackets-flag     t
+       speedbar-show-unknown-files            t
+       speedbar-smart-directory-expand-flag   t
+       ;; currently breaks erc
+       ;; speedbar-use-images                    nil
+       )
+
+
+      (add-hook
+       'speedbar-mode-hook
+       '(lambda ()
+          (linum-mode 0)))
+      (custom-set-faces
+       '(speedbar-file-face           ((t (:height 95 :box nil))))
+       '(speedbar-directory-face      ((t (:height 95 :box nil))))
+       '(speedbar-selected-face       ((t (:height 105 :box nil)))))
+      )))
+
+;; org-mode --------------------------------------------------------------------
+(defun zv/configure/org-mode ()
+  ;; (evil-leader/set-key-for-mode 'org-mode "oa" 'org-attach  "oR" 'org-refile)
+  (setq org-directory (expand-file-name "~/org/"))
+  (setq org-default-notes-file (concat org-directory "notes.org"))
+  (setq org-capture-templates
+        '(("t" "Todo"  entry  (file             (concat org-directory "gtd.org")) "* TODO %?\n  %i\n  %a")
+          ("d" "Diary" entry (file+datetree     (concat org-directory "diary.org")))
+          ("i" "Ideas"  item  (file     (concat org-directory "ideas.org")) "%?")
+          ("q" "Quotes" item (file (concat org-directory "quotes.org")) "%?")))
+  )
+
+;; helm-ag ---------------------------------------------------------------------
 (defun zv/install/helm-ag ()
   "Setup ag && helm-ag"
   (use-package ag
@@ -213,13 +271,22 @@ This function is called at the very end of Spacemacs initialization."
 
   (define-key evil-normal-state-map "g]" 'helm-etags-select)
   (define-key evil-visual-state-map "g]" 'helm-etags-select)
+
+  (global-set-key (kbd "<XF86Calculator>") 'calc)
+  ;; put these items into a use-package
+  ;;(define-key woman-mode-map (kbd "M-n") 'Man-next-section)
+  ;;(define-key woman-mode-map (kbd "M-p") 'Man-previous-section)
   
   (zv/install/linum-relative)
   (zv/install/helm-ag)
   (zv/install/jade-mode)
   (zv/install/clojure-mode)
   (zv/install/cider)
+  (zv/configure/prog-mode)
   (zv/configure/elisp)
+  (zv/configure/surround-keys)
+  (zv/configure/speedbar)
+  (zv/configure/org-mode)
 
   (zv/install/encrypt-hook)
   ;; Install our git related modes
@@ -271,4 +338,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))))
+ '(woman-italic ((t (:foreground "lawn green" :underline t :slant oblique)))))
