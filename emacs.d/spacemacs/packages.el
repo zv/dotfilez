@@ -679,8 +679,8 @@ DELETE-FUNC when calling CALLBACK.
       (define-key ac-completing-map (kbd "C-j") 'ac-next)
       (define-key ac-completing-map (kbd "C-k") 'ac-previous)
 
-      (setq ac-auto-start 2
-            ac-delay 0.5
+      (setq ac-auto-start 1.5
+            ac-delay 0.
             ac-quick-help-delay 1.
             ac-use-fuzzy t
             ac-fuzzy-enable t
@@ -1665,23 +1665,14 @@ DELETE-FUNC when calling CALLBACK.
     :config
     (progn
       (require 'org-install)
-      ;; (define-key global-map "\C-cl" 'org-store-link)
-      ;; (define-key global-map "\C-ca" 'org-agenda)
       (evil-leader/set-key
         "oc" 'org-capture
         "oa" 'org-agenda
         "osl" 'org-store-link)
-      (setq org-directory "~/org")
-      (setq org-default-notes-file (concat org-directory "/notes.org"))
       (setq org-log-done t)
-      (setq org-agenda-files '("~/org"))
       (use-package org-bullets
         :config
         (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-      ;;;; disable org trello
-      ;; (use-package org-trello
-      ;;   :config
-      ;;   (add-hook 'org-mode-hook 'org-trello-mode))
       ))
 
   (eval-after-load "org-agenda"
