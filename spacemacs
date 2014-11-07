@@ -148,25 +148,19 @@ Start `ielm' if it's not already running."
 ;; encrypt hook ------------------------------------------------------------------
 (defun zv/install/encrypt-hook ()
   "Install a hook to encrypt some files after saving"
-  ;; Previously I had written some much more complex code to
-  ;; accommodate src and dest directories, now this hook simply
-  ;; encrypts if it finds such a file. I am doing this out of
-  ;; expediency -- so if you do find yourself using this code be sure
-  ;; to check (the not very good) EasyPG code.
-  (setq zv-dotfiles      (expand-file-name "~/Development/dotfilez/")
-        dirs-to-encrypt `(,(expand-file-name "~/.gnupg/")
-                          ,(expand-file-name org-directory)
-                          ,(concat zv-dotfiles "gnupg/")
-                          ,(concat zv-dotfiles "ssh/")
-                          ,(expand-file-name "~/.ssh/")))
+  (defun zv/encrypt-secrets ()
+    "Encrypt this file if it is in one of our `dirs-to-encrypt'"
+    (let* ((zv-dotfiles (expand-file-name "~/Development/dotfilez/"))
+           (dirs-to-encrypt `(,(expand-file-name "~/.gnupg")
+                              ,(expand-file-name (concat org-directory "/"))
+                              ,(concat zv-dotfiles "gnupg/")
+                              ,(concat zv-dotfiles "ssh/")
+                              ,(expand-file-name "~/.ssh/")))
+           (recipient (epg-list-keys (epg-make-context epa-protocol) "<zv@nxvr.org>" 'public)))
+      (when (member (file-name-directory (buffer-file-name)) dirs-to-encrypt)
+        (epa-encrypt-file (buffer-file-name) recipient))))
 
-  ;; Encrypt this file if it is in one of our `dirs-to-encrypt'
-  (add-hook 'after-save-hook
-            (lambda ()
-              (when (member (file-name-directory (buffer-file-name)) dirs-to-encrypt)
-                (let ((recipient   (epg-list-keys (epg-make-context epa-protocol)
-                                                  "<zephyr.pellerin@gmail.com>" 'public)))
-                  (epa-encrypt-file (buffer-file-name) recipient)))))
+  (add-hook 'after-save-hook 'zv/encrypt-secrets)
   )
 
 (defun minibuffer-keyboard-quit ()
@@ -189,7 +183,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
   (require 'epa-mail)
-
   (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
   (define-key evil-normal-state-map "\C-p" 'spacemacs/projectile-find-file)
