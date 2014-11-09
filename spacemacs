@@ -14,6 +14,7 @@
  dotspacemacs-fullscreen-at-startup nil
  ;; A list of packages and/or extensions that will not be install and loaded.
  dotspacemacs-excluded-packages '()
+ ;; Dotfile directory
  ;; The default package repository used if no explicit repository has been
  ;; specified with an installed package.
  ;; Not used for now.
@@ -218,8 +219,7 @@ Start `ielm' if it's not already running."
       (when (member (file-name-directory (buffer-file-name)) dirs-to-encrypt)
         (epa-encrypt-file (buffer-file-name) recipient))))
 
-  (add-hook 'after-save-hook 'zv/encrypt-secrets)
-  )
+  (add-hook 'after-save-hook 'zv/encrypt-secrets))
 
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
