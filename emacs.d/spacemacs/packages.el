@@ -679,7 +679,7 @@ DELETE-FUNC when calling CALLBACK.
       (define-key ac-completing-map (kbd "C-j") 'ac-next)
       (define-key ac-completing-map (kbd "C-k") 'ac-previous)
 
-      (setq ac-auto-start 1.5
+      (setq ac-auto-start 1.0
             ac-delay 0.
             ac-quick-help-delay 1.
             ac-use-fuzzy t
