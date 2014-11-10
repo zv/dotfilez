@@ -37,10 +37,12 @@
     evil-nerd-commenter
     evil-surround
     evil-terminal-cursor-changer
+    ;; evil-jumper
     evil-visualstar
     evil-nerd-commenter
     exec-path-from-shell
     expand-region
+    ;; fancy-narrow
     fill-column-indicator
     fish-mode
     flx-ido
@@ -422,7 +424,10 @@ DELETE-FUNC when calling CALLBACK.
       ;;   :init
       ;;   (global-evil-search-highlight-persist)
       ;;   (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all))
-
+      (use-package evil-jumper
+        :init
+        (setq evil-jumper-auto-center t)
+        (setq evil-jumper-auto-save-interval 3600))
       ;; add a lisp state
       (use-package evil-lisp-state
         :init
@@ -1006,6 +1011,18 @@ DELETE-FUNC when calling CALLBACK.
     (custom-set-variables
      '(expand-region-contract-fast-key "V")
      '(expand-region-reset-fast-key "r"))))
+
+(defun spacemacs/init-fancy-narrow ()
+  (use-package fancy-narrow
+    :init
+    (setq fancy-narrow-mode t)
+    :config
+    (evil-leader/set-key
+      "nr" 'fancy-narrow-to-region
+      "np" 'fancy-narrow-to-page
+      "nf" 'fancy-narrow-to-defun
+      "nw" 'fancy-widen)
+    ))
 
 (defun spacemacs/init-fill-column-indicator ()
   (setq fci-rule-width 1)
@@ -2048,10 +2065,12 @@ DELETE-FUNC when calling CALLBACK.
 (defun spacemacs/init-visual-regexp-steroids ()
   (use-package visual-regexp-steroids
     :defer t
-    :init
-    (evil-leader/set-key
-      "rR" 'vr/query-replace
-      "rr" 'vr/replace)))
+    ;; no shortcut for now (used by register)
+    ;; :init
+    ;; (evil-leader/set-key
+    ;;   "rR" 'vr/query-replace
+    ;;   "rr" 'vr/replace)
+    ))
 
 (defun spacemacs/init-volatile-highlights ()
   (use-package volatile-highlights
@@ -2109,3 +2128,19 @@ DELETE-FUNC when calling CALLBACK.
 (defun spacemacs/init-zenburn-theme ()
   (use-package zenburn-theme
     :defer t))
+
+(defun spacemacs/init-coffee-mode ()
+  (use-package coffee-mode
+    :defer t
+    :init
+    (progn
+      (defun spacemacs/coffee-indent ()
+        (if (coffee-line-wants-indent)
+            ;; We need to insert an additional tab because the last line was special.
+            (coffee-insert-spaces (+ (coffee-previous-indent) coffee-tab-width))
+          ;; otherwise keep at the same indentation level
+          (coffee-insert-spaces (coffee-previous-indent)))
+        )
+      ;; indent to right position after `evil-open-blow' and `evil-open-above'
+      (add-hook 'coffee-mode-hook '(lambda () (setq indent-line-function 'spacemacs/coffee-indent)))
+      )))
