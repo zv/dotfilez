@@ -57,6 +57,7 @@
     ghc
     golden-ratio
     google-translate
+    guide-key-tip
     haskell-mode
     helm
     helm-ag
@@ -1279,6 +1280,29 @@ DELETE-FUNC when calling CALLBACK.
       (setq google-translate-show-phonetic t)
       (setq google-translate-default-source-language "En")
       (setq google-translate-default-target-language "Fr"))))
+
+(defun spacemacs/init-guide-key-tip ()
+  (use-package guide-key-tip
+    :init
+    (progn
+      (defun spacemacs/toggle-guide-key ()
+        "Toggle golden-ratio mode on and off."
+        (interactive)
+        (if (symbol-value guide-key-mode)
+            (guide-key-mode -1)
+          (guide-key-mode)))
+      (evil-leader/set-key "tG" 'spacemacs/toggle-guide-key)
+      (setq guide-key/guide-key-sequence '("C-x" "C-c" "SPC" "g" "z" "C-h")
+            guide-key/recursive-key-sequence-flag t
+            guide-key/popup-window-position 'right
+            guide-key/idle-delay 1
+            guide-key/text-scale-amount 0
+            ;; use this in your ~/.spacemacs file to enable tool tip in a
+            ;; graphical envrionment
+            ;; guide-key-tip/enabled (if window-system t)
+            guide-key-tip/enabled nil)
+      (guide-key-mode 1)
+      (spacemacs//diminish guide-key-mode " ⌖"))))
 
 (defun spacemacs/init-haskell-mode ()
   (require 'haskell-yas)
