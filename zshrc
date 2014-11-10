@@ -60,12 +60,12 @@ export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 
 path=(
-    /usr/local/pgsql/bin
     ~/bin
     $GOROOT/bin
     /usr/local/{bin,sbin}
     /usr/local/plan9/bin # Plan9 binaries
     $path
+    /usr/local/pgsql/bin
 )
 
 # Load our completion functions
