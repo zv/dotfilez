@@ -99,9 +99,6 @@
   "np" 'narrow-to-page
   "nf" 'narrow-to-defun
   "nw" 'widen)
-;; misc -----------------------------------------------------------------------
-(evil-leader/set-key
-  "reg"  'evil-show-registers)
 ;; spell check  ---------------------------------------------------------------
 (evil-leader/set-key
   "Sc" 'cofi/helm-flyspell-correct

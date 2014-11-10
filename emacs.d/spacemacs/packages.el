@@ -355,6 +355,7 @@ DELETE-FUNC when calling CALLBACK.
         (lambda () (interactive)
           (evil-window-top)
           (evil-scroll-line-to-center nil)))
+      (evil-leader/set-key "re" 'evil-show-registers)
       ;; load evil-leader
       (use-package evil-leader
         :init
@@ -1362,26 +1363,31 @@ DELETE-FUNC when calling CALLBACK.
 
 (defun spacemacs/init-helm ()
   (use-package helm
+    :idle (helm-mode +1)
     :defer t
     :init
+    (setq helm-quick-update                     t
+          helm-split-window-in-side-p           t
+          helm-buffers-fuzzy-matching           t
+          helm-bookmark-show-location           t
+          helm-move-to-line-cycle-in-source     t
+          helm-ff-search-library-in-sexp        t
+          helm-ff-file-name-history-use-recentf t
+          )
     (evil-leader/set-key
       ":"   'helm-M-x
       "bs"  'helm-mini
       "sl"  'helm-semantic-or-imenu
       "hb"  'helm-bookmarks
-      "kil" 'helm-show-kill-ring)
+      "hf"  'helm-find-files
+      "kil" 'helm-show-kill-ring
+      "ry"  'helm-show-kill-ring
+      "rr"  'helm-register
+      "rm"  'helm-all-mark-rings
+      )
     :config
     (progn
       (helm-mode +1)
-      ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed
-      ;; discussion of these options.
-      (setq helm-quick-update                     t
-            helm-split-window-in-side-p           t
-            helm-buffers-fuzzy-matching           t
-            helm-move-to-line-cycle-in-source     t
-            helm-ff-search-library-in-sexp        t
-            helm-ff-file-name-history-use-recentf t
-            )
       ;; alter helm-bookmark key bindings to be simpler
       (defun simpler-helm-bookmark-keybindings ()
         (define-key helm-bookmark-map (kbd "C-d") 'helm-bookmark-run-delete)
