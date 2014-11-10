@@ -37,6 +37,12 @@
   (interactive)
   (string-equal system-type "gnu/linux"))
 
+(defun echo (msg &rest args)
+  "Display MSG in echo-area without logging it in *Messages* buffer."
+  (interactive)
+  (let ((message-log-max nil))
+    (apply 'message msg args)))
+
 ;; insert one or several line below without changing current evil state
 (defun evil-insert-line-below (count)
   "Insert one of several lines below the current point's line without changing
