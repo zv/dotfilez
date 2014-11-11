@@ -1,3 +1,10 @@
 remove Lock = Caps_Lock
 keysym Caps_Lock = Control_L
 add Control = Control_L
+
+remove mod1 = Alt_R
+keysym Alt_R = Hyper_R
+remove Control = Control_R
+keysym Control_R = Hyper_R
+
+add mod3 = Hyper_R

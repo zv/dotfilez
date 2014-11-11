@@ -365,7 +365,7 @@ DELETE-FUNC when calling CALLBACK.
         (progn
        ;; evil-leader/in-all-states nil
           (setq evil-leader/leader "SPC"
-                evil-leader/non-normal-prefix "s-"
+                evil-leader/non-normal-prefix "H-"
                 )
           ; (global-evil-leader-mode)
           )
