@@ -319,31 +319,32 @@ export GREP_OPTIONS='--color=auto'
 ############################################
 #  Amazon AWS
 ############################################
-export AWS_AUTO_SCALING_HOME="$HOME/.aws/aws-autoscaling"
-export AWS_ELB_HOME="$HOME/.aws/aws-elastic_load_balacing"
-export AWS_CLOUDWATCH_HOME="$HOME/.aws/aws-cloudwatch"
-export EC2_HOME="$HOME/.aws/ec2-api-tools"
+# export AWS_AUTO_SCALING_HOME="$HOME/.aws/aws-autoscaling"
+# export AWS_ELB_HOME="$HOME/.aws/aws-elastic_load_balacing"
+# export AWS_CLOUDWATCH_HOME="$HOME/.aws/aws-cloudwatch"
+# export EC2_HOME="$HOME/.aws/ec2-api-tools"
 
-# Build up the various credential files & environment variables required by the
-# AWS toolchain.
-export AWS_CONFIG_FILE=$HOME/.aws/config
-export AWS_CREDENTIAL_FILE="$HOME/.aws/credentials"
-export AWS_ACCESS_KEY=$(cat $AWS_CONFIG_FILE | grep -A 2 "default"  |
-                   grep "^aws_access_key_id" | cut -d= -f2)
+# # Build up the various credential files & environment variables required by the
+# # AWS toolchain.
+# export AWS_CONFIG_FILE=$HOME/.aws/config
+# export AWS_CREDENTIAL_FILE="$HOME/.aws/credentials"
+# export AWS_ACCESS_KEY=$(cat $AWS_CONFIG_FILE | grep -A 2 "default"  |
+#                    grep "^aws_access_key_id" | cut -d= -f2)
 
-export AWS_SECRET_KEY=$(cat $AWS_CONFIG_FILE  | grep -A 2 "default" |
-                grep "^aws_secret_access_key" | cut -d= -f2)
+# export AWS_SECRET_KEY=$(cat $AWS_CONFIG_FILE  | grep -A 2 "default" |
+#                 grep "^aws_secret_access_key" | cut -d= -f2)
 
-`touch $AWS_CREDENTIAL_FILE`
-if [ -w $AWS_CREDENTIAL_FILE ]; then
-    printf "AWSAccessKeyId=%s\nAWSSecretKey=%s\n", $AWS_ACCESS_KEY, $AWS_SECRET_KEY > $AWS_CREDENTIAL_FILE;
-fi
+# `touch $AWS_CREDENTIAL_FILE`
+# if [ -w $AWS_CREDENTIAL_FILE ]; then
+#     printf "AWSAccessKeyId=%s\nAWSSecretKey=%s\n", $AWS_ACCESS_KEY, $AWS_SECRET_KEY > $AWS_CREDENTIAL_FILE;
+# fi
 
-# For awscli
-export AWS_DEFAULT_REGION=us-west-1
-export EC2_URL=https://ec2.us-west-1.amazonaws.com
+# # For awscli
+# export AWS_DEFAULT_REGION=us-west-1
+# export EC2_URL=https://ec2.us-west-1.amazonaws.com
 
-path+={$AWS_CLOUDWATCH_HOME,$AWS_ELB_HOME,$AWS_AUTO_SCALING_HOME,$EC2_HOME}/bin
+# # Add all the AWS binaries to our path
+# for p ($AWS_CLOUDWATCH_HOME $AWS_ELB_HOME $AWS_AUTO_SCALING_HOME $EC2_HOME) path+=$p/bin
 
 ############################################
 #  Git
