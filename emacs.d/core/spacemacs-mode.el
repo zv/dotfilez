@@ -52,7 +52,10 @@
                                    emacs-version))
       (spacemacs/append-to-buffer "Spacemacs is disabled.\n")
       (setq inhibit-startup-screen t)
-      (redisplay))))
+      (redisplay)))
+  (switch-to-buffer "*scratch*")
+  )
+  
 
 (defun spacemacs/append-to-buffer (msg &optional messagebuf)
   "Append MSG to spacemacs buffer. If MESSAGEBUF is not nil then MSG is
