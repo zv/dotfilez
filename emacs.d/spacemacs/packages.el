@@ -108,6 +108,7 @@
     ;; rainbow-blocks
     rainbow-delimiters
     linum-relative
+    nodejs-repl
     ;; install fail on windows
     ;; rainbow-mode
     rcirc
