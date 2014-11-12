@@ -139,7 +139,9 @@ setopt prompt_subst
 export LISTPROMPT=''
 
 # The crazier the better!
-eval `dircolors ~/.zsh/LS_COLORS`
+if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
+    eval `dircolors ~/.zsh/LS_COLORS`
+fi
 
 #############################################
 #  Vim & ZSH Line Editor
