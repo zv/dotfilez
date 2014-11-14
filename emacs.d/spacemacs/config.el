@@ -102,7 +102,11 @@
 ;; save custom variables in ~/.spacemacs
 (setq custom-file (contribsys/dotfile-location))
 ;; scratch buffer empty
-(setq initial-scratch-message nil)
+(setq initial-scratch-message (with-temp-buffer
+                                (insert-file-contents
+                                 (concat spacemacs-core-directory "banner.txt"))
+                                (buffer-string)
+                                ))
 (setq redisplay-dont-pause t)
 ;; don't create backup~ or #auto-save# files
 (setq backup-by-copying t)
