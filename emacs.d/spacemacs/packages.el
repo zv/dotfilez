@@ -686,22 +686,25 @@ DELETE-FUNC when calling CALLBACK.
       ;; customization
       ;; (define-key ac-mode-map (kbd "C-j") 'ac-next)
       ;; (define-key ac-mode-map (kbd "C-k") 'ac-previous)
+      (global-set-key               (kbd "<backtab>") 'ac-start)
       (define-key ac-completing-map (kbd "C-j") 'ac-next)
       (define-key ac-completing-map (kbd "C-k") 'ac-previous)
 
-      (setq ac-auto-start 1.0
-            ac-delay 0.
-            ac-quick-help-delay 1.
-            ac-use-fuzzy t
-            ac-fuzzy-enable t
-            tab-always-indent 'complete ; use 'complete when auto-complete is disabled
-            ac-dwim t)
+      (setq ac-auto-start       1.0                                                          
+            ac-delay            0.                                                                
+            ac-quick-help-delay 1.                                                     
+            ac-use-fuzzy        t                                                             
+            ac-fuzzy-enable     t                                                          
+            ;; use 'complete when auto-complete is disabled 
+            tab-always-indent   'complete 
+            ac-dwim             t)                                                                 
 
 
-      (add-hook 'c-mode-common-hook (lambda ()
-                                      (require 'auto-complete-clang)
-                                      (setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources))
-                                      ))
+      (add-hook 'c-mode-common-hook
+                (lambda ()
+                  (require 'auto-complete-clang)
+                  (setq ac-sources
+                        (append '(ac-source-clang ac-source-yasnippet) ac-sources))))
 
       (eval-after-load 'tern
         '(progn
