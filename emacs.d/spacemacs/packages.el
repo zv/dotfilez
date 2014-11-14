@@ -1315,7 +1315,7 @@ DELETE-FUNC when calling CALLBACK.
             (guide-key-mode -1)
           (guide-key-mode)))
       (evil-leader/set-key "tG" 'spacemacs/toggle-guide-key)
-      (setq guide-key/guide-key-sequence '("C-x" "C-c" "SPC" "g" "z" "C-h")
+      (setq guide-key/guide-key-sequence '("C-x" "C-c" "SPC" "g" "z" "<f1>")
             guide-key/recursive-key-sequence-flag t
             guide-key/popup-window-position 'right
             guide-key/idle-delay 1
