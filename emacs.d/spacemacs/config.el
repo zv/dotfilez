@@ -122,7 +122,7 @@
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+(setq save-place-file "/tmp/.emacs/places")
 ;; keep buffers opened when leaving an emacs client
 (setq server-kill-new-buffers nil)
 ;; increase memory threshold for GC

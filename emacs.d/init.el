@@ -3,6 +3,7 @@
   (expand-file-name (concat user-emacs-directory "core/"))
   "Spacemacs core directory.")
 (load (concat spacemacs-core-directory "spacemacs-mode.el"))
+
 (spacemacs/buffer)
 
 (defgroup spacemacs nil
