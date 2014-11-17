@@ -1,9 +1,11 @@
+
 ;; ---------------------------------------------------------------------------
 ;; Navigation
 ;; ---------------------------------------------------------------------------
 
 (ido-mode t)
 (setq ido-enable-flex-matching t) ;; enable fuzzy matching
+(setq ido-save-directory-list-file (concat spacemacs-cache-directory "ido.last"))
 ;; Auto refresh buffers
 (global-auto-revert-mode 1)
 ;; Also auto refresh dired, but be quiet about it
