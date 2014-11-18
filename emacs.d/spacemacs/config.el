@@ -23,17 +23,9 @@
 ;; Edit
 ;; ---------------------------------------------------------------------------
 
-;; set the 2 keys sequence to return to normal state
-;; default is "fd"
-(defvar spacemacs-normal-state-sequence '(?f . ?d)
-  "Two keys sequence to return to normal state.")
-(defvar spacemacs-normal-state-sequence-delay 0.2
-  "Maximum delay between the two keys to trigger the normal state.")
 ;; start scratch in text mode (usefull to get a faster Emacs load time
 ;; because it avoids autoloads of elisp modes)
 (setq initial-major-mode 'text-mode)
-;; font size
-;;(set-face-attribute 'default nil :height 110)
 ;; whitespace-mode
 (setq-default show-trailing-whitespace nil)
 ;; When point is on paranthesis, highlight the matching one
@@ -49,18 +41,11 @@
 ;; ---------------------------------------------------------------------------
 
 ;; reduce the mode name in mode line for emacs-lisp-mode
- (add-hook 'emacs-lisp-mode-hook
-           (lambda () (setq mode-name "Elisp")))
+ (add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "Elisp")))
 ;; important for golden-ratio to better work
 (setq window-combination-resize t)
-;; edit area full screen
-(tool-bar-mode -1)
-(when (not (eq window-system 'mac)) 
-  (menu-bar-mode -1))
-(scroll-bar-mode -1)
 ;; fringes
-(setq-default fringe-indicator-alist
-              '((truncation . nil) (continuation . nil)))
+(setq-default fringe-indicator-alist '((truncation . nil) (continuation . nil)))
 ;; Show column number in mode line
 (setq column-number-mode t)
 ;; line number
@@ -74,16 +59,6 @@
 (setq tooltip-use-echo-area t)
 ;; When emacs asks for "yes" or "no", let "y" or "n" sufficide
 (fset 'yes-or-no-p 'y-or-n-p)
-;; font
-;; (set-default-font "DejaVu Sans Mono-10")
-;; Dynamic font size depending on the system
-(let ((font "Source Code Pro"))
-  (when (member font (font-family-list))
-    (pcase window-system
-      (`x (spacemacs/set-font font 10))
-      (`mac (spacemacs/set-font font 12))
-      (`w32 (spacemacs/set-font font 9))
-      (other (spacemacs/set-font font 10)))))
 ;; draw underline lower
 (setq x-underline-at-descent-line t)
 ;; setup right and left margins
@@ -104,11 +79,7 @@
 ;; save custom variables in ~/.spacemacs
 (setq custom-file (contribsys/dotfile-location))
 ;; scratch buffer empty
-(setq initial-scratch-message (with-temp-buffer
-                                (insert-file-contents
-                                 (concat spacemacs-core-directory "banner.txt"))
-                                (buffer-string)
-                                ))
+(setq initial-scratch-message nil)
 (setq redisplay-dont-pause t)
 ;; don't create backup~ or #auto-save# files
 (setq backup-by-copying t)
@@ -124,7 +95,21 @@
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file "/tmp/.emacs/places")
+(setq save-place-file (concat spacemacs-cache-directory "places"))
+
+;; minibuffer history
+(require 'savehist)
+(setq savehist-file (concat spacemacs-cache-directory "savehist")
+      enable-recursive-minibuffers t ; Allow commands in minibuffers
+      history-length 1000
+      savehist-additional-variables '(search ring regexp-search-ring)
+      savehist-autosave-interval 60)
+(savehist-mode +1)
+
+;; bookmarks
+(setq bookmark-default-file (concat spacemacs-cache-directory "bookmarks"))
+(setq bookmark-save-flag 1) ;; save after every change
+
 ;; keep buffers opened when leaving an emacs client
 (setq server-kill-new-buffers nil)
 ;; increase memory threshold for GC
@@ -132,21 +117,21 @@
 
 ;; ;; save a bunch of variables to the desktop file
 ;; ;; for lists specify the len of the maximal saved data also
-(setq desktop-globals-to-save
-      (append '((extended-command-history . 40)
-                (file-name-history        . 300)
-                (grep-history             . 30)
-                (compile-history          . 30)
-                (minibuffer-history       . 50)
-                (query-replace-history    . 60)
-                (read-expression-history  . 60)
-                (regexp-history           . 60)
-                (regexp-search-ring       . 20)
-                (search-ring              . 20)
-                (shell-command-history    . 50)
-                (evil-ex                  .100)
-                tags-file-name
-                register-alist)))
+;; (setq desktop-globals-to-save
+;;       (append '((extended-command-history . 30)
+;;                 (file-name-history        . 100)
+;;                 (grep-history             . 30)
+;;                 (compile-history          . 30)
+;;                 (minibuffer-history       . 50)
+;;                 (query-replace-history    . 60)
+;;                 (read-expression-history  . 60)
+;;                 (regexp-history           . 60)
+;;                 (regexp-search-ring       . 20)
+;;                 (search-ring              . 20)
+;;                 (shell-command-history    . 50)
+;;                 (evil-ex                  .100)
+;;                 tags-file-name
+;;                 register-alist)))
 
 ;; ;; Make emacs open all files in last emacs session (taken from ergoemacs).
 
@@ -230,4 +215,3 @@
 (defun server-remove-kill-buffer-hook ()
   (remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function))
 (add-hook 'server-visit-hook 'server-remove-kill-buffer-hook)
-
