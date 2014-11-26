@@ -74,13 +74,24 @@ This function is called at the very end of Spacemacs initialization."
 
   (evil-set-initial-state 'Man-mode 'emacs)
 
-  (define-key evil-normal-state-map ",a" 'align-regexp)
+  ; Org-Mode keybindings
+  (evil-leader/set-key
+    "oc" 'org-capture
+    "oa" 'org-agenda
+    "osl" 'org-store-link)
 
+  ; Align keybinding
+  (evil-leader/set-key "al" 'align-regexp)
+
+  
   ;; H/L should go to the first / last non blank character respectively
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
   (define-key evil-visual-state-map "H" 'evil-first-non-blank)
   (define-key evil-normal-state-map "L" 'evil-last-non-blank)
   (define-key evil-normal-state-map "H" 'evil-first-non-blank)
+
+  ; Autocomplete 
+  (global-set-key               (kbd "<backtab>") 'ac-start)
 
   (evil-leader/set-key "l" 'previous-buffer)
 
