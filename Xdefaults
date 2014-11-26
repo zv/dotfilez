@@ -1,10 +1,23 @@
 #define LIGHT
 #define SIZE 11
+! Xft ------------------------------------------------------------------------------
 Xft.dpi:       96
 !Xft.antialias: false
-Xft.rgba:      rgb
-Xft.hinting:   true
-Xft.hintstyle: hintslight
+Xft.hinting:    true
+Xft.hintstyle:  hintmedium
+Xft.rgba:       rgb
+! xterm ------------------------------------------------------------------------------
+xterm*cursorColor:      #839496
+xterm*font:     -xos4-terminus-medium-r-normal--18-*-*-*-*-*-iso10646-1
+xterm*internalBorder:   4
+xterm*saveLines:        32768
+xterm*scaleHeight:      1.1
+xterm*scrollBar:        false
+xterm*scrollTtyKeypress:        true
+xterm*scrollTtyOutput:  false
+xterm*scrollWithBuffer: false
+xterm*underLine:        true0
+
 
 URxvt.font: xft:Inconsolata:size=SIZE
 Emacs.font: Inconsolata-11
@@ -82,4 +95,9 @@ URxvt.colorUL:      #87afd7
 *color12: S_base0
 *color13: S_violet
 *color14: S_base1
-*color15: S_base3
+
+*VT100.colorBD: #d7d7d7
+*VT100.colorBDMode:     true
+*VT100.colorUL: #87af5f
+*VT100.colorULMode:     true
+*VT100.veryBoldColors:  6
