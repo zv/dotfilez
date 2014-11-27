@@ -58,6 +58,7 @@
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
+ (setq evilnc-hotkey-comment-operator "gc")
 )
 
 (defun dotspacemacs/config ()
