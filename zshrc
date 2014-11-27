@@ -205,6 +205,7 @@ bindkey "\e[3~" delete-char
 #############################################
 # Aliasing
 #############################################
+
 alias ...='cd ../..'     # Basic directory operations
 alias -- -='cd -'        # This has always irritated me
 alias _='sudo'           # Super user
@@ -237,6 +238,9 @@ alias connect="nmcli dev wifi connect"
 # Tmux
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
+
+alias thesaurus='dict -d moby-thesaurus'
+alias thesaurus2='aiksaurus'
 
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
