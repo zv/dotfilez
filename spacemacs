@@ -22,8 +22,6 @@
  dotspacemacs-default-package-repository nil
 )
 
-;; Functions
-
 ;; encrypt hook ------------------------------------------------------------------
 (defun zv/install/encrypt-hook ()
   (require 'epa-mail)
@@ -41,7 +39,6 @@
         (epa-encrypt-file (buffer-file-name) recipient))))
   (add-hook 'after-save-hook 'zv/encrypt-secrets))
 
-
 ;; org-mode --------------------------------------------------------------------
 (defun zv/configure/org-mode ()
   ;; (evil-leader/set-key-for-mode 'org-mode "oa" 'org-attach  "oR" 'org-refile)
@@ -51,14 +48,13 @@
         '(("t" "Todo"  entry  (file             (concat org-directory "gtd.org")) "* TODO %?\n  %i\n  %a")
           ("d" "Diary" entry (file+datetree     (concat org-directory "diary.org")))
           ("i" "Ideas"  item  (file     (concat org-directory "ideas.org")) "%?")
-          ("q" "Quotes" item (file (concat org-directory "quotes.org")) "%?")))
-  )
-
+          ("q" "Quotes" item (file (concat org-directory "quotes.org")) "%?"))))
 
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
- (setq evilnc-hotkey-comment-operator "gc")
+  (setenv "PATH"          (concat "/usr/local/bin" ":" (getenv "PATH")))
+  (setq evilnc-hotkey-comment-operator "gc")
 )
 
 (defun dotspacemacs/config ()
@@ -66,12 +62,48 @@
 This function is called at the very end of Spacemacs initialization."
   (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
-  (define-key evil-normal-state-map "\C-p" 'spacemacs/projectile-find-file)
+
+  ;; evil --------------------------------------------------------------------
+  ;; evil-leader breaks this, now we fix it.
+  ;; (define-key evil-motion-state-map "f" 'evil-find-char)
   (setq evil-cross-lines t)
-  
-  (setq-default js2-global-externs '("module" "require" "buster"
-                                     "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval"
-                                     "clearInterval" "location" "__dirname" "console" "JSON"))
+  ;; As I never distinguish between [[ & [{, I might as well get the
+  ;; benefit of use of the easier one
+  (define-key evil-motion-state-map "]" 'evil-forward-section-begin)
+  (define-key evil-motion-state-map "[" 'evil-backward-section-begin)
+  (define-key evil-motion-state-map "(" 'evil-previous-open-paren)
+  (define-key evil-motion-state-map ")" 'evil-next-close-paren)
+  ;; tab/window split manipulation --------------------------------------------
+  (global-set-key "\C-h" 'evil-window-left)
+  (global-set-key "\C-l" 'evil-window-right)
+  (global-set-key "\C-j" 'evil-window-down)
+  (global-set-key "\C-k" 'evil-window-up)
+
+  ;; relative line numbers ------------------------------------------------------
+  (global-linum-mode 1)
+  (linum-relative-toggle)
+
+  ;; js2-configuration -------------------------------------------------------
+  (require 'js2-mode)
+  (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
+  (setq js2-global-externs '("module"
+                             "assert"
+                             "buster"
+                             "clearInterval"
+                             "clearTimeout"
+                             "console"
+                             "__dirname"
+                             "JSON"
+                             "location"
+                             "refute"
+                             "require"
+                             "setInterval"
+                             "setTimeout"
+                             "sinon"))
+  (setq js2-basic-offset                 2
+        js2-include-node-externs         t
+        js2-include-browser-externs      t)
+
 
   (evil-set-initial-state 'Man-mode 'emacs)
 
@@ -84,7 +116,42 @@ This function is called at the very end of Spacemacs initialization."
   ; Align keybinding
   (evil-leader/set-key "al" 'align-regexp)
 
-  
+  ;; Info Mode ----------------------------------------------------------------
+  (evil-add-hjkl-bindings Info-mode-map 'motion
+    "0" 'evil-digit-argument-or-evil-beginning-of-line
+    (kbd "\M-h") 'Info-help   ; "h"
+    "\C-t" 'Info-history-back ; "l"
+    "\C-o" 'Info-history-back
+    "\C-]" 'Info-follow-nearest-node
+    (kbd "RET") 'Info-scroll-up 
+    (kbd "DEL") 'Info-scroll-down)
+
+  ;; Helm Configuration --------------------------------------------------------
+  (setq helm-quick-update                     t
+        helm-split-window-in-side-p           t
+        helm-buffers-fuzzy-matching           t
+        helm-bookmark-show-location           t
+        helm-move-to-line-cycle-in-source     nil
+        helm-ff-search-library-in-sexp        t
+        helm-ff-file-name-history-use-recentf t
+        )
+  ;; Configure Modeline Colors -------------------------------------------------
+  (font-lock-add-keywords
+   nil '(("\\<\\(\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):\\)"
+          1 font-lock-warning-face t)))
+  ;; Configure Modeline Colors -------------------------------------------------
+ (mapcar (lambda (x) (spacemacs/defface-state-color (car x) (cdr x)))
+                '((normal . "DarkGoldenrod2")
+                  (insert . "chartreuse3")
+                  (emacs  . "SkyBlue2")
+                  (visual . "gray")
+                  (motion . "plum3")
+                  (lisp   . "HotPink1"))) 
+
+ ;; eldoc ----------------------------------------------------------------------
+ (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+ (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+ (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
   ;; H/L should go to the first / last non blank character respectively
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
   (define-key evil-visual-state-map "H" 'evil-first-non-blank)
@@ -119,16 +186,14 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-case-fold-search nil)
  '(ahs-default-range (quote ahs-range-whole-buffer))
  '(ahs-idle-interval 0.25)
+ '(ahs-inhibit-face-list nil)
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#657b83")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(edts-man-root "/home/zv/.emacs.d/edts/doc/17.3")
  '(highlight-symbol-colors (--map (solarized-color-blend it "#fdf6e3" 0.25) (quote ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
- '(js2-basic-offset 2 t)
- '(js2-bounce-indent-p t t)
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
