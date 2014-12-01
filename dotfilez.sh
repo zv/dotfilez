@@ -28,6 +28,7 @@ install_deps() {
     mtr ncrack ncrack nmap ntop p0f mutt rats rlwrap rpmdevtools rxvt-unicode
     scapy scrot socat tmux unhide weechat wireshark xbacklight xmonad
     screensaver yersinia zsh emacs ack the_silver_searcher vim-enhanced
+    dictd # Dictionary
 }
 
 ## Make /tmp temporary
@@ -36,7 +37,8 @@ setup_home() {
     ## For my org files
     mkdir ~/org
 }
-setup_tmpfs()  { cat "tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0" >> /etc/fstab }
+setup_tmpfs()  { cat "tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0" >> /etc/fstab
+}
 build_erlang() {
     mkdir /tmp/erlang && cd /tmp/erlang
     wget -qO - http://www.erlang.org/download/otp_src_17.3.tar.gz     | tar zxvf -
@@ -49,7 +51,7 @@ encrypt_setup() {
 case $1 in
     install)
         git ls-tree --name-only HEAD | \
-            grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' | \
+            grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' |\
             xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
         # compile erlang our prompt here...
         if [[ -x $(dirname erlc) ]]; then
@@ -57,13 +59,4 @@ case $1 in
         fi
         ln -s $HOME/.Xresources $HOME/.Xdefaults
         ;;
-    # pack/extract/link keys etc.
-    secrets)
-        case $2 in
-            ls | grep "aws$\|ssh$\|gnupg$" | \
-                xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
-        esac
-        # End secrets moving block
-        ;;
-    *) echo "You must provide 'install', 'backup' or 'secrets' as an argument. See the shell script" ;;
 esac
