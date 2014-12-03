@@ -10,7 +10,6 @@
                                      mode-line-frame-identification
                                      mode-line-buffer-identification
                                      "  "
-                                     mode-line-modes
                                      mode-line-misc-info
                                      mode-line-end-spaces))
             ))
