@@ -89,15 +89,22 @@
   (load (concat user-emacs-directory "skeleton_defs.el"))
   (setenv "PATH"          (concat "/usr/local/bin" ":" (getenv "PATH")))
   (setq evilnc-hotkey-comment-operator "gc")
-)
+  )
+  
+ (defun dotspacemacs/config ()
+   (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
 
-(defun dotspacemacs/config ()
+   ;; store all backup and autosave files in the tmp dir
+   (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+   (setq auto-save-default t)
+   (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
   (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
 
-  ;; evil --------------------------------------------------------------------
+  ;; evil -----------------------------------------------------------------------
   ;; evil-leader breaks this, now we fix it.
   ;; (define-key evil-motion-state-map "f" 'evil-find-char)
   (setq evil-cross-lines t)
