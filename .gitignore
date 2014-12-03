@@ -39,3 +39,5 @@ lib/vim
 *.pyc
 
 *.elc
+# !emacs.d/private/zv/*
+# emacs.d
