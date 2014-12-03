@@ -18,6 +18,7 @@ keys.tar.gz
 keys.tar
 secrets.tar.gz
 
+zsh/functions/private.zsh
 zsh/cache
 credentials.sh
 vim/.netrwhist
