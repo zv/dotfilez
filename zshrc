@@ -116,7 +116,6 @@ else
     zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
     precmd () { vcs_info }
 
-
     PROMPT='[%n@%m] %2~ ${vcs_info_msg_0_}$(zle_vim_prompt_notifier) '
 fi
 
@@ -235,6 +234,9 @@ alias nocapspty='sudo loadkeys =(sudo dumpkeys && echo "keycode 58 = Control")'
 alias wifi="nmcli -f SSID,BSSID,CHAN,SECURITY,SIGNAL,BARS,ACTIVE dev wifi"
 alias connect="nmcli dev wifi connect"
 
+# Openssl
+alias ssl="openssl"
+
 # Tmux
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
@@ -263,6 +265,7 @@ function psu {
 
 alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
 
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 ############################################
 #  Mix
 ############################################
