@@ -114,57 +114,108 @@ This function is called at the very end of Spacemacs initialization."
   (define-key evil-motion-state-map "[" 'evil-backward-section-begin)
   (define-key evil-motion-state-map "(" 'evil-previous-open-paren)
   (define-key evil-motion-state-map ")" 'evil-next-close-paren)
-  ;; tab/window split manipulation --------------------------------------------
+  ;; tab/window split manipulation ----------------------------------------------
   (global-set-key "\C-h" 'evil-window-left)
   (global-set-key "\C-l" 'evil-window-right)
   (global-set-key "\C-j" 'evil-window-down)
   (global-set-key "\C-k" 'evil-window-up)
-
+  (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
   ;; relative line numbers ------------------------------------------------------
   (global-linum-mode 1)
   (linum-relative-toggle)
-
+  ;; abbrev-mode ----------------------------------------------------------------
+  (setq-default abbrev-mode t)
+  (evil-leader/set-key
+    "dag" 'add-global-abbrev
+    "dal" 'add-mode-abbrev
+    "daig" 'inverse-add-global-abbrev)
+  ;; gnus -----------------------------------------------------------------------
+  (setq epg-user-id                       "Zephyr Pellerin <zv@nxvr.org>"
+        epg-user-id-alist                 '(("F6F2D0445DC172F8" . "Zephyr Pellerin <zephyr.pellerin@gmail.com>")
+                                            ("F6F2D0445DC172F8" . "Zephyr Pellerin <zv@nxvr.org>")))
+  (global-set-key (kbd "<XF86Mail>") 'gnus)
+  ;; erc  -----------------------------------------------------------------------
+  (setq erc-track-enable-keybindings t)
+  (defun erc-connect ()
+    "Connect to IRC."
+    (interactive)
+    ;; disable powerline for ERC ----------------------------
+    (erc :server "irc.freenode.net" :port 6667 :nick "zv")
+    (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
+    (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
+  (evil-leader/set-key "ec" 'erc-connect)
+  ;; rcirc ---------------------------------------------------------------------
+  (setq rcirc-default-nick "zv")
+  (setq rcirc-server-alist
+        '(("irc.freenode.net"
+           :channels ("#cat-v"
+                      "#elixir-lang" 
+                      "#erlang"
+                      "#haskell" 
+                      "#postgresql" 
+                      "#pwning"
+                      "#noisebridge"
+                      "#gdb"
+                      "##kernel"
+                      "#threejs"
+                      "#reactjs" 
+                      "##re"
+                      "#radare"
+                      "#stackvm"
+                      "#zsh"))
+          ("irc.mozilla.org"
+           :channels ("#rust"
+                      "#rust-internals"))
+          ("irc.oftc.net"
+           :channels ("#tor"))))
   ;; js2-configuration -------------------------------------------------------
   (require 'js2-mode)
   (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
-  (setq js2-global-externs '("module"
-                             "assert"
-                             "buster"
-                             "clearInterval"
-                             "clearTimeout"
-                             "console"
-                             "__dirname"
-                             "JSON"
-                             "location"
-                             "refute"
-                             "require"
-                             "setInterval"
-                             "setTimeout"
-                             "sinon"))
-  (setq js2-basic-offset                 2
-        js2-include-node-externs         t
-        js2-include-browser-externs      t)
+  (setq-default js2-global-externs
+                '("module"
+                  "assert"
+                  "buster"
+                  "clearInterval"
+                  "clearTimeout"
+                  "console"
+                  "__dirname"
+                  "JSON"
+                  "location"
+                  "refute"
+                  "require"
+                  "setInterval"
+                  "setTimeout"
+                  "sinon"))
+
+  (setq-default js2-basic-offset                 2
+                js2-include-node-externs         t
+                js2-include-browser-externs      t)
 
 
   (evil-set-initial-state 'Man-mode 'emacs)
+  (evil-set-initial-state 'epa-key-list-mode 'emacs)
+  (evil-set-initial-state 'epa-key-mode 'emacs)
+  (evil-set-initial-state 'epa-mail-mode 'emacs)
 
-  ; Org-Mode keybindings
+  ;; temporary hack to fix sc remote highlihg
+  (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all)
+
+  ;; Org-Mode keybindings
   (evil-leader/set-key
     "oc" 'org-capture
     "oa" 'org-agenda
     "osl" 'org-store-link)
 
-  ; Align keybinding
+  ;; Align keybinding
   (evil-leader/set-key "al" 'align-regexp)
 
-  ;; Info Mode ----------------------------------------------------------------
+  ;; Info Mode -----------------------------------------------------------------
   (evil-add-hjkl-bindings Info-mode-map 'motion
     "0" 'evil-digit-argument-or-evil-beginning-of-line
     (kbd "\M-h") 'Info-help   ; "h"
     "\C-t" 'Info-history-back ; "l"
     "\C-o" 'Info-history-back
     "\C-]" 'Info-follow-nearest-node
-    (kbd "RET") 'Info-scroll-up 
     (kbd "DEL") 'Info-scroll-down)
 
   ;; Helm Configuration --------------------------------------------------------
@@ -172,34 +223,34 @@ This function is called at the very end of Spacemacs initialization."
         helm-split-window-in-side-p           t
         helm-buffers-fuzzy-matching           t
         helm-bookmark-show-location           t
-        helm-move-to-line-cycle-in-source     nil
+        helm-move-to-line-cycle-in-source     t
         helm-ff-search-library-in-sexp        t
-        helm-ff-file-name-history-use-recentf t
-        )
+        helm-ff-file-name-history-use-recentf t)
+
   ;; Configure Modeline Colors -------------------------------------------------
   (font-lock-add-keywords
    nil '(("\\<\\(\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):\\)"
           1 font-lock-warning-face t)))
   ;; Configure Modeline Colors -------------------------------------------------
- (mapcar (lambda (x) (spacemacs/defface-state-color (car x) (cdr x)))
-                '((normal . "DarkGoldenrod2")
-                  (insert . "chartreuse3")
-                  (emacs  . "SkyBlue2")
-                  (visual . "gray")
-                  (motion . "plum3")
-                  (lisp   . "HotPink1"))) 
+  (mapcar (lambda (x) (spacemacs/defface-state-color (car x) (cdr x)))
+          '((normal . "DarkGoldenrod2")
+            (insert . "chartreuse3")
+            (emacs  . "SkyBlue2")
+            (visual . "gray")
+            (motion . "plum3")
+            (lisp   . "HotPink1"))) 
 
- ;; eldoc ----------------------------------------------------------------------
- (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
- (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
- (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+  ;; eldoc ----------------------------------------------------------------------
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
   ;; H/L should go to the first / last non blank character respectively
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
   (define-key evil-visual-state-map "H" 'evil-first-non-blank)
   (define-key evil-normal-state-map "L" 'evil-last-non-blank)
   (define-key evil-normal-state-map "H" 'evil-first-non-blank)
 
-  ; Autocomplete 
+                                        ; Autocomplete 
   (global-set-key               (kbd "<backtab>") 'ac-start)
 
   (evil-leader/set-key "l" 'previous-buffer)
@@ -247,5 +298,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))))
- '(woman-italic ((t (:foreground "lawn green" :underline t :slant oblique)))))
+ '(speedbar-directory-face ((t (:height 95 :box nil))))
+ '(speedbar-file-face ((t (:height 95 :box nil))))
+ '(speedbar-selected-face ((t (:height 105 :box nil))))
+ '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))) t)
+ '(woman-italic ((t (:foreground "lawn green" :underline t :slant oblique))) t))
