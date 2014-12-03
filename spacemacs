@@ -24,8 +24,11 @@
  ;; specified with an installed package.
  ;; Not used for now.
  dotspacemacs-default-package-repository nil
-)
+ )
 
+(defun zv/install/skeleton-text ()
+  (define-skeleton)
+  )
 ;; encrypt hook ------------------------------------------------------------------
 (defun zv/install/encrypt-hook ()
   (require 'epa-mail)
