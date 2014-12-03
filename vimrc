@@ -4,25 +4,24 @@ filetype plugin indent on
 let mapleader=","
 
 " ================ General Config ====================
-
-set number                     " Line numbers are good:
-set ruler                      " but where you are is better
-set backspace=indent,eol,start " Allow backspace in insert mode
-set history=1000               " Store lots of :cmdline history
-set showcmd                    " Show incomplete cmds down the bottom
-set shortmess=aIoO             " Show short messages, no intro.
-set showmode                   " Show current mode down the bottom
-set gcr=a:blinkon0             " Disable cursor blink
-set visualbell                 " No sounds
-set directory-=.               " No .swp/swo etc. in `cwd`
 set autoread                   " Reload files changed outside vim
-set hidden                     " Hidden Buffers
-set encoding=utf8              " Yes, really
+set backspace=indent,eol,start " Allow backspace in insert mode
 set columns=80                 " Set column width at 80
-set selection=old              " Stop that annoying thing where vim selects the next line
-set relativenumber             " Relative line numbers
-set list                       " show trailing whitespace
+set directory-=.               " No .swp/swo etc. in `cwd`
+set encoding=utf8              " Yes, really
+set gcr=a:blinkon0             " Disable cursor blink
+set hidden                     " Hidden Buffers
+set history=1000               " Store lots of :cmdline history
 set lazyredraw                 " Lazy is as lazy does!
+set list                       " show trailing whitespace
+set number                     " Line numbers are good:
+set relativenumber             " Relative line numbers
+set ruler                      " but where you are is better
+set selection=old              " Stop that annoying thing where vim selects the next line
+set shortmess=aIoO             " Show short messages, no intro.
+set showcmd                    " Show incomplete cmds down the bottom
+set showmode                   " Show current mode down the bottom
+set visualbell                 " No sounds
 set path+=/usr/include/linux;/usr/include
 
 set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode

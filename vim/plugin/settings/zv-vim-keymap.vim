@@ -63,6 +63,7 @@ nnoremap ,S :%s//g<left><left>
 vmap ,S :s//g<left><left>
 
 " Space to move a half page down and backspace to reverse
+nmap <Return> <C-d>
 nmap <Space> <C-d>
 nmap <BS> <C-u>
 
