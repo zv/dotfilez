@@ -1,10 +1,14 @@
 ;; -*- mode: emacs-lisp -*-
 (setq-default
+ ;; Directory to use for ERC
+ zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
+ ;; IRC commands to ignore in tracking
+ ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
  ;; List of additional paths where to look for configuration layers.
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '()
  ;; List of contribution to load.
- dotspacemacs-configuration-layers '(zv)
+ dotspacemacs-configuration-layers '(zv erlang-elixir)
  ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only)
  dotspacemacs-fullscreen-at-startup nil
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
