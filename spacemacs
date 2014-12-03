@@ -57,9 +57,35 @@
           ("i" "Ideas"  item  (file     (concat org-directory "ideas.org")) "%?")
           ("q" "Quotes" item (file (concat org-directory "quotes.org")) "%?"))))
 
-(defun dotspacemacs/init ()
+(defun zv/configure/abbrev-mode ()
+  ;; hippie expand is dabbrev expand on steroids
+  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                           try-expand-dabbrev-all-buffers
+                                           try-expand-dabbrev-from-kill
+                                           try-complete-file-name-partially
+                                           try-complete-file-name
+                                           try-expand-all-abbrevs
+                                           try-expand-list
+                                           try-expand-line
+                                           try-complete-lisp-symbol-partially
+                                           try-complete-lisp-symbol))
+  ;; Use hippie-expand instead of dabbrev
+  (global-set-key (kbd "M-/") 'hippie-expand)
+
+  (defun fix-abbrev-prefix-mark ()
+    "Abbrev when called with prefix mark will erroneously give a
+     newline for evil mode, this is an ugly hack to fix that."
+    (interactive)
+    (abbrev-prefix-mark)
+    (delete-backward-char 1))
+  (global-set-key (kbd "M-'") 'fix-abbrev-prefix-mark)
+  )
+
+ (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
+  ;; Load our skeleton files
+  (load (concat user-emacs-directory "skeleton_defs.el"))
   (setenv "PATH"          (concat "/usr/local/bin" ":" (getenv "PATH")))
   (setq evilnc-hotkey-comment-operator "gc")
 )
@@ -175,6 +201,7 @@ This function is called at the very end of Spacemacs initialization."
 
   (global-set-key (kbd "<XF86Calculator>") 'calc)
 
+  (zv/configure/abbrev-mode)
   (zv/configure/org-mode)
   (zv/install/encrypt-hook)
 
