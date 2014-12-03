@@ -19,8 +19,8 @@ xterm*scrollWithBuffer: false
 xterm*underLine:        true0
 
 
-URxvt.font: xft:Inconsolata:size=SIZE
-Emacs.font: Inconsolata-11
+URxvt.font: xft:Inconsolata:size=13
+Emacs.font: Inconsolata-13
 
 *urlCommand:        /usr/bin/google-chrome %s
 
