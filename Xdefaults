@@ -1,4 +1,5 @@
-#define LIGHT
+*foreground:     rgb:dd/dd/dd
+*background:     rgb:22/22/22
 #define SIZE 11
 ! Xft ------------------------------------------------------------------------------
 Xft.dpi:       96
@@ -6,24 +7,12 @@ Xft.dpi:       96
 Xft.hinting:    true
 Xft.hintstyle:  hintmedium
 Xft.rgba:       rgb
-! xterm ------------------------------------------------------------------------------
-xterm*cursorColor:      #839496
-xterm*font:     -xos4-terminus-medium-r-normal--18-*-*-*-*-*-iso10646-1
-xterm*internalBorder:   4
-xterm*saveLines:        32768
-xterm*scaleHeight:      1.1
-xterm*scrollBar:        false
-xterm*scrollTtyKeypress:        true
-xterm*scrollTtyOutput:  false
-xterm*scrollWithBuffer: false
-xterm*underLine:        true0
-
-
-URxvt.font: xft:Inconsolata:size=13
-Emacs.font: Inconsolata-13
 
 *urlCommand:        /usr/bin/google-chrome %s
 
+Emacs.font: Inconsolata-13
+
+URxvt.font: xft:Inconsolata:size=13
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
 URxvt.internalBorder:    6
@@ -31,73 +20,26 @@ URxvt.scrollTtyOutput:   false
 URxvt.scrollWithBuffer:  false
 URxvt.scrollTtyKeypress: true
 URxvt.cursorBlink:       true
-
 URxvt.colorIT:      #87af5f
 URxvt.colorBD:      #d7d7d7
 URxvt.colorUL:      #87afd7
 
-#define S_yellow #b58900
-#define S_orange #cb4b16
-#define S_red #dc322f
-#define S_magenta #d33682
-#define S_violet #6c71c4
-#define S_blue #268bd2
-#define S_cyan #2aa198
-#define S_green #859900
+*color0:  rgb:00/00/00
+*color1:  rgb:80/00/00
+*color2:  rgb:12/91/4e
+!*color3:  rgb:a0/a0/70
+*color4:  rgb:3e/45/81
+*color5:  rgb:a0/70/a0
+*color6:  rgb:70/a0/a0
+*color7:  rgb:a0/a0/a0
+*color8:  rgb:60/60/60
+*color9:  rgb:b0/70/50
+*color10: rgb:12/91/4e
+*color11: rgb:c0/c0/90
+*color12: rgb:3e/45/81
+*color13: rgb:c0/90/c0
+*color14: rgb:90/c0/c0
+*color15: rgb:ff/ff/ff
 
-
-! defines solarized light/dark
-#ifdef DARK
-! Dark
-!
-#define S_base03 #002b36
-#define S_base02 #073642
-#define S_base01 #586e75
-#define S_base00 #657b83
-#define S_base0 #839496
-#define S_base1 #93a1a1
-#define S_base2 #eee8d5
-#define S_base3 #fdf6e3
-! End Dark
-#else
-! Light
-#define S_base03 #fdf6e3
-#define S_base02 #eee8d5
-#define S_base01 #93a1a1
-#define S_base00 #839496
-#define S_base0 #657b83
-#define S_base1 #586e75
-#define S_base2 #073642
-#define S_base3 #002b36
-! End Light
-#endif
-
-*background: S_base03
-*foreground: S_base0
 *fading: 40
-*fadeColor: S_base03
 *intensityStyles: false
-*pointerColorBackground: S_base01
-*pointerColorForeground: S_base1
-
-*color0: S_base02
-*color1: S_red
-*color2: S_green
-*color3: S_yellow
-*color4: S_blue
-*color5: S_magenta
-*color6: S_cyan
-*color7: S_base2
-*color8: S_base03
-*color9: S_orange
-*color10: S_base01
-*color11: S_base00
-*color12: S_base0
-*color13: S_violet
-*color14: S_base1
-
-*VT100.colorBD: #d7d7d7
-*VT100.colorBDMode:     true
-*VT100.colorUL: #87af5f
-*VT100.colorULMode:     true
-*VT100.veryBoldColors:  6
