@@ -1,6 +1,0 @@
-ForwardAgent no
-
-#Host iota.offblast.org
-  #user zv
-  #DynamicForward 5050
-  #ProxyCommand proxytunnel -v -p theta.offblast.org:80 -d iota.offblast.org:22
