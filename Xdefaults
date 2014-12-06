@@ -1,11 +1,10 @@
-*foreground:     rgb:dd/dd/dd
-*background:     rgb:22/22/22
-#define SIZE 11
+!*foreground: rgb:dd/dd/dd
+!*background: rgb:22/22/22
 ! Xft ------------------------------------------------------------------------------
 Xft.dpi:       96
 !Xft.antialias: false
 Xft.hinting:    true
-Xft.hintstyle:  hintmedium
+Xft.hintstyle:  hintfull
 Xft.rgba:       rgb
 
 *urlCommand:        /usr/bin/google-chrome %s
@@ -15,14 +14,12 @@ Emacs.font: Inconsolata-13
 URxvt.font: xft:Inconsolata:size=13
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
-URxvt.internalBorder:    6
+URxvt.internalBorder:    4
 URxvt.scrollTtyOutput:   false
 URxvt.scrollWithBuffer:  false
 URxvt.scrollTtyKeypress: true
 URxvt.cursorBlink:       true
-URxvt.colorIT:      #87af5f
-URxvt.colorBD:      #d7d7d7
-URxvt.colorUL:      #87afd7
+URxvt.colorUL:      #269BC9
 
 *color0:  rgb:00/00/00
 *color1:  rgb:80/00/00
@@ -41,5 +38,4 @@ URxvt.colorUL:      #87afd7
 *color14: rgb:90/c0/c0
 *color15: rgb:ff/ff/ff
 
-*fading: 40
 *intensityStyles: false
