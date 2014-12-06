@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # install dotfiles one by one
 # I make absolutely zero promises on how this will work with OSX coreutils
@@ -29,20 +29,21 @@ install_deps() {
     scapy scrot socat tmux unhide weechat wireshark xbacklight xmonad
     screensaver yersinia zsh emacs ack the_silver_searcher vim-enhanced
     dictd # Dictionary
+    ## Things that should be installed from git and symlinked
+    ## emacs
+    ## ditaa
+    ## graphviz
+    ## erlang
+    ## elixir 
+    ## zsh
 }
 
 ## Make /tmp temporary
-
 setup_home() {
     ## For my org files
     mkdir ~/org
 }
 setup_tmpfs()  { cat "tmpfs   /tmp         tmpfs   nodev,nosuid,size=2G          0  0" >> /etc/fstab
-}
-build_erlang() {
-    mkdir /tmp/erlang && cd /tmp/erlang
-    wget -qO - http://www.erlang.org/download/otp_src_17.3.tar.gz     | tar zxvf -
-    wget -qO - http://www.erlang.org/download/otp_doc_man_17.3.tar.gz | tar zxvf -
 }
 encrypt_setup() {
     gpg2 -a -r "zv@nxvr.org" --encrypt-files id_rsa config known_hosts *.pem
@@ -50,13 +51,34 @@ encrypt_setup() {
 
 case $1 in
     install)
-        git ls-tree --name-only HEAD | \
-            grep -v '^\.\|Makefile\|README.md\|id_rsa.gpg\|ssh_config' |\
+        # List of files & directories not to link
+        typeset -aU nolink
+        nolink=("^\." Makefile dotfilez.sh org lib ida.cfg ssh_config ebin zv.gpg.pub README.md id_rsa.gpg)
+        # Now link our files
+        git ls-tree --name-only HEAD | grep -v "${(j:\|:)nolink}" |\
             xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
+
         # compile erlang our prompt here...
-        if [[ -x $(dirname erlc) ]]; then
+        if [[ -x erlc ]]; then
             erlc -o ebin ebin/zv_shell.erl
         fi
+
+        # Link Xresources to Xdefaults
         ln -s $HOME/.Xresources $HOME/.Xdefaults
         ;;
 esac
+# What needs to get done for decrypting
+# decrypt all ssh/*.asc files
+# decrypt my org files
+# What needs to get done for package install
+# build emacs from source
+# build ag from source
+
+print -P "                                                                  z  %F{green}███████%F{red}╗%F{green}██%F{red}╗   %F{green}██%F{red}╗%f  z"
+print -P "                                                                  e  %F{red}╚══%F{green}███%F{red}╔╝%F{green}%F{green}██%F{red}║   %F{green}██%f%F{red}║%f  e"
+print -P "                                                                  t    %F{green}███%F{red}╔╝ %F{green}██%F{red}║   %F{green}██%F{red}║%f  t"
+print -P "                                                                  a   %F{green}███%F{red}╔╝  %F{red}╚%f%F{green}██%F{red}╗ %F{green}██%f%F{red}╔╝%f  a"
+print -P "                                                                  v  %F{green}███████%F{red}╗ %F{red}╚%f%F{green}████%f%F{red}╔╝%f   v"
+print -P "                                                                  o  %F{red}╚══════╝  %F{red}╚═══╝%f    o"
+print -P "                                                                  l  too hot to handle  l"
+print -P "                                                                  t  too cold to hold.  t"
