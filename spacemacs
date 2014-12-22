@@ -9,6 +9,7 @@
  dotspacemacs-configuration-layer-path '()
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
+                                     c-c++
                                      erlang-elixir
                                      javascript
                                      html
@@ -97,23 +98,55 @@
   ;; Customize which keys we will use to move forward and backward 
   (setq next-buffer-key "\M-j")
   (setq prev-buffer-key "\M-k")
-  )
+
+  (setq exec-path (cons "/usr/local/bin" exec-path))
+
+  (defun add-semicolon-to-end-of-line ()
+    "Unsurprisingly, this adds a semicolon to the end of the line"
+    (interactive)
+    (save-excursion (end-of-line) (insert ";"))))
 
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
+  ;; Basic configuration
+  (setq powerline-default-separator nil)
   (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
   ;; store all backup and autosave files in the tmp dir
   (setq backup-directory-alist `(("/home/.*" . ,temporary-file-directory)))
   (setq auto-save-default t)
   (setq auto-save-file-name-transforms `(("/home/.*" ,temporary-file-directory t)))
-  (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
-  (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
+
+  ;; Default emacs modes ------------------------------------
+  (evil-set-initial-state 'Info-mode 'emacs)
+  (evil-set-initial-state 'Man-mode 'emacs)
+  (evil-set-initial-state 'epa-key-list-mode 'emacs)
+  (evil-set-initial-state 'epa-key-mode 'emacs)
+  (evil-set-initial-state 'epa-mail-mode 'emacs)
+
+  ;; temporary hack to fix sc remote highlihg
+  (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all)
+
+  ;; Align keybinding ---------------------------------------
+  (evil-leader/set-key "al" 'align-regexp)
+
+  ;; H/L should go to the first / last non blank character respectively
+  (define-key evil-visual-state-map "L" 'evil-last-non-blank)
+  (define-key evil-visual-state-map "H" 'evil-first-non-blank)
+  (define-key evil-normal-state-map "L" 'evil-last-non-blank)
+  (define-key evil-normal-state-map "H" 'evil-first-non-blank)
+
+  ;; Autocomplete 
+  (global-set-key (kbd "<backtab>") 'ac-start)
+  (evil-leader/set-key "l" 'previous-buffer)
+  (define-key evil-normal-state-map "g]" 'helm-etags-select)
+  (define-key evil-visual-state-map "g]" 'helm-etags-select)
 
   ;; evil ---------------------------------------------------
-  ;; evil-leader breaks this, now we fix it.
   (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
   (setq evil-cross-lines t)
+  (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
+  (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
   ;; As I never distinguish between [[ & [{, I might as well get the
   ;; benefit of use of the easier one
   (define-key evil-motion-state-map "]" 'evil-forward-section-begin)
@@ -123,25 +156,20 @@ This function is called at the very end of Spacemacs initialization."
   ;; evil leader eval region
   (evil-leader/set-key "xe" 'eval-last-sexp)
   (evil-leader/set-key-for-mode 'evil-visual-state-map "xe" 'eval-region)
-  ;; Shift-Tab should start autocomplete
-  (global-set-key               (kbd "<backtab>") 'ac-start)
 
-  
   ;; tab/window split manipulation --------------------------
   (define-key evil-normal-state-map "Q" 'evil-quit)
-  ;; Move to next window
+  ;;;; Move to next window
   (global-set-key next-buffer-key 'evil-window-next)
   (global-set-key prev-buffer-key 'evil-window-prev)
-
-  ;; Transpose window forward/backwards
+  ;;;; Transpose window forward/backwards
   (global-set-key "\C-\M-j" (lambda () (interactive) (rotate-windows 1)))
   (global-set-key "\C-\M-k" (lambda () (interactive) (rotate-windows -1)))
-  ;; Enlarge/Shrink window
+  ;;;; Enlarge/Shrink window
   (global-set-key "\M-h" (lambda () (interactive) (enlarge-window-by-dominant-dimension -5)))
   (global-set-key "\M-l" (lambda () (interactive) (enlarge-window-by-dominant-dimension 5)))
-  ;; Create new window
+  ;;;; Create new window
   (global-set-key (kbd "C-M-<return>") 'tile-split-window)
-
   (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
   (defun enlarge-window-by-dominant-dimension (magnitude)
@@ -158,10 +186,12 @@ This function is called at the very end of Spacemacs initialization."
       (evil-window-split)))
 
   ;; calculator ---------------------------------------------
-  (global-set-key (kbd "<XF86Calculator>") 'calc)
-  ;; These keys are typically bound to `kill line' which I rarely use.
-  (require 'calc)
-  (define-key calc-mode-map next-buffer-key 'evil-window-prev)
+  (use-package calc
+    :config
+    (progn
+      (global-set-key (kbd "<XF86Calculator>") 'calc)
+      ;; These keys are typically bound to `kill line' which I rarely use.
+      (define-key calc-mode-map next-buffer-key 'evil-window-prev)))
 
   ;; neotree ------------------------------------------------
   (use-package neotree
@@ -182,11 +212,7 @@ This function is called at the very end of Spacemacs initialization."
                 (define-key neotree-mode-map "u" 'neotree-up-dir)
                 (define-key neotree-mode-map "C" 'neotree-change-root)
                 (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-                (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)
-                ))
-    )
-  ;; (setq neo-show-header             nil
-  ;;       neo-persist-show            nil)
+                (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))))
 
   ;; web-mode ------------------------------------------------
   (use-package web-mode
@@ -283,12 +309,15 @@ This function is called at the very end of Spacemacs initialization."
   (global-set-key (kbd "<XF86Mail>") 'gnus)
 
   ;; dired --------------------------------------------------
-  (define-key dired-mode-map "u" 'dired-up-directory )
-  (define-key dired-mode-map "j" 'dired-next-line )
-  (define-key dired-mode-map "k" 'dired-prev-line )
-  (define-key dired-mode-map "f" 'dired-goto-file )
-  (define-key dired-mode-map "r" 'dired-unmark )
-  (define-key dired-mode-map (kbd "<f5>") 'dired-do-redisplay ) 
+  (use-package dired
+    :config
+    (progn
+      (define-key dired-mode-map "u" 'dired-up-directory )
+      (define-key dired-mode-map "j" 'dired-next-line )
+      (define-key dired-mode-map "k" 'dired-prev-line )
+      (define-key dired-mode-map "f" 'dired-goto-file )
+      (define-key dired-mode-map "r" 'dired-unmark )
+      (define-key dired-mode-map (kbd "<f5>") 'dired-do-redisplay )))
 
   ;; erc  ---------------------------------------------------
   (setq erc-track-enable-keybindings t)
@@ -299,31 +328,16 @@ This function is called at the very end of Spacemacs initialization."
     (erc :server "irc.freenode.net" :port 6667 :nick "zv")
     (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
     (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
+
   ;; js2-configuration --------------------------------------
   (require 'js2-mode)
-  (defun add-semicolon-to-end-of-line ()
-    "Unsurprisingly, this adds a semicolon to the end of the line"
-    (interactive)
-    (save-excursion (end-of-line) (insert ";")))
-
-  (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
-  (define-key js2-mode-map next-buffer-key 'evil-window-next)
-  (define-key js2-mode-map prev-buffer-key 'evil-window-prev)
-
-  ;; Add @ character to the word constituent class so we can use it inside of abbrevs
-  (modify-syntax-entry ?@ "w" js2-mode-syntax-table)
-
-  ;; Default emacs modes ------------------------------------
-  (evil-set-initial-state 'Info-mode 'emacs)
-  (evil-set-initial-state 'Man-mode 'emacs)
-  (evil-set-initial-state 'epa-key-list-mode 'emacs)
-  (evil-set-initial-state 'epa-key-mode 'emacs)
-  (evil-set-initial-state 'epa-mail-mode 'emacs)
-  ;; temporary hack to fix sc remote highlihg
-  (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all)
-
-  ;; Align keybinding ---------------------------------------
-  (evil-leader/set-key "al" 'align-regexp)
+  (use-package js2-mode
+    :config (progn
+              (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
+              (define-key js2-mode-map next-buffer-key 'evil-window-next)
+              (define-key js2-mode-map prev-buffer-key 'evil-window-prev)
+              ;; Add @ character to the word constituent class so we can use it inside of abbrevs
+              (modify-syntax-entry ?@ "w" js2-mode-syntax-table)))
 
   ;; Find Files ---------------------------------------------
   (defun find-quad-file ()
@@ -368,20 +382,28 @@ This function is called at the very end of Spacemacs initialization."
     "\C-]" 'Info-follow-nearest-node
     (kbd "DEL") 'Info-scroll-down)
 
-
   ;; Helm Configuration ------------------------------------
-  (setq helm-quick-update                     t
-        helm-split-window-in-side-p           t
-        helm-buffers-fuzzy-matching           t
-        helm-bookmark-show-location           t
-        helm-move-to-line-cycle-in-source     t
-        helm-ff-search-library-in-sexp        t
-        helm-ff-file-name-history-use-recentf t)
+  (use-package helm
+    :config
+    (progn
+      (setq helm-quick-update                     t
+            helm-split-window-in-side-p           t
+            helm-buffers-fuzzy-matching           t
+            helm-bookmark-show-location           t
+            helm-move-to-line-cycle-in-source     t
+            helm-ff-search-library-in-sexp        t
+            helm-ff-file-name-history-use-recentf t)
+      (setq
+       ag-highlight-search t
+       reuse-buffers       t)
+      ;; Redefine these to be sane
+      (define-key helm-map (kbd "C-l") 'helm-next-source)
+      (define-key helm-map (kbd "C-h") 'helm-previous-source)
+      (evil-leader/set-key
+        "gr" 'ag
+        "ga" 'ag
+        "gp" 'helm-do-ag)))
 
-  ;; Redefine these to be sane
-  (define-key helm-map (kbd "C-l") 'helm-next-source)
-  (define-key helm-map (kbd "C-h") 'helm-previous-source)
-  
   ;; Configure Modeline Colors ------------------------------
   (font-lock-add-keywords
    nil '(("\\<\\(\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):\\)"
@@ -400,24 +422,9 @@ This function is called at the very end of Spacemacs initialization."
   (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
-  
-  ;; H/L should go to the first / last non blank character respectively
-  (define-key evil-visual-state-map "L" 'evil-last-non-blank)
-  (define-key evil-visual-state-map "H" 'evil-first-non-blank)
-  (define-key evil-normal-state-map "L" 'evil-last-non-blank)
-  (define-key evil-normal-state-map "H" 'evil-first-non-blank)
-
-  ;; Autocomplete 
-  (global-set-key (kbd "<backtab>") 'ac-start)
-  (evil-leader/set-key "l" 'previous-buffer)
-  (define-key evil-normal-state-map "g]" 'helm-etags-select)
-  (define-key evil-visual-state-map "g]" 'helm-etags-select)
 
   (zv/configure/abbrev-mode)
-  (zv/install/encrypt-hook)
-
-  (setq exec-path (cons "/usr/local/bin" exec-path))
-  (setq powerline-default-separator nil))
+  (zv/install/encrypt-hook))
 
 ;; Custom variables
 (custom-set-variables
