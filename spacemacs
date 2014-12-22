@@ -8,7 +8,12 @@
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '()
  ;; List of contribution to load.
- dotspacemacs-configuration-layers '(zv erlang-elixir javascript git)
+ dotspacemacs-configuration-layers '(
+                                     erlang-elixir
+                                     javascript
+                                     html
+                                     zv
+                                     )
  ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only)
  dotspacemacs-fullscreen-at-startup nil
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
@@ -19,7 +24,7 @@
  ;; evil leader.
  dotspacemacs-feature-toggle-leader-on-jk t
  ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '()
+ dotspacemacs-excluded-packages '(rcirc)
  ;; Org Mode
  org-directory (expand-file-name "~/org")
  ;; The default package repository used if no explicit repository has been
@@ -118,7 +123,10 @@ This function is called at the very end of Spacemacs initialization."
   ;; evil leader eval region
   (evil-leader/set-key "xe" 'eval-last-sexp)
   (evil-leader/set-key-for-mode 'evil-visual-state-map "xe" 'eval-region)
+  ;; Shift-Tab should start autocomplete
+  (global-set-key               (kbd "<backtab>") 'ac-start)
 
+  
   ;; tab/window split manipulation --------------------------
   (define-key evil-normal-state-map "Q" 'evil-quit)
   ;; Move to next window
@@ -155,6 +163,102 @@ This function is called at the very end of Spacemacs initialization."
   (require 'calc)
   (define-key calc-mode-map next-buffer-key 'evil-window-prev)
 
+  ;; neotree ------------------------------------------------
+  (use-package neotree
+    :defer t
+    :config
+    (add-hook 'neotree-mode-hook
+              (lambda ()
+                (defun neotree-up-dir (optional)
+                  (interactive "p")
+                  "(Hacky way to) Change our root to the parent directory in Neotree"
+                  ( search-backward "(up a dir)" )
+                  ( neotree-change-root ))
+                (defun neotree-jump-to-parent (optional)
+                  "Move up to our parent directory"
+                  ( interactive "p" )
+                  ( search-backward-regexp "-\s.*/" ))
+                (define-key neotree-mode-map "p" 'neotree-jump-to-parent)
+                (define-key neotree-mode-map "u" 'neotree-up-dir)
+                (define-key neotree-mode-map "C" 'neotree-change-root)
+                (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
+                (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)
+                ))
+    )
+  ;; (setq neo-show-header             nil
+  ;;       neo-persist-show            nil)
+
+  ;; web-mode ------------------------------------------------
+  (use-package web-mode
+    :defer t
+    :mode (("\\.phtml\\'"     . web-mode)
+           ("\\.tpl\\.php\\'" . web-mode)
+           ("\\.html\\'"      . web-mode)
+           ("\\.htm\\'"       . web-mode)
+           ("\\.hbs$"        . web-mode)
+           ("\\.handlebars$" . web-mode)
+           ("\\.[gj]sp\\'"    . web-mode)
+           ("\\.as[cp]x\\'"   . web-mode)
+           ("\\.erb\\'"       . web-mode)
+           ("\\.mustache\\'"  . web-mode)
+           ("\\.djhtml\\'"    . web-mode))
+    :config
+    (progn
+      ;; CSS colorization 
+      (setq web-mode-enable-css-colorization t
+            web-mode-markup-indent-offset 2
+            web-mode-css-indent-offset 2
+            web-mode-code-indent-offset 2)
+
+      (defun zv-web-mode-hook () (turn-off-smartparens-mode))
+      (add-hook 'web-mode-hook 'zv-web-mode-hook)
+
+      (evil-define-key 'motion web-mode-map "[" 'web-mode-attribute-beginning)
+      (evil-define-key 'motion web-mode-map "]" 'web-mode-attribute-next)
+      (evil-define-key 'motion web-mode-map "}" 'web-mode-element-next)
+      (evil-define-key 'motion web-mode-map "{" 'web-mode-element-previous)
+      (evil-define-key 'motion web-mode-map ")" 'web-mode-block-next)
+      (evil-define-key 'motion web-mode-map "(" 'web-mode-block-previous)
+      (evil-define-key 'motion web-mode-map "^" 'web-mode-element-parent)
+      (evil-define-key 'normal web-mode-map "za" 'web-mode-element-children-fold-or-unfold)
+      (define-key web-mode-map "\C-backspace" 'web-mode-element-kill)
+
+      (evil-leader/set-key-for-mode 'web-mode
+        "mas" 'web-mode-tag-attributes-sort
+        "mts" 'web-mode-tag-sel
+        "mes" 'web-mode-element-select
+        "mer" 'web-mode-element-rename
+        "meb" 'web-mode-element-beginning
+        "mee" 'web-mode-element-end
+        "ce" 'web-mode-element-close
+        "msi" 'web-mode-element-content-select
+        "mse" 'web-mode-element-select)))
+
+  ;; eshell -------------------------------------------------
+  (use-package eshell
+    :config
+    (progn
+      (require 'em-smart)
+      ;; Ensure we set the path correctly
+      (setq   eshell-path-env (concat "/usr/local/bin" ":" eshell-path-env)) 
+      ;; Ensure eshell
+      (evil-define-key 'normal eshell-mode-map (kbd "0") 'eshell-bol)
+      (evil-define-key 'normal eshell-mode-map (kbd "C-p") 'eshell-previous-prompt)
+      (evil-define-key 'normal eshell-mode-map (kbd "C-n") 'eshell-next-prompt)
+      (evil-define-key 'normal eshell-mode-map (kbd "i") 'evilshell/insert-state)
+
+      (defun evilshell/insert-state ()
+        (interactive)
+        (evil-insert-state)
+        (eshell-bol))
+
+      (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+            eshell-review-quick-commands   nil
+            eshell-smart-space-goes-to-end t
+            eshell-where-to-jump           'begin
+            eshell-buffer-maximum-lines     20000
+            eshell-buffer-shorthand         t)))
+  
   ;; relative line numbers ----------------------------------
   (global-linum-mode 1)
   (linum-relative-toggle)
@@ -197,6 +301,11 @@ This function is called at the very end of Spacemacs initialization."
     (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
   ;; js2-configuration --------------------------------------
   (require 'js2-mode)
+  (defun add-semicolon-to-end-of-line ()
+    "Unsurprisingly, this adds a semicolon to the end of the line"
+    (interactive)
+    (save-excursion (end-of-line) (insert ";")))
+
   (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
   (define-key js2-mode-map next-buffer-key 'evil-window-next)
   (define-key js2-mode-map prev-buffer-key 'evil-window-prev)
