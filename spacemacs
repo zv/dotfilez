@@ -1,4 +1,3 @@
-
 ;; -*- mode: emacs-lisp -*-
 (setq-default
  ;; Directory to use for ERC
@@ -9,7 +8,7 @@
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '()
  ;; List of contribution to load.
- dotspacemacs-configuration-layers '(zv erlang-elixir paradox)
+ dotspacemacs-configuration-layers '(zv erlang-elixir javascript git)
  ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only)
  dotspacemacs-fullscreen-at-startup nil
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
@@ -21,15 +20,27 @@
  dotspacemacs-feature-toggle-leader-on-jk t
  ;; A list of packages and/or extensions that will not be install and loaded.
  dotspacemacs-excluded-packages '()
+ ;; Org Mode
+ org-directory (expand-file-name "~/org")
  ;; The default package repository used if no explicit repository has been
  ;; specified with an installed package.
  ;; Not used for now.
  dotspacemacs-default-package-repository nil
+ ;; The default package theme
+ dotspacemacs-default-theme 'leuven
+ vc-follow-symlinks         t
+ ;; Javascript
+ js2-global-externs '("module" "assert" "buster" "clearInterval" "clearTimeout" "console"
+                      "__dirname" "JSON" "location" "refute" "require" "setInterval" "setTimeout"
+                      "sinon" "Quad" "quad" "DS")
+ js2-basic-offset                 2
+ js2-include-node-externs         t
+ js2-include-browser-externs      t
  )
 
 (defun zv/install/skeleton-text ()
-  (define-skeleton)
-  )
+  (define-skeleton))
+
 ;; encrypt hook ------------------------------------------------------------------
 (defun zv/install/encrypt-hook ()
   (require 'epa-mail)
@@ -46,17 +57,6 @@
       (when (member (file-name-directory (buffer-file-name)) dirs-to-encrypt)
         (epa-encrypt-file (buffer-file-name) recipient))))
   (add-hook 'after-save-hook 'zv/encrypt-secrets))
-
-;; org-mode --------------------------------------------------------------------
-(defun zv/configure/org-mode ()
-  ;; (evil-leader/set-key-for-mode 'org-mode "oa" 'org-attach  "oR" 'org-refile)
-  (setq org-directory (expand-file-name "~/org/"))
-  (setq org-default-notes-file (concat org-directory "notes.org"))
-  (setq org-capture-templates
-        '(("t" "Todo"  entry  (file             (concat org-directory "gtd.org")) "* TODO %?\n  %i\n  %a")
-          ("d" "Diary" entry (file+datetree     (concat org-directory "diary.org")))
-          ("i" "Ideas"  item  (file     (concat org-directory "ideas.org")) "%?")
-          ("q" "Quotes" item (file (concat org-directory "quotes.org")) "%?"))))
 
 (defun zv/configure/abbrev-mode ()
   ;; hippie expand is dabbrev expand on steroids
@@ -82,31 +82,32 @@
   (global-set-key (kbd "M-'") 'fix-abbrev-prefix-mark)
   )
 
- (defun dotspacemacs/init ()
+(defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
   ;; Load our skeleton files
   (load (concat user-emacs-directory "skeleton_defs.el"))
   (setenv "PATH"          (concat "/usr/local/bin" ":" (getenv "PATH")))
   (setq evilnc-hotkey-comment-operator "gc")
+  ;; Customize which keys we will use to move forward and backward 
+  (setq next-buffer-key "\M-j")
+  (setq prev-buffer-key "\M-k")
   )
-  
- (defun dotspacemacs/config ()
-   (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
 
-   ;; store all backup and autosave files in the tmp dir
-   (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
-   (setq auto-save-default t)
-   (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-
+(defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
+  (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
+  ;; store all backup and autosave files in the tmp dir
+  (setq backup-directory-alist `(("/home/.*" . ,temporary-file-directory)))
+  (setq auto-save-default t)
+  (setq auto-save-file-name-transforms `(("/home/.*" ,temporary-file-directory t)))
   (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
 
-  ;; evil -----------------------------------------------------------------------
+  ;; evil ---------------------------------------------------
   ;; evil-leader breaks this, now we fix it.
-  ;; (define-key evil-motion-state-map "f" 'evil-find-char)
+  (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
   (setq evil-cross-lines t)
   ;; As I never distinguish between [[ & [{, I might as well get the
   ;; benefit of use of the easier one
@@ -114,27 +115,78 @@ This function is called at the very end of Spacemacs initialization."
   (define-key evil-motion-state-map "[" 'evil-backward-section-begin)
   (define-key evil-motion-state-map "(" 'evil-previous-open-paren)
   (define-key evil-motion-state-map ")" 'evil-next-close-paren)
-  ;; tab/window split manipulation ----------------------------------------------
-  (global-set-key "\C-h" 'evil-window-left)
-  (global-set-key "\C-l" 'evil-window-right)
-  (global-set-key "\C-j" 'evil-window-down)
-  (global-set-key "\C-k" 'evil-window-up)
+  ;; evil leader eval region
+  (evil-leader/set-key "xe" 'eval-last-sexp)
+  (evil-leader/set-key-for-mode 'evil-visual-state-map "xe" 'eval-region)
+
+  ;; tab/window split manipulation --------------------------
+  (define-key evil-normal-state-map "Q" 'evil-quit)
+  ;; Move to next window
+  (global-set-key next-buffer-key 'evil-window-next)
+  (global-set-key prev-buffer-key 'evil-window-prev)
+
+  ;; Transpose window forward/backwards
+  (global-set-key "\C-\M-j" (lambda () (interactive) (rotate-windows 1)))
+  (global-set-key "\C-\M-k" (lambda () (interactive) (rotate-windows -1)))
+  ;; Enlarge/Shrink window
+  (global-set-key "\M-h" (lambda () (interactive) (enlarge-window-by-dominant-dimension -5)))
+  (global-set-key "\M-l" (lambda () (interactive) (enlarge-window-by-dominant-dimension 5)))
+  ;; Create new window
+  (global-set-key (kbd "C-M-<return>") 'tile-split-window)
+
   (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
-  ;; relative line numbers ------------------------------------------------------
+
+  (defun enlarge-window-by-dominant-dimension (magnitude)
+    "Enlarge the current window by height if vertically split, or width otherwise"
+    (cond ((window-full-width-p) (enlarge-window magnitude))
+          ((window-full-height-p) (enlarge-window-horizontally magnitude))
+          (t (enlarge-window (/ magnitude 2)))))
+
+  (defun tile-split-window ()
+    "If we have one window split vertically, otherwise horizontally"
+    (interactive)
+    (if (= (count-windows) 1)
+        (evil-window-vsplit)
+      (evil-window-split)))
+
+  ;; calculator ---------------------------------------------
+  (global-set-key (kbd "<XF86Calculator>") 'calc)
+  ;; These keys are typically bound to `kill line' which I rarely use.
+  (require 'calc)
+  (define-key calc-mode-map next-buffer-key 'evil-window-prev)
+
+  ;; relative line numbers ----------------------------------
   (global-linum-mode 1)
   (linum-relative-toggle)
-  ;; abbrev-mode ----------------------------------------------------------------
+
+  ;; git timemachine ----------------------------------------
+  (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
+
+  ;; persistent undo ----------------------------------------
+  (global-undo-tree-mode) 
+  ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
   (evil-leader/set-key
+    ;; [d]efine [a] [g]lobal abbrev
     "dag" 'add-global-abbrev
+    ;; [d]efine [a] [l]ocal abbrev
     "dal" 'add-mode-abbrev
+    ;; [d]efine [a]n [i]nverse [g]lobal abbrev
     "daig" 'inverse-add-global-abbrev)
-  ;; gnus -----------------------------------------------------------------------
-  (setq epg-user-id                       "Zephyr Pellerin <zv@nxvr.org>"
-        epg-user-id-alist                 '(("F6F2D0445DC172F8" . "Zephyr Pellerin <zephyr.pellerin@gmail.com>")
-                                            ("F6F2D0445DC172F8" . "Zephyr Pellerin <zv@nxvr.org>")))
+
+  ;; gnus ---------------------------------------------------
+  (setq epg-user-id  "zv@nxvr.org")
   (global-set-key (kbd "<XF86Mail>") 'gnus)
-  ;; erc  -----------------------------------------------------------------------
+
+  ;; dired --------------------------------------------------
+  (define-key dired-mode-map "u" 'dired-up-directory )
+  (define-key dired-mode-map "j" 'dired-next-line )
+  (define-key dired-mode-map "k" 'dired-prev-line )
+  (define-key dired-mode-map "f" 'dired-goto-file )
+  (define-key dired-mode-map "r" 'dired-unmark )
+  (define-key dired-mode-map (kbd "<f5>") 'dired-do-redisplay ) 
+
+  ;; erc  ---------------------------------------------------
   (setq erc-track-enable-keybindings t)
   (defun erc-connect ()
     "Connect to IRC."
@@ -143,82 +195,72 @@ This function is called at the very end of Spacemacs initialization."
     (erc :server "irc.freenode.net" :port 6667 :nick "zv")
     (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
     (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
-  (evil-leader/set-key "ec" 'erc-connect)
-  ;; rcirc ---------------------------------------------------------------------
-  (setq rcirc-default-nick "zv")
-  (setq rcirc-server-alist
-        '(("irc.freenode.net"
-           :channels ("#cat-v"
-                      "#elixir-lang" 
-                      "#erlang"
-                      "#haskell" 
-                      "#postgresql" 
-                      "#pwning"
-                      "#noisebridge"
-                      "#gdb"
-                      "##kernel"
-                      "#threejs"
-                      "#reactjs" 
-                      "##re"
-                      "#radare"
-                      "#stackvm"
-                      "#zsh"))
-          ("irc.mozilla.org"
-           :channels ("#rust"
-                      "#rust-internals"))
-          ("irc.oftc.net"
-           :channels ("#tor"))))
-  ;; js2-configuration -------------------------------------------------------
+  ;; js2-configuration --------------------------------------
   (require 'js2-mode)
   (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
-  (setq-default js2-global-externs
-                '("module"
-                  "assert"
-                  "buster"
-                  "clearInterval"
-                  "clearTimeout"
-                  "console"
-                  "__dirname"
-                  "JSON"
-                  "location"
-                  "refute"
-                  "require"
-                  "setInterval"
-                  "setTimeout"
-                  "sinon"))
+  (define-key js2-mode-map next-buffer-key 'evil-window-next)
+  (define-key js2-mode-map prev-buffer-key 'evil-window-prev)
 
-  (setq-default js2-basic-offset                 2
-                js2-include-node-externs         t
-                js2-include-browser-externs      t)
+  ;; Add @ character to the word constituent class so we can use it inside of abbrevs
+  (modify-syntax-entry ?@ "w" js2-mode-syntax-table)
 
-
+  ;; Default emacs modes ------------------------------------
+  (evil-set-initial-state 'Info-mode 'emacs)
   (evil-set-initial-state 'Man-mode 'emacs)
   (evil-set-initial-state 'epa-key-list-mode 'emacs)
   (evil-set-initial-state 'epa-key-mode 'emacs)
   (evil-set-initial-state 'epa-mail-mode 'emacs)
-
   ;; temporary hack to fix sc remote highlihg
   (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all)
 
-  ;; Org-Mode keybindings
-  (evil-leader/set-key
-    "oc" 'org-capture
-    "oa" 'org-agenda
-    "osl" 'org-store-link)
-
-  ;; Align keybinding
+  ;; Align keybinding ---------------------------------------
   (evil-leader/set-key "al" 'align-regexp)
 
-  ;; Info Mode -----------------------------------------------------------------
-  (evil-add-hjkl-bindings Info-mode-map 'motion
+  ;; Find Files ---------------------------------------------
+  (defun find-quad-file ()
+    (interactive)
+    "Edit a file in quad/quad"
+    (ido-find-file-in-dir "~/Development/quad/quad"))
+
+  (defun find-zv-contrib ()
+    (interactive)
+    "Edit a file in the zv contrib folder"
+    (ido-find-file-in-dir "~/.emacs.d/contrib/zv"))
+
+  (defun find-zv-gnus ()
+    (interactive)
+    "Open our gnus configuration"
+    (find-file-existing "~/.gnus.el"))
+
+  (defun find-zv-erc  ()
+    (interactive)
+    "Open our erc configuration"
+    (find-file-existing (concat user-emacs-directory "/.ercrc.el")))
+  
+  (evil-leader/set-key
+    "feq" 'find-quad-file
+    "fez" 'find-zv-contrib
+    "feg" 'find-zv-gnus
+    "fer" 'find-zv-erc)
+
+  ;; SmartParens ---------------------------------------------
+  (setq sp-autoescape-string-quote t)
+
+  ;; Info Mode ----------------------------------------------
+  (evil-add-hjkl-bindings Info-mode-map 'emacs
     "0" 'evil-digit-argument-or-evil-beginning-of-line
     (kbd "\M-h") 'Info-help   ; "h"
+    "/" 'Info-search
+    "?" 'Info-search-backward
+    "\C-u" 'Info-scroll-down
+    "\C-d" 'Info-scroll-up 
     "\C-t" 'Info-history-back ; "l"
     "\C-o" 'Info-history-back
     "\C-]" 'Info-follow-nearest-node
     (kbd "DEL") 'Info-scroll-down)
 
-  ;; Helm Configuration --------------------------------------------------------
+
+  ;; Helm Configuration ------------------------------------
   (setq helm-quick-update                     t
         helm-split-window-in-side-p           t
         helm-buffers-fuzzy-matching           t
@@ -227,11 +269,16 @@ This function is called at the very end of Spacemacs initialization."
         helm-ff-search-library-in-sexp        t
         helm-ff-file-name-history-use-recentf t)
 
-  ;; Configure Modeline Colors -------------------------------------------------
+  ;; Redefine these to be sane
+  (define-key helm-map (kbd "C-l") 'helm-next-source)
+  (define-key helm-map (kbd "C-h") 'helm-previous-source)
+  
+  ;; Configure Modeline Colors ------------------------------
   (font-lock-add-keywords
    nil '(("\\<\\(\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):\\)"
           1 font-lock-warning-face t)))
-  ;; Configure Modeline Colors -------------------------------------------------
+
+  ;; Configure Modeline Colors ------------------------------
   (mapcar (lambda (x) (spacemacs/defface-state-color (car x) (cdr x)))
           '((normal . "DarkGoldenrod2")
             (insert . "chartreuse3")
@@ -240,34 +287,28 @@ This function is called at the very end of Spacemacs initialization."
             (motion . "plum3")
             (lisp   . "HotPink1"))) 
 
-  ;; eldoc ----------------------------------------------------------------------
+  ;; eldoc --------------------------------------------------
   (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+  
   ;; H/L should go to the first / last non blank character respectively
   (define-key evil-visual-state-map "L" 'evil-last-non-blank)
   (define-key evil-visual-state-map "H" 'evil-first-non-blank)
   (define-key evil-normal-state-map "L" 'evil-last-non-blank)
   (define-key evil-normal-state-map "H" 'evil-first-non-blank)
 
-                                        ; Autocomplete 
-  (global-set-key               (kbd "<backtab>") 'ac-start)
-
+  ;; Autocomplete 
+  (global-set-key (kbd "<backtab>") 'ac-start)
   (evil-leader/set-key "l" 'previous-buffer)
-
   (define-key evil-normal-state-map "g]" 'helm-etags-select)
   (define-key evil-visual-state-map "g]" 'helm-etags-select)
 
-  (global-set-key (kbd "<XF86Calculator>") 'calc)
-
   (zv/configure/abbrev-mode)
-  (zv/configure/org-mode)
   (zv/install/encrypt-hook)
 
   (setq exec-path (cons "/usr/local/bin" exec-path))
-  (setq powerline-default-separator nil)
-  )
-
+  (setq powerline-default-separator nil))
 
 ;; Custom variables
 (custom-set-variables
@@ -279,16 +320,25 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-case-fold-search nil)
  '(ahs-default-range (quote ahs-range-whole-buffer))
  '(ahs-idle-interval 0.25)
+ '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#657b83")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
  '(edts-man-root "/home/zv/.emacs.d/edts/doc/17.3")
- '(highlight-symbol-colors (--map (solarized-color-blend it "#fdf6e3" 0.25) (quote ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#fdf6e3" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
+ '(org-agenda-files
+   (quote
+    ("~/org/gtd.org" "~/org/todo.org" "~/org/agenda.org" "~/org/quad.org")))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
+ '(send-mail-function (quote smtpmail-send-it))
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83"))
@@ -298,6 +348,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-document-title ((t (:foreground "black" :weight bold :height 1.35 :family "Sans Serif"))))
  '(speedbar-directory-face ((t (:height 95 :box nil))))
  '(speedbar-file-face ((t (:height 95 :box nil))))
  '(speedbar-selected-face ((t (:height 105 :box nil))))
