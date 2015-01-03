@@ -1,22 +1,46 @@
 ;; -*- mode: emacs-lisp -*-
 (setq-default
- ;; Directory to use for ERC
- zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
- ;; IRC commands to ignore in tracking
- ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
  ;; List of additional paths where to look for configuration layers.
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '()
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
-                                     c-c++
-                                     erlang-elixir
+                                     ;; c-c++
+                                     ;; erlang-elixir
                                      javascript
                                      html
                                      zv
-                                     )
- ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only)
+                                     git
+                                     ))
+
+(setq-default
+ ;; Specify the startup banner. If the value is an integer then the
+ ;; banner with the corresponding index is used, if the value is `random'
+ ;; then the banner is chosen randomly among the available banners, if
+ ;; the value is nil then no banner is displayed.
+ dotspacemacs-startup-banner nil
+ ;; Default theme applied at startup
+ dotspacemacs-default-theme 'leuven
+ ;; The leader key
+ dotspacemacs-leader-key "SPC"
+ ;; Major mode leader key is a shortcut key which is the equivalent of
+ ;; pressing `<leader> m`
+ dotspacemacs-major-mode-leader-key ","
+ ;; The command key used for Evil commands (ex-commands) and
+ ;; Emacs commands (M-x).
+ ;; By default the command key is `:' so ex-commands are executed like in Vim
+ ;; with `:' and Emacs commands are executed with `<leader> :'.
+ dotspacemacs-command-key ":"
+ ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
+ ;; the commands bound to the current keystrokes.
+ dotspacemacs-guide-key-delay .6
+ ;; If non nil the frame is fullscreen when Emacs starts up (Emacs 24.4+ only).
  dotspacemacs-fullscreen-at-startup nil
+ ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only).
+ ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
+ dotspacemacs-maximized-at-startup nil
+ ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
+ dotspacemacs-mode-line-unicode-symbols t
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
@@ -24,16 +48,24 @@
  ;; If non nil pressing 'jk' in insert state, ido or helm will activate the
  ;; evil leader.
  dotspacemacs-feature-toggle-leader-on-jk t
- ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '(rcirc)
- ;; Org Mode
- org-directory (expand-file-name "~/org")
+ ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
+ dotspacemacs-smartparens-strict-mode nil
+ ;; If non nil advises quit functions to keep server open when quitting.
+ dotspacemacs-persistent-server nil
  ;; The default package repository used if no explicit repository has been
  ;; specified with an installed package.
  ;; Not used for now.
- dotspacemacs-default-package-repository nil
- ;; The default package theme
- dotspacemacs-default-theme 'leuven
+ dotspacemacs-default-package-repository "melpa"
+ ;; A list of packages and/or extensions that will not be install and loaded.
+ dotspacemacs-excluded-packages '(rcirc tern))
+
+(setq-default
+ ;; Org Mode
+ org-directory (expand-file-name "~/org")
+ ;; Directory to use for ERC
+ zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
+ ;; IRC commands to ignore in tracking
+ ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
  vc-follow-symlinks         t
  ;; Javascript
  js2-global-externs '("module" "assert" "buster" "clearInterval" "clearTimeout" "console"
@@ -41,11 +73,7 @@
                       "sinon" "Quad" "quad" "DS")
  js2-basic-offset                 2
  js2-include-node-externs         t
- js2-include-browser-externs      t
- )
-
-(defun zv/install/skeleton-text ()
-  (define-skeleton))
+ js2-include-browser-externs      t)
 
 ;; encrypt hook ------------------------------------------------------------------
 (defun zv/install/encrypt-hook ()
@@ -78,28 +106,17 @@
                                            try-complete-lisp-symbol))
   ;; Use hippie-expand instead of dabbrev
   (global-set-key (kbd "M-/") 'hippie-expand)
-
-  (defun fix-abbrev-prefix-mark ()
-    "Abbrev when called with prefix mark will erroneously give a
-     newline for evil mode, this is an ugly hack to fix that."
-    (interactive)
-    (abbrev-prefix-mark)
-    (delete-backward-char 1))
-  (global-set-key (kbd "M-'") 'fix-abbrev-prefix-mark)
   )
 
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
-  ;; Load our skeleton files
-  (load (concat user-emacs-directory "skeleton_defs.el"))
-  (setenv "PATH"          (concat "/usr/local/bin" ":" (getenv "PATH")))
+  (setenv "PATH"   (concat "/usr/local/bin" ":" (getenv "PATH")))
+  (setq exec-path (cons "/usr/local/bin" exec-path))
   (setq evilnc-hotkey-comment-operator "gc")
   ;; Customize which keys we will use to move forward and backward 
   (setq next-buffer-key "\M-j")
   (setq prev-buffer-key "\M-k")
-
-  (setq exec-path (cons "/usr/local/bin" exec-path))
 
   (defun add-semicolon-to-end-of-line ()
     "Unsurprisingly, this adds a semicolon to the end of the line"
@@ -111,7 +128,12 @@
 This function is called at the very end of Spacemacs initialization."
   ;; Basic configuration
   (setq powerline-default-separator nil)
-  (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
+  ;; don't use tabs to indent
+  (setq-default indent-tabs-mode nil)   
+
+  ;; Load our skeleton files
+  (load (concat user-emacs-directory "skeleton_defs.el"))
+
   ;; store all backup and autosave files in the tmp dir
   (setq backup-directory-alist `(("/home/.*" . ,temporary-file-directory)))
   (setq auto-save-default t)
