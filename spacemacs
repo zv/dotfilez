@@ -201,11 +201,22 @@ This function is called at the very end of Spacemacs initialization."
           (t (enlarge-window (/ magnitude 2)))))
 
   (defun tile-split-window ()
-    "If we have one window split vertically, otherwise horizontally"
+    "If our current window width / height is greater than 1.68, split vertically"
     (interactive)
-    (if (= (count-windows) 1)
-        (evil-window-vsplit)
-      (evil-window-split)))
+    (let* ((window-ratio (/ (window-pixel-width) (window-pixel-height)))
+           (golden-ratio (/ (+ 1 (sqrt 5)) 2)))
+      (if (> window-ratio golden-ratio)
+          (evil-window-vsplit)
+        (evil-window-split))))
+
+  ;; swap C-j for C-x prefix keys --------------------------- 
+  (global-set-key (kbd "C-j") ctl-x-map)
+
+  ;; guide-key ----------------------------------------------
+  ;;;; Set up some new guide keys
+  (add-to-list 'guide-key/guide-key-sequence "C-j")
+  (add-to-list 'guide-key/guide-key-sequence "<f1>")
+  (add-to-list 'guide-key/guide-key-sequence "<f9>")
 
   ;; calculator ---------------------------------------------
   (use-package calc
@@ -229,8 +240,8 @@ This function is called at the very end of Spacemacs initialization."
            ("\\.tpl\\.php\\'" . web-mode)
            ("\\.html\\'"      . web-mode)
            ("\\.htm\\'"       . web-mode)
-           ("\\.hbs$"        . web-mode)
-           ("\\.handlebars$" . web-mode)
+           ("\\.hbs$"         . web-mode)
+           ("\\.handlebars$"  . web-mode)
            ("\\.[gj]sp\\'"    . web-mode)
            ("\\.as[cp]x\\'"   . web-mode)
            ("\\.erb\\'"       . web-mode)
@@ -264,14 +275,13 @@ This function is called at the very end of Spacemacs initialization."
         "mer" 'web-mode-element-rename
         "meb" 'web-mode-element-beginning
         "mee" 'web-mode-element-end
-        "ce" 'web-mode-element-close
+        "mce" 'web-mode-element-close
         "msi" 'web-mode-element-content-select
         "mse" 'web-mode-element-select)))
 
+  (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
   ;; eshell -------------------------------------------------
-  (use-package eshell
-    :config
-    (progn
+  (eval-after-load "eshell" (progn
       (require 'em-smart)
       ;; Ensure we set the path correctly
       (setq   eshell-path-env (concat "/usr/local/bin" ":" eshell-path-env)) 
@@ -302,6 +312,7 @@ This function is called at the very end of Spacemacs initialization."
 
   ;; persistent undo ----------------------------------------
   (global-undo-tree-mode) 
+
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
   (evil-leader/set-key
@@ -315,7 +326,20 @@ This function is called at the very end of Spacemacs initialization."
   ;; gnus ---------------------------------------------------
   (setq epg-user-id  "zv@nxvr.org")
   (global-set-key (kbd "<XF86Mail>") 'gnus)
+  ;; helm ---------------------------------------------------
+  ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed
+  ;; discussion of these options.
+  (setq helm-split-window-in-side-p           t
+        helm-buffers-fuzzy-matching           t
+        helm-move-to-line-cycle-in-source     t
+        helm-ff-search-library-in-sexp        t
+        helm-ff-file-name-history-use-recentf t)
 
+  (eval-after-load "helm"
+    (lambda ()
+      (define-key helm-map "\C-u" 'helm-delete-minibuffer-contents))) 
+  
+  
   ;; dired --------------------------------------------------
   (use-package dired
     :config
@@ -337,45 +361,30 @@ This function is called at the very end of Spacemacs initialization."
     (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
     (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
 
-  ;; js2-configuration --------------------------------------
-  (require 'js2-mode)
-  (use-package js2-mode
-    :config (progn
-              (define-key js2-mode-map (kbd "C-;") 'add-semicolon-to-end-of-line)
-              (define-key js2-mode-map next-buffer-key 'evil-window-next)
-              (define-key js2-mode-map prev-buffer-key 'evil-window-prev)
-              ;; Add @ character to the word constituent class so we can use it inside of abbrevs
-              (modify-syntax-entry ?@ "w" js2-mode-syntax-table)))
-
   ;; Find Files ---------------------------------------------
-  (defun find-quad-file ()
-    (interactive)
-    "Edit a file in quad/quad"
-    (ido-find-file-in-dir "~/Development/quad/quad"))
+  (defun jump-to-file-or-dir (path)
+    "We make a pretty naive check for a directory by checking the final slash"
+    (if (string-match "\/$" path)
+        ;; use ido-find-file-in-dir if we're binding a directory
+        (ido-find-file-in-dir path)
+      (find-file-existing path)))
 
-  (defun find-zv-contrib ()
-    (interactive)
-    "Edit a file in the zv contrib folder"
-    (ido-find-file-in-dir "~/.emacs.d/contrib/zv"))
+  (setq key-file-map
+        `(("feq" . "~/Development/quad/quad/")
+          ("fez" . "~/.emacs.d/contrib/zv/")
+          ("feg" . "~/.gnus.el")
+          ("fer" . ,(concat user-emacs-directory "/" ".ercrc.el"))))
 
-  (defun find-zv-gnus ()
-    (interactive)
-    "Open our gnus configuration"
-    (find-file-existing "~/.gnus.el"))
-
-  (defun find-zv-erc  ()
-    (interactive)
-    "Open our erc configuration"
-    (find-file-existing (concat user-emacs-directory "/.ercrc.el")))
+  (mapcar (lambda (binding)
+            (let* ((keybinding (car binding))
+                   (path (cdr binding))
+                   (pathfn-sym (make-symbol (concat "zv//goto-file-special-" keybinding)))
+                   (pathfn (defalias pathfn-sym `(lambda () (interactive) (jump-to-file-or-dir ,path)))))
+              (evil-leader/set-key keybinding pathfn)))
+          key-file-map)
   
-  (evil-leader/set-key
-    "feq" 'find-quad-file
-    "fez" 'find-zv-contrib
-    "feg" 'find-zv-gnus
-    "fer" 'find-zv-erc)
-
   ;; SmartParens ---------------------------------------------
-  (setq sp-autoescape-string-quote t)
+  (setq sp-autoescape-string-quote nil)
 
   ;; Info Mode ----------------------------------------------
   (evil-add-hjkl-bindings Info-mode-map 'emacs
@@ -389,28 +398,6 @@ This function is called at the very end of Spacemacs initialization."
     "\C-o" 'Info-history-back
     "\C-]" 'Info-follow-nearest-node
     (kbd "DEL") 'Info-scroll-down)
-
-  ;; Helm Configuration ------------------------------------
-  (use-package helm
-    :config
-    (progn
-      (setq helm-quick-update                     t
-            helm-split-window-in-side-p           t
-            helm-buffers-fuzzy-matching           t
-            helm-bookmark-show-location           t
-            helm-move-to-line-cycle-in-source     t
-            helm-ff-search-library-in-sexp        t
-            helm-ff-file-name-history-use-recentf t)
-      (setq
-       ag-highlight-search t
-       reuse-buffers       t)
-      ;; Redefine these to be sane
-      (define-key helm-map (kbd "C-l") 'helm-next-source)
-      (define-key helm-map (kbd "C-h") 'helm-previous-source)
-      (evil-leader/set-key
-        "gr" 'ag
-        "ga" 'ag
-        "gp" 'helm-do-ag)))
 
   ;; Configure Modeline Colors ------------------------------
   (font-lock-add-keywords
@@ -427,9 +414,9 @@ This function is called at the very end of Spacemacs initialization."
             (lisp   . "HotPink1"))) 
 
   ;; eldoc --------------------------------------------------
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'emacs-lisp-mode-hook       'turn-on-eldoc-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'ielm-mode-hook             'turn-on-eldoc-mode)
 
   (zv/configure/abbrev-mode)
   (zv/install/encrypt-hook))
@@ -446,10 +433,6 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#657b83")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
  '(edts-man-root "/home/zv/.emacs.d/edts/doc/17.3")
  '(highlight-symbol-colors
    (--map
