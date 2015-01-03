@@ -195,24 +195,10 @@ This function is called at the very end of Spacemacs initialization."
 
   ;; neotree ------------------------------------------------
   (use-package neotree
-    :defer t
     :config
-    (add-hook 'neotree-mode-hook
-              (lambda ()
-                (defun neotree-up-dir (optional)
-                  (interactive "p")
-                  "(Hacky way to) Change our root to the parent directory in Neotree"
-                  ( search-backward "(up a dir)" )
-                  ( neotree-change-root ))
-                (defun neotree-jump-to-parent (optional)
-                  "Move up to our parent directory"
-                  ( interactive "p" )
-                  ( search-backward-regexp "-\s.*/" ))
-                (define-key neotree-mode-map "p" 'neotree-jump-to-parent)
-                (define-key neotree-mode-map "u" 'neotree-up-dir)
-                (define-key neotree-mode-map "C" 'neotree-change-root)
-                (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-                (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))))
+    (progn
+      (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
+      (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
 
   ;; web-mode ------------------------------------------------
   (use-package web-mode
