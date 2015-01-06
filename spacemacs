@@ -6,12 +6,18 @@
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
                                      ;; c-c++
-                                     ;; erlang-elixir
+                                     erlang-elixir
                                      javascript
                                      html
                                      zv
                                      git
-                                     ))
+                                     )
+ ;; The default package repository used if no explicit repository has been
+ ;; specified with an installed package.
+ ;; Not used for now.
+ dotspacemacs-default-package-repository "melpa"
+ ;; A list of packages and/or extensions that will not be install and loaded.
+ dotspacemacs-excluded-packages '(rcirc tern))
 
 (setq-default
  ;; Specify the startup banner. If the value is an integer then the
@@ -47,17 +53,12 @@
  dotspacemacs-smooth-scrolling t
  ;; If non nil pressing 'jk' in insert state, ido or helm will activate the
  ;; evil leader.
- dotspacemacs-feature-toggle-leader-on-jk t
+ dotspacemacs-feature-toggle-leader-on-jk nil
  ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
  dotspacemacs-smartparens-strict-mode nil
  ;; If non nil advises quit functions to keep server open when quitting.
  dotspacemacs-persistent-server nil
- ;; The default package repository used if no explicit repository has been
- ;; specified with an installed package.
- ;; Not used for now.
- dotspacemacs-default-package-repository "melpa"
- ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '(rcirc tern))
+ )
 
 (setq-default
  ;; Org Mode
@@ -75,44 +76,13 @@
  js2-include-node-externs         t
  js2-include-browser-externs      t)
 
-;; encrypt hook ------------------------------------------------------------------
-(defun zv/install/encrypt-hook ()
-  (require 'epa-mail)
-  "Install a hook to encrypt some files after saving"
-  (defun zv/encrypt-secrets ()
-    "Encrypt this file if it is in one of our `dirs-to-encrypt'"
-    (let* ((zv-dotfiles (expand-file-name "~/Development/dotfilez/"))
-           (dirs-to-encrypt `(,(expand-file-name "~/.gnupg")
-                              ,(expand-file-name (concat org-directory "/"))
-                              ,(concat zv-dotfiles "gnupg/")
-                              ,(concat zv-dotfiles "ssh/")
-                              ,(expand-file-name "~/.ssh/")))
-           (recipient (epg-list-keys (epg-make-context epa-protocol) "<zv@nxvr.org>" 'public)))
-      (when (member (file-name-directory (buffer-file-name)) dirs-to-encrypt)
-        (epa-encrypt-file (buffer-file-name) recipient))))
-  (add-hook 'after-save-hook 'zv/encrypt-secrets))
-
-(defun zv/configure/abbrev-mode ()
-  ;; hippie expand is dabbrev expand on steroids
-  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                           try-expand-dabbrev-all-buffers
-                                           try-expand-dabbrev-from-kill
-                                           try-complete-file-name-partially
-                                           try-complete-file-name
-                                           try-expand-all-abbrevs
-                                           try-expand-list
-                                           try-expand-line
-                                           try-complete-lisp-symbol-partially
-                                           try-complete-lisp-symbol))
-  ;; Use hippie-expand instead of dabbrev
-  (global-set-key (kbd "M-/") 'hippie-expand)
-  )
-
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
+  (autoload 'esup "esup" "Emacs Start Up Profiler." nil)
   (setenv "PATH"   (concat "/usr/local/bin" ":" (getenv "PATH")))
-  (setq exec-path (cons "/usr/local/bin" exec-path))
+  (setq exec-path  (cons "/usr/local/bin" exec-path))
+
   (setq evilnc-hotkey-comment-operator "gc")
   ;; Customize which keys we will use to move forward and backward 
   (setq next-buffer-key "\M-j")
@@ -134,86 +104,8 @@ This function is called at the very end of Spacemacs initialization."
   ;; Load our skeleton files
   (load (concat user-emacs-directory "skeleton_defs.el"))
 
-  ;; store all backup and autosave files in the tmp dir
-  (setq backup-directory-alist `(("/home/.*" . ,temporary-file-directory)))
-  (setq auto-save-default t)
-  (setq auto-save-file-name-transforms `(("/home/.*" ,temporary-file-directory t)))
-
-  ;; Default emacs modes ------------------------------------
-  (evil-set-initial-state 'Info-mode 'emacs)
-  (evil-set-initial-state 'Man-mode 'emacs)
-  (evil-set-initial-state 'epa-key-list-mode 'emacs)
-  (evil-set-initial-state 'epa-key-mode 'emacs)
-  (evil-set-initial-state 'epa-mail-mode 'emacs)
-
-  ;; temporary hack to fix sc remote highlihg
-  (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all)
-
-  ;; Align keybinding ---------------------------------------
-  (evil-leader/set-key "al" 'align-regexp)
-
-  ;; H/L should go to the first / last non blank character respectively
-  (define-key evil-visual-state-map "L" 'evil-last-non-blank)
-  (define-key evil-visual-state-map "H" 'evil-first-non-blank)
-  (define-key evil-normal-state-map "L" 'evil-last-non-blank)
-  (define-key evil-normal-state-map "H" 'evil-first-non-blank)
-
-  ;; Autocomplete 
-  (global-set-key (kbd "<backtab>") 'ac-start)
-  (evil-leader/set-key "l" 'previous-buffer)
-  (define-key evil-normal-state-map "g]" 'helm-etags-select)
-  (define-key evil-visual-state-map "g]" 'helm-etags-select)
-
-  ;; evil ---------------------------------------------------
-  (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
-  (setq evil-cross-lines t)
-  (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
-  (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
-  ;; As I never distinguish between [[ & [{, I might as well get the
-  ;; benefit of use of the easier one
-  (define-key evil-motion-state-map "]" 'evil-forward-section-begin)
-  (define-key evil-motion-state-map "[" 'evil-backward-section-begin)
-  (define-key evil-motion-state-map "(" 'evil-previous-open-paren)
-  (define-key evil-motion-state-map ")" 'evil-next-close-paren)
-  ;; evil leader eval region
-  (evil-leader/set-key "xe" 'eval-last-sexp)
-  (evil-leader/set-key-for-mode 'evil-visual-state-map "xe" 'eval-region)
-
-  ;; tab/window split manipulation --------------------------
-  (define-key evil-normal-state-map "Q" 'evil-quit)
-  ;;;; Move to next window
-  (global-set-key next-buffer-key 'evil-window-next)
-  (global-set-key prev-buffer-key 'evil-window-prev)
-  ;;;; Transpose window forward/backwards
-  (global-set-key "\C-\M-j" (lambda () (interactive) (rotate-windows 1)))
-  (global-set-key "\C-\M-k" (lambda () (interactive) (rotate-windows -1)))
-  ;;;; Enlarge/Shrink window
-  (global-set-key "\M-h" (lambda () (interactive) (enlarge-window-by-dominant-dimension -5)))
-  (global-set-key "\M-l" (lambda () (interactive) (enlarge-window-by-dominant-dimension 5)))
-  ;;;; Create new window
-  (global-set-key (kbd "C-M-<return>") 'tile-split-window)
-  (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
-
-  (defun enlarge-window-by-dominant-dimension (magnitude)
-    "Enlarge the current window by height if vertically split, or width otherwise"
-    (cond ((window-full-width-p) (enlarge-window magnitude))
-          ((window-full-height-p) (enlarge-window-horizontally magnitude))
-          (t (enlarge-window (/ magnitude 2)))))
-
-  (defun tile-split-window ()
-    "If our current window width / height is greater than 1.68, split vertically"
-    (interactive)
-    (let* ((window-ratio (/ (window-pixel-width) (window-pixel-height)))
-           (golden-ratio (/ (+ 1 (sqrt 5)) 2)))
-      (if (> window-ratio golden-ratio)
-          (evil-window-vsplit)
-        (evil-window-split))))
-
-  ;; swap C-j for C-x prefix keys --------------------------- 
-  (global-set-key (kbd "C-j") ctl-x-map)
-
   ;; guide-key ----------------------------------------------
-  ;;;; Set up some new guide keys
+  ;; Set up some new guide keys
   (add-to-list 'guide-key/guide-key-sequence "C-j")
   (add-to-list 'guide-key/guide-key-sequence "<f1>")
   (add-to-list 'guide-key/guide-key-sequence "<f9>")
@@ -230,23 +122,18 @@ This function is called at the very end of Spacemacs initialization."
   (use-package neotree
     :config
     (progn
+      (setq neo-theme 'ascii
+            neo-show-hidden-files nil)
+      (define-key neotree-mode-map "p" 'neotree-jump-to-parent)
+      (define-key neotree-mode-map "u" 'neotree-up-dir)
+      (define-key neotree-mode-map "C" 'neotree-change-root)
       (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
       (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
 
-  ;; web-mode ------------------------------------------------
+    ;; web-mode ------------------------------------------------
   (use-package web-mode
     :defer t
-    :mode (("\\.phtml\\'"     . web-mode)
-           ("\\.tpl\\.php\\'" . web-mode)
-           ("\\.html\\'"      . web-mode)
-           ("\\.htm\\'"       . web-mode)
-           ("\\.hbs$"         . web-mode)
-           ("\\.handlebars$"  . web-mode)
-           ("\\.[gj]sp\\'"    . web-mode)
-           ("\\.as[cp]x\\'"   . web-mode)
-           ("\\.erb\\'"       . web-mode)
-           ("\\.mustache\\'"  . web-mode)
-           ("\\.djhtml\\'"    . web-mode))
+    :mode (("\\.hbs$" . web-mode))
     :config
     (progn
       ;; CSS colorization 
@@ -280,145 +167,36 @@ This function is called at the very end of Spacemacs initialization."
         "mse" 'web-mode-element-select)))
 
   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
-  ;; eshell -------------------------------------------------
-  (eval-after-load "eshell" (progn
-      (require 'em-smart)
-      ;; Ensure we set the path correctly
-      (setq   eshell-path-env (concat "/usr/local/bin" ":" eshell-path-env)) 
-      ;; Ensure eshell
-      (evil-define-key 'normal eshell-mode-map (kbd "0") 'eshell-bol)
-      (evil-define-key 'normal eshell-mode-map (kbd "C-p") 'eshell-previous-prompt)
-      (evil-define-key 'normal eshell-mode-map (kbd "C-n") 'eshell-next-prompt)
-      (evil-define-key 'normal eshell-mode-map (kbd "i") 'evilshell/insert-state)
-
-      (defun evilshell/insert-state ()
-        (interactive)
-        (evil-insert-state)
-        (eshell-bol))
-
-      (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
-            eshell-review-quick-commands   nil
-            eshell-smart-space-goes-to-end t
-            eshell-where-to-jump           'begin
-            eshell-buffer-maximum-lines     20000
-            eshell-buffer-shorthand         t)))
-  
+ 
   ;; relative line numbers ----------------------------------
   (global-linum-mode 1)
   (linum-relative-toggle)
-
-  ;; git timemachine ----------------------------------------
-  (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
   ;; persistent undo ----------------------------------------
   (global-undo-tree-mode) 
 
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
-  (evil-leader/set-key
-    ;; [d]efine [a] [g]lobal abbrev
-    "dag" 'add-global-abbrev
-    ;; [d]efine [a] [l]ocal abbrev
-    "dal" 'add-mode-abbrev
-    ;; [d]efine [a]n [i]nverse [g]lobal abbrev
-    "daig" 'inverse-add-global-abbrev)
+  (zv/configure/abbrev-mode)
+
+  ;; git timemachine ----------------------------------------
+  (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
   ;; gnus ---------------------------------------------------
   (setq epg-user-id  "zv@nxvr.org")
   (global-set-key (kbd "<XF86Mail>") 'gnus)
-  ;; helm ---------------------------------------------------
-  ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed
-  ;; discussion of these options.
-  (setq helm-split-window-in-side-p           t
-        helm-buffers-fuzzy-matching           t
-        helm-move-to-line-cycle-in-source     t
-        helm-ff-search-library-in-sexp        t
-        helm-ff-file-name-history-use-recentf t)
+  (evil-leader/set-key "ag" 'gnus)
 
+  ;; helm ---------------------------------------------------
   (eval-after-load "helm"
     (lambda ()
       (define-key helm-map "\C-u" 'helm-delete-minibuffer-contents))) 
-  
-  
-  ;; dired --------------------------------------------------
-  (use-package dired
-    :config
-    (progn
-      (define-key dired-mode-map "u" 'dired-up-directory )
-      (define-key dired-mode-map "j" 'dired-next-line )
-      (define-key dired-mode-map "k" 'dired-prev-line )
-      (define-key dired-mode-map "f" 'dired-goto-file )
-      (define-key dired-mode-map "r" 'dired-unmark )
-      (define-key dired-mode-map (kbd "<f5>") 'dired-do-redisplay )))
 
-  ;; erc  ---------------------------------------------------
-  (setq erc-track-enable-keybindings t)
-  (defun erc-connect ()
-    "Connect to IRC."
-    (interactive)
-    ;; disable powerline for ERC ----------------------------
-    (erc :server "irc.freenode.net" :port 6667 :nick "zv")
-    (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
-    (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
-
-  ;; Find Files ---------------------------------------------
-  (defun jump-to-file-or-dir (path)
-    "We make a pretty naive check for a directory by checking the final slash"
-    (if (string-match "\/$" path)
-        ;; use ido-find-file-in-dir if we're binding a directory
-        (ido-find-file-in-dir path)
-      (find-file-existing path)))
-
-  (setq key-file-map
-        `(("feq" . "~/Development/quad/quad/")
-          ("fez" . "~/.emacs.d/contrib/zv/")
-          ("feg" . "~/.gnus.el")
-          ("fer" . ,(concat user-emacs-directory "/" ".ercrc.el"))))
-
-  (mapcar (lambda (binding)
-            (let* ((keybinding (car binding))
-                   (path (cdr binding))
-                   (pathfn-sym (make-symbol (concat "zv//goto-file-special-" keybinding)))
-                   (pathfn (defalias pathfn-sym `(lambda () (interactive) (jump-to-file-or-dir ,path)))))
-              (evil-leader/set-key keybinding pathfn)))
-          key-file-map)
-  
-  ;; SmartParens ---------------------------------------------
-  (setq sp-autoescape-string-quote nil)
-
-  ;; Info Mode ----------------------------------------------
-  (evil-add-hjkl-bindings Info-mode-map 'emacs
-    "0" 'evil-digit-argument-or-evil-beginning-of-line
-    (kbd "\M-h") 'Info-help   ; "h"
-    "/" 'Info-search
-    "?" 'Info-search-backward
-    "\C-u" 'Info-scroll-down
-    "\C-d" 'Info-scroll-up 
-    "\C-t" 'Info-history-back ; "l"
-    "\C-o" 'Info-history-back
-    "\C-]" 'Info-follow-nearest-node
-    (kbd "DEL") 'Info-scroll-down)
-
-  ;; Configure Modeline Colors ------------------------------
-  (font-lock-add-keywords
-   nil '(("\\<\\(\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):\\)"
-          1 font-lock-warning-face t)))
-
-  ;; Configure Modeline Colors ------------------------------
-  (mapcar (lambda (x) (spacemacs/defface-state-color (car x) (cdr x)))
-          '((normal . "DarkGoldenrod2")
-            (insert . "chartreuse3")
-            (emacs  . "SkyBlue2")
-            (visual . "gray")
-            (motion . "plum3")
-            (lisp   . "HotPink1"))) 
-
-  ;; eldoc --------------------------------------------------
+  ;; elisp   --------------------------------------------------
   (add-hook 'emacs-lisp-mode-hook       'turn-on-eldoc-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
   (add-hook 'ielm-mode-hook             'turn-on-eldoc-mode)
 
-  (zv/configure/abbrev-mode)
   (zv/install/encrypt-hook))
 
 ;; Custom variables
@@ -460,4 +238,4 @@ This function is called at the very end of Spacemacs initialization."
  '(speedbar-file-face ((t (:height 95 :box nil))))
  '(speedbar-selected-face ((t (:height 105 :box nil))))
  '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))) t)
- '(woman-italic ((t (:foreground "lawn green" :underline t :slant oblique))) t))
+ '(woman-italic ((t (:foreground "DarkGreen" :underline t :slant oblique))) t))
