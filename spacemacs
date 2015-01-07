@@ -52,12 +52,38 @@
  ;; If non nil advises quit functions to keep server open when quitting.
  dotspacemacs-persistent-server nil
  )
+(setq-default
+ ;; Org Mode
+ org-directory (expand-file-name "~/org")
+
+ ;; ERC
+ zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
+ ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
+ vc-follow-symlinks         t
+
+ ;; C Mode
+ c-electric-mode t
+ c-basic-offset  4
+
+ ;; Javascript
+ js2-global-externs '("module" "assert" "buster" "clearInterval" "clearTimeout" "console"
+                      "__dirname" "JSON" "location" "refute" "require" "setInterval" "setTimeout"
+                      "sinon" "Quad" "quad" "DS")
+ js2-basic-offset                 2
+ js2-include-node-externs         t
+ js2-include-browser-externs      t)
+
+
 
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
   (setenv "PATH"   (concat "/usr/local/bin" ":" (getenv "PATH")))
   (setq exec-path  (cons "/usr/local/bin" exec-path))
+
+  ;; Configure load path
+  (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/lisp")
+  (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/contrib/lisp" t)
 
   ;; (setq evilnc-hotkey-comment-operator "gc")
   ;; Customize which keys we will use to move forward and backward 
@@ -68,6 +94,10 @@
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
+  ;; Powerline default separator
+  (setq powerline-default-separator nil)
+
+
   ;; Load our skeleton files
   (load (concat user-emacs-directory "skeleton_defs.el"))
 
@@ -119,7 +149,7 @@ This function is called at the very end of Spacemacs initialization."
   (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
   ;; gnus ---------------------------------------------------
-  (setq epg-user-id  "zv@nxvr.org")
+  ;; (setq epg-user-id  "zv@nxvr.org")
 
   ;; helm ---------------------------------------------------
   (eval-after-load "helm"
