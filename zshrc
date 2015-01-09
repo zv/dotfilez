@@ -125,11 +125,11 @@ else
     zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
     zstyle ':vcs_info:*' stagedstr '%F{028}'
     zstyle ':vcs_info:*' unstagedstr '*'
-    zstyle ':vcs_info:*' formats "- [$base_vcs_style] "
+    zstyle ':vcs_info:*' formats " [$base_vcs_style]"
     zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
     precmd () { vcs_info }
 
-    PROMPT='[%n@%m] %2~ ${vcs_info_msg_0_}$(zle_vim_prompt_notifier) '
+    PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} $(zle_vim_prompt_notifier) '
 fi
 
 # ls colors
@@ -150,9 +150,10 @@ setopt prompt_subst
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
+
 # The crazier the better!
 if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
-    eval `dircolors ~/.zsh/LS_COLORS`
+    eval `dircolors --sh ~/.zsh/LS_COLORS`
 fi
 
 #############################################
@@ -220,7 +221,17 @@ bindkey "\e[3~" delete-char
 
 alias ...='cd ../..'     # Basic directory operations
 alias -- -='cd -'        # This has always irritated me
-alias _='sudo'           # Super user
+# Define general aliases.
+alias _='sudo'
+alias cp="${aliases[cp]:-cp} -i"
+alias e="emacs -nw"
+alias mail='emacs -nw --eval="(gnus)"'
+alias ln="${aliases[ln]:-ln} -i"
+alias mkdir="${aliases[mkdir]:-mkdir} -p"
+alias mv="${aliases[mv]:-mv} -i"
+alias rm="${aliases[rm]:-rm} -i"
+alias type='type -a'
+
 alias info="info --vi-keys"
 alias -g pr="print"
 alias -g gr="grep"
@@ -241,7 +252,11 @@ function DNScheck() {
     done;
 }
 
+alias zhdmi="xrandr --output eDP1 --auto --output HDMI2 --left-of eDP1 --auto --primary --output DP1 --off"
+alias zdp="xrandr --output eDP1 --auto --output DP1 --left-of eDP1 --auto --primary   --output HDMI2 --off"
+alias xmodc="xmodmap ~/.xmodmaprc"
 alias nocapspty='sudo loadkeys =(sudo dumpkeys && echo "keycode 58 = Control")'
+alias qgulp="rm -r ~/Development/quad/quad/.app; gulp"
 
 # Network Manager aliases
 alias wifi="nmcli -f SSID,BSSID,CHAN,SECURITY,SIGNAL,BARS,ACTIVE dev wifi"
@@ -278,7 +293,40 @@ function psu {
 
 alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
 
+typeset -A jumplist
+jumplist=(
+    fed "$(dirname `readlink $HOME/.zshrc`)"
+    fez "vim ~/.zshrc"
+    fev "vim ~/.vimrc"
+)
+
 export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
+
+
+## xclipboard ##############################################
+if (( $+commands[xclip] )); then
+    alias xccopy='xclip -selection clipboard -in'
+    alias xcpaste='xclip -selection clipboard -out'
+elif (( $+commands[xsel] )); then
+    alias xccopy='xsel --clipboard --input'
+    alias xcpaste='xsel --clipboard --output'
+fi
+
+## ls ######################################################
+alias ls='ls --group-directories-first --color=auto'
+alias l='ls -1A'         # Lists in one column, hidden files.
+alias ll='ls -lh'        # Lists human readable sizes.
+alias lr='ll -R'         # Lists human readable sizes, recursively.
+alias la='ll -A'         # Lists human readable sizes, hidden files.
+alias lm='la | "$PAGER"' # Lists human readable sizes, hidden files through pager.
+alias lx='ll -XB'        # Lists sorted by extension (GNU only).
+alias lk='ll -Sr'        # Lists sorted by size, largest last.
+alias lt='ll -tr'        # Lists sorted by date, most recent last.
+alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
+alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
+alias sl='ls'            # I often screw this up.
+
+
 ############################################
 #  Mix
 ############################################
@@ -416,31 +464,39 @@ zmodload zsh/complist
 zmodload zsh/mathfunc
 zmodload zsh/system
 
+setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
+setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
+setopt PATH_DIRS           # Perform path search even on command names with slashes.
+setopt AUTO_MENU           # Show completion menu on a succesive tab press.
+setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
+setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
+unsetopt MENU_COMPLETE     # Do not autoselect the first completion entry.
+unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
+
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-unsetopt MENU_COMPLETE   # do not autoselect the first completion entry
-unsetopt FLOWCONTROL
-setopt AUTO_MENU         # show completion menu on succesive tab press
-setopt COMPLETE_IN_WORD
-setopt ALWAYS_TO_END
+# Use caching to make completion for cammands such as dpkg and apt usable.
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
 
 ## case-insensitive (all),partial-word and then substring completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+unsetopt CASE_GLOB
 
 zstyle ':completion:*' list-colors ''
 
 zstyle ':completion:*:*:*:*:*' menu select
-# zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:kill:*:processes' command 'ps --forest -e -o pid,user,tty,cmd'
-zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
+
+zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,command -w'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:*:kill:*' force-list always
+zstyle ':completion:*:*:kill:*' insert-ids single
 
 
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 cdpath=(.)
-
-# Use caching so that commands like yum are useable
-zstyle ':completion::complete:*' use-cache yes
 
 # Case-insensitive (all), partial-word, and then substring completion.
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
@@ -488,7 +544,7 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Environmental Variables
-# zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
+zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
 # Populate hostname completion.
 zstyle -e ':completion:*:hosts' hosts 'reply=(
@@ -515,7 +571,7 @@ zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 
 # Kill
-zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,comm -w'
+zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,command -w'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
@@ -524,18 +580,6 @@ zstyle ':completion:*:*:kill:*' insert-ids single
 # Man
 zstyle ':completion:*:manuals' separate-sections true
 zstyle ':completion:*:manuals.(^1*)' insert-sections true
-
-# Media Players
-zstyle ':completion:*:*:mpg123:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
-zstyle ':completion:*:*:mpg321:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
-zstyle ':completion:*:*:ogg123:*' file-patterns '*.(ogg|OGG|flac):ogg\ files *(-/):directories'
-zstyle ':completion:*:*:mocp:*' file-patterns '*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories'
-
-# Mutt
-if [[ -s "$HOME/.mutt/aliases" ]]; then
-    zstyle ':completion:*:*:mutt:*' menu yes select
-    zstyle ':completion:*:mutt:*' users ${${${(f)"$(<"$HOME/.mutt/aliases")"}#alias[[:space:]]}%%[[:space:]]*}
-fi
 
 # SSH/SCP/RSYNC
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
