@@ -10,6 +10,7 @@ gnupg/*
 ssh/*
 !ssh/known_hosts
 !ssh/id_rsa.pub
+!ssh/id_ecdsa.pub
 !ssh/*.gpg
 !ssh/*.asc
 org/*
@@ -20,6 +21,7 @@ keys.tar
 secrets.tar.gz
 
 zsh/functions/private.zsh
+zsh/extras/private.zsh
 zsh/cache
 credentials.sh
 vim/.netrwhist
