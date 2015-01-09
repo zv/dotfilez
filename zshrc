@@ -380,36 +380,34 @@ for c in ${(@k)yum_commands}; do; alias $c="$yum_commands[$c]"; done
 ############################################
 #  Grep
 ############################################
-
+alias grep="$aliases[grep] --color=auto"
 export GREP_COLORS="37;45"
 export GREP_OPTIONS='--color=auto'
 
 ############################################
 #  Amazon AWS
 ############################################
-# export AWS_AUTO_SCALING_HOME="$HOME/.aws/aws-autoscaling"
-# export AWS_ELB_HOME="$HOME/.aws/aws-elastic_load_balacing"
-# export AWS_CLOUDWATCH_HOME="$HOME/.aws/aws-cloudwatch"
-# export EC2_HOME="$HOME/.aws/ec2-api-tools"
-
-# # Build up the various credential files & environment variables required by the
-# # AWS toolchain.
-# export AWS_CONFIG_FILE=$HOME/.aws/config
-# export AWS_CREDENTIAL_FILE="$HOME/.aws/credentials"
-# export AWS_ACCESS_KEY=$(cat $AWS_CONFIG_FILE | grep -A 2 "default"  |
-#                    grep "^aws_access_key_id" | cut -d= -f2)
-
-# export AWS_SECRET_KEY=$(cat $AWS_CONFIG_FILE  | grep -A 2 "default" |
-#                 grep "^aws_secret_access_key" | cut -d= -f2)
+typeset -A aws_env_vars
+aws_env_vars=(
+    AWS_AUTO_SCALING_HOME "$HOME/.aws/aws-autoscaling"
+    AWS_ELB_HOME          "$HOME/.aws/aws-elastic_load_balacing"
+    AWS_CLOUDWATCH_HOME   "$HOME/.aws/aws-cloudwatch"
+    EC2_HOME              "$HOME/.aws/ec2-api-tools"
+    # Build up the various credential files & environment variables required by the
+    # AWS toolchain.
+    AWS_CONFIG_FILE       "$HOME/.aws/config"
+    AWS_CREDENTIAL_FILE   "$HOME/.aws/credentials"
+    # # For awscli
+    AWS_DEFAULT_REGION    "us-west-1"
+    EC2_URL               "https://ec2.us-west-1.amazonaws.com"
+    #AWS_ACCESS_KEY        "$(cat $AWS_CONFIG_FILE | grep -A 2 'default'  | grep '^aws_access_key_id' | cut -d  -f2)"
+    #AWS_SECRET_KEY        "$(cat $AWS_CONFIG_FILE  | grep -A 2 'default' | grep '^aws_secret_access_key' | cut -d  -f2)"
+)
 
 # `touch $AWS_CREDENTIAL_FILE`
 # if [ -w $AWS_CREDENTIAL_FILE ]; then
 #     printf "AWSAccessKeyId=%s\nAWSSecretKey=%s\n", $AWS_ACCESS_KEY, $AWS_SECRET_KEY > $AWS_CREDENTIAL_FILE;
 # fi
-
-# # For awscli
-# export AWS_DEFAULT_REGION=us-west-1
-# export EC2_URL=https://ec2.us-west-1.amazonaws.com
 
 # # Add all the AWS binaries to our path
 # for p ($AWS_CLOUDWATCH_HOME $AWS_ELB_HOME $AWS_AUTO_SCALING_HOME $EC2_HOME) path+=$p/bin
