@@ -6,10 +6,14 @@
 (add-hook 'erc-mode-hook
           (lambda ()
             (setq mode-line-format `("%e"
+                                     mode-line-mule-info
                                      mode-line-client
                                      mode-line-frame-identification
                                      mode-line-buffer-identification
                                      "  "
+                                     mode-line-modes
+                                     " "
+                                     mode-line-process
                                      mode-line-misc-info
                                      mode-line-end-spaces))
             ))
@@ -20,10 +24,16 @@
   )
 ;; Configure some leader keys for erc
 (evil-leader/set-key-for-mode 'erc-mode
-  "ej" 'erc-join-channel
-  "el" 'erc-go-to-log-matches-buffer
-  "es" 'erc-save-buffer-in-logs
+  "mej" 'erc-join-channel
+  "mel" 'erc-go-to-log-matches-buffer
+  "mes" 'erc-save-buffer-in-logs
+  "mr" 'erc-cmd-RECONNECT
   )
+
+;; erc-process-input-line uses `erc-cmd-reconnect'-style functions as
+;; it's commands, we use it to our advantage here.
+;; RCONN aliases RECONNECT
+(defun erc-cmd-RCONN () (erc-cmd-RECONNECT))
 
 ;; configure various ERC settings -----------------------------------------------
 (setq
@@ -86,6 +96,7 @@
                                      "#cat-v"
                                      "#elixir-lang" 
                                      "#erlang"
+                                     "#ember"
                                      "#haskell" 
                                      "#postgresql" 
                                      "#pwning"
@@ -96,6 +107,7 @@
                                      "##re"
                                      "#radare"
                                      "#stackvm"
+                                     "#sequelize"
                                      "#zsh"
                                      "#xmonad"
                                      "#emacs"
