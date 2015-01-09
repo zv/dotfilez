@@ -1,8 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
 (setq-default
- ;; List of additional paths where to look for configuration layers.
- ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
- dotspacemacs-configuration-layer-path '()
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
                                      c-c++
@@ -12,12 +9,8 @@
                                      javascript
                                      zv
                                      )
- ;; The default package repository used if no explicit repository has been
- ;; specified with an installed package.
- ;; Not used for now.
- dotspacemacs-default-package-repository 'melpa
  ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '(tern))
+ dotspacemacs-excluded-packages '(rcirc))
 
 (setq-default
  ;; Specify the startup banner. If the value is an integer then the
@@ -44,27 +37,18 @@
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
  dotspacemacs-smooth-scrolling t
- ;; If non nil pressing 'jk' in insert state, ido or helm will activate the
- ;; evil leader.
- dotspacemacs-feature-toggle-leader-on-jk nil
- ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
- dotspacemacs-smartparens-strict-mode nil
- ;; If non nil advises quit functions to keep server open when quitting.
- dotspacemacs-persistent-server nil
  )
+
 (setq-default
  ;; Org Mode
  org-directory (expand-file-name "~/org")
-
  ;; ERC
  zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
  ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
  vc-follow-symlinks         t
-
  ;; C Mode
  c-electric-mode t
  c-basic-offset  4
-
  ;; Javascript
  js2-global-externs '("module" "assert" "buster" "clearInterval" "clearTimeout" "console"
                       "__dirname" "JSON" "location" "refute" "require" "setInterval" "setTimeout"
@@ -78,8 +62,8 @@
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
-  (setenv "PATH"   (concat "/usr/local/bin" ":" (getenv "PATH")))
-  (setq exec-path  (cons "/usr/local/bin" exec-path))
+  (setenv "PATH"  (concat "/usr/local/bin" ":" (getenv "PATH")))
+  (add-to-list 'exec-path "/usr/local/bin")
 
   ;; Configure load path
   (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/lisp")
@@ -87,8 +71,15 @@
 
   ;; (setq evilnc-hotkey-comment-operator "gc")
   ;; Customize which keys we will use to move forward and backward 
-  (setq next-buffer-key "\M-j")
-  (setq prev-buffer-key "\M-k")
+  (setq next-buffer-key "\M-j"
+        prev-buffer-key "\M-k")
+
+  ;; Prioritize melpa
+  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                           ("ELPA" . "http://tromey.com/elpa/")
+                           ("gnu" . "http://elpa.gnu.org/packages/")
+                           ))
+
   )
 
 (defun dotspacemacs/config ()
@@ -96,10 +87,6 @@
 This function is called at the very end of Spacemacs initialization."
   ;; Powerline default separator
   (setq powerline-default-separator nil)
-
-
-  ;; Load our skeleton files
-  (load (concat user-emacs-directory "skeleton_defs.el"))
 
   ;; guide-key ----------------------------------------------
   ;; Set up some new guide keys
@@ -146,14 +133,12 @@ This function is called at the very end of Spacemacs initialization."
   (zv/configure/abbrev-mode)
 
   ;; git timemachine ----------------------------------------
-  (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
-
-  ;; gnus ---------------------------------------------------
-  ;; (setq epg-user-id  "zv@nxvr.org")
+  ;; we will just use \ (goto emacs mode) commands from now on
+  ;; (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
   ;; helm ---------------------------------------------------
   (eval-after-load "helm"
-    (lambda ()
+    '(progn
       (define-key helm-map "\C-u" 'helm-delete-minibuffer-contents))) 
 
   ;; elisp   --------------------------------------------------
@@ -164,7 +149,8 @@ This function is called at the very end of Spacemacs initialization."
   ;; SmartParens ---------------------------------------------
   (setq sp-autoescape-string-quote nil)
 
-  (zv/install/encrypt-hook))
+  (zv/install/encrypt-hook)
+  )
 
 ;; Custom variables
 (custom-set-variables
