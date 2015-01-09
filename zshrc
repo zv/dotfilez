@@ -64,10 +64,13 @@ export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 
 path=(
+    /home/zv/Downloads/firefox
+    /usr/local/heroku/bin
     ~/bin
     $GOROOT/bin
     /usr/local/{bin,sbin}
-    /usr/local/plan9/bin # Plan9 binaries
+    /usr/local/lib/
+    /usr/local/plan9/bin # Userspace From Plan9 binaries
     $path
     /usr/local/pgsql/bin
 )
