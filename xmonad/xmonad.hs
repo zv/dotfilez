@@ -22,7 +22,7 @@ mykeys (XConfig {modMask = modm}) = M.fromList $
 main = do
      xmproc  <- spawnPipe "/usr/bin/xmobar"
      session <- getEnv "DESKTOP_SESSION"
-     xmonad $ (maybe desktopConfig desktop session) { terminal = "/usr/bin/urxvt256c"
+     xmonad $ (maybe desktopConfig desktop session) { terminal = "/bin/gnome-terminal"
                                                     , modMask = mod4Mask
                                                     , logHook = dynamicLogWithPP sjanssenPP
                                                         { ppOutput = hPutStrLn xmproc
