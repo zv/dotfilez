@@ -8,6 +8,7 @@ gnupg/*
 !gnupg/trustring.gpg
 !gnupg/*.asc
 ssh/*
+!ssh/config
 !ssh/known_hosts
 !ssh/id_rsa.pub
 !ssh/id_ecdsa.pub
