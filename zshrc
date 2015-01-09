@@ -82,14 +82,19 @@ fpath=(
     $fpath
 )
 
-for fn (~/.zsh/functions/*.zsh) source $fn
+for fn (~/.zsh/extra/*.zsh) source $fn
 
 ############################################
 #  Theme
 #############################################
 function spectrum_ls() {
+    string=${1-Test}
+    if [[ $1 == "block" ]]
+    then
+        string="███████████████████████████████"
+    fi
     for code in {000..255}; do
-        print -P -- "$code: %F{$code}Test%f"
+        print -P -- "$code: %F{$code}${string}%f"
     done
 }
 
