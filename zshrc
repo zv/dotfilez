@@ -109,11 +109,12 @@ else
     export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
     # shows a slightly different prompt for vicmd vs other ZLE command modes to let
     # you know what you are dealing with.
+    baseprompt='>>'
     zle_vim_prompt_notifier() {
         if [[ "$KEYMAP" == vicmd ]]; then
-            print "%F{red}>>%f"
+            print "%F{red}$baseprompt%f"
         else
-            print ">>"
+            print "$baseprompt"
         fi
     }
 
