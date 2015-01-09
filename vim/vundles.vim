@@ -6,6 +6,7 @@ call vundle#rc()
 Bundle "gmarik/vundle"
 
 " Languages and Scripts
+Bundle "Z1MM32M4N/vim-superman"
 Bundle "jnwhiteh/vim-golang"
 Bundle "jimenezrick/vimerl"
 Bundle "elixir-lang/vim-elixir"

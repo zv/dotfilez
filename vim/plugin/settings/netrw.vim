@@ -9,4 +9,3 @@ let g:netrw_winsize=20
 let g:netrw_list_hide='^\..*'
 
 let g:netrw_hide=0
-

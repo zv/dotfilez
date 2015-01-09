@@ -13,7 +13,7 @@ set gcr=a:blinkon0             " Disable cursor blink
 set hidden                     " Hidden Buffers
 set history=1000               " Store lots of :cmdline history
 set lazyredraw                 " Lazy is as lazy does!
-set list                       " show trailing whitespace
+set nolist                       " show trailing whitespace
 set number                     " Line numbers are good:
 set relativenumber             " Relative line numbers
 set ruler                      " but where you are is better
