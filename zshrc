@@ -1,12 +1,9 @@
 #!/usr/bin/env zsh
 # This is zv's ZSHRC.
-# haq the plan8
 # meow nyan meow nyan meow
-# 2013
+# 2009
 
-#
 #  Environment
-#
 typeset -gU cdpath fpath path mailpath
 
 setopt BRACE_CCL          # Allow brace character class list expansion.
@@ -48,6 +45,13 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 export LC_CTYPE=$LANG
 
 # vim for manpages
+vman() {
+  vim -c "SuperMan $*"
+
+  if [ "$?" != "0" ]; then
+    echo "No manual entry for $*"
+  fi
+}
 export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 # build stuff
