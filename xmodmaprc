@@ -1,3 +1,16 @@
-remove Lock = Caps_Lock
+! Caps Lock -> Control
+remove Lock      = Caps_Lock
 keysym Caps_Lock = Control_L
-add Control = Control_L
+add Control      = Control_L
+
+! Swap Right Alt/Control
+remove Control = Control_R
+remove Mod1 = Alt_R
+keycode 105 = Alt_R
+keycode 108 = Control_R
+add Control = Control_R
+add Mod1 = Alt_R
+
+! Menu Key -> Hyper Key
+keycode 135 = Hyper_R
+add Mod3 = Hyper_R
