@@ -1,5 +1,9 @@
 ;; -*- mode: emacs-lisp -*-
 (setq-default
+ ;; List of additional paths where to look for configuration layers.
+ ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
+ dotspacemacs-configuration-layer-path '()
+
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
                                      c-c++
@@ -10,7 +14,12 @@
                                      zv
                                      )
  ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '(rcirc))
+ dotspacemacs-excluded-packages '(
+                                  rcirc
+                                  ))
+
+
+
 
 (setq-default
  ;; Specify the startup banner. If the value is an integer then the
@@ -37,6 +46,16 @@
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
  dotspacemacs-smooth-scrolling t
+ ;; A value from the range (0..100), in increasing opacity, which describes the
+ ;; transparency level of a frame when it's active or selected. Transparency can
+ ;; be toggled through `toggle-transparency'.
+ dotspacemacs-active-transparency 90
+ ;; A value from the range (0..100), in increasing opacity, which describes the
+ ;; transparency level of a frame when it's inactive or deselected. Transparency
+ ;; can be toggled through `toggle-transparency'.
+ dotspacemacs-inactive-transparency 90
+ ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
+ dotspacemacs-mode-line-unicode-symbols t
  )
 
 (setq-default
@@ -78,13 +97,14 @@
   (setq package-archives '(("melpa" . "http://melpa.org/packages/")
                            ("ELPA" . "http://tromey.com/elpa/")
                            ("gnu" . "http://elpa.gnu.org/packages/")
-                           ))
-
-  )
+                           )))
 
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
+  ;; don't use tabs to indent
+  ;; (setq-default indent-tabs-mode nil)   
+
   ;; Powerline default separator
   (setq powerline-default-separator nil)
 
@@ -126,15 +146,17 @@ This function is called at the very end of Spacemacs initialization."
   (linum-relative-toggle)
 
   ;; persistent undo ----------------------------------------
-  (global-undo-tree-mode) 
+  (setq undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+    (make-directory (concat spacemacs-cache-directory "undo")))
 
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
-  (zv/configure/abbrev-mode)
-
+  
   ;; git timemachine ----------------------------------------
-  ;; we will just use \ (goto emacs mode) commands from now on
-  ;; (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
+  (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
   ;; helm ---------------------------------------------------
   (eval-after-load "helm"
@@ -148,8 +170,6 @@ This function is called at the very end of Spacemacs initialization."
 
   ;; SmartParens ---------------------------------------------
   (setq sp-autoescape-string-quote nil)
-
-  (zv/install/encrypt-hook)
   )
 
 ;; Custom variables
@@ -186,5 +206,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-document-title ((t (:foreground "black" :weight bold :height 1.35 :family "Sans Serif"))))
- '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))) t)
- '(woman-italic ((t (:foreground "DarkGreen" :underline t :slant oblique))) t))
+ '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))))
+ '(woman-italic ((t (:foreground "DarkGreen" :underline t :slant oblique)))))
