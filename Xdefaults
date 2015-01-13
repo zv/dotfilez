@@ -1,17 +1,15 @@
-!*foreground: rgb:dd/dd/dd
-!*background: rgb:22/22/22
 ! Xft ------------------------------------------------------------------------------
 Xft.dpi:       96
-!Xft.antialias: false
+! Xft.antialias: false
 Xft.hinting:    true
-Xft.hintstyle:  hintfull
+Xft.hintstyle:  hintmedium
 Xft.rgba:       rgb
+*urlCommand:    /usr/bin/google-chrome %s
 
-*urlCommand:        /usr/bin/google-chrome %s
+Emacs.font: Inconsolata-14
 
-Emacs.font: Inconsolata-13
+URxvt.font: xft:Inconsolata:size=14
 
-URxvt.font: xft:Inconsolata:size=13
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
 URxvt.internalBorder:    4
@@ -22,7 +20,7 @@ URxvt.cursorBlink:       true
 URxvt.colorUL:      #269BC9
 
 *color0:  rgb:00/00/00
-*color1:  rgb:80/00/00
+*color1:  rgb:ff/00/00
 *color2:  rgb:12/91/4e
 !*color3:  rgb:a0/a0/70
 *color4:  rgb:3e/45/81
@@ -39,3 +37,6 @@ URxvt.colorUL:      #269BC9
 *color15: rgb:ff/ff/ff
 
 *intensityStyles: false
+
+!*foreground: rgb:dd/dd/dd
+!*background: rgb:22/22/22
