@@ -8,7 +8,7 @@
                (nnimap-stream ssl)
                (nnimap-inbox "gmail")))
 
-u(setq gnus-secondary-select-methods
+(setq gnus-secondary-select-methods
       '((nnimap "nxvr"
                 (nnimap-address "mail.nxvr.org")
                 (nnimap-server-port 143)
@@ -43,9 +43,9 @@ u(setq gnus-secondary-select-methods
 (setq gnus-posting-styles
       '(
         (".*"
-         (name "zv")
-         (address "zv@nxvr.org"))
-        (header "from" "zephyr.pellerin@gmail.com"
+        ;;  (name "zv")
+        ;;  (address "zv@nxvr.org"))
+        ;; (header "from" "zephyr.pellerin@gmail.com"
                 (name "Zephyr Pellerin")
                 (address "zephyr.pellerin@gmail.com")
                 )))
