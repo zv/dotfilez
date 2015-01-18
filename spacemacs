@@ -92,13 +92,7 @@
   ;; (setq evilnc-hotkey-comment-operator "gc")
   ;; Customize which keys we will use to move forward and backward 
   (setq next-buffer-key "\M-j"
-        prev-buffer-key "\M-k")
-
-  ;; Prioritize melpa
-  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ("ELPA" . "http://tromey.com/elpa/")
-                           ("gnu" . "http://elpa.gnu.org/packages/")
-                           )))
+        prev-buffer-key "\M-k"))
 
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
