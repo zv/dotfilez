@@ -6,8 +6,10 @@
 
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
-                                     c-c++
-                                     erlang-elixir
+                                     ;; Too slow on startup
+                                    ;; c-c++
+                                     ;; Causing problems with heml
+                                    ;; erlang-elixir
                                      git
                                      html
                                      javascript
@@ -17,7 +19,6 @@
  dotspacemacs-excluded-packages '(
                                   rcirc
                                   ))
-
 
 
 
@@ -108,6 +109,9 @@ This function is called at the very end of Spacemacs initialization."
   ;; Powerline default separator
   (setq powerline-default-separator nil)
 
+  ;; Set the non-normal prefix to Hyper key
+  (setq evil-leader/non-normal-prefix "H-") 
+
   ;; guide-key ----------------------------------------------
   ;; Set up some new guide keys
   (add-to-list 'guide-key/guide-key-sequence "C-j")
@@ -169,8 +173,8 @@ This function is called at the very end of Spacemacs initialization."
   (add-hook 'ielm-mode-hook             'turn-on-eldoc-mode)
 
   ;; SmartParens ---------------------------------------------
-  (setq sp-autoescape-string-quote nil)
-  )
+  (setq sp-autoescape-string-quote nil))
+
 
 ;; Custom variables
 (custom-set-variables
