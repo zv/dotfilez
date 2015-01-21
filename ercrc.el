@@ -19,16 +19,14 @@
             ))
 
 ;; keybindings -------------------------------------------
-(evil-add-hjkl-bindings erc-mode-map 'motion
-  "0" 'erc-bol
-  )
+(evil-add-hjkl-bindings erc-mode-map 'motion "0" 'erc-bol) 
+
 ;; Configure some leader keys for erc
 (evil-leader/set-key-for-mode 'erc-mode
   "mej" 'erc-join-channel
   "mel" 'erc-go-to-log-matches-buffer
   "mes" 'erc-save-buffer-in-logs
-  "mr" 'erc-cmd-RECONNECT
-  )
+  "mr" 'erc-cmd-RECONNECT)
 
 ;; erc-process-input-line uses `erc-cmd-reconnect'-style functions as
 ;; it's commands, we use it to our advantage here.

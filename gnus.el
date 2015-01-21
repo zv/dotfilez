@@ -116,13 +116,16 @@
 (setq gnus-summary-make-false-root 'dummy)
 (setq gnus-summary-make-false-root-always nil)
 
+(defun gnus-user-format-function-G (_arg)
+  (replace-regexp-in-string "\\(gwene.com\\|gmane\\)\.\\(comp.\\)?" "" gnus-tmp-qualified-group))
+
+(setq gnus-group-line-format "%P%5y:%B%(%uG%) %M%S%p \n")
+
 (setq gnus-summary-line-format        "%8{%4k│%}%9{%U%R%z%}%8{│%}%*%(%-23,23f%)%7{║%} %6{%B%} %s\n"
       gnus-summary-dummy-line-format  "    %8{│%}   %(%8{│%}                       %7{║%}%) %6{┏○%}  %S\n"
       gnus-visible-headers            "^From:\\|^To:\\|^Subject:\\|^Date:\\|^User-Agent:\\|^X-Mailer:"
       gnus-topic-indent-level 1
       gnus-group-uncollapsed-levels 2
-      gnus-group-line-format "%S %(%-25~(form (replace-regexp-in-string \"\" \"\" (gnus-short-group-name gnus-tmp-group)))@%) %6y\n"
-      
       gnus-sum-thread-tree-indent " "
       gnus-sum-thread-tree-root "┏● " 
       gnus-sum-thread-tree-false-root " ○ "
@@ -174,7 +177,7 @@
    (horizontal 1.0
                (vertical 30 (group 1.0))
                (vertical 1.0
-                         (summary 0.16 point)
+                         (summary 0.2 point)
                          (article 1.0)))))
 
 (gnus-add-configuration

@@ -7,18 +7,26 @@
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(
                                      ;; Too slow on startup
-                                    ;; c-c++
+                                     ;; c-c++
                                      ;; Causing problems with heml
-                                    ;; erlang-elixir
+                                     ;; erlang-elixir
                                      git
                                      html
                                      javascript
+                                     company-mode
                                      zv
                                      )
+
  ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '(
+ dotspacemacs-excluded-packages '(aggressive-indent
+                                  google-translate
+                                  ;; We use our own here
+                                  evil-org
+                                  ledger-mode
+                                  monokai
                                   rcirc
-                                  ))
+                                  rcirc-color
+                                  zenburn-theme))
 
 
 
@@ -58,7 +66,6 @@
  ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
  dotspacemacs-mode-line-unicode-symbols t
  )
-
 (setq-default
  ;; Org Mode
  org-directory (expand-file-name "~/org")
@@ -82,11 +89,12 @@
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
+  (spacemacs/set-font "Source Code Pro" 12)
   (setenv "PATH"  (concat "/usr/local/bin" ":" (getenv "PATH")))
   (add-to-list 'exec-path "/usr/local/bin")
 
   ;; Configure load path
-  (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/lisp")
+  ;; (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/lisp")
   (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/contrib/lisp" t)
 
   ;; (setq evilnc-hotkey-comment-operator "gc")
@@ -99,8 +107,8 @@
 This function is called at the very end of Spacemacs initialization."
   ;; don't use tabs to indent
   ;; (setq-default indent-tabs-mode nil)   
-
   ;; Powerline default separator
+
   (setq powerline-default-separator nil)
 
   ;; Set the non-normal prefix to Hyper key
@@ -119,16 +127,6 @@ This function is called at the very end of Spacemacs initialization."
   (setq neo-theme 'ascii
         neo-show-hidden-files nil)
 
-  ;; web-mode ------------------------------------------------
-  (setq web-mode-enable-css-colorization t
-        web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset 2
-        web-mode-code-indent-offset 2)
-
-  (defun zv-web-mode-hook () (turn-off-smartparens-mode))
-  (add-hook 'web-mode-hook 'zv-web-mode-hook)
-
-  (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
 
   ;; helm ---------------------------------------------------
@@ -161,11 +159,6 @@ This function is called at the very end of Spacemacs initialization."
     '(progn
       (define-key helm-map "\C-u" 'helm-delete-minibuffer-contents))) 
 
-  ;; elisp   --------------------------------------------------
-  (add-hook 'emacs-lisp-mode-hook       'turn-on-eldoc-mode)
-  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-  (add-hook 'ielm-mode-hook             'turn-on-eldoc-mode)
-
   ;; SmartParens ---------------------------------------------
   (setq sp-autoescape-string-quote nil))
 
@@ -183,6 +176,8 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
  '(edts-man-root "/home/zv/.emacs.d/edts/doc/17.3")
+ '(expand-region-contract-fast-key "V")
+ '(expand-region-reset-fast-key "r")
  '(highlight-symbol-colors
    (--map
     (solarized-color-blend it "#fdf6e3" 0.25)
@@ -203,6 +198,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(org-document-title ((t (:foreground "black" :weight bold :height 1.35 :family "Sans Serif"))))
  '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))))
  '(woman-italic ((t (:foreground "DarkGreen" :underline t :slant oblique)))))
