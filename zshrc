@@ -18,6 +18,7 @@ setopt NOTIFY             # Report status of background jobs immediately.
 unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
 unsetopt HUP              # Don't kill jobs on shell exit.
 unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
+
 export DISABLE_AUTO_TITLE="true"
 setopt EXTENDED_GLOB
 setopt BARE_GLOB_QUAL
@@ -65,6 +66,7 @@ export GOPATH=$HOME/Development/golang
 
 path=(
     /home/zv/Downloads/firefox
+    /usr/local/pgsql/bin
     /usr/local/heroku/bin
     ~/bin
     $GOROOT/bin
@@ -72,7 +74,6 @@ path=(
     /usr/local/lib/
     /usr/local/plan9/bin # Userspace From Plan9 binaries
     $path
-    /usr/local/pgsql/bin
 )
 
 # Load our completion functions
@@ -223,9 +224,9 @@ alias ...='cd ../..'     # Basic directory operations
 alias -- -='cd -'        # This has always irritated me
 # Define general aliases.
 alias _='sudo'
-alias cp="${aliases[cp]:-cp} -i"
-alias e="emacs -nw"
+alias e="emacsclient -t"
 alias mail='emacs -nw --eval="(gnus)"'
+alias cp="${aliases[cp]:-cp} -i"
 alias ln="${aliases[ln]:-ln} -i"
 alias mkdir="${aliases[mkdir]:-mkdir} -p"
 alias mv="${aliases[mv]:-mv} -i"
@@ -252,15 +253,6 @@ function DNScheck() {
     done;
 }
 
-alias zhdmi="xrandr --output eDP1 --auto --output HDMI2 --left-of eDP1 --auto --primary --output DP1 --off"
-alias zdp="xrandr --output eDP1 --auto --output DP1 --left-of eDP1 --auto --primary   --output HDMI2 --off"
-alias xmodc="xmodmap ~/.xmodmaprc"
-alias nocapspty='sudo loadkeys =(sudo dumpkeys && echo "keycode 58 = Control")'
-alias qgulp="rm -r ~/Development/quad/quad/.app; gulp"
-
-# Network Manager aliases
-alias wifi="nmcli -f SSID,BSSID,CHAN,SECURITY,SIGNAL,BARS,ACTIVE dev wifi"
-alias connect="nmcli dev wifi connect"
 
 # Openssl
 alias ssl="openssl"
@@ -269,8 +261,9 @@ alias ssl="openssl"
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
-alias thesaurus='dict -d moby-thesaurus'
-alias thesaurus2='aiksaurus'
+# Thesaurus
+alias ths2='dict -d moby-thesaurus'
+alias ths='aiksaurus'
 
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
@@ -291,7 +284,7 @@ function psu {
   ps -U "${1:-$USER}" -o 'pid,%cpu,%mem,command' "${(@)argv[2,-1]}"
 }
 
-alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
+## alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
 
 typeset -A jumplist
 jumplist=(
@@ -324,7 +317,6 @@ alias lk='ll -Sr'        # Lists sorted by size, largest last.
 alias lt='ll -tr'        # Lists sorted by date, most recent last.
 alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
 alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
-alias sl='ls'            # I often screw this up.
 
 
 ############################################
@@ -628,3 +620,8 @@ setopt hist_save_no_dups         # do not write a duplicate event to the history
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
+
+source ~/.nvm/nvm.sh
+
+export QUADDIR="~/Development/quad"
+source ~/Development/quad/q4api/utility_belt/aliases.sh
