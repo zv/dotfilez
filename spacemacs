@@ -5,30 +5,25 @@
  dotspacemacs-configuration-layer-path '()
 
  ;; List of contribution to load.
- dotspacemacs-configuration-layers '(
-                                     ;; Too slow on startup
-                                     ;; c-c++
-                                     ;; Causing problems with heml
+ dotspacemacs-configuration-layers '(;; c-c++
                                      ;; erlang-elixir
+                                     ;; company-mode
                                      git
                                      html
                                      javascript
-                                     company-mode
-                                     zv
-                                     )
+                                     zv)
 
  ;; A list of packages and/or extensions that will not be install and loaded.
- dotspacemacs-excluded-packages '(aggressive-indent
-                                  google-translate
+ dotspacemacs-excluded-packages '(google-translate
                                   ;; We use our own here
                                   evil-org
-                                  ledger-mode
-                                  monokai
                                   rcirc
                                   rcirc-color
-                                  zenburn-theme))
-
-
+                                  
+                                  zenburn-theme
+                                  rainbow-delimiters
+                                  monokai
+                                  ))
 
 (setq-default
  ;; Specify the startup banner. If the value is an integer then the
@@ -50,11 +45,15 @@
  dotspacemacs-command-key ":"
  ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
  ;; the commands bound to the current keystrokes.
- dotspacemacs-guide-key-delay .6
- ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
- ;; overrides the default behavior of Emacs which recenters the point when
- ;; it reaches the top or bottom of the screen
- dotspacemacs-smooth-scrolling t
+ dotspacemacs-guide-key-delay 0.6
+ ;; If non nil the frame is fullscreen when Emacs starts up (Emacs 24.4+ only).
+ dotspacemacs-fullscreen-at-startup nil
+ ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
+ ;; Use to disable fullscreen animations in OSX."
+ dotspacemacs-fullscreen-use-non-native nil
+ ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only).
+ ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
+ dotspacemacs-maximized-at-startup nil
  ;; A value from the range (0..100), in increasing opacity, which describes the
  ;; transparency level of a frame when it's active or selected. Transparency can
  ;; be toggled through `toggle-transparency'.
@@ -65,7 +64,20 @@
  dotspacemacs-inactive-transparency 90
  ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
  dotspacemacs-mode-line-unicode-symbols t
+ ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
+ ;; overrides the default behavior of Emacs which recenters the point when
+ ;; it reaches the top or bottom of the screen
+ dotspacemacs-smooth-scrolling t
+ ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
+ dotspacemacs-smartparens-strict-mode nil
+ ;; If non nil advises quit functions to keep server open when quitting.
+ dotspacemacs-persistent-server nil
+ ;; The default package repository used if no explicit repository has been
+ ;; specified with an installed package.
+ ;; Not used for now.
+ dotspacemacs-default-package-repository nil
  )
+
 (setq-default
  ;; Org Mode
  org-directory (expand-file-name "~/org")
@@ -85,14 +97,17 @@
  js2-include-browser-externs      t)
 
 
-
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
-  (spacemacs/set-font "Source Code Pro" 12)
   (setenv "PATH"  (concat "/usr/local/bin" ":" (getenv "PATH")))
   (add-to-list 'exec-path "/usr/local/bin")
 
+  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                           ("ELPA" . "http://tromey.com/elpa/")
+                           ("gnu" . "http://elpa.gnu.org/packages/")))
+
+  ;; (setq spacemacs-erlang-elixir-use-edts t)
   ;; Configure load path
   ;; (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/lisp")
   (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/contrib/lisp" t)
@@ -141,6 +156,9 @@ This function is called at the very end of Spacemacs initialization."
   (global-linum-mode 1)
   (linum-relative-toggle)
 
+  ;; Configure Erlang
+  (setq edts-man-root "/usr/local/lib/erlang/erts-6.2")
+
   ;; persistent undo ----------------------------------------
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist
@@ -175,7 +193,6 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
- '(edts-man-root "/home/zv/.emacs.d/edts/doc/17.3")
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(highlight-symbol-colors
@@ -187,7 +204,6 @@ This function is called at the very end of Spacemacs initialization."
  '(org-agenda-files
    (quote
     ("~/org/gtd.org" "~/org/todo.org" "~/org/agenda.org" "~/org/quad.org")))
- '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
  '(term-default-bg-color "#fdf6e3")

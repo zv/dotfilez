@@ -14,4 +14,4 @@
 	url = https://github.com/zsh-users/zsh-completions.git
 [submodule "emacs.d"]
 	path = emacs.d
-	url = https://github.com/zv/spacemacs.git
+	url = https://github.com/zv/emacs.d.git
