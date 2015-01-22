@@ -1,4 +1,4 @@
-(setq smtpmail-auth-credentials (expand-file-name "~/.authinfo"))
+(setq smtpmail-auth-credentials (expand-file-name "~/.authinfo.gpg"))
 
 ;; Mail configuration ----------------------------------------------------------
 (setq gnus-select-method
@@ -54,6 +54,8 @@
 ;; Show Gravatar
 (setq gnus-treat-mail-gravatar 'head)
 
+(setq gnus-server-line-format "     {%(%h:%w%)} %s%a\n")
+
 ;; Add Keybindings ------------------------------------------
 (add-hook 'gnus-summary-mode-hook
           (lambda ()
@@ -64,15 +66,37 @@
             (define-key gnus-summary-mode-map next-buffer-key 'evil-window-next)
             ))
 
+(defun gnus-group-next-obj ()
+  (if (gnus-group-topic-p)
+      (gnus-topic-goto-next-topic)
+    (gnus-group-next-group)))
+
+(defun gnus-group-prev-obj ()
+  (if (gnus-group-topic-p)
+      (gnus-topic-goto-previous-topic)
+    (gnus-group-prev-group)))
+
 (add-hook 'gnus-group-mode-hook
           (lambda ()
             (define-key gnus-group-mode-map "j" 'gnus-group-next-group)
             (define-key gnus-group-mode-map "k" 'gnus-group-prev-group)
-            (define-key gnus-group-mode-map "f" 'gnus-group-jump-to-group)
+            (define-key gnus-group-mode-map "h" 'gnus-group-prev-obj)
+            (define-key gnus-group-mode-map "l" 'gnus-group-next-obj)
+            ;; If in topic mode these shul
+            ;; Yank and Paste Groups
+            ;; (define-key gnus-group-mode-map "D" 'gnus-group-yank-group)
+            ;; (define-key gnus-group-mode-map "p" 'gnus-group-kill-group)
             ;; Ensure our global bindings are not overridden
+            ;; M m 'gnus-group-mark-group
+            ;; visual etc.
+            ;; m (toggle mark)
+            
+            ;; z normally suspends
+            (define-key gnus-group-mode-map "z" nil)
             (define-key gnus-group-mode-map prev-buffer-key 'evil-window-prev)
             (define-key gnus-group-mode-map next-buffer-key 'evil-window-next)
             ))
+
 
 (add-hook 'gnus-article-mode-hook
           (lambda ()
@@ -83,10 +107,17 @@
               "mep" 'mml-secure-message-encrypt-pgp
               "mer" 'mml-unsecure-message)))
 
+(evil-leader/set-key-for-mode 'gnus-group-mode
+  "ms" 'server
+  )
 
-(require 'bbdb)
-(bbdb-initialize)
-(add-hook 'gnus-Startup-hook 'bbdb-insinuate-gnus)
+(evil-leader/set-key-for-mode 'gnus-message-mode
+  "mb" 'bbdb)
+
+
+;; Prefixes
+;; t - Topics
+
 
 (setq gnus-group-list-inactive-groups t)
 
