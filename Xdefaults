@@ -2,12 +2,13 @@
 Xft.dpi:       96
 Xft.antialias: true
 Xft.hinting:    true
-Xft.hintstyle:  hintmedium
+Xft.hintstyle:  hintfull
 Xft.rgba:       rgb
 *urlCommand:    /usr/bin/google-chrome %s
 
+Emacs.font: Inconsolata-14
 ! Use source-code-pro instead
-URxvt.font: xft:Inconsolata:size=14
+URxvt.font: xft:Source Code Pro:size=9,xft:Deja Vu Sans Mono:size=9
 
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
