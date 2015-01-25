@@ -29,7 +29,7 @@ setopt correct_all # Correct commands
 for cmd (
     ack cd cp ebuild gcc gist grep heroku
     ln man mkdir mv mysql rm nmcli ip ag
-    git
+    git npm ember
 ) alias $cmd="nocorrect $cmd"
 
 # Disable globbing.
@@ -44,6 +44,10 @@ export PAGER='less'
 export LANG='en_US.UTF-8'
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 export LC_CTYPE=$LANG
+
+# Configure GPG
+GPG_TTY=$(tty)
+export GPG_TTY
 
 # vim for manpages
 vman() {
@@ -285,6 +289,27 @@ function psu {
 }
 
 ## alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
+typeset -a harmony_args
+harmony_args=(--harmony
+ --harmony_shipping 
+ --harmony_modules 
+ --harmony_arrays 
+ --harmony_array_includes
+ --harmony_regexps 
+ --harmony_arrow_functions 
+ --harmony_proxies 
+ --harmony_sloppy
+ --harmony_unicode 
+ --harmony_tostring 
+ --harmony_classes
+ --harmony_object_literals 
+ --harmony_numeric_literals 
+ --harmony_strings
+ --harmony_scoping 
+ --harmony_templates)
+
+alias harmony="node ${(j: :)harmony_args}"
+
 
 typeset -A jumplist
 jumplist=(
@@ -368,6 +393,19 @@ yum_commands=(
 )
 
 for c in ${(@k)yum_commands}; do; alias $c="$yum_commands[$c]"; done
+
+############################################
+#  Package Management (npm)
+############################################
+typeset -A npm_commands
+
+npm_commands=(
+    npms 'npm search'  # Search NPM
+    npmi 'npm install' # Install a package
+)
+
+for c in ${(@k)npm_commands}; do; alias $c="$npm_commands[$c]"; done
+
 
 ############################################
 #  Grep
@@ -624,4 +662,4 @@ alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r 
 source ~/.nvm/nvm.sh
 
 export QUADDIR="~/Development/quad"
-source ~/Development/quad/q4api/utility_belt/aliases.sh
+# source ~/Development/quad/quad-api/utility_belt/aliases.sh
