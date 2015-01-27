@@ -11,6 +11,7 @@
  ;; List of contribution to load.
  dotspacemacs-configuration-layers '(c-c++
                                      erlang-elixir
+                                     clojure
                                      git
                                      html
                                      javascript
@@ -74,7 +75,7 @@
  ;; can be toggled through `toggle-transparency'.
  dotspacemacs-inactive-transparency 90
  ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
- dotspacemacs-mode-line-unicode-symbols nil
+ dotspacemacs-mode-line-unicode-symbols t
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
@@ -98,7 +99,15 @@
 
   ;; Customize which keys we will use to move forward and backward 
   (setq next-buffer-key "\M-j"
-        prev-buffer-key "\M-k"))
+        prev-buffer-key "\M-k")
+
+  (setq-default
+   ;; Evil-Escape should take longer
+   evil-escape-delay 0.2
+   spacemacs-erlang-elixir-use-edts t
+   git-enable-github-support t
+   evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode))
+  ) 
 
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
@@ -131,11 +140,11 @@ This function is called at the very end of Spacemacs initialization."
   (setq edts-man-root "/usr/local/lib/erlang/erts-6.2")
 
   ;; persistent undo ----------------------------------------
-  (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
+  ;; (setq undo-tree-auto-save-history t
+  ;;       undo-tree-history-directory-alist
+  ;;       `(("." . ,(concat spacemacs-cache-directory "undo"))))
+  ;; (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
+  ;;   (make-directory (concat spacemacs-cache-directory "undo")))
 
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
@@ -144,7 +153,8 @@ This function is called at the very end of Spacemacs initialization."
   (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
   ;; SmartParens ---------------------------------------------
-  (setq sp-autoescape-string-quote nil))
+  ;; (setq sp-autoescape-string-quote t)
+  )
 
 ;; Custom variables
 (custom-set-variables
@@ -158,6 +168,7 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
+ '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(highlight-symbol-colors
