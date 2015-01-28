@@ -33,6 +33,11 @@
 ;; RCONN aliases RECONNECT
 (defun erc-cmd-RCONN () (erc-cmd-RECONNECT))
 
+;; erc
+(setq erc-track-enable-keybindings t)
+
+
+
 ;; configure various ERC settings -----------------------------------------------
 (setq
  erc-nick "zv"
