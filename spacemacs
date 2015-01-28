@@ -1,13 +1,16 @@
 ;; -*- mode: emacs-lisp -*-
+
+;; Configuration Layers
+;; --------------------
+
 (setq-default
  ;; List of additional paths where to look for configuration layers.
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '()
 
  ;; List of contribution to load.
- dotspacemacs-configuration-layers '(;; c-c++
-                                     ;; erlang-elixir
-                                     ;; company-mode
+ dotspacemacs-configuration-layers '(c-c++
+                                     erlang-elixir
                                      git
                                      html
                                      javascript
@@ -15,15 +18,14 @@
 
  ;; A list of packages and/or extensions that will not be install and loaded.
  dotspacemacs-excluded-packages '(google-translate
-                                  ;; We use our own here
                                   evil-org
                                   rcirc
                                   rcirc-color
-                                  
-                                  zenburn-theme
-                                  rainbow-delimiters
-                                  monokai
-                                  ))
+                                  monokai-theme
+                                  zenburn-theme))
+
+;; Settings
+;; --------
 
 (setq-default
  ;; Specify the startup banner. If the value is an integer then the
@@ -31,8 +33,17 @@
  ;; then the banner is chosen randomly among the available banners, if
  ;; the value is nil then no banner is displayed.
  dotspacemacs-startup-banner nil
- ;; Default theme applied at startup
- dotspacemacs-default-theme 'leuven
+ ;; List of themes, the first of the list is loaded when spacemacs starts.
+ ;; Press <SPC> T n to cycle to the next theme in the list (works great
+ ;; with 2 themes variants, one dark and one light)
+ dotspacemacs-themes '(leuven solarized-dark solarized-light)
+ ;; Default font. The powerline-offset allows to quickly tweak the mode-line
+ ;; size to make separators look not too crappy.
+ dotspacemacs-default-font '("Source Code Pro"
+                             :size 18
+                             :weight normal
+                             :width normal
+                             :powerline-offset 2)
  ;; The leader key
  dotspacemacs-leader-key "SPC"
  ;; Major mode leader key is a shortcut key which is the equivalent of
@@ -63,11 +74,11 @@
  ;; can be toggled through `toggle-transparency'.
  dotspacemacs-inactive-transparency 90
  ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
- dotspacemacs-mode-line-unicode-symbols t
+ dotspacemacs-mode-line-unicode-symbols nil
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
- dotspacemacs-smooth-scrolling t
+ dotspacemacs-smooth-scrolling nil
  ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
  dotspacemacs-smartparens-strict-mode nil
  ;; If non nil advises quit functions to keep server open when quitting.
@@ -75,44 +86,16 @@
  ;; The default package repository used if no explicit repository has been
  ;; specified with an installed package.
  ;; Not used for now.
- dotspacemacs-default-package-repository nil
- )
-
-(setq-default
- ;; Org Mode
- org-directory (expand-file-name "~/org")
- ;; ERC
- zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
- ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
- vc-follow-symlinks         t
- ;; C Mode
- c-electric-mode t
- c-basic-offset  4
- ;; Javascript
- js2-global-externs '("module" "assert" "buster" "clearInterval" "clearTimeout" "console"
-                      "__dirname" "JSON" "location" "refute" "require" "setInterval" "setTimeout"
-                      "sinon" "Quad" "quad" "DS")
- js2-basic-offset                 2
- js2-include-node-externs         t
- js2-include-browser-externs      t)
-
+ dotspacemacs-default-package-repository nil)
 
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
   (setenv "PATH"  (concat "/usr/local/bin" ":" (getenv "PATH")))
-  (add-to-list 'exec-path "/usr/local/bin")
+  (add-to-list    'exec-path "/usr/local/bin")
 
-  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ("ELPA" . "http://tromey.com/elpa/")
-                           ("gnu" . "http://elpa.gnu.org/packages/")))
+  (setq spacemacs-erlang-elixir-use-edts t)
 
-  ;; (setq spacemacs-erlang-elixir-use-edts t)
-  ;; Configure load path
-  ;; (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/lisp")
-  (add-to-list 'load-path "~/.emacs.d/contrib/zv/extensions/org/contrib/lisp" t)
-
-  ;; (setq evilnc-hotkey-comment-operator "gc")
   ;; Customize which keys we will use to move forward and backward 
   (setq next-buffer-key "\M-j"
         prev-buffer-key "\M-k"))
@@ -120,23 +103,11 @@
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
-  ;; don't use tabs to indent
-  ;; (setq-default indent-tabs-mode nil)   
   ;; Powerline default separator
-
   (setq powerline-default-separator nil)
 
   ;; Set the non-normal prefix to Hyper key
   (setq evil-leader/non-normal-prefix "H-") 
-
-  ;; guide-key ----------------------------------------------
-  ;; Set up some new guide keys
-  (add-to-list 'guide-key/guide-key-sequence "C-j")
-  (add-to-list 'guide-key/guide-key-sequence "<f1>")
-  (add-to-list 'guide-key/guide-key-sequence "<f9>")
-
-  ;; erc
-  (setq erc-track-enable-keybindings t)
 
   ;; neotree
   (setq neo-theme 'ascii
@@ -172,14 +143,8 @@ This function is called at the very end of Spacemacs initialization."
   ;; git timemachine ----------------------------------------
   (add-hook 'git-timemachine-mode-hook 'evil-emacs-state)
 
-  ;; helm ---------------------------------------------------
-  (eval-after-load "helm"
-    '(progn
-      (define-key helm-map "\C-u" 'helm-delete-minibuffer-contents))) 
-
   ;; SmartParens ---------------------------------------------
   (setq sp-autoescape-string-quote nil))
-
 
 ;; Custom variables
 (custom-set-variables
@@ -204,6 +169,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-agenda-files
    (quote
     ("~/org/gtd.org" "~/org/todo.org" "~/org/agenda.org" "~/org/quad.org")))
+ '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
  '(term-default-bg-color "#fdf6e3")
