@@ -80,8 +80,17 @@
       ;; To save some time on exit. I don't use any other news reader.
       gnus-save-newsrc-file nil
       gnus-read-newsrc-file nil
+      ;; Commands should not attempt to go to the next unread article
+      gnus-summary-goto-unread 'never
       ;; Inline images?
       mm-attachment-override-types '("image/.*")
+
+      ;; allow retrieving images in HTML contents with the <img> tags
+      mm-inline-text-html-with-images t
+
+      ;; default directory for saving attachments
+      mm-default-directory "~/Downloads/"
+
       ;; Don't check on startup for groups higher than 3.
       gnus-activate-level 3
       ;; Use EWW's text renderer
@@ -146,6 +155,7 @@
 ;;   | u | Article |
 ;;   | p |         |
 ;;   +---+---------+
+
 (gnus-add-configuration
  '(article
    (horizontal 1.0
@@ -157,8 +167,14 @@
 (gnus-add-configuration
  '(summary
    (horizontal 1.0
-               (vertical 35 (group 1.0))
+               (vertical 25 (group 1.0))
                (vertical 1.0 (summary 1.0 point)))))
+
+(gnus-add-configuration
+ '(server
+   (horizontal 1.0
+               (vertical 40 (server 1.0 point))
+               (vertical 1.0 (browse 1.0)))))
 
 (if window-system
     (setq
