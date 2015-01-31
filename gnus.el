@@ -264,24 +264,43 @@
        "  "
        "%3{│%}"
        " "
-       "%1{%B%}"
+       "%B"
        "%s\n")
       ;; Adopt a previous line in for our false roots
       gnus-summary-make-false-root 'adopt)
 
 (setq gnus-thread-sort-functions
-      '(gnus-thread-sort-by-most-recent-date
-        gnus-thread-sort-by-number))
+      '(gnus-thread-sort-by-number
+        gnus-thread-sort-by-most-recent-date))
 
 ;; Add Keybindings ------------------------------------------
-(defun zv/gnus-summary-mode-hook  ()
-  (define-key gnus-summary-mode-map "j" 'gnus-summary-next-article)
-  (define-key gnus-summary-mode-map "k" 'gnus-summary-prev-article)
+(defun zv/gnus-summary-mode-hook ()
+  (gnus-define-keys gnus-summary-mode-map
+    "J" gnus-summary-next-unread-article
+    "K" gnus-summary-prev-unread-article
+    "j" gnus-summary-next-article
+    "k" gnus-summary-prev-article
+    "\M-\C-j" gnus-summary-next-same-subject
+    "\M-\C-k" gnus-summary-prev-same-subject
+    "\C-j" gnus-summary-next-unread-subject
+    "\C-k" gnus-summary-prev-unread-subject
+    "/" gnus-summary-search-article-forward
+    "?" gnus-summary-search-article-backward
+    "P" gnus-summary-refer-parent-article
+    "n" gnus-summary-repeat-search-article-forward
+    "p" gnus-summary-repeat-search-article-backward
+    "a" gnus-summary-post-news
+    "!" gnus-summary-tick-article-forward
+    "x" gnus-summary-mark-as-expirable
+    "|" gnus-summary-pipe-output
+    "q" gnus-summary-exit
+    "Q" gnus-summary-exit-no-update
+    "<" gnus-summary-beginning-of-article
+    ">" gnus-summary-end-of-article
+    "H" gnus-summary-toggle-header
+    "x" gnus-summary-enter-digest-group)
 
-
-  ;; previously F
-  ;; (gnus-summary-followup-with-original N &optional FORCE-NEWS)
-  (gnus-define-keys (gnus-summary-limit-map "F" gnus-summary-mode-map)
+  (gnus-define-keys (gnus-summary-limit-map "f" gnus-summary-mode-map)
     "/" gnus-summary-limit-to-subject
     "n" gnus-summary-limit-to-articles
     "b" gnus-summary-limit-to-bodies
@@ -298,7 +317,6 @@
     "T" gnus-summary-limit-include-thread
     "d" gnus-summary-limit-exclude-dormant
     "t" gnus-summary-limit-to-age
-    "." gnus-summary-limit-to-unseen
     "x" gnus-summary-limit-to-extra
     "p" gnus-summary-limit-to-display-predicate
     "E" gnus-summary-limit-include-expunged
@@ -309,12 +327,34 @@
     "S" gnus-summary-limit-to-singletons
     "r" gnus-summary-limit-to-replied
     "R" gnus-summary-limit-to-recipient
-    "A" gnus-summary-limit-to-address)
+    "A" gnus-summary-limit-to-address) 
 
-
-  
-  (mapc (lambda (gk) (guide-key/add-local-guide-key-sequence gk))
-        '("M" "/" "Y" "S" "V" "A" "X" "B" "O" "W" "F"))
+  (gnus-define-keys (gnus-summary-thread-map "t" gnus-summary-mode-map)
+    ;; Vim bindings
+    "j" gnus-summary-next-thread
+    "k" gnus-summary-prev-thread
+    "v" gnus-summary-refer-thread
+    "r" gnus-summary-refer-references
+    ;; regular bindings
+    "k" gnus-summary-kill-thread
+    "E" gnus-summary-expire-thread
+    "l" gnus-summary-lower-thread
+    "i" gnus-summary-raise-thread
+    "T" gnus-summary-toggle-threads
+    "t" gnus-summary-rethread-current
+    "^" gnus-summary-reparent-thread
+    "\M-^" gnus-summary-reparent-children
+    "s" gnus-summary-show-thread
+    "S" gnus-summary-show-all-threads
+    "h" gnus-summary-hide-thread
+    "H" gnus-summary-hide-all-threads
+    "n" gnus-summary-next-thread
+    "p" gnus-summary-prev-thread
+    "u" gnus-summary-up-thread
+    "o" gnus-summary-top-thread
+    "d" gnus-summary-down-thread
+    "#" gnus-uu-mark-thread
+    "\M-#" gnus-uu-unmark-thread)
 
   ;; Ensure our global bindings are not overridden
   (define-key gnus-summary-mode-map prev-buffer-key 'evil-window-prev)
