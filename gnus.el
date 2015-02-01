@@ -186,6 +186,7 @@
      gnus-sum-thread-tree-vertical        "┃"
      gnus-sum-thread-tree-leaf-with-other "┣━❯ "
      gnus-sum-thread-tree-single-leaf     "┗━❯ "
+
      ;; Summary Mode Marks
      gnus-score-over-mark  ?↑   
      gnus-score-below-mark ?↓ 
@@ -365,10 +366,16 @@
 ;; --------------------
 ;; Group Mode
 ;; --------------------
-(setq gnus-group-line-format "%P%5y:%B%(%uG%) %M%S%p \n")
+(setq gnus-group-line-format "%P%4y:%(%uG%) %M%S%p \n")
 
 (defun gnus-user-format-function-G (_arg)
-  (replace-regexp-in-string "\\(gwene.com\\|gmane\\)\.\\(comp.\\)?" "" gnus-tmp-qualified-group))
+  (replace-regexp-in-string
+   "\\(gwene\.\\|feedburner\.\\)?"
+   ""
+   (replace-regexp-in-string
+    "\\(gwene.com\\|gmane\\)\.\\(comp.\\)?"
+    ""
+    gnus-tmp-qualified-group)))
 
 ;; • Keep track of the last time we opened this group.
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
