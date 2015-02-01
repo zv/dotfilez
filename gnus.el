@@ -385,67 +385,74 @@
 
   ;; • Define our keys
   (evil-define-key 'motion gnus-group-mode-map
-    ;;"/"  'evil-search-forward
-    ;; "?"  'evil-search-backward
-    "r"  'gnus-topic-get-new-news-this-topic
-    (kbd "RET") ''gnus-topic-select-group
-    (kbd "M-RET") ''gnus-group-visible-select-group
-    "=" 'gnus-group-select-group
-    "\r" 'gnus-group-select-group
-    "\M-\r" 'gnus-group-quick-select-group
-    "\M- " 'gnus-group-visible-select-group
-    "f" 'gnus-group-jump-to-group
-    "J" 'gnus-group-next-unread-group
-    "K" 'gnus-group-prev-unread-group
-    "j" 'gnus-group-next-group
-    "k" 'gnus-group-prev-group
-    "[" 'gnus-topic-goto-previous-topic
-    "]" 'gnus-topic-goto-next-topic
-    "\M-j" 'gnus-group-next-unread-group-same-level
-    "\M-k" 'gnus-group-prev-unread-group-same-level
-    ;;"," 'gnus-group-best-unread-group
-    ;;"." 'gnus-group-first-unread-group
-    "u" 'gnus-group-unsubscribe-current-group
-    "c" 'gnus-group-catchup-current
-    "C" 'gnus-group-catchup-current-all
-    "\M-c" 'gnus-group-clear-data
-    "l" 'gnus-group-list-groups
-    "L" 'gnus-group-list-all-groups
-    "m" 'gnus-group-mail
-    "i" 'gnus-group-news
-    "g" 'gnus-group-get-new-news
-    "\M-g" 'gnus-group-get-new-news-this-group
-    "R" 'gnus-group-restart
-    "B" 'gnus-group-browse-foreign-server
-    "b" 'gnus-group-check-bogus-groups
-    "a" 'gnus-group-post-news
+    ;;"/"          'evil-search-forward
+    ;; "?"         'evil-search-backward
+    "r"            'gnus-topic-get-new-news-this-topic
+    (kbd "RET")    'gnus-topic-select-group
+    (kbd "M-RET")  'gnus-group-visible-select-group
+    "="            'gnus-topic-select-group
+    "\r"           'gnus-topic-select-group
+
+    "\M-\r"        'gnus-group-quick-select-group
+    "\M- "         'gnus-group-visible-select-group
+    "f"            'gnus-group-jump-to-group
+    "J"            'gnus-group-next-unread-group
+    "K"            'gnus-group-prev-unread-group
+    ;; "j"         'gnus-group-next-group
+    ;; "k"         'gnus-group-prev-group
+    "["            'gnus-topic-goto-previous-topic
+    "]"            'gnus-topic-goto-next-topic
+    ;;","          'gnus-group-best-unread-group
+    ;;"."          'gnus-group-first-unread-group
+    "u"            'gnus-group-unsubscribe-current-group
+    "c"            'gnus-topic-catchup-articles
+
+    ;; Topics
+    [tab]          'gnus-topic-indent
+    [(meta tab)]   'gnus-topic-unindent
+
+    "C"            'gnus-group-catchup-current-all
+    "\M-c"         'gnus-group-clear-data
+    "l"            'gnus-group-list-groups
+    "L"            'gnus-group-list-all-groups
+    "m"            'gnus-group-mail
+    "i"            'gnus-group-news
+    "g"            'gnus-group-get-new-news
+    "\M-g"         'gnus-group-get-new-news-this-group
+    "R"            'gnus-group-restart
+    "B"            'gnus-group-browse-foreign-server
+    "b"            'gnus-group-check-bogus-groups
+    "a"            'gnus-group-post-news
     ;; visual 
-    ;; "x" 'gnus-group-kill-region
-    "\C-c\C-x" 'gnus-group-expire-articles
-    "\C-c\M-\C-x" 'gnus-group-expire-all-groups
-    "V" 'gnus-version
-    "q" 'gnus-group-exit
-    "Q" 'gnus-group-quit
-    "^" 'gnus-group-enter-server-mode
-    "s" 'gnus-group-sort-groups
-    "t" 'gnus-topic-mode
-    "\M-&" 'gnus-group-universal-argument
-    "o" 'gnus-group-mark-group
-    "\M-o" 'gnus-group-unmark-group
-    
-    "Du" 'gnus-sieve-update
-    "Dg" 'gnus-sieve-generate
+    ;; "x"         'gnus-group-kill-region
+    "\C-c\C-x"     'gnus-group-expire-articles
+    "\C-c\M-\C-x"  'gnus-group-expire-all-groups
+    "q"            'gnus-group-exit
+    "Q"            'gnus-group-quit
+    "^"            'gnus-group-enter-server-mode
+    "t"            'gnus-topic-mode
+    "\M-&"         'gnus-group-universal-argument
+    )
 
-    "Sl" 'gnus-group-set-current-level
-    "St" 'gnus-group-unsubscribe-current-group
-    "Ss" 'gnus-group-unsubscribe-group
-    "Sk" 'gnus-group-kill-group
-    "Sy" 'gnus-group-yank-group
-    "Sw" 'gnus-group-kill-region
-    "S\C-k" 'gnus-group-kill-level
-    "Sz" 'gnus-group-kill-all-zombies)
-
+  (mapc
+   (lambda (state)
+     (evil-define-key state gnus-group-mode-map
+       "o"     'gnus-group-mark-group
+       "\M-o"  'gnus-group-unmark-group
+       "s"     'gnus-group-sort-groups
+       "M"     'gnus-topic-move-group
+       "Sl"    'gnus-group-set-current-level
+       "St"    'gnus-group-unsubscribe-current-group
+       "Ss"    'gnus-group-unsubscribe-group
+       "Sk"    'gnus-group-kill-group
+       "Sy"    'gnus-group-yank-group
+       "Sw"    'gnus-group-kill-region
+       "S\C-k" 'gnus-group-kill-level
+       "Sz"    'gnus-group-kill-all-zombies))
+   '(motion normal visual))
+  
   (evil-leader/set-key-for-mode 'gnus-group-mode
+    "m/"   'gnus-group-make-nnir-group
     "msn" 'gnus-group-save-newsrc
     ;; Other
     "mkl" 'gnus-group-edit-local-kill
@@ -476,15 +483,54 @@
     "mgR" 'gnus-group-make-rss-group
     "mgM" 'gnus-group-read-ephemeral-group
     "mg<backspace>" 'gnus-group-delete-group
-    ;; Sort
-    "mss" 'gnus-group-sort-groups
-    "msa" 'gnus-group-sort-groups-by-alphabet
-    "msu" 'gnus-group-sort-groups-by-unread
-    "msl" 'gnus-group-sort-groups-by-level
-    "msv" 'gnus-group-sort-groups-by-score
-    "msr" 'gnus-group-sort-groups-by-rank
-    "msm" 'gnus-group-sort-groups-by-method
-    "msn" 'gnus-group-sort-groups-by-real-name)
+
+    ;; sieve
+    "mvu" 'gnus-sieve-update
+    "mvg" 'gnus-sieve-generate
+
+    ;; Listing of groups
+    "mak" 'gnus-group-list-killed
+    "maz" 'gnus-group-list-zombies
+    "mas" 'gnus-group-list-groups
+    "mau" 'gnus-group-list-all-groups
+    "maA" 'gnus-group-list-active
+    "maa" 'gnus-group-apropos
+    "mad" 'gnus-group-description-apropos
+    "mam" 'gnus-group-list-matching
+    "maM" 'gnus-group-list-all-matching
+    "mal" 'gnus-group-list-level
+    "mac" 'gnus-group-list-cached
+    "ma?" 'gnus-group-list-dormant
+    "ma!" 'gnus-group-list-ticked
+
+    "mss" 'gnus-topic-sort-groups
+    "msa" 'gnus-topic-sort-groups-by-alphabet
+    "msu" 'gnus-topic-sort-groups-by-unread
+    "msl" 'gnus-topic-sort-groups-by-level
+    "mse" 'gnus-topic-sort-groups-by-server
+    "msv" 'gnus-topic-sort-groups-by-score
+    "msr" 'gnus-topic-sort-groups-by-rank
+    "msm" 'gnus-topic-sort-groups-by-method
+
+    "mtn" 'gnus-topic-create-topic
+    "mt#" 'gnus-topic-mark-topic
+    "mt\M-#" 'gnus-topic-unmark-topic
+    "mtm" 'gnus-topic-move-group
+    "mtD" 'gnus-topic-remove-group
+    "mtc" 'gnus-topic-copy-group
+    "mth" 'gnus-topic-hide-topic
+    "mts" 'gnus-topic-show-topic
+    "mtj" 'gnus-topic-jump-to-topic
+    "mtM" 'gnus-topic-move-matching
+    "mtC" 'gnus-topic-copy-matching
+    "mtr" 'gnus-topic-rename
+
+    ;;"mt\M-p" 'gnus-topic-goto-previous-topic
+    ;;"mt\M-n" 'gnus-topic-goto-next-topic
+    ;;"mt\C-i" 'gnus-topic-indent
+    ;;"mt\t" 'gnus-topic-indent
+    ;;"mt\177" 'gnus-topic-delete
+    "mtH" 'gnus-topic-toggle-display-empty-topics)
  
   (guide-key/add-local-guide-key-sequence "G")
   (guide-key/add-local-guide-key-sequence "T")
@@ -501,10 +547,15 @@
 (add-hook 'gnus-group-mode-hook 'zv/gnus-group-mode-hook)
 
 ;; --------------------
+;; Topic Mode
+;; --------------------
+(setq gnus-topic-indent-level 2
+      gnus-topic-line-format "%i[ %(%{%n%}%) ]%v\n"
+      )
+
+;; --------------------
 ;; Article Mode
 ;; --------------------
-(require 'gnus-art)
-
 (setq gnus-visible-headers
       "^From:\\|^To:\\|^Subject:\\|^Date:\\|^User-Agent:\\|^X-Mailer:"
       gnus-summary-display-arrow t
