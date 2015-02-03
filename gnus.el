@@ -564,49 +564,49 @@
 
 ;; format specification for the article mode line
 (setq gnus-article-mode-line-format "%S%m")
+(evil-set-initial-state 'gnus-article-mode-map 'motion )
 
 (defun zv/gnus-article-mode-hook ()
-  (zv/define-keymap gnus-article-mode-map
-                    '(("n" . shr-next-link)
-                      ("p" . shr-previous-link)))
-  
-    )
+  (evil-set-initial-state 'gnus-article-mode 'motion)
+
+  (evil-set-initial-state 'gnus-group-mode 'motion)
+
+  (evil-leader/set-key-for-mode gnus-article-mode-map
+    "maf" 'mml-attach-file
+    "ms"  'gnus-article-edit-done
+    "mQ"  'gnus-article-edit-done)
+
+  (evil-define-key 'motion gnus-article-mode-map
+    "gt"    'message-goto-to
+    "go"    'message-goto-from
+    "gb"    'message-goto-bcc
+    "gc"    'message-goto-cc
+    "gs"    'message-goto-subject
+    "gr"    'message-goto-reply-to
+    "gn"    'message-goto-newsgroups
+    "gf"    'message-goto-followup-to
+    "gm"    'message-goto-mail-followup-to
+    "gu"    'message-goto-summary
+    "gi"    'message-insert-or-toggle-importance
+    "ga"    'message-generate-unsubscribed-mail-followup-to
+    ;; Link browsing
+    "n"   'shr-next-link
+    "p"   'shr-previous-link
+
+    "gb"    'message-goto-body
+    "gi"    'message-goto-signature
+
+    "Mt"    'message-insert-to
+    "Mn"    'message-insert-newsgroups
+
+    "So"    'message-sort-headers
+    "de"    'message-elide-region
+    "dz"    'message-kill-to-signature
+
+    "\M-\r" 'message-newline-and-reformat
+    "\t"    'message-tab))
 
 (add-hook 'gnus-article-mode-hook 'zv/gnus-article-mode-hook)
-
-;; Article Edit Mode
-(evil-set-initial-state 'gnus-article-edit-mode-map 'normal)
-(evil-leader/set-key-for-mode gnus-article-edit-mode-map
-  "maf" 'mml-attach-file
-  "ms" 'gnus-article-edit-done
-  "mQ" 'gnus-article-edit-done)
-
-(evil-define-key 'normal gnus-article-edit-mode-map
-  "gt"    'message-goto-to
-  "go"    'message-goto-from
-  "gb"    'message-goto-bcc
-  "gc"    'message-goto-cc
-  "gs"    'message-goto-subject
-  "gr"    'message-goto-reply-to
-  "gn"    'message-goto-newsgroups
-  "gf"    'message-goto-followup-to
-  "gm"    'message-goto-mail-followup-to
-  "gu"    'message-goto-summary
-  "gi"    'message-insert-or-toggle-importance
-  "ga"    'message-generate-unsubscribed-mail-followup-to
-
-  "gb"    'message-goto-body
-  "gi"    'message-goto-signature
-
-  "Mt"    'message-insert-to
-  "Mn"    'message-insert-newsgroups
-
-  "So"    'message-sort-headers
-  "de"    'message-elide-region
-  "dz"    'message-kill-to-signature
-
-  "\M-\r" 'message-newline-and-reformat
-  "\t"    'message-tab)
 
 ;; --------------------
 ;; Message Mode
@@ -616,7 +616,6 @@
 (evil-set-initial-state 'message-mode 'normal)
 
 (defun zv/message-mode-hook ()
-  (evil-set-initial-state 'message-mode 'normal)
   ;; Initialize BBDB
   ;; (bbdb-initialize 'message)
   ;; (bbdb-initialize 'gnus)
@@ -742,7 +741,7 @@
 (setq gnus-cacheable-groups "^nnimap")
 
 ;; avoid caching your nnml and nnfolder groups
-(setq gnus-uncacheable-groups "^nnml\\|^nnfolder")
+(setq gnus-uncacheable-groups "^nnml\\|^nnfolder\\|^nnrss")
 
 ;; --------------------
 ;; Message Encryption
@@ -805,7 +804,6 @@
    (define-key gnus-article-mode-map (kbd "C-c k") 'gnus-article-receive-epg-keys)
    (define-key gnus-summary-mode-map (kbd "C-c k") 'gnus-article-receive-epg-keys)))
 
-
 ;; --------------------
 ;; Forwarding
 ;; --------------------
@@ -821,3 +819,15 @@
 
 ;; forwarded messages will just be copied inline to the new message
 (setq message-forward-as-mime nil)
+
+;; --------------------
+;; Forwarding
+;; --------------------
+(use-package mailcap
+  :defer t
+  :config
+  (progn
+    (add-to-list 'mailcap-mime-extensions
+                 '(".doc" . "application/msword"))
+    (add-to-list 'mailcap-mime-extensions
+                 '(".ppt" . "application/vnd.ms-powerpoint"))))
