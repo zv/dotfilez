@@ -99,8 +99,6 @@
                                      "#cat-v"
                                      "#elixir-lang" 
                                      "#erlang"
-                                     "#ember"
-                                     "#haskell" 
                                      "#postgresql" 
                                      "#pwning"
                                      "#noisebridge"
@@ -109,12 +107,7 @@
                                      "#reactjs" 
                                      "##re"
                                      "#radare"
-                                     "#stackvm"
-                                     "#sequelize"
-                                     "#zsh"
-                                     "#xmonad"
-                                     "#emacs"
-                                     "#scheme")
+                                     "#emacs")
                                     ("irc.mozilla.org"
                                      "#rust"
                                      "#rust-internals")
