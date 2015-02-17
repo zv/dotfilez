@@ -46,3 +46,5 @@ lib/vim
 *.elc
 # !emacs.d/private/zv/*
 # emacs.d
+
+*npm-debug.log

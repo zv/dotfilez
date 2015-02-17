@@ -4,6 +4,29 @@
 # 2009
 
 #  Environment
+path=(
+    $path
+    /home/zv/Downloads/firefox
+    /usr/local/pgsql/bin
+    /usr/local/heroku/bin
+    ~/bin
+    $GOROOT/bin
+    /usr/local/{bin,sbin}
+    /usr/local/lib/
+    /usr/local/plan9/bin # Userspace From Plan9 binaries
+)
+
+# Load our completion functions
+fpath=(
+    ~/.zsh/zsh-completions/src
+    ~/.zsh/completion
+    $HOME/.zsh/functions
+    $fpath
+)
+
+# Run our external modules
+for fn (~/.zsh/modules/*.zsh) source $fn
+
 typeset -gU cdpath fpath path mailpath
 
 setopt BRACE_CCL          # Allow brace character class list expansion.
@@ -29,7 +52,7 @@ setopt correct_all # Correct commands
 for cmd (
     ack cd cp ebuild gcc gist grep heroku
     ln man mkdir mv mysql rm nmcli ip ag
-    git npm ember
+    git npm ember yum
 ) alias $cmd="nocorrect $cmd"
 
 # Disable globbing.
@@ -44,20 +67,13 @@ export PAGER='less'
 export LANG='en_US.UTF-8'
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 export LC_CTYPE=$LANG
+export BROWSER==google-chrome
+export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+
 
 # Configure GPG
 GPG_TTY=$(tty)
 export GPG_TTY
-
-# vim for manpages
-vman() {
-  vim -c "SuperMan $*"
-
-  if [ "$?" != "0" ]; then
-    echo "No manual entry for $*"
-  fi
-}
-export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 # build stuff
 export CXX=g++
@@ -68,30 +84,11 @@ export AR=ar
 export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 
-path=(
-    /home/zv/Downloads/firefox
-    /usr/local/pgsql/bin
-    /usr/local/heroku/bin
-    ~/bin
-    $GOROOT/bin
-    /usr/local/{bin,sbin}
-    /usr/local/lib/
-    /usr/local/plan9/bin # Userspace From Plan9 binaries
-    $path
-)
-
-# Load our completion functions
-fpath=(
-    ~/.zsh/zsh-completions/src
-    ~/.zsh/completion
-    $fpath
-)
-
-for fn (~/.zsh/extra/*.zsh) source $fn
-
 ############################################
 #  Theme
 #############################################
+zstyle ':prezto:module:node:info:version' format '%v'
+
 function spectrum_ls() {
     string=${1-Test}
     if [[ $1 == "block" ]]
@@ -101,6 +98,20 @@ function spectrum_ls() {
     for code in {000..255}; do
         print -P -- "$code: %F{$code}${string}%f"
     done
+}
+
+
+## Determines if our path has a `node_modules` directory in it's parent
+## directory tree
+function is_node_project {
+    local checkpath=${PWD:a}
+    until [[ $checkpath == '/' ]] {
+              if [[ -d $checkpath/node_modules ]] {
+                     return 0
+                 }
+                 checkpath=${checkpath:a:h}
+          }
+    false
 }
 
 # If we're in a dumb terminal then dont play fancy pants with our prompt
@@ -123,7 +134,14 @@ else
         fi
     }
 
+    print_node_version() {
+        if is_node_project; then
+            print "$node_info[version]"
+        fi
+    }
+
     autoload -Uz vcs_info
+    autoload -Uz node-info node-doc
     base_vcs_style='%c%b%u%f'
     zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
     zstyle ':vcs_info:*' check-for-changes true
@@ -132,9 +150,10 @@ else
     zstyle ':vcs_info:*' unstagedstr '*'
     zstyle ':vcs_info:*' formats " [$base_vcs_style]"
     zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
-    precmd () { vcs_info }
+    precmd () { vcs_info; node-info }
 
     PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} $(zle_vim_prompt_notifier) '
+    # RPROMPT='$(print_node_version)'
 fi
 
 # ls colors
@@ -229,6 +248,7 @@ alias -- -='cd -'        # This has always irritated me
 # Define general aliases.
 alias _='sudo'
 alias e="emacsclient -t"
+alias edit="emacs -nw"
 alias mail='emacs -nw --eval="(gnus)"'
 alias cp="${aliases[cp]:-cp} -i"
 alias ln="${aliases[ln]:-ln} -i"
@@ -288,24 +308,82 @@ function psu {
   ps -U "${1:-$USER}" -o 'pid,%cpu,%mem,command' "${(@)argv[2,-1]}"
 }
 
+function dut {
+  (( $# == 0 )) && set -- *
+
+  if grep -q -i 'GNU' < <(du --version 2>&1); then
+    du -khsc "$@" | sort -h -r
+  else
+    local line size name
+    local -a record
+
+    while IFS=$'\n' read line; do
+      record=(${(z)line})
+      size="$(($record[1] / 1024.0))"
+      name="$record[2,-1]"
+      printf "%9.1LfM    %s\n" "$size" "$name"
+    done < <(du -kcs "$@") | sort -n -r
+  fi
+}
+
+# Sort connection state
+sortcons() {
+    netstat -nat |awk '{print $6}'|sort|uniq -c|sort -rn
+}
+
+# On the connected IP sorted by the number of connections
+sortconip() {
+    netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n
+}
+
+# top20 of Find the number of requests on 80 port
+req20() {
+    netstat -anlp|grep 80|grep tcp|awk '{print $5}'|awk -F: '{print $1}'|sort|uniq -c|sort -nr|head -n20
+}
+
+# top20 of Using tcpdump port 80 access to view
+http20() {
+    sudo tcpdump -i eth0 -tnn dst port 80 -c 1000 | awk -F"." '{print $1"."$2"."$3"."$4}' | sort | uniq -c | sort -nr |head -20
+}
+
+# Printing process according to the port number
+port_pro() {
+    netstat -ntlp | grep "$(retval $1)" | awk '{print $7}' | cut -d/ -f1
+}
+
+# gather external ip address
+getextaddr() {
+    curl http://ifconfig.me
+}
+
+alias ping='ping -c 5'
+alias clr='clear;echo "Currently logged in on $(tty), as $USER in directory $PWD."'
+alias psmem='ps -e -orss=,args= | sort -b -k1,1n'
+alias psmem10='ps -e -orss=,args= | sort -b -k1,1n| head -10'
+# get top process eating cpu if not work try excute : export LC_ALL='C'
+alias pscpu='ps -e -o pcpu,cpu,nice,state,cputime,args|sort -k1 -nr'
+alias pscpu10='ps -e -o pcpu,cpu,nice,state,cputime,args|sort -k1 -nr | head -10'
+# top10 of the history
+alias hist10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
+
 ## alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
 typeset -a harmony_args
 harmony_args=(--harmony
- --harmony_shipping 
- --harmony_modules 
- --harmony_arrays 
+ --harmony_shipping
+ --harmony_modules
+ --harmony_arrays
  --harmony_array_includes
- --harmony_regexps 
- --harmony_arrow_functions 
- --harmony_proxies 
+ --harmony_regexps
+ --harmony_arrow_functions
+ --harmony_proxies
  --harmony_sloppy
- --harmony_unicode 
- --harmony_tostring 
+ --harmony_unicode
+ --harmony_tostring
  --harmony_classes
- --harmony_object_literals 
- --harmony_numeric_literals 
+ --harmony_object_literals
+ --harmony_numeric_literals
  --harmony_strings
- --harmony_scoping 
+ --harmony_scoping
  --harmony_templates)
 
 alias harmony="node ${(j: :)harmony_args}"
@@ -317,9 +395,6 @@ jumplist=(
     fez "vim ~/.zshrc"
     fev "vim ~/.vimrc"
 )
-
-export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
-
 
 ## xclipboard ##############################################
 if (( $+commands[xclip] )); then
@@ -342,7 +417,6 @@ alias lk='ll -Sr'        # Lists sorted by size, largest last.
 alias lt='ll -tr'        # Lists sorted by date, most recent last.
 alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
 alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
-
 
 ############################################
 #  Mix
@@ -400,8 +474,8 @@ for c in ${(@k)yum_commands}; do; alias $c="$yum_commands[$c]"; done
 typeset -A npm_commands
 
 npm_commands=(
-    npms 'npm search'  # Search NPM
-    npmi 'npm install' # Install a package
+    nps 'npm search'  # Search NPM
+    npi 'npm install' # Install a package
 )
 
 for c in ${(@k)npm_commands}; do; alias $c="$npm_commands[$c]"; done
@@ -466,6 +540,7 @@ alias glgg='git log --graph --max-count=5'
 alias gss='git status -s'
 alias ga='git add'
 alias gm='git merge'
+alias grb='git reset HEAD'
 alias grh='git reset HEAD'
 alias grhh='git reset HEAD --hard'
 
@@ -619,7 +694,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 ## NPM
-eval "$(npm completion 2>/dev/null)"
+# eval "$(npm completion 2>/dev/null)"
 
 #############################################
 # Directories
@@ -634,6 +709,13 @@ setopt extended_glob
 
 alias d='dirs -v'
 for index ({1..9}) alias "$index"="cd +${index}"; unset index
+
+local gnu_global_dir=$HOME/.gtags/
+if [[ ! -d $gnu_global_dir ]]; then
+    mkdir $gnu_global_dir
+fi
+
+export GTAGSLIBPATH=$gnu_global_dir
 
 #############################################
 # History
@@ -658,8 +740,6 @@ setopt hist_save_no_dups         # do not write a duplicate event to the history
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
-
-source ~/.nvm/nvm.sh
 
 export QUADDIR="~/Development/quad"
 # source ~/Development/quad/quad-api/utility_belt/aliases.sh

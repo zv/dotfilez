@@ -1,0 +1,51 @@
+#compdef mix 
+#autoload
+
+# Elixir mix zsh completion
+if [[ -n helpText ]]; then
+    helpText=($(mix help))
+    export helpText
+fi;
+
+# Split our mix task list into a dict
+local -a mixHelp mixTasks
+mixHelp=(${(ps:mix:)helpText//[[:space:]]*mix /})
+mixTasks=($mixHelp[2,-2])
+
+declare -a taskDesc
+
+taskDesc=(${${${mixTasks/ \# /:}//#[[:space:]]/}//[[:space:]](#c2,)})
+# print $taskDesc
+taskDesc+='--help:Describe available tasks'
+taskDesc+='--version:Prints the Elixir version information'
+
+__task_list ()
+{
+    declare -a tasks 
+    tasks=(${(@)$(mix help --names)})
+    _wanted tasks expl 'help' compadd $tasks
+}
+
+local expl
+
+local curcontext="$curcontext" state line
+declare -A opt_args
+
+_arguments -C \
+    ':command:->command' \
+    '*::options:->options'
+
+case $state in
+  (command)
+      _describe -t commands "mix subcommand" taskDesc
+      return
+  ;;
+
+  (options)
+    case $line[1] in
+      (help)
+         _arguments ':feature:__task_list' 
+    esac
+  ;;
+esac
+
