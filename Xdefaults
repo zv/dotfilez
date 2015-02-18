@@ -6,7 +6,7 @@ Xft.hintstyle:  hintfull
 Xft.rgba:       rgb
 *urlCommand:    /usr/bin/google-chrome %s
 
-Emacs.font: Inconsolata-14
+! Emacs.font: Inconsolata-14
 ! Use source-code-pro instead
 URxvt.font: xft:Source Code Pro:size=9,xft:Deja Vu Sans Mono:size=9
 
