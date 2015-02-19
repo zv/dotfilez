@@ -100,8 +100,12 @@ function setup_env() {
         mtr
         mutt
         ncrack
+        git-extras
+        gitflow
+        global # gtags
         nmap
         ntop
+        hping3
         rlwrap
         rpmdevtools
         rxvt-unicode-256color-ml
