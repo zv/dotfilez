@@ -16,7 +16,7 @@
 ;; regularly check gmail for new messges
 ;; Primary Mailbox (GMane)
 ;; :q shoudl exit gnus
-(setq gnus-select-method '(nntp "news.gmane.org")) 
+(setq gnus-select-method '(nntp "news.gmane.org"))
 
 ;;; Ask encyption password once
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
@@ -66,7 +66,7 @@
 ;; --------------------
 
 (setq gnus-parameters
-      '(("\\`nnrss:" 
+      '(("\\`nnrss:"
          (display . all)
          (mm-discouraged-alternatives nil))))
 
@@ -115,7 +115,7 @@
 
       ;;  Gnus will only know about the groups in my `.newsrc' file
      gnus-active-file nil  ; speed-up
-     
+
      ;; List our inactive groups
      gnus-group-list-inactive-groups t
 
@@ -450,7 +450,7 @@
        "S\C-k" 'gnus-group-kill-level
        "Sz"    'gnus-group-kill-all-zombies))
    '(motion normal visual))
-  
+
   (evil-leader/set-key-for-mode 'gnus-group-mode
     "m/"   'gnus-group-make-nnir-group
     "msn" 'gnus-group-save-newsrc
@@ -531,7 +531,7 @@
     ;;"mt\t" 'gnus-topic-indent
     ;;"mt\177" 'gnus-topic-delete
     "mtH" 'gnus-topic-toggle-display-empty-topics)
- 
+
   (guide-key/add-local-guide-key-sequence "G")
   (guide-key/add-local-guide-key-sequence "T")
   (guide-key/add-local-guide-key-sequence "S")
@@ -765,7 +765,7 @@
    mml2015-passphrase-cache-expiry   65535
    mml2015-sign-with-sender          t
 
-   ;; Reply-in-kind to encrypted/signed message 
+   ;; Reply-in-kind to encrypted/signed message
    gnus-message-replyencrypt         t
    gnus-message-replysign            t
    gnus-message-replysignencrypted   t
@@ -777,7 +777,7 @@
    ;; Always verify & decrypt any signed/encrypted messages
    mm-verify-option                  'always
    mm-decrypt-option                 'always
-   
+
    gnus-buttonized-mime-types '("multipart/alternative"
                                 "multipart/encrypted"
                                 "multipart/signed")
@@ -797,12 +797,6 @@
                                  "pgp.mit.edu"
                                  (match-string 1)))
         (message "No unknown signed parts found.")))))
-
-(add-hook
- 'gnus-startup-hook
- (lambda nil
-   (define-key gnus-article-mode-map (kbd "C-c k") 'gnus-article-receive-epg-keys)
-   (define-key gnus-summary-mode-map (kbd "C-c k") 'gnus-article-receive-epg-keys)))
 
 ;; --------------------
 ;; Forwarding
