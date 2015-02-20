@@ -135,7 +135,7 @@
 ;; --------------------
 
 (setq gnus-html-cache-directory "/tmp/gnus"
-      gnus-html-frame-width 80)
+      gnus-html-frame-width 72)
 ;; from Tassilo Horn, 17/7/14
 (setq shr-color-visible-distance-min 10
       shr-color-visible-luminance-min 60)
