@@ -7,7 +7,7 @@
 ;; ajaxian
 ;; addy osmandi
 ;; statuscode
-;; ericlippert 
+;; ericlippert
 
 ;; ember weekly http://us4.campaign-archive2.com/feed?u=ac25c8565ec37f9299ac75ca0&id=e96229d21d
 
@@ -188,8 +188,8 @@
      gnus-sum-thread-tree-single-leaf     "┗━❯ "
 
      ;; Summary Mode Marks
-     gnus-score-over-mark  ?↑   
-     gnus-score-below-mark ?↓ 
+     gnus-score-over-mark  ?↑
+     gnus-score-below-mark ?↓
      gnus-ticked-mark      ?⚑
      gnus-dormant-mark     ?⚐
      gnus-expirable-mark   ?♻
@@ -277,6 +277,13 @@
 ;; Add Keybindings ------------------------------------------
 (defun zv/gnus-summary-mode-hook ()
   (gnus-define-keys gnus-summary-mode-map
+    ;; Scrolling
+    " " gnus-summary-next-page
+    [?\S-\ ] gnus-summary-prev-page
+    "\177" gnus-summary-prev-page
+    [delete] gnus-summary-prev-page
+    "\r" gnus-summary-scroll-up
+    "\M-\r" gnus-summary-scroll-down
     "J" gnus-summary-next-unread-article
     "K" gnus-summary-prev-unread-article
     "j" gnus-summary-next-article
@@ -285,21 +292,32 @@
     "\M-\C-k" gnus-summary-prev-same-subject
     "\C-j" gnus-summary-next-unread-subject
     "\C-k" gnus-summary-prev-unread-subject
+    "<" gnus-summary-beginning-of-article
+    ">" gnus-summary-end-of-article
+
+    ;; `/' and `?' are vim-style search
     "/" gnus-summary-search-article-forward
     "?" gnus-summary-search-article-backward
     "P" gnus-summary-refer-parent-article
     "n" gnus-summary-repeat-search-article-forward
     "p" gnus-summary-repeat-search-article-backward
+
+    ;; Various message manipulation commands
     "a" gnus-summary-post-news
-    "!" gnus-summary-tick-article-forward
     "x" gnus-summary-mark-as-expirable
     "|" gnus-summary-pipe-output
+    "H" gnus-summary-toggle-header
+    "x" gnus-summary-enter-digest-group
+    "!" gnus-summary-tick-article-forward
+
+    ;; [u]nmark
+    "u" gnus-summary-clear-mark-forward
+    "U" gnus-summary-clear-mark-backward
+
+    ;; quitting
     "q" gnus-summary-exit
     "Q" gnus-summary-exit-no-update
-    "<" gnus-summary-beginning-of-article
-    ">" gnus-summary-end-of-article
-    "H" gnus-summary-toggle-header
-    "x" gnus-summary-enter-digest-group)
+    )
 
   (gnus-define-keys (gnus-summary-limit-map "f" gnus-summary-mode-map)
     "/" gnus-summary-limit-to-subject
@@ -328,7 +346,7 @@
     "S" gnus-summary-limit-to-singletons
     "r" gnus-summary-limit-to-replied
     "R" gnus-summary-limit-to-recipient
-    "A" gnus-summary-limit-to-address) 
+    "A" gnus-summary-limit-to-address)
 
   (gnus-define-keys (gnus-summary-thread-map "t" gnus-summary-mode-map)
     ;; Vim bindings
@@ -423,7 +441,7 @@
     "B"            'gnus-group-browse-foreign-server
     "b"            'gnus-group-check-bogus-groups
     "a"            'gnus-group-post-news
-    ;; visual 
+    ;; visual
     ;; "x"         'gnus-group-kill-region
     "\C-c\C-x"     'gnus-group-expire-articles
     "\C-c\M-\C-x"  'gnus-group-expire-all-groups
@@ -556,57 +574,60 @@
 ;; --------------------
 ;; Article Mode
 ;; --------------------
-(setq gnus-visible-headers
-      "^From:\\|^To:\\|^Subject:\\|^Date:\\|^User-Agent:\\|^X-Mailer:"
-      gnus-summary-display-arrow t
-      gnus-topic-indent-level 1
-      gnus-group-uncollapsed-levels 2)
+(evil-set-initial-state 'gnus-article-mode 'motion)
 
-;; format specification for the article mode line
-(setq gnus-article-mode-line-format "%S%m")
-(evil-set-initial-state 'gnus-article-mode-map 'motion )
+(use-package gnus-art
+  :defer t
+  :init
+  (progn
+    (define-key gnus-article-mode-map (kbd "C-c k") 'gnus-article-receive-epg-keys)
+    (define-key gnus-summary-mode-map (kbd "C-c k") 'gnus-article-receive-epg-keys)
 
-(defun zv/gnus-article-mode-hook ()
-  (evil-set-initial-state 'gnus-article-mode 'motion)
+    (setq gnus-visible-headers
+          "^From:\\|^To:\\|^Subject:\\|^Date:\\|^User-Agent:\\|^X-Mailer:"
+          gnus-summary-display-arrow t
+          gnus-topic-indent-level 1
+          gnus-group-uncollapsed-levels 2
+          ;; format specification for the article mode line
+          gnus-article-mode-line-format "%S%m")
 
-  (evil-set-initial-state 'gnus-group-mode 'motion)
+    (evil-leader/set-key-for-mode gnus-article-mode-map
+      "maf" 'mml-attach-file
+      "ms" 'gnus-article-edit-done
+      "mQ" 'gnus-article-edit-done)
 
-  (evil-leader/set-key-for-mode gnus-article-mode-map
-    "maf" 'mml-attach-file
-    "ms"  'gnus-article-edit-done
-    "mQ"  'gnus-article-edit-done)
+    (evil-define-key 'motion gnus-article-mode-map
+      "n"     'shr-next-link
+      "p"     'shr-previous-link
+      "q"     'gnus-article-read-summary-keys
 
-  (evil-define-key 'motion gnus-article-mode-map
-    "gt"    'message-goto-to
-    "go"    'message-goto-from
-    "gb"    'message-goto-bcc
-    "gc"    'message-goto-cc
-    "gs"    'message-goto-subject
-    "gr"    'message-goto-reply-to
-    "gn"    'message-goto-newsgroups
-    "gf"    'message-goto-followup-to
-    "gm"    'message-goto-mail-followup-to
-    "gu"    'message-goto-summary
-    "gi"    'message-insert-or-toggle-importance
-    "ga"    'message-generate-unsubscribed-mail-followup-to
-    ;; Link browsing
-    "n"   'shr-next-link
-    "p"   'shr-previous-link
+      "k"     'gnus-kill-sticky-article-buffer
 
-    "gb"    'message-goto-body
-    "gi"    'message-goto-signature
+      "gt"    'message-goto-to
+      "go"    'message-goto-from
+      "gb"    'message-goto-bcc
+      "gc"    'message-goto-cc
+      "gs"    'message-goto-subject
+      "gr"    'message-goto-reply-to
+      "gn"    'message-goto-newsgroups
+      "gf"    'message-goto-followup-to
+      "gm"    'message-goto-mail-followup-to
+      "gu"    'message-goto-summary
+      "gi"    'message-insert-or-toggle-importance
+      "ga"    'message-generate-unsubscribed-mail-followup-to
 
-    "Mt"    'message-insert-to
-    "Mn"    'message-insert-newsgroups
+      "gb"    'message-goto-body
+      "gi"    'message-goto-signature
 
-    "So"    'message-sort-headers
-    "de"    'message-elide-region
-    "dz"    'message-kill-to-signature
+      "Mt"    'message-insert-to
+      "Mn"    'message-insert-newsgroups
 
-    "\M-\r" 'message-newline-and-reformat
-    "\t"    'message-tab))
+      "So"    'message-sort-headers
+      "de"    'message-elide-region
+      "dz"    'message-kill-to-signature
 
-(add-hook 'gnus-article-mode-hook 'zv/gnus-article-mode-hook)
+      "\M-\r" 'message-newline-and-reformat
+      "\t"    'message-tab)))
 
 ;; --------------------
 ;; Message Mode
