@@ -19,7 +19,7 @@
             ))
 
 ;; keybindings -------------------------------------------
-(evil-add-hjkl-bindings erc-mode-map 'motion "0" 'erc-bol) 
+(evil-add-hjkl-bindings erc-mode-map 'motion "0" 'erc-bol)
 
 ;; Configure some leader keys for erc
 (evil-leader/set-key-for-mode 'erc-mode
@@ -72,7 +72,7 @@
 ;; logging ----------------------------------------------------------------------
 (setq erc-log-insert-log-on-open nil
       erc-log-channels t
-      erc-log-channels-directory "~/.emacs.d/erc/logs" 
+      erc-log-channels-directory "~/.emacs.d/erc/logs"
       erc-save-buffer-on-part t
       erc-hide-timestamps nil)
 
@@ -87,7 +87,7 @@
 ;; tracking mode ----------------------------------------------------------------
 (setq
  ;; Don't shorten the names of channels
- erc-track-shorten-function nil 
+ erc-track-shorten-function nil
  ;; exclude boring stuff from tracking
  erc-track-exclude-types (cons ignored-irc-commands '("324" "329" "332" "333" "353" "477"))
  erc-hide-list           ignored-irc-commands
@@ -97,19 +97,21 @@
 ;; autojoin channels ------------------------------------------------------------
 (setq erc-autojoin-channels-alist '(("freenode.net"
                                      "#cat-v"
-                                     "#elixir-lang" 
+                                     "#elixir-lang"
                                      "#erlang"
-                                     "#postgresql" 
+                                     "#postgresql"
                                      "#pwning"
                                      "#noisebridge"
                                      "#gdb"
                                      "##kernel"
-                                     "#reactjs" 
                                      "##re"
                                      "#radare"
                                      "#emacs")
                                     ("irc.mozilla.org"
                                      "#rust"
-                                     "#rust-internals")
+                                     "#rust-internals"
+                                     "#rust-osdev"
+                                     "#rust-gamedev"
+                                     )
                                     ("irc.oftc.net"
                                      "#tor")))
