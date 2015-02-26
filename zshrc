@@ -4,16 +4,25 @@
 # 2009
 
 #  Environment
+# go
+export GOROOT=$HOME/Development/go
+export GOPATH=$HOME/Development/golang
+
+autoload bashcompinit
+bashcompinit
+
 path=(
+    $GOROOT/bin
+    $GOPATH/bin
     $path
     /home/zv/Downloads/firefox
     /usr/local/pgsql/bin
     /usr/local/heroku/bin
     ~/bin
-    $GOROOT/bin
     /usr/local/{bin,sbin}
     /usr/local/lib/
     /usr/local/plan9/bin # Userspace From Plan9 binaries
+    $HOME/depot_tools
 )
 
 # Load our completion functions
@@ -68,7 +77,7 @@ export LANG='en_US.UTF-8'
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 export LC_CTYPE=$LANG
 export BROWSER==google-chrome
-export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
+export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 norelativenumber nomod nolist nonu noma showtabline=0' -\""
 
 
 # Configure GPG
@@ -79,10 +88,6 @@ export GPG_TTY
 export CXX=g++
 export CC=gcc
 export AR=ar
-
-# go
-export GOROOT=$HOME/Development/go
-export GOPATH=$HOME/Development/golang
 
 ############################################
 #  Theme
@@ -253,8 +258,6 @@ alias mail='emacs -nw --eval="(gnus)"'
 alias cp="${aliases[cp]:-cp} -i"
 alias ln="${aliases[ln]:-ln} -i"
 alias mkdir="${aliases[mkdir]:-mkdir} -p"
-alias mv="${aliases[mv]:-mv} -i"
-alias rm="${aliases[rm]:-rm} -i"
 alias type='type -a'
 
 alias info="info --vi-keys"
@@ -280,23 +283,19 @@ function DNScheck() {
 
 # Openssl
 alias ssl="openssl"
-
 # Tmux
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
-
 # Thesaurus
 alias ths2='dict -d moby-thesaurus'
 alias ths='aiksaurus'
-
 # esxape ANSI sequences
 alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 # Switch Users, maining RTP.
 alias sudovim='sudo -E vim' # -c "set runtimepath+=$HOME/.vim" -u $HOME/.vimrc'
-
 alias screenlock='xscreensaver-command -lock'
-
-alias tuidbg="gdb -tui -nh"
+alias gdb="gdb -q"
+alias gdbtui="gdb -tui -ex 'set \$SHOW_CONTEXT = 0' -ex 'set \$USECOLOR = 0' -ex 'set extended-prompt (gdb) '"
 
 # # mkdir & cd to it
 function mcd() {
@@ -447,6 +446,20 @@ for c in $sc_user_commands; do; alias sc-$c="systemctl $c"; done
 for c in $sc_sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
 
 ############################################
+#  Cargo
+############################################
+local -A rust_commands
+
+rust_commands=(
+    ccd 'cargo build' # Compile the current project
+    ccl 'cargo clean' # Remove the target directory
+    ccr 'cargo run'   # Build and execute src/main.rs
+    rc 'rustc'        # Rust compiler
+)
+
+for c in ${(@k)rust_commands}; do; alias $c="$rust_commands[$c]"; done
+
+############################################
 #  Package Management (Yum)
 ############################################
 typeset -A yum_commands
@@ -560,8 +573,9 @@ function authorstats {
 #  Modules & Completions
 ############################################
 
-autoload -U compinit
-compinit -i
+autoload -U compinit && compinit -i
+#autoload -U bashcompinit && bashcompinit
+#source /usr/share/bash-completion/completions/nmcli
 
 zmodload zsh/complist
 zmodload zsh/mathfunc
@@ -740,6 +754,3 @@ setopt hist_save_no_dups         # do not write a duplicate event to the history
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
-
-export QUADDIR="~/Development/quad"
-# source ~/Development/quad/quad-api/utility_belt/aliases.sh

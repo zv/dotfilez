@@ -8,8 +8,6 @@ alias xmodc="xmodmap ~/.xmodmaprc"
 alias nocapspty='sudo loadkeys =(sudo dumpkeys && echo "keycode 58 = Control")'
 alias qgulp="rm -r ~/Development/quad/quad/.app; gulp"
 
-alias sl="sails lift"
-
 # Network Manager aliases
 alias wifi="nmcli -f SSID,BSSID,CHAN,SECURITY,SIGNAL,BARS,ACTIVE dev wifi"
 alias connect="nmcli dev wifi connect"
