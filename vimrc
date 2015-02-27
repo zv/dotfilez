@@ -1,7 +1,7 @@
 set nocompatible " rube would be proud
 syntax enable "turn on syntax highlighting
 filetype plugin indent on
-let mapleader=","
+let mapleader="9"
 
 " ================ General Config ====================
 set autoread                   " Reload files changed outside vim
