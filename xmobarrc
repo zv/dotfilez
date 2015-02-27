@@ -10,6 +10,6 @@ Config {
         ],
     sepChar      = "%",
     alignSep     = "}{",
-    template     = "%StdinReader% }{ %date% || %acpi%"
+    template     = "%StdinReader% }{ %date% "
 }
 
