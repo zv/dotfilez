@@ -1,0 +1,10 @@
+\pset border 2
+\pset linestyle unicode
+\pset null NULL
+
+\set HISTFILE ~/.psql_history- :DBNAME
+\set HISTSIZE 20000 
+
+/*
+set PROMPT1 '%[%033[1m%]%n@%/>>%[%033[0m%]% %[%033[1;31m%]%x%[%033[0m%]%'
+*/
