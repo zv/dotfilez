@@ -7,13 +7,16 @@
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers '((auto-completion :variables auto-completion-enable-company-help-tooltip t)
+   dotspacemacs-configuration-layers '((auto-completion :variables
+                                                        auto-completion-enable-company-help-tooltip t)
                                        c-c++
                                        clojure
-                                       (erlang-elixir  :variables spacemacs-erlang-elixir-use-edts t)
+                                       (erlang-elixir :variables
+                                                      spacemacs-erlang-elixir-use-edts t)
                                        emacs-lisp
                                        erc
                                        gtags
+                                       org
                                        git
                                        go
                                        html
@@ -22,7 +25,8 @@
                                        ruby
                                        rust
                                        syntax-checking
-                                       zv)
+                                       zv
+                                       )
    ;; List of additional packages that will be installed wihout being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
@@ -118,7 +122,7 @@ before layers configuration."
    ;; Transparency can be toggled through `toggle-transparency'.
    dotspacemacs-inactive-transparency nil
    ;; If non nil unicode symbols are displayed in the mode line.
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen.
@@ -151,6 +155,7 @@ before layers configuration."
 
   (setq-default
    evil-escape-delay 0.2
+   org-directory (expand-file-name "~/Documents")
    git-enable-github-support t
    evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode)))
 
@@ -200,8 +205,15 @@ This function is called at the very end of Spacemacs initialization."
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
 
+  (add-hook 'prog-mode-hook
+            '(lambda ()
+               (when (derived-mode-p 'rust-mode)
+                 (ggtags-mode 1))))
 
   (evil-leader/set-key "ai" 'erc-connect)
+
+  ;; Org Mode
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
 
   ;; Machine specific org settings
   ;; (setq org-ditaa-jar-path (concat zv-configuration-layer-directory
@@ -241,9 +253,9 @@ This function is called at the very end of Spacemacs initialization."
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
  '(magit-completing-read-function (quote magit-builtin-completing-read))
- '(org-agenda-files
-   (quote
-    ("~/org/gtd.org" "~/org/todo.org" "~/org/agenda.org" "~/org/quad.org")))
+ ;'(org-agenda-files
+ ;  (quote
+ ;   ("~/Documents/agenda.org")))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
