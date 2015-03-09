@@ -61,7 +61,7 @@ setopt correct_all # Correct commands
 for cmd (
     ack cd cp ebuild gcc gist grep heroku
     ln man mkdir mv mysql rm nmcli ip ag
-    git npm ember yum
+    git npm ember dnf
 ) alias $cmd="nocorrect $cmd"
 
 # Disable globbing.
@@ -460,26 +460,20 @@ rust_commands=(
 for c in ${(@k)rust_commands}; do; alias $c="$rust_commands[$c]"; done
 
 ############################################
-#  Package Management (Yum)
+#  Package Management (dnf)
 ############################################
-typeset -A yum_commands
-
-yum_commands=(
-    yumc 'sudo yum clean all'    # Cleans the cache.
-    yumh 'yum history'           # Displays history.
-    yumi 'sudo yum install'      # Installs package(s).
-    yuml 'yum list'              # Lists packages.
-    yumL 'yum list installed'    # Lists installed packages.
-    yumq 'yum info'              # Displays package information.
-    yumr 'sudo yum remove'       # Removes package(s).
-    yums 'yum search'            # Searches for a package.
-    yumsc 'yum search -C'        # Search in cache
-    yumu 'sudo yum update'       # Updates packages.
-    yumU 'sudo yum upgrade'      # Upgrades packages.
-    yumfl 'repoquery -lq'        # (f)ile (l)ist a package
-)
-
-for c in ${(@k)yum_commands}; do; alias $c="$yum_commands[$c]"; done
+if (( $+commands[dnf] )); then
+    alias dnfc='sudo dnf clean all'    # Cleans the cache.
+    alias dnfh='dnf history'           # Displays history.
+    alias dnfi='sudo dnf install'      # Installs package(s).
+    alias dnfl='dnf list'              # Lists packages.
+    alias dnfL='dnf list installed'    # Lists installed packages.
+    alias dnfq='dnf info'              # Displays package information.
+    alias dnfr='sudo dnf remove'       # Removes package(s).
+    alias dnfs='dnf search'            # Searches for a package.
+    alias dnfu='sudo dnf update'       # Updates packages.
+    alias dnfU='sudo dnf upgrade'      # Upgrades packages.
+fi
 
 ############################################
 #  Package Management (npm)
