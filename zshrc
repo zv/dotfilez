@@ -18,11 +18,11 @@ path=(
     /home/zv/Downloads/firefox
     /usr/local/pgsql/bin
     /usr/local/heroku/bin
-    ~/bin
+    $HOME/.bin
     /usr/local/{bin,sbin}
     /usr/local/lib/
     /usr/local/plan9/bin # Userspace From Plan9 binaries
-    $HOME/depot_tools
+    # $HOME/depot_tools
 )
 
 # Load our completion functions
