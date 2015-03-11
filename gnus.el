@@ -1,5 +1,6 @@
  ;; jeremykun
 ;; nodeweekly
+
 ;; emberweekly
 ;; javascriptweekly
 ;; dailyjs
@@ -24,7 +25,7 @@
 ;; Use our auth-source file
 (setq smtpmail-auth-credentials "~/.authinfo.gpg")
 
-(load "/home/zv/.emacs.d/contrib/gnus/funcs.el")
+;; (load "/home/zv/.emacs.d/contrib/gnus/funcs.el")
 
 ;;@see http://gnus.org/manual/gnus_397.html
 (add-to-list 'gnus-secondary-select-methods
@@ -161,7 +162,7 @@
    (horizontal 1.0
                (vertical 25 (group 1.0))
                (vertical 1.0
-                         (summary 0.16 point)
+                         (summary 0.2 point)
                          (article 1.0)))))
 
 (gnus-add-configuration
