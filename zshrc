@@ -76,7 +76,11 @@ export PAGER='less'
 export LANG='en_US.UTF-8'
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 export LC_CTYPE=$LANG
-export BROWSER==google-chrome
+
+if [[ -x google-chrome ]]; then
+    export BROWSER==google-chrome
+fi
+
 export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 norelativenumber nomod nolist nonu noma showtabline=0' -\""
 
 
