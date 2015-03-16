@@ -1,0 +1,151 @@
+[user]
+  name       = zv
+  email      = zv@nxvr.org
+  editor     = vim
+  signingkey = 5DC172F8
+
+[remote "origin"]
+  fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
+
+[color]
+  ui = true
+  pager = true
+
+[color "decorate"]
+  stash = "red bold "
+
+[color "branch"]
+  current = green reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  old = red
+  new = green
+  commit = cyan
+  func = red bold
+
+[color "status"]
+  added = green
+  changed = yellow
+  untracked = red
+  nobranch = red bold reverse
+
+[alias]
+  # add
+  a = add            # add
+  padd = add --patch # stage commits chunk by chunk
+
+  # branch
+  b = branch -v                     # branch (verbose)
+
+  # commit
+  c = commit -m          # commit with message
+  ca = commit -am        # commit all with message
+  ci = commit            # commit
+  amend = commit --amend # ammend your last commit
+
+  # checkout
+  co = checkout    # checkout
+  nb = checkout -b # create and switch to a new branch (mnemonic: "git new branch branchname...")
+
+                      # cherry-pick
+  cp = cherry-pick -x # grab a change from a branch
+
+  churn = !"git log -M -C --name-only --format=\"format:%n\" | grep . | sort | uniq -c | sort -n"
+
+  # diff
+  # d = difftool
+  d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
+  dc = diff --cached # diff staged changes
+  last = diff HEAD^  # diff last committed change
+
+  # log
+  l = log --date=short --pretty=\"format:%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset\"
+  ll = log --graph --oneline --decorate --branches --tags
+  lc = log ORIG_HEAD.. --stat --no-merges
+  lsig = log  --pretty=format:\"%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) %m [%G?]%Creset\"
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
+  short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
+  changelog = log --pretty=format:\" * %s\"
+  useraddcount = shortlog -sn
+  # Show our branches as a tree
+  show-branch-ordered = log --graph --simplify-by-decoration --pretty=format:'%d' --all
+
+  # rebase
+  rc = rebase --continue            # continue rebase
+  rs = rebase --skip                # skip rebase
+
+  # remote
+  r = remote -v                     # show remotes (verbose)
+
+  # edit unmerged paths
+  edit-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; vim `f`"
+  add-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
+
+  # reset
+  unstage = reset HEAD              # remove files from index (tracking)
+  uncommit = reset --soft HEAD^     # go back before last commit, with files in uncommitted state
+  filelog = log -u                  # show changes to a file
+
+  # rm
+  remove-cache=!sh -c"git rm $(git ls-files --deleted)" # Remove files from git that are deleted.
+
+  # stash
+  stashlast = stash apply stash@{0} # apply the most recently made stash
+  sl = stash list
+
+  # unstage to HEAD
+  unstage = reset HEAD --
+
+  # via http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
+  snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+  snapshots = !git stash list --grep snapshot
+
+  branchlog = for-each-ref --sort=-committerdate refs/heads/ # sort branches by last commit date
+
+  # temporary ignore/unignore
+  ignore   = update-index --assume-unchanged
+  unignore = update-index --no-assume-unchanged
+  list-ignored =!sh -c "git ls-files -v|grep '^h'" # list our ignored files
+
+[log]
+  date = short
+
+[merge]
+  summary = true
+  verbosity = 1
+  tool = vimdiff
+
+[branch]
+  autosetupmerge = true
+[core]
+  # true resulted in some painful dialog with Windows developers.
+  autocrlf = false
+  editor = vim
+  excludesfile = ~/.gitignore
+[advice]
+  statusHints = false
+[apply]
+  whitespace = nowarn
+[diff]
+  # Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+  # instead of a/b/c/d as prefixes for patches
+  mnemonicprefix = true
+  algorithm      = patience
+  tool           = vimdiff
+  guitool        = gvimdiff
+[rerere]
+  # "Boom! Roasted!" -- Emeril Legasse
+  # https://www.kernel.org/pub/software/scm/git/docs/git-rerere.html
+  enabled = true
+[push]
+  default = current
+[rebase]
+  stat = true
+[difftool]
+  prompt = true
