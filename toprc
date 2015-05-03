@@ -1,18 +1,18 @@
 top's Config File (Linux processes with windows)
-Id:g, Mode_altscr=0, Mode_irixps=1, Delay_time=2.0, Curwin=0
-Def	fieldscur=¥¨³´»½@Ä·º¹&*'-06<8>?ACFGÅ)+,./125BHIJKLMNOPQRSTUVWXYZ[
-	winflags=194996, sortindx=22, maxtasks=0
+Id:i, Mode_altscr=1, Mode_irixps=1, Delay_time=2.0, Curwin=1
+Def	fieldscur=%7E(34;=@D:9&*'-06<8>?ACFG)+,./125BHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghij
+	winflags=162212, sortindx=18, maxtasks=0, graph_cpus=1, graph_mems=2
 	summclr=6, msgsclr=1, headclr=0, taskclr=4
-Job	fieldscur=¥¦*(-068>?@ACFG¹·º³´Ä»¼½§Å)+,./125BHIJKLMNOPQRSTUVWXYZ[
-	winflags=195900, sortindx=20, maxtasks=0
+Job	fieldscur=¥&7¨4®-Æ0ÅH*68>?@ACG9:3D;<=')+,/125BIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghij
+	winflags=183742, sortindx=0, maxtasks=0, graph_cpus=0, graph_mems=0
 	summclr=6, msgsclr=6, headclr=7, taskclr=6
-Mem	fieldscur=¥º»¼½¾¿ÀÁÎÃ&*'(-0689FGÄ³´·Å)+,./125BHIJKLMOPQRSTUVWXYZ[
-	winflags=195900, sortindx=28, maxtasks=0
+Mem	fieldscur=¥º;O>?@Å½¼ÁNC&*'(-0689FGD347)+,./12µBHIJKLMPQRSTUVWXYZ[\]^_`abcdefghij
+	winflags=187836, sortindx=21, maxtasks=0, graph_cpus=0, graph_mems=0
 	summclr=5, msgsclr=5, headclr=4, taskclr=5
-Usr	fieldscur=¥¦§¨ª°-3468;<=>?@ACFG¹·ºÄÅ)+,./125BHIJKLMNOPQRSTUVWXYZ[
-	winflags=195900, sortindx=3, maxtasks=0
+CPU	fieldscur=¥·Å&'(*0-3468;<=>?@ACFG¹:D)+,./125BHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghij
+	winflags=159636, sortindx=18, maxtasks=0, graph_cpus=2, graph_mems=0
 	summclr=3, msgsclr=3, headclr=2, taskclr=3
-Fixed_widest=0, Summ_mscale=1, Task_mscale=1, Zero_suppress=0
+Fixed_widest=-1, Summ_mscale=2, Task_mscale=1, Zero_suppress=1
 
 pipe	Open Files	lsof -P -p %d 2>&1
 file	NUMA Info	/proc/%d/numa_maps
