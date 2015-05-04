@@ -1,16 +1,16 @@
+Compression yes
+VisualHostKey yes
 HashKnownHosts yes
-Compression    yes
-VisualHostKey  yes
 
 Host *.nxvr.org
   user zv
   ForwardAgent yes
+
+Host nxvr.org
+  HostName nxvr
 
 Host offblast.org
   HostName offblast
 
 Host slaanesh
   HostName sl
-
-Host 54.68.186.82
-  ForwardAgent yes
