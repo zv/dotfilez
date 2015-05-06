@@ -233,31 +233,7 @@ This function is called at the very end of Spacemacs initialization."
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
 
-  (add-hook 'prog-mode-hook
-            '(lambda ()
-               (when (derived-mode-p 'rust-mode)
-                 (ggtags-mode 1))))
-
-  (evil-leader/set-key "ai" 'erc-connect)
-
-  ;; Org Mode
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
-
-  ;; Machine specific org settings
-  ;; (setq org-ditaa-jar-path (concat zv-configuration-layer-directory
-  ;;                                  "/extensions/org/contrib/scripts/ditaa.jar")
-  ;;       org-default-notes-file (org-path "notes.org"))
-
-  ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-  ;; (setq org-capture-templates
-  ;;       (quote
-  ;;        (("t" "todo"         entry (file (org-path "gtd.org"))            "* TODO %?\n%U\n%a\n")
-  ;;         ("n" "note"         entry (file (org-path "notes.org"))          "* %? :NOTE:\n%U\n%a\n")
-  ;;         ("c" "conversation" entry (file (org-path "conversation.org"))   "* CONVERSATION %? :PHONE:\n%U")
-  ;;         ("i" "ideas"        entry (file (org-path "ideas.org"))          "* %?\n%U")
-  ;;         ("q" "quotes"       item  (file (org-path "quotes.org"))         "%?\n%U")
-  ;;         ("j" "journal"      entry (file+datetree (org-path "diary.org")) "* %?\n%U\n"))))
-  )
+  (setq org-default-notes-file (org-path "notes.org")))
 
 ;; Custom variables
 (custom-set-variables
@@ -265,7 +241,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ac-ispell-requires 4)
+ '(ac-ispell-requires 4 t)
  '(ahs-case-fold-search nil)
  '(ahs-default-range (quote ahs-range-whole-buffer))
  '(ahs-idle-interval 0.25)
@@ -280,10 +256,10 @@ This function is called at the very end of Spacemacs initialization."
     (quote
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
- '(magit-completing-read-function (quote magit-builtin-completing-read))
- ;'(org-agenda-files
- ;  (quote
- ;   ("~/Documents/agenda.org")))
+ '(magit-completing-read-function (quote magit-builtin-completing-read) t)
+ '(org-agenda-files
+   (quote
+    ("~/Documents/notes.org" "~/Documents/SFGOV/affordable_housing.org")))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
