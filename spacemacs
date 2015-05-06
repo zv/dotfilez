@@ -215,21 +215,13 @@ This function is called at the very end of Spacemacs initialization."
   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . shell-script-mode))
 
-  ;; helm ---------------------------------------------------
-  ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed discussion of these options.
-  (setq helm-split-window-in-side-p           t
-        helm-buffers-fuzzy-matching           t
-        helm-move-to-line-cycle-in-source     t
-        helm-ff-search-library-in-sexp        t
-        helm-ff-file-name-history-use-recentf t)
-
   ;; relative line numbers ----------------------------------
-  (global-linum-mode 1)
   (linum-relative-toggle)
 
-  ;; Configure Erlang
-  (setq-default erlang-root-dir "/usr/local/lib/erlang/erts-6.2")
-  (setq edts-man-root "/usr/local/lib/erlang/erts-6.2")
+  ;; helm configuration
+  (setq helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+        helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+        helm-ff-file-name-history-use-recentf t)
 
   ;; persistent undo ----------------------------------------
   (setq undo-tree-auto-save-history t
