@@ -1,32 +1,42 @@
-;; -*- mode: dotspacemacs -*-
+;; -*- mode: emacs-lisp -*-
+;; This file is loaded by Spacemacs at startup.
+;; It must be stored in your home directory.
+
 (defun dotspacemacs/layers ()
-  "Configuration Layers declaration."
+  "Configuration Layers declaration.
+You should not put any user code in this function besides modifying the variable
+values."
   (setq-default
+   ;; Base distribution to use. This is a layer contained in the directory
+   ;; `+distribution'. For now available distributions are `spacemacs-base'
+   ;; or `spacemacs'. (default 'spacemacs)
+   dotspacemacs-distribution 'spacemacs
    ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
+   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers '((auto-completion :variables
-                                                        auto-completion-enable-company-help-tooltip t)
-                                       c-c++
-                                       clojure
-                                       (erlang-elixir :variables
-                                                      spacemacs-erlang-elixir-use-edts t)
-                                       emacs-lisp
-                                       erc
-                                       gtags
-                                       org
-                                       git
-                                       go
-                                       html
-                                       javascript
-                                       markdown
-                                       ruby
-                                       rust
-                                       syntax-checking
-                                       zv
-                                       )
+   dotspacemacs-configuration-layers
+   '(auto-completion
+     (c-c++ :variables c-c++-enable-clang-support t)
+     clojure
+     elixir
+     emacs-lisp
+     (erlang :variables
+             erlang-root-dir "/usr/local/lib/erlang/erts-6.2"
+             edts-man-root   "/usr/local/lib/erlang/erts-6.2")
+     git
+     go
+     gtags
+     html
+     javascript
+     markdown
+     org
+     ruby
+     rust
+     sql
+     syntax-checking
+     zv)
    ;; List of additional packages that will be installed wihout being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
