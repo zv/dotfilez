@@ -1,29 +1,25 @@
 #!/bin/sh
 # Load resources
 # Set the background color
-[[ $(xrandr | grep "HDMI2 connected") ]] &&  xrandr --output HDMI2 --left-of eDP1 --primary --auto
+# [[ $(xrandr | grep "HDMI2 connected") ]] &&  xrandr --output HDMI2 --left-of eDP1 --primary --auto
 
-xsetroot -solid white
+xsetroot -solid gray
 
 ## Fire up apps
-xscreensaver -no-splash &
-
-autocutsel &
-
-ssh-add
+# xscreensaver -no-splash &
 
 # Setup GPG Agent
-envfile="$HOME/.gnupg/gpg-agent.env"
-if [[ -e "$envfile" ]] && kill -0 $(grep GPG_AGENT_INFO "$envfile" | cut -d: -f 2) 2>/dev/null; then
-    eval "$(cat "$envfile")"
-else
-    eval "$(gpg-agent --daemon --enable-ssh-support --write-env-file "$envfile")"
-fi
+# envfile="$HOME/.gnupg/gpg-agent.env"
+# if [[ -e "$envfile" ]] && kill -0 $(grep GPG_AGENT_INFO "$envfile" | cut -d: -f 2) 2>/dev/null; then
+#     eval "$(cat "$envfile")"
+# else
+#     eval "$(gpg-agent --daemon --enable-ssh-support --write-env-file "$envfile")"
+# fi
+# 
+# export GPG_AGENT_INFO  # the env file does not contain the export statement
+# export SSH_AUTH_SOCK   # enable gpg-agent for ssh
+# 
+xmodmap ${HOME}/.xmodmaprc
 
-export GPG_AGENT_INFO  # the env file does not contain the export statement
-export SSH_AUTH_SOCK   # enable gpg-agent for ssh
-
-xhost local:
-
-# Fire up xmonad
-xmonad
+# Run gpg-agent-wrapper to SSH using our yubikey
+# source $HOME/.gnupg/gpg-agent-wrapper
