@@ -2,53 +2,55 @@
 " " Language:	man
 " " Maintainer:	SungHyun Nam <goweol@gmail.com>
 " " Last Change:	2013 Jul 17
-
+" 
 " " To make the ":Man" command available before editing a manual page, source
 " " this script from your startup vimrc file.
-
+" 
 " " If 'filetype' isn't "man", we must have been called to only define ":Man".
 " if &filetype == "man"
-
+" 
 "   " Only do this when not done yet for this buffer
 "   if exists("b:did_ftplugin")
 "     finish
 "   endif
 "   let b:did_ftplugin = 1
-
+" 
 "   " Ensure Vim is not recursively invoked (man-db does this)
 "   " when doing ctrl-[ on a man page reference.
 "   if exists("$MANPAGER")
 "     let $MANPAGER = ""
 "   endif
-
+" 
+"   nmap d <C-d>
+"   nmap u <C-u>
 "   " allow dot and dash in manual page name.
 "   setlocal iskeyword+=\.,-
-
+" 
 "   " Add mappings, unless the user didn't want this.
 "   if !exists("no_plugin_maps") && !exists("no_man_maps")
 "     if !hasmapto('<Plug>ManBS')
 "       nmap <buffer> <LocalLeader>h <Plug>ManBS
 "     endif
 "     nnoremap <buffer> <Plug>ManBS :%s/.\b//g<CR>:setl nomod<CR>''
-
+" 
 "     nnoremap <buffer> <c-]> :call <SID>PreGetPage(v:count)<CR>
 "     nnoremap <buffer> <c-t> :call <SID>PopPage()<CR>
 "   endif
-
+" 
 "   let b:undo_ftplugin = "setlocal iskeyword<"
-
+" 
 " endif
-
+" 
 " if exists(":Man") != 2
 "   com -nargs=+ Man call s:GetPage(<f-args>)
 "   nmap <Leader>K :call <SID>PreGetPage(0)<CR>
 " endif
-
+" 
 " " Define functions only once.
 " if !exists("s:man_tag_depth")
-
+" 
 " let s:man_tag_depth = 0
-
+" 
 " let s:man_sect_arg = ""
 " let s:man_find_arg = "-w"
 " try
@@ -59,7 +61,7 @@
 " catch /E145:/
 "   " Ignore the error in restricted mode
 " endtry
-
+" 
 " func <SID>PreGetPage(cnt)
 "   if a:cnt == 0
 "     let old_isk = &iskeyword
@@ -80,14 +82,14 @@
 "   endif
 "   call s:GetPage(sect, page)
 " endfunc
-
+" 
 " func <SID>GetCmdArg(sect, page)
 "   if a:sect == ''
 "     return a:page
 "   endif
 "   return s:man_sect_arg.' '.a:sect.' '.a:page
 " endfunc
-
+" 
 " func <SID>FindPage(sect, page)
 "   let where = system("/usr/bin/man ".s:man_find_arg.' '.s:GetCmdArg(a:sect, a:page))
 "   if where !~ "^/"
@@ -97,7 +99,7 @@
 "   endif
 "   return 1
 " endfunc
-
+" 
 " func <SID>GetPage(...)
 "   if a:0 >= 2
 "     let sect = a:1
@@ -108,12 +110,12 @@
 "   else
 "     return
 "   endif
-
+" 
 "   " To support:	    nmap K :Man <cword>
 "   if page == '<cword>'
 "     let page = expand('<cword>')
 "   endif
-
+" 
 "   if sect != "" && s:FindPage(sect, page) == 0
 "     let sect = ""
 "   endif
@@ -125,7 +127,7 @@
 "   exec "let s:man_tag_lin_".s:man_tag_depth." = ".line(".")
 "   exec "let s:man_tag_col_".s:man_tag_depth." = ".col(".")
 "   let s:man_tag_depth = s:man_tag_depth + 1
-
+" 
 "   " Use an existing "man" window if it exists, otherwise open a new one.
 "   if &filetype != "man"
 "     let thiswin = winnr()
@@ -150,7 +152,7 @@
 "   silent exec "edit $HOME/".page.".".sect."~"
 "   " Avoid warning for editing the dummy file twice
 "   setl buftype=nofile noswapfile
-
+" 
 "   setl ma nonu nornu nofen
 "   silent exec "norm 1GdG"
 "   let $MANWIDTH = winwidth(0)
@@ -167,7 +169,7 @@
 "   setl bufhidden=hide
 "   setl nobuflisted
 " endfunc
-
+" 
 " func <SID>PopPage()
 "   if s:man_tag_depth > 0
 "     let s:man_tag_depth = s:man_tag_depth - 1
@@ -183,7 +185,7 @@
 "     unlet s:man_tag_buf s:man_tag_lin s:man_tag_col
 "   endif
 " endfunc
-
+" 
 " endif
-
+" 
 " " vim: set sw=2:
