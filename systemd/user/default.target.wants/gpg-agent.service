@@ -1,0 +1,15 @@
+[Unit]
+Description=GnuPG private key agent
+IgnoreOnIsolate=true
+ConditionFileIsExecutable=/usr/bin/gpg-agent
+
+[Service]
+Type=forking
+Environment=SSH_AUTH_SOCK=%h/S.gpg-agent.ssh
+ExecStart=/usr/bin/gpg-agent --daemon --homedir=%h/.gnupg --enable-ssh-support --log-file %h/.gnupg/gpg-agent.log --pinentry-program /usr/bin/pinentry  --allow-preset-passphrase --allow-emacs-pinentry
+ExecStartPost=/usr/bin/systemctl --user set-environment SSH_AUTH_SOCK=${SSH_AUTH_SOCK} GPG_AGENT_INFO=${GPG_AGENT_INFO}
+ExecStop=/usr/bin/pkill gpg-agent
+Restart=on-abort
+
+[Install]
+WantedBy=default.target
