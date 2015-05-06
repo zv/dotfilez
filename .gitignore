@@ -12,6 +12,7 @@ ssh/*
 !ssh/known_hosts
 !ssh/id_rsa.pub
 !ssh/id_ecdsa.pub
+!ssh/yubi.pub
 !ssh/*.gpg
 !ssh/*.asc
 org/*
