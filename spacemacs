@@ -46,37 +46,39 @@ values."
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
-   ;; the list `dotspacemacs-configuration-layers'
+   ;; the list `dotspacemacs-configuration-layers'. (default t)
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
-before layers configuration."
+before layers configuration.
+You should not put any user code in there besides modifying the variable
+values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
-   ;; is `emacs' then the `holy-mode' is enabled at startup.
+   ;; One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
+   ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
+   ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
+   ;; unchanged. (default 'vim)
    dotspacemacs-editing-style 'vim
-   ;; If non nil output loading progress in `*Messages*' buffer.
-   dotspacemacs-verbose-loading t
+   ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
+   dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
-   ;; If the value is nil then no banner is displayed.
+   ;; If the value is nil then
    dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'."
-   dotspacemacs-startup-lists '(recents projects)
+   dotspacemacs-startup-lists nil
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(leuven
-                         solarized-light
-                         solarized-dark)
+   dotspacemacs-themes '(leuven solarized-light solarized-dark)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -173,11 +175,9 @@ before layers configuration."
    ;; specified with an installed package.
    ;; Not used for now.
    dotspacemacs-default-package-repository nil
-   )
-  ;; User initialization goes here
+   ))
 
-  ;; (setenv "PATH"  (concat "/usr/local/bin" ":" (getenv "PATH")))
-  ;;(add-to-list    'exec-path "/usr/local/bin")
+(defun dotspacemacs/user-init ()
   (setenv "GOROOT" "/home/zv/Development/go")
   (setenv "GOPATH" "/home/zv/Development/golang")
 
@@ -185,13 +185,17 @@ before layers configuration."
   (setq next-buffer-key "\M-j"
         prev-buffer-key "\M-k")
 
+  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                           ;; ("org" . "http://orgmode.org/elpa/")
+                           ("gnu" . "http://elpa.gnu.org/packages/")))
   (setq-default
    evil-escape-delay 0.2
    org-directory (expand-file-name "~/Documents")
    git-enable-github-support t
-   evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode)))
+   evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode))
+  )
 
-(defun dotspacemacs/config ()
+(defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
   ;; Where I keep my git controlled repos
