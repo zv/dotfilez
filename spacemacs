@@ -204,8 +204,8 @@ This function is called at the very end of Spacemacs initialization."
   ;; Powerline default separator
   (setq powerline-default-separator nil)
 
-  ;; Set the non-normal prefix to Hyper key
-  (setq evil-leader/non-normal-prefix "H-")
+  ;; Set our gpg program
+  (setq epg-gpg-program "/usr/bin/gpg2")
 
   ;; neotree
   (setq neo-theme 'ascii
