@@ -8,9 +8,6 @@
 export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 
-autoload bashcompinit
-bashcompinit
-
 path=(
     $GOROOT/bin
     $GOPATH/bin
@@ -27,8 +24,9 @@ path=(
 
 # Load our completion functions
 fpath=(
-    ~/.zsh/zsh-completions/src
-    ~/.zsh/completion
+    $HOME/.zsh/zsh-completions/src
+    $HOME/.zsh/completion
+    $HOME/.zsh/completion/rust-completion
     $HOME/.zsh/functions
     $fpath
 )
@@ -571,7 +569,7 @@ function authorstats {
 #  Modules & Completions
 ############################################
 
-autoload -U compinit && compinit -i
+autoload -U compinit && compinit 
 #autoload -U bashcompinit && bashcompinit
 #source /usr/share/bash-completion/completions/nmcli
 
