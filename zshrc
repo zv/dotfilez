@@ -83,8 +83,8 @@ export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//
 
 
 # Configure GPG
-GPG_TTY=$(tty)
-export GPG_TTY
+# GPG_TTY=$(tty)
+# export GPG_TTY
 
 # build stuff
 export CXX=g++
@@ -495,7 +495,6 @@ for c in ${(@k)npm_commands}; do; alias $c="$npm_commands[$c]"; done
 ############################################
 alias grep="$aliases[grep] --color=auto"
 export GREP_COLORS="37;45"
-export GREP_OPTIONS='--color=auto'
 
 ############################################
 #  Amazon AWS
