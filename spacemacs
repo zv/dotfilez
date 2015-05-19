@@ -185,9 +185,6 @@ values."
   (setq next-buffer-key "\M-j"
         prev-buffer-key "\M-k")
 
-  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ;; ("org" . "http://orgmode.org/elpa/")
-                           ("gnu" . "http://elpa.gnu.org/packages/")))
   (setq-default
    evil-escape-delay 0.2
    org-directory (expand-file-name "~/Documents")
