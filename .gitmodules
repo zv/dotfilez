@@ -15,3 +15,6 @@
 [submodule "emacs.d"]
 	path = emacs.d
 	url = https://github.com/zv/spacemacs.git
+[submodule "zsh/completion/rust-completion"]
+	path = zsh/completion/rust-completion
+	url = git@github.com:rust-lang/zsh-config.git
