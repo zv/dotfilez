@@ -6,9 +6,6 @@
 	path = vim/bundle/vundle
 	url = git://github.com/gmarik/vundle.git
 	ignore = dirty
-[submodule "lib/ag"]
-	path = lib/ag
-	url = https://github.com/ggreer/the_silver_searcher.git
 [submodule "zsh/zsh-completions"]
 	path = zsh/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
