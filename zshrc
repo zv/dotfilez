@@ -750,3 +750,16 @@ setopt hist_save_no_dups         # do not write a duplicate event to the history
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
+
+export NVM_DIR="/home/zv/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+alias serialt=screen /dev/ttyS0 115200,cs8,-ixon,-ixon,istrip
+function whatserialt {
+    echo "screen /dev/ttyS0 115200,cs8,-ixon,-ixon,istrip"
+}
+
+
+alias gpg=gpg2
+
+source $HOME/.gnupg/gpg-agent-wrapper
