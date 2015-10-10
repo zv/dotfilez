@@ -1,4 +1,4 @@
-top's Config File (Linux processes with windows)
+zv's Config File (Linux processes with windows)
 Id:i, Mode_altscr=1, Mode_irixps=1, Delay_time=2.0, Curwin=1
 Def	fieldscur=%7E(34;=@D:9&*'-06<8>?ACFG)+,./125BHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghij
 	winflags=162212, sortindx=18, maxtasks=0, graph_cpus=1, graph_mems=2
@@ -15,6 +15,7 @@ CPU	fieldscur=¥·Å&'(*0-3468;<=>?@ACFG¹:D)+,./125BHIJKLMNOPQRSTUVWXYZ[\]^_`abcdef
 Fixed_widest=-1, Summ_mscale=2, Task_mscale=1, Zero_suppress=1
 
 pipe	Open Files	lsof -P -p %d 2>&1
-file	NUMA Info	/proc/%d/numa_maps
-pipe	Log	tail -n200 /var/log/syslog | sort -Mr
-
+file	Limits	/proc/%d/limits
+pipe	Object File Headers	objdump -x /proc/%d/exe	
+pipe	ELF File Headers	readelf -a /proc/%d/exe	
+file	mmap regions	/proc/%d/maps
