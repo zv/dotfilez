@@ -94,8 +94,6 @@ export AR=ar
 ############################################
 #  Theme
 #############################################
-zstyle ':prezto:module:node:info:version' format '%v'
-
 function spectrum_ls() {
     string=${1-Test}
     if [[ $1 == "block" ]]
@@ -148,7 +146,6 @@ else
     }
 
     autoload -Uz vcs_info
-    autoload -Uz node-info node-doc
     base_vcs_style='%c%b%u%f'
     zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
     zstyle ':vcs_info:*' check-for-changes true
@@ -157,7 +154,7 @@ else
     zstyle ':vcs_info:*' unstagedstr '*'
     zstyle ':vcs_info:*' formats " [$base_vcs_style]"
     zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
-    precmd () { vcs_info; node-info }
+    precmd () { vcs_info }
 
     PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} $(zle_vim_prompt_notifier) '
     # RPROMPT='$(print_node_version)'
