@@ -362,15 +362,6 @@ jumplist=(
     fev "vim ~/.vimrc"
 )
 
-## xclipboard ##############################################
-if (( $+commands[xclip] )); then
-    alias xccopy='xclip -selection clipboard -in'
-    alias xcpaste='xclip -selection clipboard -out'
-elif (( $+commands[xsel] )); then
-    alias xccopy='xsel --clipboard --input'
-    alias xcpaste='xsel --clipboard --output'
-fi
-
 ## ls ######################################################
 alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
@@ -394,23 +385,6 @@ alias mxg='mix deps.get'
 alias mxdc='mix deps.compile'
 alias mxdu='mix deps.update'
 alias mxt='mix test'
-
-############################################
-# SystemD
-############################################
-
-typeset sc_user_commands sc_sudo_commands
-sc_user_commands=(
-  list-units is-active status show help list-unit-files
-  is-enabled list-jobs show-environment)
-
-sc_sudo_commands=(
-  start stop reload restart try-restart isolate kill
-  reset-failed enable disable reenable preset mask unmask
-  link load cancel set-environment unset-environment)
-
-for c in $sc_user_commands; do; alias sc-$c="systemctl $c"; done
-for c in $sc_sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
 
 ############################################
 #  Cargo
@@ -441,19 +415,6 @@ if (( $+commands[dnf] )); then
     alias dnfu='sudo dnf update'       # Updates packages.
     alias dnfU='sudo dnf upgrade'      # Upgrades packages.
 fi
-
-############################################
-#  Package Management (npm)
-############################################
-typeset -A npm_commands
-
-npm_commands=(
-    nps 'npm search'  # Search NPM
-    npi 'npm install' # Install a package
-)
-
-for c in ${(@k)npm_commands}; do; alias $c="$npm_commands[$c]"; done
-
 
 ############################################
 #  Grep
