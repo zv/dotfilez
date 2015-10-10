@@ -139,12 +139,6 @@ else
         fi
     }
 
-    print_node_version() {
-        if is_node_project; then
-            print "$node_info[version]"
-        fi
-    }
-
     autoload -Uz vcs_info
     base_vcs_style='%c%b%u%f'
     zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
@@ -157,7 +151,6 @@ else
     precmd () { vcs_info }
 
     PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} $(zle_vim_prompt_notifier) '
-    # RPROMPT='$(print_node_version)'
 fi
 
 # ls colors
@@ -178,7 +171,6 @@ setopt prompt_subst
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
-
 # The crazier the better!
 if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
     eval `dircolors --sh ~/.zsh/LS_COLORS`
@@ -195,7 +187,6 @@ function zle-line-init zle-keymap-select {
 }
 
 # ZSH line editor stuff needed for bindkey to work
-
 zle -N zle-line-init
 zle -N zle-keymap-select
 
@@ -363,29 +354,6 @@ alias pscpu='ps -e -o pcpu,cpu,nice,state,cputime,args|sort -k1 -nr'
 alias pscpu10='ps -e -o pcpu,cpu,nice,state,cputime,args|sort -k1 -nr | head -10'
 # top10 of the history
 alias hist10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
-
-## alias node='env NODE_NO_READLINE=1 rlwrap -S "node >>> " node'
-typeset -a harmony_args
-harmony_args=(--harmony
- --harmony_shipping
- --harmony_modules
- --harmony_arrays
- --harmony_array_includes
- --harmony_regexps
- --harmony_arrow_functions
- --harmony_proxies
- --harmony_sloppy
- --harmony_unicode
- --harmony_tostring
- --harmony_classes
- --harmony_object_literals
- --harmony_numeric_literals
- --harmony_strings
- --harmony_scoping
- --harmony_templates)
-
-alias harmony="node ${(j: :)harmony_args}"
-
 
 typeset -A jumplist
 jumplist=(
@@ -565,7 +533,7 @@ function authorstats {
 #  Modules & Completions
 ############################################
 
-autoload -U compinit && compinit 
+autoload -U compinit && compinit
 #autoload -U bashcompinit && bashcompinit
 #source /usr/share/bash-completion/completions/nmcli
 
@@ -699,13 +667,9 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
-## NPM
-# eval "$(npm completion 2>/dev/null)"
-
 #############################################
 # Directories
 #############################################
-
 setopt auto_name_dirs
 setopt auto_pushd
 setopt pushd_ignore_dups
@@ -722,7 +686,6 @@ if [[ ! -d $gnu_global_dir ]]; then
 fi
 
 export GTAGSLIBPATH=$gnu_global_dir
-
 #############################################
 # History
 #############################################
@@ -749,12 +712,6 @@ alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r 
 
 export NVM_DIR="/home/zv/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-alias serialt=screen /dev/ttyS0 115200,cs8,-ixon,-ixon,istrip
-function whatserialt {
-    echo "screen /dev/ttyS0 115200,cs8,-ixon,-ixon,istrip"
-}
-
 
 alias gpg=gpg2
 
