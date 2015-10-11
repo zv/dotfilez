@@ -1,0 +1,2 @@
+# Yubico YubiKey
+ATTRS{idVendor}=="1050", ATTR{manufacturer}=="Yubico", TAG+="uaccess"
