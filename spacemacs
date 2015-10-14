@@ -36,6 +36,7 @@ values."
      ruby
      rust
      sql
+     (shell :variables shell-default-term-shell "/usr/bin/zsh")
      syntax-checking
      zv)
    ;; List of additional packages that will be installed wihout being
