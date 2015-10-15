@@ -38,6 +38,7 @@ values."
      sql
      (shell :variables shell-default-term-shell "/usr/bin/zsh")
      syntax-checking
+     dash
      zv)
    ;; List of additional packages that will be installed wihout being
    ;; wrapped in a layer. If you need some configuration for these
