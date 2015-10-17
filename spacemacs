@@ -184,6 +184,8 @@ values."
 (defun dotspacemacs/user-init ()
   (setenv "GOROOT" "/home/zv/Development/go")
   (setenv "GOPATH" "/home/zv/Development/golang")
+  ;; Manually set for rust-racer when we can't have ENV_APPLICATION from systemd
+  (setenv "RUST_SRC_PATH" "/home/zv/Development/rust/src")
 
   ;; Customize which keys we
   (setq next-buffer-key "\M-j"
@@ -206,7 +208,13 @@ This function is called at the very end of Spacemacs initialization."
   (setq powerline-default-separator nil)
 
   ;; Set our gpg program
-  (setq epg-gpg-program "/usr/bin/gpg2")
+
+  ;; Racer
+  (add-hook 'racer-mode-hook #'company-mode)
+  (setq company-tooltip-align-annotations t)
+  ""
+  (setq racer-cmd "/home/zv/Development/racer/target/release/racer")
+  (setq racer-rust-src-path "/home/zv/Development/rust/src/")
 
   ;; neotree
   (setq neo-theme 'ascii
