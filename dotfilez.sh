@@ -112,38 +112,30 @@ function setup_env {
     packages=(
         ack
         aircrack-ng
-        bvi
+        clang
         clang-devel
+        clang-libs
         dnsenum
         dnsmap
         emacs
         curl
-        htop
         libvirt
         mtr
-        mutt
-        ncrack
         git-extras
-        gitflow
         global # gtags
         nmap
-        ntop
         hping3
         rlwrap
         rpmdevtools
-        rxvt-unicode-256color-ml
         scapy
         gnupg2
         graphviz
-        scrot
         socat
         the_silver_searcher
         tmux
         vim-enhanced
-        weechat
         wireshark
         xbacklight
-        xmonad
         zsh
     )
 
@@ -162,3 +154,24 @@ function setup_env {
 
     # systemctl unmask tmp.mount
 }
+
+#i3bar i3lock
+
+# emacs js mode
+# $ npm install -g js-beautify
+# thunderbird && thunderbird-enigmail
+# sudo dnf install ykpers-devel libyubikey-devel libusb-devel autoconf gnupg gnupg2-smime pcsc-lite
+# install zeal git@github.com:zealdocs/zeal.git # salimma/zeal
+# trackpad thing
+# xinput --set-prop 14 140 1.5 0 0 0 1.5 0 0 0 1
+
+# This will list the properties of your mouse. You'll see your Coordinate Transformation Matrix there, remember the number between parenthesis, mine is 146.
+# .
+
+# $xinput --set-prop 8 146 2 0 0 0 2 0 0 0 1
+
+# The numbers to pay attention here are the first and second '2' digits. The first specifies your x-axis sensitivity, and the second your y-axis sensitivity. Those numbers are generally set at 1, if you increase them you get faster mouse movement, you can also specify floating point numbers to decrease the speed(0.5 will half the speed). You can also change the last digit, which is the scale, it will multiply itself by both the x-axis and y-axis sensitivity, so you can change the mouse sensitivity with a single change.
+
+# One thing to remember though, these changes to the Coordinate Transformation Matrix don't play well with steam games, I have no idea why. Any change to it will mess up the mouse movement in-game, in my case the mouse just trembles in the top left corner of the screen, the game is unplayable. To fix it you need to return the matrix to 1's.
+
+# $xinput --set-prop 8 146 1 0 0 0 1 0 0 0 1
