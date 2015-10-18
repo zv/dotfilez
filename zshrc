@@ -655,23 +655,23 @@ export GTAGSLIBPATH=$gnu_global_dir
 #############################################
 # History
 #############################################
+
 HISTFILE=$HOME/.zsh_history
 
 # Lines to store
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=$((2**16 - 1))
+SAVEHIST=$((2**16 - 1))
 
-setopt append_history
 setopt extended_history
 setopt hist_expire_dups_first
-setopt hist_ignore_dups # ignore duplication command history list
+setopt hist_find_no_dups    # do not display a previously found event.
+setopt hist_ignore_all_dups # delete an old recorded event if a new event is a duplicate.
+setopt hist_ignore_dups     # ignore duplication command history list
+setopt hist_ignore_space    # do not record an event starting with a space.
+setopt hist_save_no_dups    # do not write a duplicate event to the history file.
 setopt hist_verify
 setopt inc_append_history
-setopt share_history # share command history data
-setopt hist_ignore_all_dups      # delete an old recorded event if a new event is a duplicate.
-setopt hist_find_no_dups         # do not display a previously found event.
-setopt hist_ignore_space         # do not record an event starting with a space.
-setopt hist_save_no_dups         # do not write a duplicate event to the history file.
+setopt share_history        # share command history data
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
