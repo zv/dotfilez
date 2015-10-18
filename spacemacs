@@ -186,9 +186,8 @@ values."
   ;; Manually set for rust-racer when we can't have ENV_APPLICATION from systemd
   (setenv "RUST_SRC_PATH" "/home/zv/Development/rust/src")
 
-  ;; Customize which keys we
-  (setq next-buffer-key "\M-j"
-        prev-buffer-key "\M-k")
+  (setq next-buffer-key (kbd "H-j")
+        prev-buffer-key (kbd "H-k"))
 
   (setq-default
    evil-escape-delay 0.2
