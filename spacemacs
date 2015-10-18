@@ -205,6 +205,9 @@ This function is called at the very end of Spacemacs initialization."
   ;; Powerline default separator
   (setq powerline-default-separator nil)
 
+  ;; Use Gtags to generate
+  (setq projectile-tags-command "gtags %s")
+
   ;; Set our gpg program
 
   ;; Racer
