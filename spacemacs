@@ -178,8 +178,7 @@ values."
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
-   dotspacemacs-default-package-repository nil
-   ))
+   dotspacemacs-default-package-repository nil))
 
 (defun dotspacemacs/user-init ()
   (setenv "GOROOT" "/home/zv/Development/go")
@@ -193,7 +192,7 @@ values."
 
   (setq-default
    evil-escape-delay 0.2
-   org-directory (expand-file-name "~/Documents")
+   org-directory (expand-file-name "~/Documents/")
    git-enable-github-support t
    evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode))
   )
@@ -277,6 +276,7 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
+ '(company-selection-wrap-around t)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(highlight-symbol-colors
@@ -286,9 +286,6 @@ This function is called at the very end of Spacemacs initialization."
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
  '(magit-completing-read-function (quote magit-builtin-completing-read) t)
- '(org-agenda-files
-   (quote
-    ("~/Documents/notes.org" "~/Documents/SFGOV/affordable_housing.org")))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
@@ -302,6 +299,4 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(org-document-title ((t (:foreground "black" :weight bold :height 1.35 :family "Sans Serif"))))
- '(woman-bold ((t (:foreground "DeepSkyBlue3" :weight bold))))
- '(woman-italic ((t (:foreground "DarkGreen" :underline t :slant oblique)))))
+ '(org-document-title ((t (:foreground "black" :weight bold :height 1.35 :family "Sans Serif")))))
