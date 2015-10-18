@@ -242,7 +242,27 @@ This function is called at the very end of Spacemacs initialization."
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
 
-  (setq org-default-notes-file (org-path "notes.org")))
+  ;; Monkeypatch some spacemacs internal window positioning
+  (defun spacemacs/shrink-window-horizontally (delta)
+    "Wrap `spacemacs/shrink-window-horizontally'."
+    (interactive "p")
+    (shrink-window 10 t))
+
+  (defun spacemacs/shrink-window (delta)
+    "Wrap `spacemacs/shrink-window'."
+    (interactive "p")
+    (shrink-window 5))
+
+  (defun spacemacs/enlarge-window (delta)
+    "Wrap `spacemacs/enlarge-window'."
+    (interactive "p")
+    (enlarge-window 5))
+
+  (defun spacemacs/enlarge-window-horizontally (delta)
+    "Wrap `spacemacs/enlarge-window-horizontally'."
+    (interactive "p")
+    (enlarge-window 10 t))
+  )
 
 ;; Custom variables
 (custom-set-variables
