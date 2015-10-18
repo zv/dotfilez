@@ -121,11 +121,16 @@ function is_node_project {
 
 # If we're in a dumb terminal then dont play fancy pants with our prompt
 if [[ $TERM == "dumb" ]]; then
-    PS1='%(?..[%?])%!:%~%# '
+    PROMPT='%2~ >> '
     unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
     # Ensure we don't set preexec && precmd
+elif [[ $TERM == 'eterm-color' ]]; then
+    unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    PROMPT='[%y] %2~ >> '
 else
     export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
     # shows a slightly different prompt for vicmd vs other ZLE command modes to let
