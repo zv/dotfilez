@@ -209,6 +209,8 @@ This function is called at the very end of Spacemacs initialization."
   (setq projectile-tags-command "gtags %s")
 
   ;; Set our gpg program
+  (setq epg-gpg-program "/usr/bin/gpg2"
+        epg-user-id "zv@nxvr.org")
 
   ;; Racer
   (add-hook 'racer-mode-hook #'company-mode)
