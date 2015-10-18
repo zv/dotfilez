@@ -270,8 +270,8 @@ function firewalkipedia {
 
 # do a quick check on the fastest DNS servers around
 function DNScheck() {
-    for x in "208.67.222.222" "208.67.220.220" "198.153.192.1" "198.153.194.1" "156.154.70.1" "156.154.71.1" "8.8.8.8" "8.8.4.4" "4.2.2.2"; do
-    (echo -n "$x "; dig @"$x" "$*"|grep Query);
+    for x in "208.67.222.222" "208.67.220.220" "198.153.192.1" "198.153.194.1" "156.154.70.1" "156.154.71.1" "8.8.8.8" "8.8.4.4" "4.2.2.2" "10.0.0.1"; do
+      (echo -n "$x "; dig "@$x" "$@" |grep Query); 
     done;
 }
 
