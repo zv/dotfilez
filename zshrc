@@ -165,28 +165,37 @@ bindkey -v
 
 bindkey "^[m" copy-prev-shell-word
 
-# Edit command in an external editor.
-bindkey -M vicmd "v" edit-command-line
+# Use C-l and C-h in zsh to accommodate backwards and forwards in viins
+# bindkey -M viins "\C-h" vi-backward-char
+# bindkey -M viins "\C-l" vi-forward-char
+# # Add this in to clear the screen instead of C-l
+# bindkey -M viins "\el" clear-screen
+bindkey -M viins "\ep" vi-up-line-or-history
+bindkey -M viins "\en" vi-down-line-or-history
 
+# Some convienent alt bindings
+bindkey -M viins "\eh" vi-backward-blank-word
+bindkey -M viins "\el" vi-forward-blank-word
+bindkey -M viins "\ed" delete-word
+bindkey -M viins "\ek" vi-cmd-mode
+
+# Edit command in an external editor.
 autoload -U edit-command-line
 zle -N edit-command-line
-bindkey '\C-x\C-e' edit-command-line
+bindkey -M vicmd "v" edit-command-line
 
-# Undo/Redo
-bindkey -M vicmd "u" undo
-bindkey -M vicmd "\C-R" redo
+# History
 bindkey -M vicmd "?" history-incremental-pattern-search-backward
 bindkey -M vicmd "/" history-incremental-pattern-search-forward
+bindkey -M vicmd "k" up-line-or-history
+bindkey -M vicmd "j" down-line-or-history
 
-# Expand history on space.
-bindkey -M "viins" ' ' magic-space
-
-autoload -U url-quote-magic
-zle -N self-insert url-quote-magic
+# autoload -U url-quote-magic
+# zle -N self-insert url-quote-magic
 
 bindkey '\ew' kill-region
-bindkey -s '\el' "ls\n"
-bindkey -s '\e.' "..\n"
+bindkey -s '\eu' "..\n"
+bindkey -s '\es' "git status\n"
 bindkey '^r' history-incremental-search-backward
 bindkey "^[[5~" up-line-or-history
 bindkey "^[[6~" down-line-or-history
