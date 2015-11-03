@@ -115,7 +115,7 @@ mode "resize" {
 bindsym $mod+s mode "resize"
 
 bindsym $mod+0 exec "gnome-terminal --profile=IRC -e irssi"
-bindsym $mod+2 exec "vlc"
+bindsym $mod+9 exec "vlc"
 
 bar {
         position top
