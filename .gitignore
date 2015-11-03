@@ -48,4 +48,8 @@ lib/vim
 # !emacs.d/private/zv/*
 # emacs.d
 
+irssi/irssi-scripts
+irssi/sasl.auth
+irssi/*.crt
+
 *npm-debug.log
