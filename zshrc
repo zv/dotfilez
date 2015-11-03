@@ -3,7 +3,7 @@
 # meow nyan meow nyan meow
 # 2009
 
-#  Environment
+# Environment
 # go
 export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
@@ -39,9 +39,8 @@ typeset -gU cdpath fpath path mailpath
 setopt BRACE_CCL          # Allow brace character class list expansion.
 setopt COMBINING_CHARS    # Combine zero-length punctuation characters
                           # with the base character.
-setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
+# setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
 unsetopt MAIL_WARNING     # Don't print a warning message if a mail file has been accessed.
-
 setopt LONG_LIST_JOBS     # List jobs in the long format by default.
 setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
 setopt NOTIFY             # Report status of background jobs immediately.
