@@ -54,19 +54,6 @@ setopt BARE_GLOB_QUAL
 
 setopt correct_all # Correct commands
 
-# Disable correction.
-for cmd (
-    ack cd cp ebuild gcc gist grep heroku
-    ln man mkdir mv mysql rm nmcli ip ag
-    git npm ember dnf
-) alias $cmd="nocorrect $cmd"
-
-# Disable globbing.
-for cmd (
-    fc find ftp history locate rake rsync
-    scp sftp git
-) alias $cmd="noglob $cmd"
-
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
@@ -238,69 +225,56 @@ bindkey "^[[3~" delete-char
 bindkey "^[3;5~" delete-char
 bindkey "\e[3~" delete-char
 
+zmodload zsh/complist
+# Completion menu selection keys (alt-{jkl} respectively)
+bindkey -M menuselect '\ej' down-line-or-history
+bindkey -M menuselect  '\ek' up-line-or-history
+bindkey -M menuselect  '\el' accept-line
+
+# Paging of long autocomplete can be exited with q
+bindkey -M listscroll q send-break
+# J key to scroll through history
+bindkey -M listscroll j down-line-or-history
+
 #############################################
 # Aliasing
 #############################################
+# Disable correction.
+for cmd (
+        ack cd cp ebuild gcc gist grep heroku
+        ln man mkdir mv mysql rm nmcli ip ag
+        git npm ember dnf
+    ) alias $cmd="nocorrect $cmd"
 
-alias ...='cd ../..'     # Basic directory operations
-alias -- -='cd -'        # This has always irritated me
+    # Disable globbing.
+    for cmd (
+            fc find ftp history locate rake rsync
+            scp sftp git
+        ) alias $cmd="noglob $cmd"
+
 # Define general aliases.
 alias _='sudo'
 alias e="emacsclient -t"
 alias edit="emacs -nw"
-alias mail='emacs -nw --eval="(gnus)"'
-alias cp="${aliases[cp]:-cp} -i"
-alias ln="${aliases[ln]:-ln} -i"
-alias mkdir="${aliases[mkdir]:-mkdir} -p"
-alias type='type -a'
-
 alias info="info --vi-keys"
 alias -g pr="print"
-alias -g gr="grep"
 
-# I occassionally want to convert man pages to pdfs, this is my hacky way to do it.
-function man2pdf {
-    man -Tps "$argv[1]" | ps2pdf - "$argv[1]"_man.pdf
-}
-# Wikipedia over DNS.
-function firewalkipedia {
-    dig +short txt "$argv[1]".wp.dg.cx
-}
-
-# do a quick check on the fastest DNS servers around
-function DNScheck() {
-    for x in "208.67.222.222" "208.67.220.220" "198.153.192.1" "198.153.194.1" "156.154.70.1" "156.154.71.1" "8.8.8.8" "8.8.4.4" "4.2.2.2" "10.0.0.1"; do
-      (echo -n "$x "; dig "@$x" "$@" |grep Query); 
-    done;
-}
-
-
-# Openssl
-alias ssl="openssl"
 # Tmux
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
-# Thesaurus
-alias ths2='dict -d moby-thesaurus'
-alias ths='aiksaurus'
-# esxape ANSI sequences
-alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
-# Switch Users, maining RTP.
-alias sudovim='sudo -E vim' # -c "set runtimepath+=$HOME/.vim" -u $HOME/.vimrc'
-alias screenlock='xscreensaver-command -lock'
+
 alias gdb="gdb -q"
 alias gdbtui="gdb -tui -ex 'set \$SHOW_CONTEXT = 0' -ex 'set \$USECOLOR = 0' -ex 'set extended-prompt (gdb) '"
 
+alias zthree="z3 -in"
+alias gpg=gpg2
+# Bullshit workaround to unlock my yubikey
+alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+
 # # mkdir & cd to it
-function mcd() {
-  mkdir -p "$1" && cd "$1";
-}
+function mcd() { mkdir -p "$1" && cd "$1"; }
 
 # Displays user owned processes status.
-function psu {
-  ps -U "${1:-$USER}" -o 'pid,%cpu,%mem,command' "${(@)argv[2,-1]}"
-}
-
 function dut {
   (( $# == 0 )) && set -- *
 
@@ -319,52 +293,7 @@ function dut {
   fi
 }
 
-# Sort connection state
-sortcons() {
-    netstat -nat |awk '{print $6}'|sort|uniq -c|sort -rn
-}
-
-# On the connected IP sorted by the number of connections
-sortconip() {
-    netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n
-}
-
-# top20 of Find the number of requests on 80 port
-req20() {
-    netstat -anlp|grep 80|grep tcp|awk '{print $5}'|awk -F: '{print $1}'|sort|uniq -c|sort -nr|head -n20
-}
-
-# top20 of Using tcpdump port 80 access to view
-http20() {
-    sudo tcpdump -i eth0 -tnn dst port 80 -c 1000 | awk -F"." '{print $1"."$2"."$3"."$4}' | sort | uniq -c | sort -nr |head -20
-}
-
-# Printing process according to the port number
-port_pro() {
-    netstat -ntlp | grep "$(retval $1)" | awk '{print $7}' | cut -d/ -f1
-}
-
-# gather external ip address
-getextaddr() {
-    curl http://ifconfig.me
-}
-
-alias ping='ping -c 5'
 alias clr='clear;echo "Currently logged in on $(tty), as $USER in directory $PWD."'
-alias psmem='ps -e -orss=,args= | sort -b -k1,1n'
-alias psmem10='ps -e -orss=,args= | sort -b -k1,1n| head -10'
-# get top process eating cpu if not work try excute : export LC_ALL='C'
-alias pscpu='ps -e -o pcpu,cpu,nice,state,cputime,args|sort -k1 -nr'
-alias pscpu10='ps -e -o pcpu,cpu,nice,state,cputime,args|sort -k1 -nr | head -10'
-# top10 of the history
-alias hist10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
-
-typeset -A jumplist
-jumplist=(
-    fed "$(dirname `readlink $HOME/.zshrc`)"
-    fez "vim ~/.zshrc"
-    fev "vim ~/.vimrc"
-)
 
 ## ls ######################################################
 alias ls='ls --group-directories-first --color=auto'
@@ -380,44 +309,23 @@ alias lc='lt -c'         # Lists sorted by date, most recent last, shows change 
 alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
 
 ############################################
-#  Mix
-############################################
-
-alias mxc='mix compile'
-alias mxd='mix deps'
-alias mxg='mix deps.get'
-alias mxdc='mix deps.compile'
-alias mxdu='mix deps.update'
-alias mxt='mix test'
-
-############################################
-#  Cargo
-############################################
-local -A rust_commands
-
-rust_commands=(
-    ccd 'cargo build' # Compile the current project
-    ccl 'cargo clean' # Remove the target directory
-    ccr 'cargo run'   # Build and execute src/main.rs
-    rc 'rustc'        # Rust compiler
-)
-
-for c in ${(@k)rust_commands}; do; alias $c="$rust_commands[$c]"; done
-
-############################################
 #  Package Management (dnf)
 ############################################
 if (( $+commands[dnf] )); then
-    alias dnfc='sudo dnf clean all'    # Cleans the cache.
-    alias dnfh='dnf history'           # Displays history.
-    alias dnfi='sudo dnf install'      # Installs package(s).
-    alias dnfl='dnf list'              # Lists packages.
-    alias dnfL='dnf list installed'    # Lists installed packages.
-    alias dnfq='dnf info'              # Displays package information.
-    alias dnfr='sudo dnf remove'       # Removes package(s).
-    alias dnfs='dnf search'            # Searches for a package.
-    alias dnfu='sudo dnf update'       # Updates packages.
-    alias dnfU='sudo dnf upgrade'      # Upgrades packages.
+    alias dnfs="dnf search"                       # search package
+    alias dnfp="dnf info"                         # show package info
+    alias dnfl="dnf list"                         # list packages
+    alias dnfgl="dnf grouplist"                   # list package groups
+    alias dnfli="dnf list installed"              # print all installed packages
+    alias dnfmc="dnf makecache"                   # rebuilds the dnf package list
+
+    alias dnfu="sudo dnf upgrade"                 # upgrade packages
+    alias dnfi="sudo dnf install"                 # install package
+    alias dnfgi="sudo dnf groupinstall"           # install package group
+    alias dnfr="sudo dnf remove"                  # remove package
+    alias dnfgr="sudo dnf groupremove"            # remove pagage group
+    alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
+    alias dnfc="sudo dnf clean all"               # clean cachefi
 fi
 
 ############################################
@@ -425,34 +333,6 @@ fi
 ############################################
 alias grep="$aliases[grep] --color=auto"
 export GREP_COLORS="37;45"
-
-############################################
-#  Amazon AWS
-############################################
-typeset -A aws_env_vars
-aws_env_vars=(
-    AWS_AUTO_SCALING_HOME "$HOME/.aws/aws-autoscaling"
-    AWS_ELB_HOME          "$HOME/.aws/aws-elastic_load_balacing"
-    AWS_CLOUDWATCH_HOME   "$HOME/.aws/aws-cloudwatch"
-    EC2_HOME              "$HOME/.aws/ec2-api-tools"
-    # Build up the various credential files & environment variables required by the
-    # AWS toolchain.
-    AWS_CONFIG_FILE       "$HOME/.aws/config"
-    AWS_CREDENTIAL_FILE   "$HOME/.aws/credentials"
-    # # For awscli
-    AWS_DEFAULT_REGION    "us-west-1"
-    EC2_URL               "https://ec2.us-west-1.amazonaws.com"
-    #AWS_ACCESS_KEY        "$(cat $AWS_CONFIG_FILE | grep -A 2 'default'  | grep '^aws_access_key_id' | cut -d  -f2)"
-    #AWS_SECRET_KEY        "$(cat $AWS_CONFIG_FILE  | grep -A 2 'default' | grep '^aws_secret_access_key' | cut -d  -f2)"
-)
-
-# `touch $AWS_CREDENTIAL_FILE`
-# if [ -w $AWS_CREDENTIAL_FILE ]; then
-#     printf "AWSAccessKeyId=%s\nAWSSecretKey=%s\n", $AWS_ACCESS_KEY, $AWS_SECRET_KEY > $AWS_CREDENTIAL_FILE;
-# fi
-
-# # Add all the AWS binaries to our path
-# for p ($AWS_CLOUDWATCH_HOME $AWS_ELB_HOME $AWS_AUTO_SCALING_HOME $EC2_HOME) path+=$p/bin
 
 ############################################
 #  Git
