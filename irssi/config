@@ -14,7 +14,18 @@ servers = (
     port = "6667";
     autoconnect = "yes";
   },
-  { address = "irc.oftc.net"; chatnet = "OFTC"; port = "6667"; }
+  { address = "irc.oftc.net"; chatnet = "OFTC"; port = "6667"; },
+  {
+    address = "irc.smashthestack.org";
+    chatnet = "smashthestack";
+    port = "6667";
+  },
+  {
+    address = "irc.awarenetwork.org";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+  }
 );
 
 chatnets = {
@@ -24,19 +35,9 @@ chatnets = {
     max_msgs = "3";
     max_whois = "30";
   };
-  mozilla = {
-    type = "IRC";
-    nick = "zv";
-    autoconnect = "Yes";
-  };
-  freenode = {
-    type = "IRC";
-    nick = "zv";
-    autoconnect = "Yes";
-  };
-  smashthestack = {
-    type = "IRC"; host = "irc.smashthestack.org";
-  };
+  mozilla = { type = "IRC"; nick = "zv"; autoconnect = "Yes"; };
+  freenode = { type = "IRC"; nick = "zv"; autoconnect = "Yes"; };
+  smashthestack = { type = "IRC"; nick = "zv"; autoconnect = "Yes"; };
 };
 
 channels = (
@@ -48,16 +49,17 @@ channels = (
   { name = "#asm"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#postgresql"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#webgl"; chatnet = "freenode"; autojoin = "Yes"; },
-  { name = "#webpack"; chatnet = "freenode"; autojoin = "Yes"; },
-  { name = "#whatwg"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#reactjs"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##javascript"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#emacs"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "#noisebrige"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "#yum"; chatnet = "freenode"; autojoin = "Yes"; },
 
   { name = "#rust"; chatnet = "mozilla"; autojoin = "Yes"; },
   { name = "#rust-internals"; chatnet = "mozilla"; autojoin = "Yes"; },
   { name = "#cargo"; chatnet = "mozilla"; autojoin = "Yes"; },
   { name = "#servo"; chatnet = "mozilla"; autojoin = "Yes"; },
+  { name = "#sf"; chatnet = "mozilla"; autojoin = "Yes"; },
 
   { name = "#io"; chatnet = "smashthestack"; autojoin = "Yes"; }
 );
@@ -74,7 +76,6 @@ aliases = {
   DATE = "time";
   HOST = "userhost";
   LAST = "lastlog";
-  SAY = "msg *";
   WI = "whois";
   WII = "whois $0 $0";
   WW = "whowas";
@@ -110,6 +111,7 @@ aliases = {
   ATAG = "WINDOW SERVER";
   UNSET = "set -clear";
   RESET = "set -default";
+  g = "/window goto";
 };
 
 statusbar = {
@@ -291,3 +293,14 @@ settings = {
   };
 };
 ignores = ( { level = "JOINS PARTS QUITS MODES"; } );
+keyboard = (
+  { key = "^O"; id = "command"; data = "window last"; },
+  { key = "meta-p"; id = "change_window"; data = "20"; },
+  { key = "meta-a"; id = "change_window"; data = "21"; },
+  { key = "meta-s"; id = "change_window"; data = "22"; },
+  { key = "meta-d"; id = "change_window"; data = "23"; },
+  { key = "meta-f"; id = "change_window"; data = "24"; },
+  { key = "meta-g"; id = "change_window"; data = "25"; },
+  { key = "meta-k"; id = "command"; data = "scrollback goto -5"; },
+  { key = "meta-j"; id = "command"; data = "scrollback goto +5"; }
+);
