@@ -11,20 +11,27 @@ servers = (
   {
     address = "irc.mozilla.org";
     chatnet = "mozilla";
-    port = "6667";
+    port = "6697";
+    use_ssl = "yes";
+    ssl_cert = "~/.irssi/nxvr.crt";
+    ssl_verify = "yes";
+    family = "inet";
     autoconnect = "yes";
   },
-  { address = "irc.oftc.net"; chatnet = "OFTC"; port = "6667"; },
+  {
+    address = "irc.oftc.net";
+    chatnet = "OFTC";
+    port = "6697";
+    use_ssl = "yes";
+    ssl_cert = "~/.irssi/nxvr.crt";
+    # ssl_verify = "yes";
+    autoconnect = "yes";
+  },
   {
     address = "irc.smashthestack.org";
     chatnet = "smashthestack";
     port = "6667";
-  },
-  {
-    address = "irc.awarenetwork.org";
-    port = "6667";
-    use_ssl = "no";
-    ssl_verify = "no";
+    autoconnect = "yes";
   }
 );
 
@@ -48,12 +55,12 @@ channels = (
   { name = "#radare"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#asm"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#postgresql"; chatnet = "freenode"; autojoin = "Yes"; },
-  { name = "#webgl"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#reactjs"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##javascript"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#emacs"; chatnet = "freenode"; autojoin = "Yes"; },
-  { name = "#noisebrige"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "#noisebridge"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#yum"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "#tor"; chatnet = "OFTC"; autojoin = "Yes"; },
 
   { name = "#rust"; chatnet = "mozilla"; autojoin = "Yes"; },
   { name = "#rust-internals"; chatnet = "mozilla"; autojoin = "Yes"; },
@@ -102,7 +109,7 @@ aliases = {
   GOTO = "sb goto";
   CHAT = "dcc chat";
   RUN = "SCRIPT LOAD";
-  CALC = "exec - if command -v bc >/dev/null 2>&1\\; then printf '%s=' '$*'\\; echo '$*' | bc -l\\; else echo bc was not found\\; fi";
+  CALC = "exec emacsclient --eval '(calc-eval \"$*\")'";
   SBAR = "STATUSBAR";
   INVITELIST = "mode $C +I";
   Q = "QUERY";
@@ -243,9 +250,8 @@ statusbar = {
       #rollen statusbar:
 
       items = {
-        #           barstart = "--------------";
         erotin = {
-          items = { barstart = "asdasd--------------"; };
+          items = { barstart = ""; };
           priority = "100";
           alignment = "left";
           disabled = "no";
@@ -268,10 +274,20 @@ statusbar = {
     };
   };
 };
+
 settings = {
-  core = { real_name = "zv"; user_name = "zv"; nick = "zv"; };
+  core = {
+    real_name = "zv";
+    user_name = "zv";
+    nick = "zv";
+    hostname = "nxvr.org";
+  };
   "fe-text" = { actlist_sort = "refnum"; };
-  "fe-common/core" = { theme = "default"; };
+  "fe-common/core" = {
+    theme = "weed";
+    autolog_path = "/tmp/irssi_logs/%Y/$tag/$0.%m-%d.log";
+    autolog = "yes";
+  };
   "perl/core/scripts" = {
     awl_all_disable = "no";
     awl_automode = "sbar";
@@ -292,15 +308,20 @@ settings = {
     awl_sort = "refnum";
   };
 };
+
 ignores = ( { level = "JOINS PARTS QUITS MODES"; } );
+
 keyboard = (
   { key = "^O"; id = "command"; data = "window last"; },
   { key = "meta-p"; id = "change_window"; data = "20"; },
   { key = "meta-a"; id = "change_window"; data = "21"; },
   { key = "meta-s"; id = "change_window"; data = "22"; },
   { key = "meta-d"; id = "change_window"; data = "23"; },
-  { key = "meta-f"; id = "change_window"; data = "24"; },
-  { key = "meta-g"; id = "change_window"; data = "25"; },
-  { key = "meta-k"; id = "command"; data = "scrollback goto -5"; },
-  { key = "meta-j"; id = "command"; data = "scrollback goto +5"; }
+  { key = "meta-k"; id = "command"; data = "scrollback goto -10"; },
+  { key = "meta-j"; id = "command"; data = "scrollback goto +10"; },
+  { key = "^H"; id = "previous_window"; data = ""; },
+  { key = "^L"; id = "next_window"; data = ""; },
+  { key = "home"; id = "scroll_start"; data = ""; },
+  { key = "end"; id = "scroll_end"; data = ""; }
 );
+logs = { };
