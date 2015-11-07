@@ -285,7 +285,8 @@ This function is called at the very end of Spacemacs initialization."
     (quote
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
- '(magit-completing-read-function (quote magit-builtin-completing-read) t)
+ '(magit-completing-read-function (quote magit-builtin-completing-read))
+ '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
