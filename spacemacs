@@ -236,11 +236,12 @@ This function is called at the very end of Spacemacs initialization."
         helm-ff-file-name-history-use-recentf t)
 
   ;; persistent undo ----------------------------------------
+  (setq zv/undo-tree-directory "/tmp/.emacs-undo")
   (setq undo-tree-auto-save-history t
-        undo-tree-history-directory-alist
-        `(("." . ,(concat spacemacs-cache-directory "undo"))))
-  (unless (file-exists-p (concat spacemacs-cache-directory "undo"))
-    (make-directory (concat spacemacs-cache-directory "undo")))
+        undo-tree-history-directory-alist `(("." . ,zv/undo-tree-directory)))
+
+  (unless (file-exists-p zv/undo-tree-directory)
+    (make-directory zv/undo-tree-directory))
 
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t)
