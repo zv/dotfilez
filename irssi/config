@@ -21,11 +21,12 @@ servers = (
   {
     address = "irc.oftc.net";
     chatnet = "OFTC";
-    port = "6697";
-    use_ssl = "yes";
-    ssl_cert = "~/.irssi/nxvr.crt";
+    port = "6667";
+    #port = "6697";
+    #use_ssl = "yes";
+    #ssl_cert = "~/.irssi/nxvr.crt";
     # ssl_verify = "yes";
-    autoconnect = "yes";
+    # autoconnect = "yes";
   },
   {
     address = "irc.smashthestack.org";
@@ -54,6 +55,7 @@ channels = (
   { name = "#erlang"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#radare"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#asm"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "##re"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#postgresql"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#reactjs"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##javascript"; chatnet = "freenode"; autojoin = "Yes"; },
@@ -118,7 +120,7 @@ aliases = {
   ATAG = "WINDOW SERVER";
   UNSET = "set -clear";
   RESET = "set -default";
-  g = "/window goto";
+  g = "/go";
 };
 
 statusbar = {
@@ -246,9 +248,7 @@ statusbar = {
     remove = { items = { }; disabled = "yes"; };
     channels = { items = { chanact = { }; }; disabled = "yes"; };
     statusbar = {
-
       #rollen statusbar:
-
       items = {
         erotin = {
           items = { barstart = ""; };
@@ -286,15 +286,15 @@ settings = {
   "fe-common/core" = {
     theme = "weed";
     autolog_path = "/tmp/irssi_logs/%Y/$tag/$0.%m-%d.log";
-    autolog = "yes";
+    autolog = "no";
   };
   "perl/core/scripts" = {
     awl_all_disable = "no";
     awl_automode = "sbar";
-    awl_block = "20";
+    awl_block = "10";
     awl_columns = "1";
-    awl_display_key = "%K%0$H $N %N";
-    awl_display_key_active = "%1 %W$C %N";
+    awl_display_key = "%K%0$H $Q %N";
+    awl_display_key_active = "%1 %W$N $C %N";
     awl_display_nokey = "%K%0$H $N %N";
     awl_display_nokey_active = "%1 %W$C %N";
     awl_height_adjust = "1";
@@ -303,7 +303,7 @@ settings = {
     awl_placement = "bottom";
     awl_position = "0";
     awl_prefer_name = "yes";
-    awl_sbar_maxlength = "yes";
+    awl_sbar_maxlength = "no";
     awl_separator = "%N %N";
     awl_sort = "refnum";
   };
