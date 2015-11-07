@@ -249,24 +249,19 @@ This function is called at the very end of Spacemacs initialization."
   ;; Monkeypatch some spacemacs internal window positioning
   (defun spacemacs/shrink-window-horizontally (delta)
     "Wrap `spacemacs/shrink-window-horizontally'."
-    (interactive "p")
-    (shrink-window 10 t))
+    (interactive "p") (shrink-window 10 t))
 
   (defun spacemacs/shrink-window (delta)
     "Wrap `spacemacs/shrink-window'."
-    (interactive "p")
-    (shrink-window 5))
+    (interactive "p") (shrink-window 5))
 
   (defun spacemacs/enlarge-window (delta)
     "Wrap `spacemacs/enlarge-window'."
-    (interactive "p")
-    (enlarge-window 5))
+    (interactive "p") (enlarge-window 5))
 
   (defun spacemacs/enlarge-window-horizontally (delta)
     "Wrap `spacemacs/enlarge-window-horizontally'."
-    (interactive "p")
-    (enlarge-window 10 t))
-  )
+    (interactive "p") (enlarge-window 10 t)))
 
 ;; Custom variables
 (custom-set-variables
