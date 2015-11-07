@@ -117,7 +117,7 @@ values."
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
-   dotspacemacs-use-ido t
+   dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to miminimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
@@ -181,6 +181,7 @@ values."
    dotspacemacs-default-package-repository nil))
 
 (defun dotspacemacs/user-init ()
+
   (setenv "GOROOT" "/home/zv/Development/go")
   (setenv "GOPATH" "/home/zv/Development/golang")
   ;; Manually set for rust-racer when we can't have ENV_APPLICATION from systemd
@@ -193,8 +194,7 @@ values."
    evil-escape-delay 0.2
    org-directory (expand-file-name "~/Documents/")
    git-enable-github-support t
-   evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode))
-  )
+   evil-lisp-state-major-modes '(emacs-lisp-mode clojure-mode)))
 
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
@@ -215,7 +215,7 @@ This function is called at the very end of Spacemacs initialization."
   ;; Racer
   (add-hook 'racer-mode-hook #'company-mode)
   (setq company-tooltip-align-annotations t)
-  ""
+
   (setq racer-cmd "/home/zv/Development/racer/target/release/racer")
   (setq racer-rust-src-path "/home/zv/Development/rust/src/")
 
