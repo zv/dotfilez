@@ -135,9 +135,9 @@ fi
 # ls colors
 autoload -U colors && colors;
 
-setopt no_beep # Stop the beep insanity
-setopt auto_cd # Automatic CD on directory specification
-setopt cdablevarS # CD into variable from var name
+setopt no_beep      # Stop the beep insanity
+setopt auto_cd      # Automatic CD on directory specification
+setopt cdablevarS   # CD into variable from var name
 setopt prompt_subst # Setup the prompt with pretty colors
 
 # 10 years I've been listenining to this list prompt and today I am fucking done!
@@ -252,9 +252,6 @@ alias -g pr="print"
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
-alias gdb="gdb -q"
-alias gdbtui="gdb -tui -ex 'set \$SHOW_CONTEXT = 0' -ex 'set \$USECOLOR = 0' -ex 'set extended-prompt (gdb) '"
-
 alias zthree="z3 -in"
 alias gpg=gpg2
 # Bullshit workaround to unlock my yubikey
@@ -293,7 +290,6 @@ alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias lm='la | "$PAGER"' # Lists human readable sizes, hidden files through pager.
 alias lx='ll -XB'        # Lists sorted by extension (GNU only).
 alias lk='ll -Sr'        # Lists sorted by size, largest last.
-alias lt='ll -tr'        # Lists sorted by date, most recent last.
 alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
 alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
 
@@ -441,13 +437,13 @@ if [[ "$TERM" != 'dumb' ]]; then
 )'
 
     # Don't complete uninteresting users...
-    zstyle ':completion:*:*:*:users' ignored-patterns \
+    zstyle ':completion:*:*:*:users' ignored-patterns                     \
            adm amanda apache avahi beaglidx bin cacti canna clamav daemon \
-           dbus distcache dovecot fax ftp games gdm gkrellmd gopher \
-           hacluster haldaemon halt hsqldb ident junkbust ldap lp mail \
-           mailman mailnull mldonkey mysql nagios \
-           named netdump news nfsnobody nobody nscd ntp nut nx openvpn \
-           operator pcap postfix postgres privoxy pulse pvm quagga radvd \
+           dbus distcache dovecot fax ftp games gdm gkrellmd gopher       \
+           hacluster haldaemon halt hsqldb ident junkbust ldap lp mail    \
+           mailman mailnull mldonkey mysql nagios                         \
+           named netdump news nfsnobody nobody nscd ntp nut nx openvpn    \
+           operator pcap postfix postgres privoxy pulse pvm quagga radvd  \
            rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs '_*'
 
     # ... unless we really want to.
