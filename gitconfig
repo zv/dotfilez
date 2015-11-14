@@ -22,133 +22,123 @@
 
 [color "branch"]
 	current = green reverse
-	local = yellow
-	remote = green
+	local		= yellow
+	remote	= green
 
 [color "diff"]
-	meta = yellow
-	frag = magenta bold
-	old = red
-	new = green
-	commit = cyan
-	func = red bold
+	meta		= yellow
+	frag		= magenta bold
+	old			= red
+	new			= green
+	commit	= cyan
+	func		= red bold
 
 [color "status"]
-	added = green
-	changed = yellow
+	added			= green
+	changed		= yellow
 	untracked = red
-	nobranch = red bold reverse
+	nobranch	= red bold reverse
 
 [alias]
-# Mostly in order they were added, except my most heavily
-# used aliases are first.
+	# commits not pushed to $1, master by default
+	unpushed			= cherry -v
 
-# commits not pushed to $1, master by default
-unpushed = cherry -v
+	# what branch contains the sha
+	contains			= branch --contains
 
-# what branch contains the sha
-contains = branch --contains
+	# https://github.com/prabirshrestha/ProfilesAndSettings/blob/master/.gitconfig
+	# show tags and any tag annotation (tito adds tag annotations for example)
+	tags					= tag -n1 -l
 
-# https://github.com/prabirshrestha/ProfilesAndSettings/blob/master/.gitconfig
-# show tags and any tag annotation (tito adds tag annotations for example)
-tags = tag -n1 -l
+	# show a list of every branch and show their latests commit, sorted by last commit
+	branch-log				= "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/heads --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
+	branch-log-remote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/origin --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
 
-# url of origin, about 99% of what I use git config --list for
-cloneurl = config --get remote.origin.url
+	whatis				= show -s --pretty='tformat:%h (%s, %ad)' --date=short
 
-# show a list of every branch and show their latests commit, sorted by last commit
-brlog = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/heads --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
-brlogremote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/origin --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
+	ancestor			= !bash -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+	
+	whats-new     = !sh -c 'git log $1@{1}..$1@{0} "$@"'
 
-# from https://git.wiki.kernel.org/index.php/Aliases
-#whois = !sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\\" --author=\"$1\"' -
+	# Branch Diff
+	branch-diff		= "!f() { head=${1:-HEAD} ; ancestor=`git oldest-ancestor master $head` ; git diff $ancestor..$head ; }; f"
+	branch-vdiff	= "!f() { head=${1:-HEAD} ; ancestor=`git oldest-ancestor master $head` ; git diff --name-only $ancestor..$head | xargs diffuse -s -r $ancestor ; }; f &"
 
-whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+	# add
+	a							= add            # add
+	pa  					= add --patch # stage commits chunk by chunk
 
-# from https://gist.github.com/awood/11189030
-oldest-ancestor = !bash -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
-branchdiff = "!f() { head=${1:-HEAD} ; ancestor=`git oldest-ancestor master $head` ; git diff $ancestor..$head ; }; f"
-visual-branchdiff = "!f() { head=${1:-HEAD} ; ancestor=`git oldest-ancestor master $head` ; git diff --name-only $ancestor..$head | xargs diffuse -s -r $ancestor ; }; f &"
+	# branch
+	b							= branch -v                     # branch (verbose)
 
-# add
-a = add            # add
-padd = add --patch # stage commits chunk by chunk
+	# commit
+	c							= commit -m          # commit with message
+	ca						= commit -am        # commit all with message
+	ci						= commit            # commit
+	amend					= commit --amend # ammend your last commit
 
-# branch
-b = branch -v                     # branch (verbose)
+	# checkout
+	co						= checkout    # checkout
+	nb						= checkout -b # create and switch to a new branch (mnemonic: "git new branch branchname...")
 
-# commit
-c = commit -m          # commit with message
-ca = commit -am        # commit all with message
-ci = commit            # commit
-amend = commit --amend # ammend your last commit
+	# cherry-pick
+	cp						= cherry-pick -x # grab a change from a branch
 
-# checkout
-co = checkout    # checkout
-nb = checkout -b # create and switch to a new branch (mnemonic: "git new branch branchname...")
+	churn					= !"git log -M -C --name-only --format=\"format:%n\" | grep . | sort | uniq -c | sort -n"
 
-# cherry-pick
-cp = cherry-pick -x # grab a change from a branch
+	# diff
+	# d						= difftool
+	d							= !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
+	dc						= diff --cached # diff staged changes
+	last					= diff HEAD^  # diff last committed change
 
-churn = !"git log -M -C --name-only --format=\"format:%n\" | grep . | sort | uniq -c | sort -n"
+	# log
+	l							= log --date=short --pretty=\"format:%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset\"
+	ll						= log --graph --oneline --decorate --branches --tags
+	# A shortcut for seeing the fetched commits
+	lc						= log ORIG_HEAD.. --stat --no-merges
+	lsig					= log  --pretty=format:\"%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) %m [%G?]%Creset\"
+	lol						= log --graph --decorate --pretty=oneline --abbrev-commit
+	lola					= log --graph --decorate --pretty=oneline --abbrev-commit --all
+	changes				= log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
+	short					= log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
+	changelog			= log --pretty=format:\" * %s\"
 
-# diff
-# d = difftool
-d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
-dc = diff --cached # diff staged changes
-last = diff HEAD^  # diff last committed change
+	# Show our branches as a tree
+	prtree				= log --graph --simplify-by-decoration --pretty=format:'%d' --all
 
-# log
-l = log --date=short --pretty=\"format:%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset\"
-ll = log --graph --oneline --decorate --branches --tags
-lc = log ORIG_HEAD.. --stat --no-merges
-lsig = log  --pretty=format:\"%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) %m [%G?]%Creset\"
-lol = log --graph --decorate --pretty=oneline --abbrev-commit
-lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
-short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
-changelog = log --pretty=format:\" * %s\"
-useraddcount = shortlog -sn
-# Show our branches as a tree
-show-branch-ordered = log --graph --simplify-by-decoration --pretty=format:'%d' --all
+	# rebase
+	rc						= rebase --continue            # continue rebase
+	rs						= rebase --skip                # skip rebase
 
-# rebase
-rc = rebase --continue            # continue rebase
-rs = rebase --skip                # skip rebase
+	# remote
+	r							= remote -v                     # show remotes (verbose)
 
-# remote
-r = remote -v                     # show remotes (verbose)
+	# edit unmerged paths
+	edit-unmerged	= "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; vim `f`"
+	add-unmerged	= "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
 
-# edit unmerged paths
-edit-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; vim `f`"
-add-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
+	# reset
+	unstage				= reset HEAD              # remove files from index (tracking)
+	uncommit			= reset --soft HEAD^     # go back before last commit, with files in uncommitted state
+	filelog				= log -u                  # show changes to a file
 
-# reset
-unstage = reset HEAD              # remove files from index (tracking)
-uncommit = reset --soft HEAD^     # go back before last commit, with files in uncommitted state
-filelog = log -u                  # show changes to a file
+	# rm
+	remove-cache	= !sh -c"git rm $(git ls-files --deleted)" # Remove files from git that are deleted.
 
-# rm
-remove-cache=!sh -c"git rm $(git ls-files --deleted)" # Remove files from git that are deleted.
+	# stash
+	stashlast			= stash apply stash@{0} # apply the most recently made stash
+	sl						= stash list
 
-# stash
-stashlast = stash apply stash@{0} # apply the most recently made stash
-sl = stash list
+	# unstage to HEAD
+	unstage				= reset HEAD --
 
-# unstage to HEAD
-unstage = reset HEAD --
+	branchlog			= for-each-ref --sort=-committerdate refs/heads/ # sort branches by last commit date
 
-# via http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
-snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
-snapshots = !git stash list --grep snapshot
-
-branchlog = for-each-ref --sort=-committerdate refs/heads/ # sort branches by last commit date
-
-# temporary ignore/unignore
-ignore   = update-index --assume-unchanged
-unignore = update-index --no-assume-unchanged
-list-ignored =!sh -c "git ls-files -v|grep '^h'" # list our ignored files
-
+	# temporary ignore/unignore
+	ignore				= update-index --assume-unchanged
+	unignore			= update-index --no-assume-unchanged
+	list-ignored	=!sh -c "git ls-files -v|grep '^h'" # list our ignored files
 [log]
 	date = short
 
@@ -159,15 +149,19 @@ list-ignored =!sh -c "git ls-files -v|grep '^h'" # list our ignored files
 
 [branch]
 	autosetupmerge = true
+	
 [core]
 	# true resulted in some painful dialog with Windows developers.
 	autocrlf = false
 	editor = vim
 	excludesfile = ~/.gitignore
+	
 [advice]
 	statusHints = false
+
 [apply]
 	whitespace = nowarn
+	
 [diff]
 	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
 	# instead of a/b/c/d as prefixes for patches
@@ -175,13 +169,12 @@ list-ignored =!sh -c "git ls-files -v|grep '^h'" # list our ignored files
 	algorithm      = patience
 	tool           = vimdiff
 	guitool        = gvimdiff
-[rerere]
-	# "Boom! Roasted!" -- Emeril Legasse
-	# https://www.kernel.org/pub/software/scm/git/docs/git-rerere.html
-	enabled = true
+
 [push]
 	default = current
+
 [rebase]
 	stat = true
+
 [difftool]
 	prompt = true
