@@ -10,6 +10,9 @@
 [remote "origin"]
 	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
 
+[format]
+	signoff = true
+
 [color]
 	ui = true
 	pager = true
