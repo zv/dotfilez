@@ -1,8 +1,11 @@
 [user]
-	name       = zv
+	name       = Zephyr Pellerin
 	email      = zv@nxvr.org
 	editor     = vim
-	signingkey = 5DC172F8
+	signingkey = 0xF6F2D0445DC172F8
+
+[github]
+	user = zv
 
 [remote "origin"]
 	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
