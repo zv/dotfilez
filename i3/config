@@ -118,6 +118,13 @@ bindsym $mod+s mode "resize"
 bindsym $mod+0 exec "gnome-terminal --profile=IRC -e irssi"
 bindsym $mod+9 exec "vlc"
 
+# bindsym $mod+Shift+b bar hidden_state toggle
+bindsym $mod+a bar mode toggle
+
+# Printscreen
+bindsym Print exec gnome-screenshot -f '/tmp/screenshot.jpg'
+bindsym $mod+Print exec gnome-screenshot -i
+
 bar {
         position top
         colors {
