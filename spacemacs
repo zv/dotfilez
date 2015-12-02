@@ -274,6 +274,8 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
  '(company-selection-wrap-around t)
  '(expand-region-contract-fast-key "V")
@@ -284,8 +286,16 @@ This function is called at the very end of Spacemacs initialization."
     (quote
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
- '(magit-completing-read-function (quote magit-builtin-completing-read))
+ '(magit-completing-read-function (quote magit-builtin-completing-read) t)
  '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
+ '(org-html-text-markup-alist
+   (quote
+    ((bold . "<b>%s</b>")
+     (code . "<code>%s</code>")
+     (italic . "<i>%s</i>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<span class=\"verbatim\">%s</span>"))))
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
