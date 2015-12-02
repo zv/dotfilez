@@ -8,19 +8,27 @@
 export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 
-path=(
-    $GOROOT/bin
-    $GOPATH/bin
-    $path
-    /home/zv/Downloads/firefox
-    /usr/local/pgsql/bin
-    /usr/local/heroku/bin
+# Add some items to our path
+local -aU path_suffix path_prefix
+
+path_prefix=(
     $HOME/.bin
     /usr/local/{bin,sbin}
-    /usr/local/lib/
-    /usr/local/plan9/bin # Userspace From Plan9 binaries
-    # $HOME/depot_tools
+    /usr/local/lib)
+
+path_suffix=(
+    {$GOROOT,$GOPATH}/bin
+    /usr/local/{pgsql,heroku,plan9}/bin
+    $HOME/depot_tools
 )
+
+for np ($path_suffix) if [[ ! -d $np ]] path_suffix=(${path_suffix#$np})
+for np ($path_prefix) if [[ ! -d $np ]] path_prefix=(${path_prefix#$np})
+
+# Tack the `real` path all together now
+path=($path_prefix $path $path_suffix)
+
+typeset -gU cdpath fpath path mailpath
 
 # Load our completion functions
 fpath=(
@@ -33,8 +41,6 @@ fpath=(
 
 # Run our external modules
 for fn (~/.zsh/modules/*.zsh) source $fn
-
-typeset -gU cdpath fpath path mailpath
 
 setopt BRACE_CCL          # Allow brace character class list expansion.
 setopt COMBINING_CHARS    # Combine zero-length punctuation characters
