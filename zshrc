@@ -278,6 +278,18 @@ function dut {
 
 alias clr='clear;echo "Currently logged in on $(tty), as $USER in directory $PWD."'
 
+function lenovo_oxide {
+    # Grep through for the actual ID. Hack.
+    local prop_id
+    prop_id=$(xinput list --short | \
+        grep 'Lenovo.*pointer' | \
+        awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
+        sed 's/id\=//')
+   xinput --set-prop $prop_id 140 $1 0 0 0 $1 0 0 0 0.8
+}
+
+alias ptrsp='lenovo_oxide'
+
 ## ls ######################################################
 alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
