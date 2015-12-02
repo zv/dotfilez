@@ -107,8 +107,9 @@ function is_node_project {
 }
 
 # If we're in a dumb terminal then dont play fancy pants with our prompt
+local baseprompt='>>'
 if [[ $TERM == 'dumb' ]]; then
-    PROMPT='%2~ >> '
+    PROMPT='%2~ $baseprompt '
     unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
@@ -117,12 +118,11 @@ elif [[ $TERM == 'eterm-color' ]]; then
     unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
-    PROMPT='[%y] %2~ >> '
+    PROMPT='[%y] %2~ $baseprompt '
 else
     export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
     # shows a slightly different prompt for vicmd vs other ZLE command modes to let
     # you know what you are dealing with.
-    baseprompt='>>'
 
     autoload -Uz vcs_info
     base_vcs_style='%c%b%u%f'
@@ -169,21 +169,15 @@ zle -N zle-keymap-select
 
 bindkey -v
 
-bindkey "^[m" copy-prev-shell-word
 
-# Use C-l and C-h in zsh to accommodate backwards and forwards in viins
-# bindkey -M viins "\C-h" vi-backward-char
-# bindkey -M viins "\C-l" vi-forward-char
-# # Add this in to clear the screen instead of C-l
-# bindkey -M viins "\el" clear-screen
-bindkey -M viins "\ep" vi-up-line-or-history
-bindkey -M viins "\en" vi-down-line-or-history
+bindkey -M viins "^P" up-line-or-search
+bindkey -M viins "^N" down-line-or-search
 
 # Some convienent alt bindings
 bindkey -M viins "\eh" vi-backward-blank-word
 bindkey -M viins "\el" vi-forward-blank-word
 bindkey -M viins "\ed" delete-word
-bindkey -M viins "\ek" vi-cmd-mode
+bindkey -M viins "^F" vi-cmd-mode
 
 # Edit command in an external editor.
 autoload -U edit-command-line
@@ -193,11 +187,10 @@ bindkey -M vicmd "v" edit-command-line
 # History
 bindkey -M vicmd "?" history-incremental-pattern-search-backward
 bindkey -M vicmd "/" history-incremental-pattern-search-forward
-bindkey -M vicmd "k" up-line-or-history
-bindkey -M vicmd "j" down-line-or-history
-
-# autoload -U url-quote-magic
-# zle -N self-insert url-quote-magic
+# *-or-search searches for existing history items currently in the command
+# *-string, while '*-or-history' ignores this.
+bindkey -M vicmd "k" up-line-or-search # up-line-or-history
+bindkey -M vicmd "j" down-line-or-search # down-line-or-history
 
 bindkey '\ew' kill-region
 bindkey -s '\eu' "..\n"
@@ -210,8 +203,6 @@ bindkey "^[[6~" down-line-or-history
 bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
 bindkey ' ' magic-space    # also do history expansion on space
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
 bindkey '^[[Z' reverse-menu-complete
 
 # Make the delete key work instead of outputting a ~
@@ -220,16 +211,16 @@ bindkey "^[[3~" delete-char
 bindkey "^[3;5~" delete-char
 bindkey "\e[3~" delete-char
 
-zmodload zsh/complist
-# Completion menu selection keys (alt-{jkl} respectively)
-bindkey -M menuselect '\ej' down-line-or-history
-bindkey -M menuselect  '\ek' up-line-or-history
-bindkey -M menuselect  '\el' accept-line
+bindkey ' ' magic-space # [Space] - do history expansion
 
-# Paging of long autocomplete can be exited with q
-bindkey -M listscroll q send-break
-# J key to scroll through history
-bindkey -M listscroll j down-line-or-history
+# these are supposed to map Ctrl-Left/Right arrow but they do nothing
+#bindkey "^[[1;5C" forward-word
+#bindkey "^[[1;5D" backward-word
+#bindkey -M viins "\ek" vi-cmd-mode # not useful
+#bindkey "^[m" copy-prev-shell-word # doesn't work
+#useless
+# autoload -U url-quote-magic
+# zle -N self-insert url-quote-magic
 
 #############################################
 # Aliasing
@@ -238,7 +229,7 @@ bindkey -M listscroll j down-line-or-history
 for cmd (
         ack cd cp ebuild gcc gist grep heroku
         ln man mkdir mv mysql rm nmcli ip ag
-        git npm ember dnf
+        git npm ember dnf jekyll
     ) alias $cmd="nocorrect $cmd"
 
     # Disable globbing.
