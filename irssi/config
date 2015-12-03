@@ -56,6 +56,7 @@ channels = (
   { name = "#radare"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#asm"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##re"; chatnet = "freenode"; autojoin = "Yes"; },
+  { name = "#io"; chatnet = "smashthestack"; autojoin = "Yes"; }
   { name = "#postgresql"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#reactjs"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##javascript"; chatnet = "freenode"; autojoin = "Yes"; },
@@ -70,7 +71,6 @@ channels = (
   { name = "#servo"; chatnet = "mozilla"; autojoin = "Yes"; },
   { name = "#sf"; chatnet = "mozilla"; autojoin = "Yes"; },
 
-  { name = "#io"; chatnet = "smashthestack"; autojoin = "Yes"; }
 );
 
 aliases = {
