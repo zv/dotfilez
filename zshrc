@@ -244,6 +244,7 @@ alias e="emacsclient -t"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
 alias -g pr="print"
+alias jkl="jekyll serve -D"
 
 # Tmux
 alias ta="tmux attach-session -t"
@@ -542,4 +543,4 @@ source $HOME/.gnupg/gpg-agent-wrapper
 export RUST_SRC_PATH=$HOME/Development/rust/src
 export GTAGSLIBPATH=$gnu_global_dir
 
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
