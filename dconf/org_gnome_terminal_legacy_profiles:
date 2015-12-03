@@ -1,0 +1,29 @@
+[/]
+list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '1186ec83-930c-45c1-ad0d-c45d925d1353']
+
+[:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+foreground-color='rgb(131,148,150)'
+visible-name='SCPRegular'
+login-shell=true
+palette=['rgb(7,54,66)', 'rgb(220,50,47)', 'rgb(133,153,0)', 'rgb(181,137,0)', 'rgb(38,139,210)', 'rgb(211,54,130)', 'rgb(42,161,152)', 'rgb(238,232,213)', 'rgb(0,43,54)', 'rgb(203,75,22)', 'rgb(88,110,117)', 'rgb(101,123,131)', 'rgb(131,148,150)', 'rgb(108,113,196)', 'rgb(147,161,161)', 'rgb(253,246,227)']
+cursor-shape='block'
+use-system-font=false
+use-theme-colors=false
+font='Source Code Pro 11'
+background-color='rgb(0,43,54)'
+scrollbar-policy='never'
+
+[:1186ec83-930c-45c1-ad0d-c45d925d1353]
+foreground-color='rgb(255,255,255)'
+visible-name='IRC'
+login-shell=true
+palette=['rgb(43,43,43)', 'rgb(204,0,0)', 'rgb(78,154,6)', 'rgb(196,160,0)', 'rgb(52,101,164)', 'rgb(117,80,123)', 'rgb(6,152,154)', 'rgb(211,215,207)', 'rgb(113,113,113)', 'rgb(239,41,41)', 'rgb(138,226,52)', 'rgb(252,233,79)', 'rgb(114,159,207)', 'rgb(173,127,168)', 'rgb(52,226,226)', 'rgb(238,238,236)']
+cursor-shape='block'
+use-system-font=false
+use-theme-colors=false
+use-transparent-background=false
+font='Source Code Pro Medium 13'
+scrollback-unlimited=false
+background-color='rgb(0,0,0)'
+scrollbar-policy='never'
+scrollback-lines=128
