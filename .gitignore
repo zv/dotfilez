@@ -19,6 +19,12 @@ ssh/*
 org/*
 !org/*.gpg
 
+certificates/nxvr.crt
+certificates/gpgsm-nxvr.crt
+certificates/gpgsm-nxvr.csr
+certificates/startssl-nxvr.crt
+certificates/README
+
 keys.tar.gz
 keys.tar
 secrets.tar.gz
