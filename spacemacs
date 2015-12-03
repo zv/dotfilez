@@ -190,6 +190,9 @@ values."
   (setq next-buffer-key (kbd "H-j")
         prev-buffer-key (kbd "H-k"))
 
+  ;; Personal blog path
+  (setq zv//blog-path (expand-file-name "~/zv.github.com/"))
+
   (setq-default
    evil-escape-delay 0.2
    org-directory (expand-file-name "~/Documents/")
