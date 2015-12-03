@@ -24,8 +24,8 @@ values."
      elixir
      emacs-lisp
      (erlang :variables
-             erlang-root-dir "/usr/local/lib/erlang/erts-6.2"
-             edts-man-root   "/usr/local/lib/erlang/erts-6.2")
+             erlang-root-dir "/usr/local/lib/erlang/erts-7.1"
+             edts-man-root   "/usr/local/lib/erlang/erts-7.1")
      git
      go
      gtags
