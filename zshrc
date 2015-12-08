@@ -31,24 +31,10 @@ function spectrum_ls() {
     done
 }
 
-
-## Determines if our path has a `node_modules` directory in it's parent
-## directory tree
-function is_node_project {
-    local checkpath=${PWD:a}
-    until [[ $checkpath == '/' ]] {
-              if [[ -d $checkpath/node_modules ]] {
-                     return 0
-                 }
-                 checkpath=${checkpath:a:h}
-          }
-    false
-}
-
 # If we're in a dumb terminal then dont play fancy pants with our prompt
 local baseprompt='>>'
 if [[ $TERM == 'dumb' ]]; then
-    PROMPT='%2~ $baseprompt '
+    PROMPT="%2~ $baseprompt "
     unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
@@ -57,12 +43,11 @@ elif [[ $TERM == 'eterm-color' ]]; then
     unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
-    PROMPT='[%y] %2~ $baseprompt '
+    PROMPT="[%y] %2~ $baseprompt "
 else
     export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
     # shows a slightly different prompt for vicmd vs other ZLE command modes to let
     # you know what you are dealing with.
-
     autoload -Uz vcs_info
     base_vcs_style='%c%b%u%f'
     zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
@@ -74,7 +59,15 @@ else
     zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
     precmd () { vcs_info }
 
-    PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `[ "$KEYMAP" == vicmd ] && print "%F{red}$baseprompt%f" || print "$baseprompt"` '
+    zle_vim_prompt_notifier() {
+        if [[ "$KEYMAP" == vicmd ]]; then
+            print "%F{red}>>%f"
+        else
+            print ">>"
+        fi
+    }
+
+    PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} $(zle_vim_prompt_notifier) '
 fi
 
 # ls colors
