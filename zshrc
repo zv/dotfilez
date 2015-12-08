@@ -2,46 +2,6 @@
 # This is zv's ZSHRC.
 # meow nyan meow nyan meow
 # 2009
-
-# Environment
-# go
-export GOROOT=$HOME/Development/go
-export GOPATH=$HOME/Development/golang
-
-# Add some items to our path
-local -aU path_suffix path_prefix
-
-path_prefix=(
-    $HOME/.bin
-    /usr/local/{bin,sbin}
-    /usr/local/lib)
-
-path_suffix=(
-    {$GOROOT,$GOPATH}/bin
-    /usr/local/{pgsql,heroku,plan9}/bin
-    $HOME/depot_tools
-)
-
-for np ($path_suffix) if [[ ! -d $np ]] path_suffix=(${path_suffix#$np})
-for np ($path_prefix) if [[ ! -d $np ]] path_prefix=(${path_prefix#$np})
-
-# Tack the `real` path all together now
-path=($path_prefix $path $path_suffix)
-
-typeset -gU cdpath fpath path mailpath
-
-# Load our completion functions
-fpath=(
-    $HOME/.zsh/zsh-completions/src
-    $HOME/.zsh/completion
-    $HOME/.zsh/completion/rust-completion
-    $HOME/.zsh/functions
-    $fpath
-)
-
-# Run our external modules
-for fn (~/.zsh/modules/*.zsh) source $fn
-
 setopt BRACE_CCL          # Allow brace character class list expansion.
 setopt COMBINING_CHARS    # Combine zero-length punctuation characters
                           # with the base character.
@@ -54,29 +14,8 @@ unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
 unsetopt HUP              # Don't kill jobs on shell exit.
 unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
 
-export DISABLE_AUTO_TITLE="true"
 setopt EXTENDED_GLOB
 setopt BARE_GLOB_QUAL
-
-setopt correct_all # Correct commands
-
-export EDITOR='vim'
-export VISUAL='vim'
-export PAGER='less'
-export LANG='en_US.UTF-8'
-export LESS='-F -g -i -M -R -S -w -X -z-4'
-export LC_CTYPE=$LANG
-
-if [[ -x google-chrome ]]; then
-    export BROWSER=google-chrome
-fi
-
-export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 norelativenumber nomod nolist nonu noma showtabline=0' -\""
-
-# build stuff
-export CXX=g++
-export CC=gcc
-export AR=ar
 
 ############################################
 #  Theme
@@ -327,7 +266,6 @@ fi
 #  Grep
 ############################################
 alias grep="$aliases[grep] --color=auto"
-export GREP_COLORS="37;45"
 
 ############################################
 #  Git
