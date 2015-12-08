@@ -78,81 +78,10 @@ setopt auto_cd      # Automatic CD on directory specification
 setopt cdablevarS   # CD into variable from var name
 setopt prompt_subst # Setup the prompt with pretty colors
 
-# 10 years I've been listenining to this list prompt and today I am fucking done!
-export LISTPROMPT=''
-
 # The crazier the better!
 if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
     eval `dircolors --sh ~/.zsh/LS_COLORS`
 fi
-
-#############################################
-#  Vim & ZSH Line Editor
-############################################
-WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
-
-function zle-line-init zle-keymap-select {
-  zle reset-prompt
-}
-
-# ZSH line editor stuff needed for bindkey to work
-zle -N zle-line-init
-zle -N zle-keymap-select
-
-bindkey -v
-
-
-bindkey -M viins "^P" up-line-or-search
-bindkey -M viins "^N" down-line-or-search
-
-# Some convienent alt bindings
-bindkey -M viins "\eh" vi-backward-blank-word
-bindkey -M viins "\el" vi-forward-blank-word
-bindkey -M viins "\ed" delete-word
-bindkey -M viins "^F" vi-cmd-mode
-
-# Edit command in an external editor.
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey -M vicmd "v" edit-command-line
-
-# History
-bindkey -M vicmd "?" history-incremental-pattern-search-backward
-bindkey -M vicmd "/" history-incremental-pattern-search-forward
-# *-or-search searches for existing history items currently in the command
-# *-string, while '*-or-history' ignores this.
-bindkey -M vicmd "k" up-line-or-search # up-line-or-history
-bindkey -M vicmd "j" down-line-or-search # down-line-or-history
-
-bindkey '\ew' kill-region
-bindkey -s '\eu' "..\n"
-bindkey -s '\es' "git status\n"
-bindkey '^r' history-incremental-search-backward
-bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
-
-# make search up and down work, so partially type and hit up/down to find relevant stuff
-bindkey '^[[A' up-line-or-search
-bindkey '^[[B' down-line-or-search
-bindkey ' ' magic-space    # also do history expansion on space
-bindkey '^[[Z' reverse-menu-complete
-
-# Make the delete key work instead of outputting a ~
-bindkey '^?' backward-delete-char
-bindkey "^[[3~" delete-char
-bindkey "^[3;5~" delete-char
-bindkey "\e[3~" delete-char
-
-bindkey ' ' magic-space # [Space] - do history expansion
-
-# these are supposed to map Ctrl-Left/Right arrow but they do nothing
-#bindkey "^[[1;5C" forward-word
-#bindkey "^[[1;5D" backward-word
-#bindkey -M viins "\ek" vi-cmd-mode # not useful
-#bindkey "^[m" copy-prev-shell-word # doesn't work
-#useless
-# autoload -U url-quote-magic
-# zle -N self-insert url-quote-magic
 
 #############################################
 # Aliasing
@@ -171,11 +100,11 @@ for cmd (
         ) alias $cmd="noglob $cmd"
 
 # Define general aliases.
+alias -g pr="print"
 alias _='sudo'
 alias e="emacsclient -t"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
-alias -g pr="print"
 alias jkl="jekyll serve -D"
 
 # Tmux
@@ -186,6 +115,8 @@ alias zthree="z3 -in"
 alias gpg=gpg2
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+
+function calc { emacsclient --eval "(calc-eval \"$1\")" }
 
 # # mkdir & cd to it
 function mcd() { mkdir -p "$1" && cd "$1"; }
@@ -300,133 +231,6 @@ function authorstats {
     echo ''
 }
 
-############################################
-#  Modules & Completions
-############################################
-autoload -U compinit && compinit
-#autoload -U bashcompinit && bashcompinit
-#source /usr/share/bash-completion/completions/nmcli
-# zmodload zsh/complist
-
-if [[ "$TERM" != 'dumb' ]]; then
-    setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
-    setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
-    setopt PATH_DIRS           # Perform path search even on command names with slashes.
-    setopt AUTO_MENU           # Show completion menu on a succesive tab press.
-    setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
-    setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
-    unsetopt MENU_COMPLETE     # Do not autoselect the first completion entry.
-    unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
-
-    # Use caching to make completion for commands such as dpkg and apt usable.
-    zstyle ':completion::complete:*' use-cache on
-    zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
-
-    # Case-insensitive (all), partial-word, and then substring completion.
-    zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-    unsetopt CASE_GLOB
-
-    # Group matches and describe.
-    zstyle ':completion:*:*:*:*:*' menu select
-    zstyle ':completion:*:matches' group 'yes'
-    zstyle ':completion:*:options' description 'yes'
-    zstyle ':completion:*:options' auto-description '%d'
-    zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
-    zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
-    zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-    zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-    zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-    zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
-    zstyle ':completion:*' group-name ''
-    zstyle ':completion:*' verbose yes
-
-    # Fuzzy match mistyped completions.
-    zstyle ':completion:*' completer _complete _match _approximate
-    zstyle ':completion:*:match:*' original only
-    zstyle ':completion:*:approximate:*' max-errors 1 numeric
-
-    # Increase the number of errors based on the length of the typed word.
-    zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
-
-    # Don't complete unavailable commands.
-    zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
-
-    # Array completion element sorting.
-    zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
-
-    # Directories
-    zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-    zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
-    zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
-    zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
-    zstyle ':completion:*' squeeze-slashes true
-
-    # History
-    zstyle ':completion:*:history-words' stop yes
-    zstyle ':completion:*:history-words' remove-all-dups yes
-    zstyle ':completion:*:history-words' list false
-    zstyle ':completion:*:history-words' menu yes
-
-    # Environmental Variables
-    zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
-
-    # Populate hostname completion.
-    zstyle -e ':completion:*:hosts' hosts 'reply=(
-  ${=${=${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) 2>/dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
-  ${=${(f)"$(cat /etc/hosts(|)(N) <<(ypcat hosts 2>/dev/null))"}%%\#*}
-  ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2>/dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
-)'
-
-    # Don't complete uninteresting users...
-    zstyle ':completion:*:*:*:users' ignored-patterns                     \
-           adm amanda apache avahi beaglidx bin cacti canna clamav daemon \
-           dbus distcache dovecot fax ftp games gdm gkrellmd gopher       \
-           hacluster haldaemon halt hsqldb ident junkbust ldap lp mail    \
-           mailman mailnull mldonkey mysql nagios                         \
-           named netdump news nfsnobody nobody nscd ntp nut nx openvpn    \
-           operator pcap postfix postgres privoxy pulse pvm quagga radvd  \
-           rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs '_*'
-
-    # ... unless we really want to.
-    zstyle '*' single-ignored show
-
-    # Ignore multiple entries.
-    zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
-    zstyle ':completion:*:rm:*' file-patterns '*:all-files'
-
-    # Kill
-    zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
-    zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
-    zstyle ':completion:*:*:kill:*' menu yes select
-    zstyle ':completion:*:*:kill:*' force-list always
-    zstyle ':completion:*:*:kill:*' insert-ids single
-
-    # Man
-    zstyle ':completion:*:manuals' separate-sections true
-    zstyle ':completion:*:manuals.(^1*)' insert-sections true
-
-    # Media Players
-    zstyle ':completion:*:*:mpg123:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
-    zstyle ':completion:*:*:mpg321:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
-    zstyle ':completion:*:*:ogg123:*' file-patterns '*.(ogg|OGG|flac):ogg\ files *(-/):directories'
-    zstyle ':completion:*:*:mocp:*' file-patterns '*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories'
-
-    # Mutt
-    if [[ -s "$HOME/.mutt/aliases" ]]; then
-        zstyle ':completion:*:*:mutt:*' menu yes select
-        zstyle ':completion:*:mutt:*' users ${${${(f)"$(<"$HOME/.mutt/aliases")"}#alias[[:space:]]}%%[[:space:]]*}
-    fi
-
-    # SSH/SCP/RSYNC
-    zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
-    zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
-    zstyle ':completion:*:ssh:*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
-    zstyle ':completion:*:ssh:*' group-order users hosts-domain hosts-host users hosts-ipaddr
-    zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
-    zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
-    zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
-fi
-
 #############################################
 # Directories
 #############################################
@@ -466,12 +270,220 @@ setopt HIST_BEEP                 # Beep when accessing non-existent history.
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
+#  Gnupg Agent Wrapper
+source $HOME/.gnupg/gpg-agent-wrapper
+
+# Node Version Manager
+[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+
+# **********************************************************
+# Don't do any of the following if we have a dumb terminal *
+# **********************************************************
+
+if [[ "$TERM" == 'dumb' ]]; then
+    return 1
+fi
+
+# Prompt for correction
+setopt correct_all
+
+#############################################
+#  Vim & ZSH Line Editor
+############################################
+
+WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
+
+function zle-line-init zle-keymap-select {
+  zle reset-prompt
+}
+
+# ZSH line editor stuff needed for bindkey to work
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
+bindkey -v
+
+bindkey -M viins "^P" up-line-or-search
+bindkey -M viins "^N" down-line-or-search
+
+# Some convienent alt bindings
+bindkey -M viins "\eh" vi-backward-blank-word
+bindkey -M viins "\el" vi-forward-blank-word
+bindkey -M viins "\ed" delete-word
+bindkey -M viins "^F" vi-cmd-mode
+
+# Edit command in an external editor.
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd "v" edit-command-line
+
+# History
+bindkey -M vicmd "?" history-incremental-pattern-search-backward
+bindkey -M vicmd "/" history-incremental-pattern-search-forward
+# *-or-search searches for existing history items currently in the command
+# *-string, while '*-or-history' ignores this.
+bindkey -M vicmd "k" up-line-or-search # up-line-or-history
+bindkey -M vicmd "j" down-line-or-search # down-line-or-history
+
+bindkey '\ew' kill-region
+bindkey -s '\eu' "..\n"
+bindkey -s '\es' "git status\n"
+bindkey '^r' history-incremental-search-backward
+bindkey "^[[5~" up-line-or-history
+bindkey "^[[6~" down-line-or-history
+
+# make search up and down work, so partially type and hit up/down to find relevant stuff
+bindkey '^[[A' up-line-or-search
+bindkey '^[[B' down-line-or-search
+bindkey ' ' magic-space    # also do history expansion on space
+bindkey '^[[Z' reverse-menu-complete
+
+# Make the delete key work instead of outputting a ~
+bindkey '^?' backward-delete-char
+bindkey "^[[3~" delete-char
+bindkey "^[3;5~" delete-char
+bindkey "\e[3~" delete-char
+
+bindkey ' ' magic-space # [Space] - do history expansion
+
+# these are supposed to map Ctrl-Left/Right arrow but they do nothing
+#bindkey "^[[1;5C" forward-word
+#bindkey "^[[1;5D" backward-word
+#bindkey -M viins "\ek" vi-cmd-mode # not useful
+#bindkey "^[m" copy-prev-shell-word # doesn't work
+
+############################################
+#  Modules & Completions
+############################################
+autoload -U compinit && compinit
+#autoload -U bashcompinit && bashcompinit
+# zmodload zsh/complist
+
+setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
+setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
+setopt PATH_DIRS           # Perform path search even on command names with slashes.
+setopt AUTO_MENU           # Show completion menu on a succesive tab press.
+setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
+setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
+unsetopt MENU_COMPLETE     # Do not autoselect the first completion entry.
+unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
+
+# Use caching to make completion for commands such as dpkg and apt usable.
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
+
+# Case-insensitive (all), partial-word, and then substring completion.
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+unsetopt CASE_GLOB
+
+# Group matches and describe.
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
+zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+
+# Fuzzy match mistyped completions.
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+
+# Increase the number of errors based on the length of the typed word.
+zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+
+# Don't complete unavailable commands.
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
+
+# Array completion element sorting.
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+# Directories
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
+zstyle ':completion:*' squeeze-slashes true
+
+# History
+zstyle ':completion:*:history-words' stop yes
+zstyle ':completion:*:history-words' remove-all-dups yes
+zstyle ':completion:*:history-words' list false
+zstyle ':completion:*:history-words' menu yes
+
+# Environmental Variables
+zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
+
+# Populate hostname completion.
+zstyle -e ':completion:*:hosts' hosts 'reply=(
+  ${=${=${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) 2>/dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
+  ${=${(f)"$(cat /etc/hosts(|)(N) <<(ypcat hosts 2>/dev/null))"}%%\#*}
+  ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2>/dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
+)'
+
+# Don't complete uninteresting users...
+zstyle ':completion:*:*:*:users' ignored-patterns                     \
+       adm amanda apache avahi beaglidx bin cacti canna clamav daemon \
+       dbus distcache dovecot fax ftp games gdm gkrellmd gopher       \
+       hacluster haldaemon halt hsqldb ident junkbust ldap lp mail    \
+       mailman mailnull mldonkey mysql nagios                         \
+       named netdump news nfsnobody nobody nscd ntp nut nx openvpn    \
+       operator pcap postfix postgres privoxy pulse pvm quagga radvd  \
+       rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs '_*'
+
+# ... unless we really want to.
+zstyle '*' single-ignored show
+
+# Ignore multiple entries.
+zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
+zstyle ':completion:*:rm:*' file-patterns '*:all-files'
+
+# Kill
+zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:*:kill:*' force-list always
+zstyle ':completion:*:*:kill:*' insert-ids single
+
+# Man
+zstyle ':completion:*:manuals' separate-sections true
+zstyle ':completion:*:manuals.(^1*)' insert-sections true
+
+# Media Players
+zstyle ':completion:*:*:mpg123:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
+zstyle ':completion:*:*:mpg321:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
+zstyle ':completion:*:*:ogg123:*' file-patterns '*.(ogg|OGG|flac):ogg\ files *(-/):directories'
+zstyle ':completion:*:*:mocp:*' file-patterns '*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories'
+
+# Mutt
+if [[ -s "$HOME/.mutt/aliases" ]]; then
+    zstyle ':completion:*:*:mutt:*' menu yes select
+    zstyle ':completion:*:mutt:*' users ${${${(f)"$(<"$HOME/.mutt/aliases")"}#alias[[:space:]]}%%[[:space:]]*}
+fi
+
+# SSH/SCP/RSYNC
+zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
+zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
+zstyle ':completion:*:ssh:*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
+zstyle ':completion:*:ssh:*' group-order users hosts-domain hosts-host users hosts-ipaddr
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
+
 #############################################
 # Other
 #############################################
-export NVM_DIR="/home/zv/.nvm"
-source $HOME/.gnupg/gpg-agent-wrapper
-export RUST_SRC_PATH=$HOME/Development/rust/src
-export GTAGSLIBPATH=$gnu_global_dir
+# export GTAGSLIBPATH=$gnu_global_dir
 
-[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# Run our external modules
+for fn (~/.zsh/modules/*.zsh) source $fn
