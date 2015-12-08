@@ -67,7 +67,7 @@ else
         fi
     }
 
-    PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} $(zle_vim_prompt_notifier) '
+    PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
 fi
 
 # ls colors
@@ -77,11 +77,6 @@ setopt no_beep      # Stop the beep insanity
 setopt auto_cd      # Automatic CD on directory specification
 setopt cdablevarS   # CD into variable from var name
 setopt prompt_subst # Setup the prompt with pretty colors
-
-# The crazier the better!
-if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
-    eval `dircolors --sh ~/.zsh/LS_COLORS`
-fi
 
 #############################################
 # Aliasing
@@ -93,11 +88,11 @@ for cmd (
         git npm ember dnf jekyll
     ) alias $cmd="nocorrect $cmd"
 
-    # Disable globbing.
-    for cmd (
-            fc find ftp history locate rake rsync
-            scp sftp git
-        ) alias $cmd="noglob $cmd"
+# Disable globbing.
+for cmd (
+        fc find ftp history locate rake rsync
+        scp sftp git
+    ) alias $cmd="noglob $cmd"
 
 # Define general aliases.
 alias -g pr="print"
@@ -280,13 +275,17 @@ source $HOME/.gnupg/gpg-agent-wrapper
 # **********************************************************
 # Don't do any of the following if we have a dumb terminal *
 # **********************************************************
-
 if [[ "$TERM" == 'dumb' ]]; then
     return 1
 fi
 
 # Prompt for correction
 setopt correct_all
+
+# The crazier the better!
+if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
+    eval `dircolors --sh ~/.zsh/LS_COLORS`
+fi
 
 #############################################
 #  Vim & ZSH Line Editor
