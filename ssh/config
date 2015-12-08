@@ -1,6 +1,7 @@
 Compression yes
 VisualHostKey yes
 HashKnownHosts yes
+HostKeyAlgorithms ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp521,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384
 
 Host *.nxvr.org
   user zv
