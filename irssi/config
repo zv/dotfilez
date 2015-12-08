@@ -1,5 +1,11 @@
 servers = (
   {
+    address = "localhost";
+    chatnet = "bit";
+    port = "6667";
+    autoconnect = "yes";
+  },
+  {
     address = "irc.freenode.net";
     chatnet = "freenode";
     port = "6697";
@@ -46,6 +52,7 @@ chatnets = {
   mozilla = { type = "IRC"; nick = "zv"; autoconnect = "Yes"; };
   freenode = { type = "IRC"; nick = "zv"; autoconnect = "Yes"; };
   smashthestack = { type = "IRC"; nick = "zv"; autoconnect = "Yes"; };
+  bit = { type = "IRC"; };
 };
 
 channels = (
@@ -56,7 +63,7 @@ channels = (
   { name = "#radare"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#asm"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##re"; chatnet = "freenode"; autojoin = "Yes"; },
-  { name = "#io"; chatnet = "smashthestack"; autojoin = "Yes"; }
+  { name = "#io"; chatnet = "smashthestack"; autojoin = "Yes"; },
   { name = "#postgresql"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "#reactjs"; chatnet = "freenode"; autojoin = "Yes"; },
   { name = "##javascript"; chatnet = "freenode"; autojoin = "Yes"; },
@@ -287,6 +294,7 @@ settings = {
     theme = "weed";
     autolog_path = "/tmp/irssi_logs/%Y/$tag/$0.%m-%d.log";
     autolog = "no";
+    hide_colors = "no";
   };
   "perl/core/scripts" = {
     awl_all_disable = "no";
@@ -306,6 +314,8 @@ settings = {
     awl_sbar_maxlength = "no";
     awl_separator = "%N %N";
     awl_sort = "refnum";
+    nicklist_height = "54";
+    nicklist_width = "16";
   };
 };
 
