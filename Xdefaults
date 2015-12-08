@@ -8,7 +8,7 @@ Xft.rgba:       rgb
 
 ! Emacs.font: Inconsolata-14
 ! Use source-code-pro instead
-URxvt.font: xft:Source Code Pro:size=9,xft:Deja Vu Sans Mono:size=9
+URxvt.font: xft:Source Code Pro:size=11,xft:Deja Vu Sans Mono:size=11
 
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
@@ -22,7 +22,7 @@ URxvt.colorUL:      #269BC9
 *color0:  rgb:00/00/00
 *color1:  rgb:ff/00/00
 *color2:  rgb:12/91/4e
-!*color3:  rgb:a0/a0/70
+*color3:  rgb:a0/a0/70
 *color4:  rgb:3e/45/81
 *color5:  rgb:a0/70/a0
 *color6:  rgb:70/a0/a0
@@ -38,5 +38,5 @@ URxvt.colorUL:      #269BC9
 
 *intensityStyles: false
 
-!*foreground: rgb:dd/dd/dd
-!*background: rgb:22/22/22
+*foreground: rgb:dd/dd/dd
+*background: rgb:22/22/22
