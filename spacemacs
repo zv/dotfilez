@@ -181,11 +181,10 @@ values."
    dotspacemacs-default-package-repository nil))
 
 (defun dotspacemacs/user-init ()
-
-  (setenv "GOROOT" "/home/zv/Development/go")
-  (setenv "GOPATH" "/home/zv/Development/golang")
+  ;;(setenv "GOROOT" "/home/zv/Development/go")
+  ;;(setenv "GOPATH" "/home/zv/Development/golang")
   ;; Manually set for rust-racer when we can't have ENV_APPLICATION from systemd
-  (setenv "RUST_SRC_PATH" "/home/zv/Development/rust/src")
+  ;;(setenv "RUST_SRC_PATH" "/home/zv/Development/rust/src")
 
   (setq next-buffer-key (kbd "H-j")
         prev-buffer-key (kbd "H-k"))
@@ -281,15 +280,40 @@ This function is called at the very end of Spacemacs initialization."
    [default default default italic underline success warning error])
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
  '(company-selection-wrap-around t)
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#839496")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
+ '(fci-rule-color "#073642" t)
+ '(gud-tooltip-mode t)
+ '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
     (solarized-color-blend it "#fdf6e3" 0.25)
     (quote
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
  '(highlight-symbol-foreground-color "#586e75")
- '(magit-completing-read-function (quote magit-builtin-completing-read) t)
+ '(highlight-tail-colors
+   (quote
+    (("#073642" . 0)
+     ("#546E00" . 20)
+     ("#00736F" . 30)
+     ("#00629D" . 50)
+     ("#7B6000" . 60)
+     ("#8B2C02" . 70)
+     ("#93115C" . 85)
+     ("#073642" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
+ '(hl-fg-colors
+   (quote
+    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(magit-completing-read-function (quote magit-builtin-completing-read))
+ '(magit-diff-use-overlays nil)
  '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
  '(org-html-text-markup-alist
    (quote
@@ -300,10 +324,38 @@ This function is called at the very end of Spacemacs initialization."
      (underline . "<span class=\"underline\">%s</span>")
      (verbatim . "<span class=\"verbatim\">%s</span>"))))
  '(paradox-github-token t)
+ '(pos-tip-background-color "#073642")
+ '(pos-tip-foreground-color "#93a1a1")
  '(ring-bell-function (quote ignore) t)
  '(send-mail-function (quote smtpmail-send-it))
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(term-default-bg-color "#fdf6e3")
- '(term-default-fg-color "#657b83"))
+ '(term-default-fg-color "#657b83")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#dc322f")
+     (40 . "#c85d17")
+     (60 . "#be730b")
+     (80 . "#b58900")
+     (100 . "#a58e00")
+     (120 . "#9d9100")
+     (140 . "#959300")
+     (160 . "#8d9600")
+     (180 . "#859900")
+     (200 . "#669b32")
+     (220 . "#579d4c")
+     (240 . "#489e65")
+     (260 . "#399f7e")
+     (280 . "#2aa198")
+     (300 . "#2898af")
+     (320 . "#2793ba")
+     (340 . "#268fc6")
+     (360 . "#268bd2"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83"))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
