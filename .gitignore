@@ -60,3 +60,5 @@ irssi/sasl.auth
 irssi/*.crt
 
 *npm-debug.log
+
+ghc/
