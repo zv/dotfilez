@@ -190,9 +190,12 @@ values."
         prev-buffer-key (kbd "H-k"))
 
   ;; Personal blog path
-  (setq zv//blog-path (expand-file-name "~/zv.github.com/"))
+  (setq zv//blog-path (expand-file-name "~/zv.github.com/")
+        ;; Undo tree file directory
+        zv//undo-tree-directory "/tmp/.emacs-undo")
 
   (setq-default
+   exec-path-from-shell-check-startup-files nil
    evil-escape-delay 0.2
    org-directory (expand-file-name "~/Documents/")
    git-enable-github-support t
