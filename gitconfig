@@ -31,13 +31,55 @@
 	old			= red
 	new			= green
 	commit	= cyan
-	func		= red bold
+	func		= blue bold
 
 [color "status"]
 	added			= green
 	changed		= yellow
 	untracked = red
 	nobranch	= red bold reverse
+
+[log]
+	date = short
+
+[diff]
+	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+	# instead of a/b/c/d as prefixes for patches
+	mnemonicprefix = true
+	algorithm      = patience
+	tool           = vimdiff
+
+[difftool]
+	prompt = true
+
+[merge]
+	summary = true
+	verbosity = 1
+	tool = ediff
+
+[mergetool "ediff"]
+  cmd = emacsclient -t -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+
+[branch]
+	autosetupmerge = true
+	
+[core]
+	# true resulted in some painful dialog with Windows developers.
+	autocrlf = false
+	editor = vim
+	excludesfile = ~/.gitignore
+	
+[advice]
+	statusHints = false
+
+[apply]
+	whitespace = nowarn
+	
+[push]
+	default = current
+
+[rebase]
+	stat = true
 
 [alias]
 	# commits not pushed to $1, master by default
@@ -93,7 +135,7 @@
 	last					= diff HEAD^  # diff last committed change
 
 	# log
-	l							= log --date=short --pretty=\"format:%ad%  %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset\"
+	l							= log --date=short --pretty=\"format:%C(blue)%ad%  %C(yellow)%h%C(green)%d%Creset %s %C(magenta) [%an]%Creset\"
 	ll						= log --graph --oneline --decorate --branches --tags
 	# A shortcut for seeing the fetched commits
 	lc						= log ORIG_HEAD.. --stat --no-merges
@@ -139,42 +181,3 @@
 	ignore				= update-index --assume-unchanged
 	unignore			= update-index --no-assume-unchanged
 	list-ignored	=!sh -c "git ls-files -v|grep '^h'" # list our ignored files
-[log]
-	date = short
-
-[merge]
-	summary = true
-	verbosity = 1
-	tool = vimdiff
-
-[branch]
-	autosetupmerge = true
-	
-[core]
-	# true resulted in some painful dialog with Windows developers.
-	autocrlf = false
-	editor = vim
-	excludesfile = ~/.gitignore
-	
-[advice]
-	statusHints = false
-
-[apply]
-	whitespace = nowarn
-	
-[diff]
-	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
-	# instead of a/b/c/d as prefixes for patches
-	mnemonicprefix = true
-	algorithm      = patience
-	tool           = vimdiff
-	guitool        = gvimdiff
-
-[push]
-	default = current
-
-[rebase]
-	stat = true
-
-[difftool]
-	prompt = true
