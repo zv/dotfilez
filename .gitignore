@@ -58,6 +58,8 @@ lib/vim
 irssi/irssi-scripts
 irssi/sasl.auth
 irssi/*.crt
+irssi/*.pem
+weechat/logs
 
 *npm-debug.log
 
