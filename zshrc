@@ -265,13 +265,6 @@ setopt HIST_BEEP                 # Beep when accessing non-existent history.
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
-#  Gnupg Agent Wrapper
-source $HOME/.gnupg/gpg-agent-wrapper
-
-# Node Version Manager
-[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-
 # **********************************************************
 # Don't do any of the following if we have a dumb terminal *
 # **********************************************************
@@ -486,3 +479,16 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<-
 
 # Run our external modules
 for fn (~/.zsh/modules/*.zsh) source $fn
+
+#  Gnupg Agent Wrapper
+source $HOME/.gnupg/gpg-agent-wrapper
+
+# Node Version Manager
+lazy_source () {
+    eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
+}
+
+NVM_SOURCE=$NVM_DIR/nvm.sh
+lazy_source nvm $NVM_SOURCE
+#[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
