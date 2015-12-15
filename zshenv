@@ -45,7 +45,7 @@ export RUST_SRC_PATH=$HOME/Development/rust/src
 export NVM_DIR="/home/zv/.nvm"
 
 # Ensure path arrays do not contain duplicates.
-typeset -gU cdpath fpath mailpath path
+typeset -gU fpath mailpath path #cdpath
 
 #
 # Paths
