@@ -27,18 +27,18 @@ values."
              erlang-root-dir "/usr/local/lib/erlang/erts-7.1"
              edts-man-root   "/usr/local/lib/erlang/erts-7.1")
      git
-     go
+     ;; go
      gtags
      html
      javascript
      markdown
      org
-     ruby
+     ;; ruby
      rust
      sql
      (shell :variables shell-default-term-shell "/usr/bin/zsh")
      syntax-checking
-     dash
+     ;; dash
      zv)
 
    ;; List of additional packages that will be installed wihout being
