@@ -51,15 +51,13 @@ function install_pkgs {
     )
 
     # List of packages to be installed
-    packages=(
-        ack
+    packages=(ack
         aircrack-ng
         clang
         clang-devel
         clang-libs
         curl
         dnsenum
-        dnsmap
         emacs
         # git-extras
         global # gtags
@@ -82,6 +80,7 @@ function install_pkgs {
         vim-enhanced
         vlc
         wireshark
+        weechat
         xbacklight
         zsh
     )
