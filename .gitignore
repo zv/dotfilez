@@ -55,11 +55,13 @@ lib/vim
 # !emacs.d/private/zv/*
 # emacs.d
 
+# IRC
 irssi/irssi-scripts
 irssi/sasl.auth
 irssi/*.crt
 irssi/*.pem
 weechat/logs
+weechat/weechat.log
 
 *npm-debug.log
 
