@@ -105,7 +105,14 @@ alias gpg=gpg2
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
-function calc { emacsclient --eval "(calc-eval \"$1\")" }
+nocorrect noglob function calc () {
+    if [ $# -ne 0 ]; then
+         local wrapped_args="\"${argv}\""
+         emacsclient --eval "(calc-eval $wrapped_args)" | sed 's/^\"//' |  sed 's/\"$//'
+    else
+        emacsclient -t -c --eval "(full-calc)"
+    fi
+}
 
 # # mkdir & cd to it
 function mcd() { mkdir -p "$1" && cd "$1"; }
