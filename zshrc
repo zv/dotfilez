@@ -6,6 +6,7 @@ setopt BRACE_CCL          # Allow brace character class list expansion.
 setopt COMBINING_CHARS    # Combine zero-length punctuation characters
                           # with the base character.
 # setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
+setopt C_BASES            # Output hex numbers in 0xFF instead of 16#FF
 unsetopt MAIL_WARNING     # Don't print a warning message if a mail file has been accessed.
 setopt LONG_LIST_JOBS     # List jobs in the long format by default.
 setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
