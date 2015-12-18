@@ -87,12 +87,8 @@ for cmd (ack cd cp ebuild gcc gist grep heroku
         ln man mkdir mv mysql rm nmcli ip ag
         git npm ember dnf jekyll) alias $cmd="nocorrect $cmd"
 
-# Disable globbing.
-for cmd (fc find ftp history locate rake rsync
-        scp sftp git) alias $cmd="noglob $cmd"
-
 # Define general aliases.
-alias pr="print"
+alias p="print"
 alias _='sudo'
 alias e="emacsclient -t"
 alias edit="emacs -nw"
@@ -114,12 +110,10 @@ function calc { emacsclient --eval "(calc-eval \"$1\")" }
 # # mkdir & cd to it
 function mcd() { mkdir -p "$1" && cd "$1"; }
 
-alias clr='clear;echo "Currently logged in on $(tty), as $USER in directory $PWD."'
-
 function ptrsp {
+    if [[ !$+commands[xinput] ]] return;
     # Grep through for the actual ID. Hack.
-    local prop_id
-    prop_id=$(xinput list --short | \
+    local prop_id=$(xinput list --short | \
         grep 'Lenovo.*pointer' | \
         awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
         sed 's/id\=//')
@@ -130,24 +124,16 @@ alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
-alias lm='la | "$PAGER"' # Lists human readable sizes, hidden files through pager.
-alias lx='ll -XB'        # Lists sorted by extension (GNU only).
-alias lk='ll -Sr'        # Lists sorted by size, largest last.
-alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
-alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
-#  Package Management (dnf)
-############################################
+alias grep="$aliases[grep] --color=auto"
+
+# dnf
 if (( $+commands[dnf] )); then
     alias dnfs="dnf search"                       # search package
     alias dnfp="dnf info"                         # show package info
     alias dnfl="dnf list"                         # list packages
-    alias dnfgl="dnf grouplist"                   # list package groups
-    alias dnfli="dnf list installed"              # print all installed packages
-    alias dnfmc="dnf makecache"                   # rebuilds the dnf package list
-
+    alias dnfh="sudo dnf history"                      # get dnf history
     alias dnfu="sudo dnf upgrade"                 # upgrade packages
     alias dnfi="sudo dnf install"                 # install package
-    alias dnfgi="sudo dnf groupinstall"           # install package group
     alias dnfr="sudo dnf remove"                  # remove package
     alias dnfgr="sudo dnf groupremove"            # remove pagage group
     alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
@@ -190,18 +176,11 @@ setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
 setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt AUTO_NAME_DIRS       # Auto add variable-stored paths to ~ list.
 setopt MULTIOS              # Write to multiple descriptors.
-setopt EXTENDED_GLOB        # Use extended globbing syntax.
 unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
+setopt RC_EXPAND_PARAM # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
+setopt EXTENDED_GLOB   # Use extended globbing syntax.
 
-#############################################
 # History
-#############################################
-HISTFILE=$HOME/.zsh_history
-
-# Lines to store
-HISTSIZE=$((2**14 - 1))
-SAVEHIST=$((2**14 - 1))
-
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
@@ -218,95 +197,18 @@ setopt HIST_BEEP                 # Beep when accessing non-existent history.
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
-# **********************************************************
-# Don't do any of the following if we have a dumb terminal *
-# **********************************************************
-if [[ "$TERM" == 'dumb' ]]; then
-    return 1
-fi
-
-# Prompt for correction
-setopt correct_all
-
-# The crazier the better!
-if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
-    eval `dircolors --sh ~/.zsh/LS_COLORS`
-fi
-
-#############################################
-#  Vim & ZSH Line Editor
-############################################
-WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
-
-function zle-line-init zle-keymap-select {
-  zle reset-prompt
-}
-
-# ZSH line editor stuff needed for bindkey to work
-zle -N zle-line-init
-zle -N zle-keymap-select
-
-autoload -U url-quote-magic
-zle -N self-insert url-quote-magic
-
-bindkey -v
-
-bindkey -M viins "^P" up-line-or-search
-bindkey -M viins "^N" down-line-or-search
-
-# Some convienent alt bindings
-bindkey -M viins "\eh" vi-backward-blank-word
-bindkey -M viins "\el" vi-forward-blank-word
-bindkey -M viins "\ed" delete-word
-bindkey -M viins "^F" vi-cmd-mode
-
-# Edit command in an external editor.
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey -M vicmd "v" edit-command-line
-
-# History
-bindkey -M vicmd "?" history-incremental-pattern-search-backward
-bindkey -M vicmd "/" history-incremental-pattern-search-forward
-# *-or-search searches for existing history items currently in the command
-# *-string, while '*-or-history' ignores this.
-bindkey -M vicmd "k" up-line-or-search # up-line-or-history
-bindkey -M vicmd "j" down-line-or-search # down-line-or-history
-
-bindkey '\ew' kill-region
-bindkey -s '\eu' "..\n"
-bindkey -s '\es' "git status\n"
-bindkey '^r' history-incremental-search-backward
-bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
-
-# make search up and down work, so partially type and hit up/down to find relevant stuff
-bindkey '^[[A' up-line-or-search
-bindkey '^[[B' down-line-or-search
-bindkey ' ' magic-space    # also do history expansion on space
-bindkey '^[[Z' reverse-menu-complete
-
-# Make the delete key work instead of outputting a ~
-bindkey '^?' backward-delete-char
-bindkey "^[[3~" delete-char
-bindkey "^[3;5~" delete-char
-bindkey "\e[3~" delete-char
-
-bindkey ' ' magic-space # [Space] - do history expansion
-
 ############################################
 #  Modules & Completions
 ############################################
 autoload -U compinit && compinit
-#autoload -U bashcompinit && bashcompinit
-# zmodload zsh/complist
 
-setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
 setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
-setopt PATH_DIRS           # Perform path search even on command names with slashes.
-setopt AUTO_MENU           # Show completion menu on a succesive tab press.
 setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
+setopt AUTO_MENU           # Show completion menu on a succesive tab press.
 setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
+setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
+setopt PATH_DIRS           # Perform path search even on command names with slashes.
+
 unsetopt MENU_COMPLETE     # Do not autoselect the first completion entry.
 unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 
@@ -314,8 +216,6 @@ unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
 
-# Case-insensitive (all), partial-word, and then substring completion.
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 unsetopt CASE_GLOB
 
 # Group matches and describe.
@@ -405,25 +305,92 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
+# **********************************************************
+# Don't do any of the following if we have a dumb terminal *
+# **********************************************************
+if [[ "$TERM" == 'dumb' ]]; then
+    return 1
+fi
+
+# Prompt for correction
+setopt correct_all
+
+# The crazier the better!
+if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
+    eval `dircolors --sh ~/.zsh/LS_COLORS`
+fi
+
+#############################################
+#  Vim & ZSH Line Editor
+############################################
+WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
+
+function zle-line-init zle-keymap-select {
+  zle reset-prompt
+}
+
+# ZSH line editor stuff needed for bindkey to work
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+
+set VI # equivalent to bindkey -v
+
+bindkey -M viins "^P" up-line-or-search
+bindkey -M viins "^N" down-line-or-search
+
+# Some convienent alt bindings
+bindkey -M viins "\eh" vi-backward-blank-word
+bindkey -M viins "\el" vi-forward-blank-word
+bindkey -M viins "\ed" delete-word
+bindkey -M viins "^F" vi-cmd-mode
+
+# Edit command in an external editor.
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd "v" edit-command-line
+
+# History
+bindkey -M vicmd "?" history-incremental-pattern-search-backward
+bindkey -M vicmd "/" history-incremental-pattern-search-forward
+# *-or-search searches for existing history items currently in the command
+# *-string, while '*-or-history' ignores this.
+bindkey -M vicmd "k" up-line-or-search # up-line-or-history
+bindkey -M vicmd "j" down-line-or-search # down-line-or-history
+
+bindkey '\ew' kill-region
+bindkey -s '\eu' "..\n"
+bindkey -s '\es' "git status\n"
+bindkey '^r' history-incremental-search-backward
+bindkey "^[[5~" up-line-or-history
+bindkey "^[[6~" down-line-or-history
+
+# make search up and down work, so partially type and hit up/down to find relevant stuff
+bindkey '^[[A' up-line-or-search
+bindkey '^[[B' down-line-or-search
+bindkey ' ' magic-space    # also do history expansion on space
+bindkey '^[[Z' reverse-menu-complete
+
+# Make the delete key work instead of outputting a ~
+bindkey '^?' backward-delete-char
+bindkey "^[[3~" delete-char
+bindkey "^[3;5~" delete-char
+bindkey "\e[3~" delete-char
+
+bindkey ' ' magic-space # [Space] - do history expansion
+
 #############################################
 # Other
 #############################################
-# export GTAGSLIBPATH=$gnu_global_dir
-
 # Run our external modules
 for fn (~/.zsh/modules/*.zsh) source $fn
 
 #  Gnupg Agent Wrapper
 source $HOME/.gnupg/gpg-agent-wrapper
 
-# Node Version Manager
-#lazy_source () {
-#    eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
-#}
-
-#NVM_SOURCE=$NVM_DIR/nvm.sh
-#lazy_source nvm $NVM_SOURCE
-#[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-
 # Configure Ocaml package manager
 . /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+# cdpath=($cdpath)
