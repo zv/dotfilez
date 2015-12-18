@@ -51,7 +51,7 @@ else
     # you know what you are dealing with.
     autoload -Uz vcs_info
     base_vcs_style='%c%b%u%f'
-    zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr hg-git
+    zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr
     zstyle ':vcs_info:*' check-for-changes true
     zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
     zstyle ':vcs_info:*' stagedstr '%F{028}'
@@ -126,11 +126,9 @@ function ptrsp {
    xinput --set-prop $prop_id 140 $1 0 0 0 $1 0 0 0 $2
 }
 
-## ls ######################################################
 alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
-alias lr='ll -R'         # Lists human readable sizes, recursively.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias lm='la | "$PAGER"' # Lists human readable sizes, hidden files through pager.
 alias lx='ll -XB'        # Lists sorted by extension (GNU only).
@@ -156,17 +154,7 @@ if (( $+commands[dnf] )); then
     alias dnfc="sudo dnf clean all"               # clean cachefi
 fi
 
-
-############################################
-#  Grep
-############################################
-alias grep="$aliases[grep] --color=auto"
-
-############################################
-#  Git
-############################################
-
-# Git aliases
+# Git
 alias g='git'
 alias gst='git status'
 alias gl='git pull'
@@ -175,7 +163,6 @@ alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gcm='git checkout master'
 alias ga='git add'
-
 alias chr="google-chrome"
 
 alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
@@ -190,9 +177,11 @@ function authorstats {
     echo ''
 }
 
-#############################################
+####
+# Expansion and Globbing
+####
+
 # Directories
-#############################################
 setopt AUTO_CD              # Auto changes to a directory without typing cd.
 setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
 setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
@@ -372,13 +361,6 @@ zstyle ':completion:*:history-words' menu yes
 
 # Environmental Variables
 zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
-
-# Populate hostname completion.
-# zstyle -e ':completion:*:hosts' hosts 'reply=(
-#   ${=${=${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) 2>/dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
-#   ${=${(f)"$(cat /etc/hosts(|)(N))"}%%\#*}
-#   ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2>/dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
-# )'
 
 # Don't complete uninteresting users...
 zstyle ':completion:*:*:*:users' ignored-patterns                     \
