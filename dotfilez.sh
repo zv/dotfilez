@@ -129,6 +129,14 @@ function configure_env {
     gpg --import certificates/*
 }
 
+function ocaml {
+    # Install ocaml-proper
+    _ dnf install ocaml-camlp4-devel ocaml-ocamldoc ocaml-findlib-devel ocaml-extlib-devel ocaml-calendar-devel
+    # Install opam
+    wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin/
+    # Now install utop
+}
+
 function javascript {
     ## Build nodejs
     pushd
