@@ -1,7 +1,7 @@
 #compdef dnf
 
 # Main dispatcher
-_dnf() 
+_dnf()
 {
 	local curcontext="$curcontext" state lstate line
 
@@ -9,7 +9,7 @@ _dnf()
 	   '(- *)'{-h,--help}'[show the help message]' \
 	   '(-t --tolerant)'{-t,--tolerant}'[be tolerant of errors]' \
 	   '(-C --cacheonly)'{-C,--cacheonly}'[run entirely from cache]' \
-	   '(-c --config)'{-c,--config=}'[config file location]:dnf conf file:_files' \
+	   '(-c --config)'{-c,--config=}'[config file location]:Dnf conf file:_files' \
 	   '(-R --randomwait)'{-R,--randomwait=}'[maximum command wait time (in minutes)]:max wait time' \
 	   '(-d --debuglevel)'{-d,--debuglevel=}'[debug level (0-10)]:debug level' \
 	   '(-e --errorlevel)'{-e,--errorlevel=}'[error level (0-10)]:error level' \
@@ -26,9 +26,10 @@ _dnf()
 	   '*::dnf command:_dnf_command'
 }
 
-(( $+functions[_dnf_command] )) || _dnf_command() 
+(( $+functions[_dnf_command] )) || _dnf_command()
 {
   	local -a _dnf_cmds
+    local -a _dnf_plugins
   	_dnf_cmds=(
 		"install:install the latest version of a package or group of packages"
 		"erase:remove an installed package (with its dependencies)"
@@ -55,22 +56,37 @@ _dnf()
 		"upgrade:upgrade one or more packages"
   	)
 
+    _dnf_plugins=(
+        # Plugins
+        "builddep:Install build dependencies for package or spec file"
+        "config-manager:manage dnf configuration options and repositories"
+        "copr:Interact with Copr repositories."
+        "debuginfo-install:install debuginfo packages"
+        "download:Download package to current directory"
+        "needs-restarting:determine updated binaries that need restarting"
+        "playground:Interact with Playground repository."
+        "repoquery:search for packages matching keyword"
+        "reposync:download all packages from remote repo"
+    )
+
   	if (( CURRENT == 1 )); then
 		_describe -t commands 'dnf command' _dnf_cmds || compadd "$@"
+		_describe -t commands 'dnf plugins' _dnf_plugins || compadd "$@"
   	else
     	local curcontext="$curcontext"
 
 	    cmd="${${_dnf_cmds[(r)$words[1]:*]%%:*}}"
+	    cmd="${${_dnf_plugins[(r)$words[1]:*]%%:*}}"
 		# Deal with any aliases
 		case $cmd in
 			remove) cmd="erase";;
 			whatprovides) cmd="provides";;
 			upgrade) cmd="update";;
 		esac
-		
+
     	if (( $#cmd )); then
     		curcontext="${curcontext%:*:*}:dnf-${cmd}:"
-	
+
 	      	local update_policy
 		  	zstyle -s ":completion:${curcontext}:" cache-policy update_policy
 		  	if [[ -z "$update_policy" ]]; then
@@ -151,7 +167,7 @@ dnf_repos() {
 {
 	compset -P '*,'
 	compset -S ',*'
-	dnf_repos			
+	dnf_repos
 	compadd "$@" -a -- disabled_dnf_repos
 }
 
@@ -159,7 +175,7 @@ dnf_repos() {
 {
 	compset -P '*,'
 	compset -S ',*'
-	dnf_repos			
+	dnf_repos
 	compadd "$@" -a -- enabled_dnf_repos
 }
 
@@ -234,9 +250,9 @@ _dnf_list_or_info()
 		"obsoletes:packages installed that are obsoleted"
 		"recent:packages recently added to repositories"
 	)
-	
+
   	if (( CURRENT == 2 )); then
-		_describe -t dnf-list-subcmds "dnf info/list sub-commands" listlist || _dnf_all
+		_describe -t dnf-list-subcmds "Dnf info/list sub-commands" listlist || _dnf_all
 	else
 	    local subcmd
 		subcmd="${${listlist[(r)$words[2]:*]%%:*}}"
@@ -265,13 +281,13 @@ _dnf_list_or_info()
 # Completion function for provides|whatprovides
 (( $+functions[_dnf_provides] )) || _dnf_provides()
 {
-	_files	
+	_files
 }
 
 # Completion function for resolvedep
 (( $+functions[_dnf_resolvedep] )) || _dnf_resolvedep()
 {
-	_files	
+	_files
 }
 
 # Completion function for clean
@@ -286,13 +302,13 @@ _dnf_list_or_info()
 		"packages:cache packages"
 		"metadata:cache meta-data"
 	)
-	
+
   	if (( CURRENT == 2 )); then
-		_describe -t dnf-clean-subcmds "dnf clean sub-commands" cleanlist 
+		_describe -t dnf-clean-subcmds "Dnf clean sub-commands" cleanlist
 	fi
 }
 
-_dnf_caching_policy() 
+_dnf_caching_policy()
 {
   local _dnfrepomds
   local -a oldp
