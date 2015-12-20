@@ -115,7 +115,7 @@ mode "resize" {
 
 bindsym $mod+s mode "resize"
 
-bindsym $mod+0 exec "gnome-terminal --profile=IRC -e irssi"
+bindsym $mod+0 exec "gnome-terminal --profile=IRC"
 bindsym $mod+9 exec "vlc"
 
 # bindsym $mod+Shift+b bar hidden_state toggle
