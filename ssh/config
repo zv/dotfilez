@@ -1,7 +1,13 @@
 Compression yes
-VisualHostKey yes
+ControlMaster auto
+ControlPath /tmp/%r@%h:%p
+ControlPersist yes
 HashKnownHosts yes
 HostKeyAlgorithms ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp521,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384
+ServerAliveCountMax 6
+ServerAliveInterval 15
+TCPKeepAlive yes
+VisualHostKey yes
 
 Host *.nxvr.org
   user zv
