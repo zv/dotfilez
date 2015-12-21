@@ -82,20 +82,16 @@ setopt prompt_subst # Setup the prompt with pretty colors
 # Aliasing
 #############################################
 # Disable correction.
-for cmd (
-        ack cd cp ebuild gcc gist grep heroku
+for cmd (ack cd cp ebuild gcc gist grep heroku
         ln man mkdir mv mysql rm nmcli ip ag
-        git npm ember dnf jekyll
-    ) alias $cmd="nocorrect $cmd"
+        git npm ember dnf jekyll) alias $cmd="nocorrect $cmd"
 
 # Disable globbing.
-for cmd (
-        fc find ftp history locate rake rsync
-        scp sftp git
-    ) alias $cmd="noglob $cmd"
+for cmd (fc find ftp history locate rake rsync
+        scp sftp git) alias $cmd="noglob $cmd"
 
 # Define general aliases.
-alias -g pr="print"
+alias pr="print"
 alias _='sudo'
 alias e="emacsclient -t"
 alias edit="emacs -nw"
@@ -108,6 +104,7 @@ alias tl="tmux list-sessions"
 
 alias zthree="z3 -in"
 alias gpg=gpg2
+
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
@@ -116,38 +113,17 @@ function calc { emacsclient --eval "(calc-eval \"$1\")" }
 # # mkdir & cd to it
 function mcd() { mkdir -p "$1" && cd "$1"; }
 
-# Displays user owned processes status.
-function dut {
-  (( $# == 0 )) && set -- *
-
-  if grep -q -i 'GNU' < <(du --version 2>&1); then
-    du -khsc "$@" | sort -h -r
-  else
-    local line size name
-    local -a record
-
-    while IFS=$'\n' read line; do
-      record=(${(z)line})
-      size="$(($record[1] / 1024.0))"
-      name="$record[2,-1]"
-      printf "%9.1LfM    %s\n" "$size" "$name"
-    done < <(du -kcs "$@") | sort -n -r
-  fi
-}
-
 alias clr='clear;echo "Currently logged in on $(tty), as $USER in directory $PWD."'
 
-function lenovo_oxide {
+function ptrsp {
     # Grep through for the actual ID. Hack.
     local prop_id
     prop_id=$(xinput list --short | \
         grep 'Lenovo.*pointer' | \
         awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
         sed 's/id\=//')
-   xinput --set-prop $prop_id 140 $1 0 0 0 $1 0 0 0 0.8
+   xinput --set-prop $prop_id 140 $1 0 0 0 $1 0 0 0 $2
 }
-
-alias ptrsp='lenovo_oxide'
 
 ## ls ######################################################
 alias ls='ls --group-directories-first --color=auto'
@@ -160,8 +136,6 @@ alias lx='ll -XB'        # Lists sorted by extension (GNU only).
 alias lk='ll -Sr'        # Lists sorted by size, largest last.
 alias lc='lt -c'         # Lists sorted by date, most recent last, shows change time.
 alias lu='lt -u'         # Lists sorted by date, most recent last, shows access time.
-
-############################################
 #  Package Management (dnf)
 ############################################
 if (( $+commands[dnf] )); then
@@ -181,6 +155,7 @@ if (( $+commands[dnf] )); then
     alias dnfc="sudo dnf clean all"               # clean cachefi
 fi
 
+
 ############################################
 #  Grep
 ############################################
@@ -194,25 +169,13 @@ alias grep="$aliases[grep] --color=auto"
 alias g='git'
 alias gst='git status'
 alias gl='git pull'
-alias gup='git fetch && git rebase'
-alias gp='git push'
-gdv() { git diff -w "$@" | view - }
 alias gc='git commit -v'
 alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gcm='git checkout master'
-alias gb='git branch'
-alias gba='git branch -a'
-alias gcount='git shortlog -sn'
-alias gcp='git cherry-pick'
-alias glg='git log --stat --max-count=5'
-alias glgg='git log --graph --max-count=5'
-alias gss='git status -s'
 alias ga='git add'
-alias gm='git merge'
-alias grb='git reset HEAD'
-alias grh='git reset HEAD'
-alias grhh='git reset HEAD --hard'
+
+alias chr="google-chrome"
 
 alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
 
@@ -283,7 +246,6 @@ fi
 #############################################
 #  Vim & ZSH Line Editor
 ############################################
-
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 function zle-line-init zle-keymap-select {
@@ -341,12 +303,6 @@ bindkey "^[3;5~" delete-char
 bindkey "\e[3~" delete-char
 
 bindkey ' ' magic-space # [Space] - do history expansion
-
-# these are supposed to map Ctrl-Left/Right arrow but they do nothing
-#bindkey "^[[1;5C" forward-word
-#bindkey "^[[1;5D" backward-word
-#bindkey -M viins "\ek" vi-cmd-mode # not useful
-#bindkey "^[m" copy-prev-shell-word # doesn't work
 
 ############################################
 #  Modules & Completions
@@ -417,11 +373,11 @@ zstyle ':completion:*:history-words' menu yes
 zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
 # Populate hostname completion.
-zstyle -e ':completion:*:hosts' hosts 'reply=(
-  ${=${=${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) 2>/dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
-  ${=${(f)"$(cat /etc/hosts(|)(N) <<(ypcat hosts 2>/dev/null))"}%%\#*}
-  ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2>/dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
-)'
+# zstyle -e ':completion:*:hosts' hosts 'reply=(
+#   ${=${=${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) 2>/dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
+#   ${=${(f)"$(cat /etc/hosts(|)(N))"}%%\#*}
+#   ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2>/dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
+# )'
 
 # Don't complete uninteresting users...
 zstyle ':completion:*:*:*:users' ignored-patterns                     \
@@ -457,12 +413,6 @@ zstyle ':completion:*:*:mpg321:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):di
 zstyle ':completion:*:*:ogg123:*' file-patterns '*.(ogg|OGG|flac):ogg\ files *(-/):directories'
 zstyle ':completion:*:*:mocp:*' file-patterns '*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories'
 
-# Mutt
-if [[ -s "$HOME/.mutt/aliases" ]]; then
-    zstyle ':completion:*:*:mutt:*' menu yes select
-    zstyle ':completion:*:mutt:*' users ${${${(f)"$(<"$HOME/.mutt/aliases")"}#alias[[:space:]]}%%[[:space:]]*}
-fi
-
 # SSH/SCP/RSYNC
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
 zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
@@ -484,11 +434,13 @@ for fn (~/.zsh/modules/*.zsh) source $fn
 source $HOME/.gnupg/gpg-agent-wrapper
 
 # Node Version Manager
-lazy_source () {
-    eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
-}
+#lazy_source () {
+#    eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
+#}
 
-NVM_SOURCE=$NVM_DIR/nvm.sh
-lazy_source nvm $NVM_SOURCE
-#[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#NVM_SOURCE=$NVM_DIR/nvm.sh
+#lazy_source nvm $NVM_SOURCE
+#[ -x "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
+# Configure Ocaml package manager
+. /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
