@@ -141,6 +141,7 @@ bar {
 for_window [title="Terminal"] border pixel 1
 for_window [title="emacs@sigstkflt"] border pixel 1
 for_window [title="Google Chrome"] border none
+for_window [title="zhesaurus"] floating enable
 
 exec_always --no-startup-id ~/.xinitrc
 exec_always --no-startup-id nm-applet
