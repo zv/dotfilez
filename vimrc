@@ -185,9 +185,11 @@ set sidescroll=1
 
 " ================ External Settings ========================
 for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
-  "  exe 'source' f
+  exe 'source' f
 endfor
 
 " ================ Vim as MAN ========================
 
 runtime ftplugin/man.vim
+
+nnoremap <silent> Q :quit!<CR>
