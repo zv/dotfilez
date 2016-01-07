@@ -69,17 +69,17 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
-    mkdir -p -m 700 "$TMPDIR" && export TMPDIR="/tmp/$LOGNAME"
+    export TMPDIR="/tmp/$LOGNAME" 
+    mkdir -p -m 700 "$TMPDIR" 
 fi
-
-TMPPREFIX="${TMPDIR%/}/zsh"
+export TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Browser
 (( $+commands[google-chrome] )) && export BROWSER=google-chrome
 
 # History
-HISTFILE=$HOME/.zsh_history
+export HISTFILE=$HOME/.zsh_history
 
 # Lines to store
-HISTSIZE=$((2**14 - 1))
-SAVEHIST=$((2**14 - 1))
+export HISTSIZE=$((2**14 - 1))
+export SAVEHIST=$((2**14 - 1))
