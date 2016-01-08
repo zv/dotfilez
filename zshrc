@@ -204,6 +204,10 @@ setopt HIST_BEEP                 # Beep when accessing non-existent history.
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
+
+# Man
+export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 norelativenumber nomod nolist nonu noma showtabline=0' -\""
+
 ############################################
 #  Modules & Completions
 ############################################
