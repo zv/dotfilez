@@ -8,7 +8,7 @@ function backup_profile {
           -C ~/.thunderbird \
           -aJ zv.default \
           -O \
-          | gpg -a --encrypt -r zv@nxvr.org -o profile.tar.xz.gpg -
+          | gpg --encrypt -r zv@nxvr.org -o profile.tar.xz.gpg -
       echo "Saved profile"
   else
       echo "No thunderbird profile found at $profile_path"
@@ -17,8 +17,11 @@ function backup_profile {
 
 function restore_profile {
     echo "Extracting profile..."
+    # ugly hack to avoid sigpipe on mac osx where no <(gpg) or =(gpg) is
+    # permitted by the kernel
     gpg --decrypt profile.tar.xz.gpg > profile.tar.xz
     tar xf profile.tar.xz -C ~/.thunderbird
+    rm profile.tar.xz
     
     if [[ -e ~/.thunderbird/profiles.ini ]]; then
         echo "Backing up our manifest"
