@@ -175,7 +175,7 @@ endfunction
 
 nnoremap <C-q><C-k> :q!<CR>
 
-nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
+" nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
