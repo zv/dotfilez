@@ -86,13 +86,17 @@ function install_pkgs {
     )
 
     if [[ "$twofa_dependencies" == 'true' ]]; then
-      sudo dnf install ykpers-devel libyubikey-devel libusb-devel autoconf gnupg gnupg2-smime pcsc-lite
     fi
 
     dnf group install -y ${(@)groups}
     dnf install -y ${(@)packages}
 }
 
+
+# Includes two-factor authentication development libraries
+function two_factor_auth {
+    sudo dnf install ykpers-devel libyubikey-devel libusb-devel autoconf gnupg gnupg2-smime pcsc-lite
+}
 
 function configure_env {
     # Set my shell to zsh
@@ -130,48 +134,110 @@ function configure_env {
 }
 
 function ocaml {
-    # Install ocaml-proper
-    _ dnf install ocaml-camlp4-devel ocaml-ocamldoc ocaml-findlib-devel ocaml-extlib-devel ocaml-calendar-devel
-    # Install opam
-    wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin/
-    # Now install utop
+    if [[ -x =ocaml ]]; then
+        # Install ocaml-proper
+        _ dnf install ocaml-camlp4-devel ocaml-ocamldoc ocaml-findlib-devel ocaml-extlib-devel ocaml-calendar-devel
+        # Install opam
+        wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin/
+        # Now install utop
+    fi
 }
 
 function javascript {
-    ## Build nodejs
     pushd
-    mkdir -p ~/Development/node/local
-    cd ~/Development/node
-    curl https://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1
-    ./configure --prefix=~/Development/node/local
-    make install
-    curl https://www.npmjs.org/install.sh | sh
-    rehash npm
+    ## Build nodejs
+    if [[ -x =node ]]; then
+        mkdir -p ~/Development/node/local
+        cd ~/Development/node
+        curl https://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1
+        ./configure --prefix=~/Development/node/local
+        make install
+        rehash node
+    fi
+
+    # Build / install npm
+    if [[ -x =npm ]]; then
+        curl https://www.npmjs.org/install.sh | sh
+        rehash npm
+    fi
 
     ## Install our NPM packages
-    npm_packages=(ternjs js-beautify yo ember-cli bower babel-core babel-cli)
+    npm_packages=(
+        tern
+        js-beautify
+        yo
+        ember-cli
+        gulp
+        lodash
+        bower
+        babel-core
+        babel-cli
+        webpack
+        webpack-dev-server
+    )
 
     npm install -g ${(@)npm_packages}
+
     popd
 }
 
+# Link all relevant RC files.
+function link_dotfiles {
+    # List of files & directories not to link
+    local -aU nolink
+    nolink=("^\."
+            .gpg
+            .sh
+            Makefile
+            README.md
+            certificates
+            dconf
+            ebin
+            etc
+            ida.cfg
+            lib
+            org
+            ssh_config
+            systemd
+            .pub)
+    # Now link our files
+    git ls-tree --name-only HEAD | grep -v "${(j:\|:)nolink}" |\
+        xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
+}
+
 case $1 in
+    print $*
     # install dotfiles one by one
     # I make absolutely zero promises on how this will work with OSX coreutils
     # or any other OS toolchain currently experiencing a time warp to late '80s
+    test)
+        local -a test_opts
+        zparseopts -D -E -a test_opts -- l js ocaml base a h
+        print -l $test_opts
+        case $test_opts in
+            -l) echo 'l';&
+            -b) echo 'b';&
+            --js) echo '-js';&
+            --ocaml) echo '-caml';&
+        esac
+        ;;
     install)
-        # List of files & directories not to link
-        typeset -aU nolink
-        nolink=("^\." certificates Makefile org lib ida.cfg ssh_config
-                ebin zv.gpg.pub README.md .gpg .sh)
-        # Now link our files
-        git ls-tree --name-only HEAD | grep -v "${(j:\|:)nolink}" |\
-            xargs -p -I % sh -c "ln -s $(realpath %) $HOME/.%"
+        local -a install_opts
+        zparseopts -D -E -a install_opts -- l js ocaml base a h
+        case $install_opts in
+            -l) link_dotfiles;&
+            -b) install_pkgs;&
+            --js) javascript;&
+            --ocaml) ocaml;&
+        esac
         ;;
     protect)
         protect
         ;;
     unprotect)
         unprotect
+        ;;
+    js)
+        javascript
         ;;
 esac
