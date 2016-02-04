@@ -206,7 +206,6 @@ function link_dotfiles {
 }
 
 case $1 in
-    print $*
     # install dotfiles one by one
     # I make absolutely zero promises on how this will work with OSX coreutils
     # or any other OS toolchain currently experiencing a time warp to late '80s
@@ -237,7 +236,42 @@ case $1 in
     unprotect)
         unprotect
         ;;
+    keyring)
+        local destination=gnome-keyring.tar.gpg
+        local keyring_path=~/.local/share/keyrings
+        if [[ $2 = "backup" ]]; then
+            echo 'Backing up gnome keyring';
+            tar --create -C $keyring_path(:h) --wildcards -O $keyring_path(:t) | gpg --encrypt -r $key_id -o $destination - && echo "Wrote file to $destination"
+        elif [[ $2 = "restore" ]]; then
+            if [[ -e $destination ]]; then
+                local temp_dir=$(mktemp -d)
+                gpg2 -d $destination > $temp_dir/gnome-keyring.tar
+                tar xvf $temp_dir/gnome-keyring.tar
+                if mv $keyring_path $temp_dir; then
+                    echo "backed up keyring to $temp_dir"
+                else
+                    echo 'failed to backup keyring: EXITING'
+                    exit
+                fi
+                mv keyrings ~/.local/share/keyrings
+                mv $temp_dir/keyrings $keyring_path/old_keyrings
+                echo "Restored keyring"
+                echo "old keyrings are still in /tmp -- be careful if no tmpfs"
+            else
+                echo "No file"
+            fi
+        else
+            echo "keyring backup # backup the keyring"
+            echo "keyring restore # restore the keyring"
+        fi
+        ;;
     js)
         javascript
         ;;
+    *)
+        echo "install"
+        echo "protect"
+        echo "unprotect"
+        echo "keyring"
+        echo "js"
 esac
