@@ -8,7 +8,7 @@ You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
    dotspacemacs-distribution 'spacemacs
-   dotspacemacs-configuration-layer-path '("~/dotfilez/layers")
+   dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
    '((auto-completion :variables
                       auto-completion-enable-help-tooltip t)
