@@ -52,41 +52,37 @@ function install_pkgs {
 
     # List of packages to be installed
     packages=(ack
-        aircrack-ng
-        clang
-        clang-devel
-        clang-libs
-        curl
-        dnsenum
-        emacs
-        # git-extras
-        global # gtags
-        gnupg2
-        graphviz
-        hping3
-        i3
-        i3lock
-        i3status
-        libvirt
-        mtr
-        nmap
-        rlwrap
-        rpmdevtools
-        scapy
-        socat
-        the_silver_searcher
-        thunderbird
-        tmux
-        vim-enhanced
-        vlc
-        wireshark
-        weechat
-        xbacklight
-        zsh
-    )
-
-    if [[ "$twofa_dependencies" == 'true' ]]; then
-    fi
+              aircrack-ng
+              clang
+              clang-devel
+              clang-libs
+              curl
+              dnsenum
+              emacs
+              # git-extras
+              global # gtags
+              gnupg2
+              graphviz
+              hping3
+              i3
+              i3lock
+              i3status
+              libvirt
+              mtr
+              nmap
+              rlwrap
+              rpmdevtools
+              scapy
+              socat
+              the_silver_searcher
+              thunderbird
+              tmux
+              vim-enhanced
+              vlc
+              wireshark
+              weechat
+              xbacklight
+              zsh)
 
     dnf group install -y ${(@)groups}
     dnf install -y ${(@)packages}
