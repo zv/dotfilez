@@ -109,19 +109,6 @@
 ;; normal mode
 (define-key evil-visual-state-map (kbd "C-e") 'eval-region)
 
-;; As I never distinguish between [[ & [{, I might as well get the
-;; benefit of use of the easier one
-(define-key evil-motion-state-map "]" 'evil-forward-paragraph)
-(define-key evil-motion-state-map "[" 'evil-backward-paragraph)
-(define-key evil-motion-state-map "}" 'evil-forward-section-begin)
-(define-key evil-motion-state-map "{" 'evil-backward-section-begin)
-(define-key evil-motion-state-map (kbd "M-]") 'evil-forward-section-end)
-(define-key evil-motion-state-map (kbd "M-[") 'evil-backward-section-end)
-;;(define-key evil-motion-state-map "(" 'evil-previous-open-paren)
-;;(define-key evil-motion-state-map ")" 'evil-next-close-paren)
-(define-key evil-motion-state-map (kbd "M-{") 'evil-previous-open-brace)
-(define-key evil-motion-state-map (kbd "M-}") 'evil-next-close-brace)
-
 ;; H/L should go to the first / last non blank character respectively
 ;; (define-key evil-visual-state-map "L" 'evil-last-non-blank)
 ;; (define-key evil-visual-state-map "H" 'evil-first-non-blank)

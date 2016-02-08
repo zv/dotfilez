@@ -28,7 +28,7 @@ values."
      markdown
      org
      ;; haskell
-     ;; ocaml
+     ocaml
      ;; ruby
      rust
      ;; sql
@@ -48,13 +48,22 @@ before layers configuration.
 You should not put any user code in there besides modifying the variable
 values."
   (setq-default
-   dotspacemacs-elpa-https nil
+   dotspacemacs-elpa-https t
    dotspacemacs-elpa-timeout 5
+   dotspacemacs-check-for-update t
    dotspacemacs-editing-style 'vim
    dotspacemacs-verbose-loading nil
-   dotspacemacs-startup-banner nil
-   dotspacemacs-startup-lists nil
-   dotspacemacs-themes '(leuven solarized-light solarized-dark)
+   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-lists '(recents projects)
+   dotspacemacs-startup-recent-list-size 5
+   dotspacemacs-scratch-mode 'text-mode
+   dotspacemacs-themes '(leuven
+                         spacemacs-dark
+                         spacemacs-light
+                         solarized-light
+                         solarized-dark
+                         monokai
+                         zenburn)
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Source Code Pro"
                                :size 14
@@ -65,9 +74,11 @@ values."
    dotspacemacs-emacs-leader-key "M-m"
    dotspacemacs-major-mode-leader-key ","
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; dotspacemacs-command-key ":"
+   dotspacemacs-emacs-command-key "SPC"
    dotspacemacs-distinguish-gui-tab nil
-   dotspacemacs-command-key ":"
-   dotspacemacs-remap-Y-to-y$ t
+   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-ex-substitute-global nil
    dotspacemacs-default-layout-name "Default"
    dotspacemacs-display-default-layout nil
    dotspacemacs-auto-resume-layouts nil
@@ -75,7 +86,7 @@ values."
    dotspacemacs-max-rollback-slots 5
    dotspacemacs-use-ido nil
    dotspacemacs-helm-resize nil
-   dotspacemacs-helm-no-header t
+   dotspacemacs-helm-no-header nil
    dotspacemacs-helm-position 'bottom
    dotspacemacs-enable-paste-micro-state nil
    dotspacemacs-which-key-delay 0.6
@@ -86,7 +97,9 @@ values."
    dotspacemacs-maximized-at-startup nil
    dotspacemacs-active-transparency nil
    dotspacemacs-inactive-transparency nil
-   dotspacemacs-mode-line-unicode-symbols nil
+   dotspacemacs-show-transient-state-title t
+   dotspacemacs-show-transient-state-color-guide t
+   dotspacemacs-mode-line-unicode-symbols t
    dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers nil
    dotspacemacs-smartparens-strict-mode nil
@@ -140,9 +153,33 @@ This function is called at the very end of Spacemacs initialization."
         neo-show-hidden-files nil
         neo-vc-integration nil)
 
+  ;; smartparens
+  (eval-after-load 'smartparens
+    '(progn
+       (sp-pair "(" nil :actions :rem)
+       (sp-pair "<" nil :actions :rem)
+       (sp-pair "[" nil :actions :rem)
+       (sp-pair "'" nil :actions :rem)
+       (sp-pair "\"" nil :actions :rem)))
+
   ;; Mode setting
   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . shell-script-mode))
+
+
+  ;; As I never distinguish between [[ & [{, I might as well get the
+  ;; benefit of use of the easier one
+  (define-key evil-normal-state-map "]" 'evil-forward-paragraph)
+  (define-key evil-normal-state-map "[" 'evil-backward-paragraph)
+  (define-key evil-normal-state-map "}" 'evil-forward-section-begin)
+  (define-key evil-normal-state-map "{" 'evil-backward-section-begin)
+  (define-key evil-normal-state-map (kbd "M-]") 'evil-forward-section-end)
+  (define-key evil-normal-state-map (kbd "M-[") 'evil-backward-section-end)
+  ;;(define-key evil-motion-state-map "(" 'evil-previous-open-paren)
+  ;;(define-key evil-motion-state-map ")" 'evil-next-close-paren)
+  (define-key evil-normal-state-map (kbd "M-{") 'evil-previous-open-brace)
+  (define-key evil-normal-state-map (kbd "M-}") 'evil-next-close-brace)
+
 
   ;; relative line numbers ----------------------------------
   (linum-relative-toggle)
