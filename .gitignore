@@ -46,6 +46,8 @@ pentadactyl/info/default
 lib/ag
 lib/vim
 
+gnome-keyring.tar.gpg
+
 
 *.beam
 " for YCM
