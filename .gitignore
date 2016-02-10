@@ -68,3 +68,5 @@ weechat/weechat.log
 *npm-debug.log
 
 ghc/
+
+gnupg/secring.gpg
