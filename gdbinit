@@ -95,10 +95,10 @@ which `{pid}` is expanded with the process identifier of the target program.""",
             },
             # common styles
             'style_selected_1': {
-                'default': '0;32'
+                'default': '1;32'
             },
             'style_selected_2': {
-                'default': '32'
+                'default': '0;32'
             },
             'style_low': {
                 'default': '0;37'
@@ -773,7 +773,7 @@ instructions constituting the current statement are marked, if available."""
         return {
             'context': {
                 'doc': 'Number of context instructions.',
-                'default': 3,
+                'default': 15,
                 'type': int,
                 'check': check_ge_zero
             },
