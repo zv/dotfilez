@@ -9,3 +9,10 @@
 */global-messages-db.sqlite
 */datareporting
 */liberatorCache
+*/places.sqlite
+*/places.sqlite-wal
+*/places.sqlite.old
+*/panacea.dat
+*/cookies.sqlite-wal
+*/storage.sdb
+*/*.log

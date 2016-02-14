@@ -3,10 +3,10 @@ function backup_profile {
   local profile_path=~/.thunderbird/zv.default
   if [[ -e $profile_path ]]; then
       echo "Creating profile..."
-      tar --create \
+      XZ_OPT=-9 tar --create \
           --exclude-from=thunderbird_exclude \
           -C ~/.thunderbird \
-          -aJ zv.default \
+          -J zv.default \
           -O \
           | gpg --encrypt -r zv@nxvr.org -o profile.tar.xz.gpg -
       echo "Saved profile"
@@ -38,6 +38,7 @@ function restore_profile {
     echo '----------------------------------------------'
     echo '----------------------------------------------'
     echo '----------------------------------------------'
+    echo 'You can run rsync -av ~/.thunderbird/zv.default ~/.thunderbird/OLD_PROFILE if you want'
 }
 
 if [[ $@[1] = "--extract" ]]; then
