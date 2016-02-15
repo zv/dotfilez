@@ -303,9 +303,6 @@
           org-default-priority ?C)
 
     ;; Org mode keybindings
-    (evil-leader/set-key-for-mode 'org-mode
-      "m*" 'org-ctrl-c-star
-      "m-" 'org-ctrl-c-minus)
     ))
 
 ;; ORG MODE PUBLISHING
