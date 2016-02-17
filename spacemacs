@@ -53,7 +53,7 @@ values."
    dotspacemacs-check-for-update t
    dotspacemacs-editing-style 'vim
    dotspacemacs-verbose-loading nil
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    dotspacemacs-startup-lists '(recents projects)
    dotspacemacs-startup-recent-list-size 5
    dotspacemacs-scratch-mode 'text-mode
@@ -99,7 +99,7 @@ values."
    dotspacemacs-inactive-transparency nil
    dotspacemacs-show-transient-state-title t
    dotspacemacs-show-transient-state-color-guide t
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    dotspacemacs-smooth-scrolling t
    dotspacemacs-line-numbers nil
    dotspacemacs-smartparens-strict-mode nil
@@ -117,7 +117,7 @@ values."
   ;; Personal blog path
   (setq zv//blog-path (expand-file-name "~/zv.github.com/")
         ;; Undo tree file directory
-        zv//undo-tree-directory "/tmp/.emacs-undo")
+        zv//undo-tree-directory "/tmp/zv/.emacs-undo")
 
   (setq-default
    exec-path-from-shell-check-startup-files nil
@@ -145,8 +145,8 @@ This function is called at the very end of Spacemacs initialization."
   (add-hook 'racer-mode-hook #'company-mode)
   (setq company-tooltip-align-annotations t)
 
-  (setq racer-cmd "/home/zv/Development/racer/target/release/racer")
-  (setq racer-rust-src-path "/home/zv/Development/rust/src/")
+  (setq racer-cmd "/usr/local/bin/racer")
+  (setq racer-rust-src-path "/usr/local/src/rust/src")
 
   ;; neotree
   (setq neo-theme 'ascii
@@ -167,19 +167,31 @@ This function is called at the very end of Spacemacs initialization."
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . shell-script-mode))
 
 
-  ;; As I never distinguish between [[ & [{, I might as well get the
-  ;; benefit of use of the easier one
-  (define-key evil-normal-state-map "]" 'evil-forward-paragraph)
-  (define-key evil-normal-state-map "[" 'evil-backward-paragraph)
-  (define-key evil-normal-state-map "}" 'evil-forward-section-begin)
-  (define-key evil-normal-state-map "{" 'evil-backward-section-begin)
-  (define-key evil-normal-state-map (kbd "M-]") 'evil-forward-section-end)
-  (define-key evil-normal-state-map (kbd "M-[") 'evil-backward-section-end)
-  ;;(define-key evil-motion-state-map "(" 'evil-previous-open-paren)
-  ;;(define-key evil-motion-state-map ")" 'evil-next-close-paren)
-  (define-key evil-normal-state-map (kbd "M-{") 'evil-previous-open-brace)
-  (define-key evil-normal-state-map (kbd "M-}") 'evil-next-close-brace)
+  ;; ;; As I never distinguish between [[ & [{, I might as well get the
+  ;; ;; benefit of use of the easier one
+  (define-key evil-motion-state-map "]" 'evil-forward-paragraph)
+  (define-key evil-motion-state-map "[" 'evil-backward-paragraph)
 
+  (define-key evil-motion-state-map "}}" 'evil-forward-section-begin)
+  (define-key evil-motion-state-map "{{" 'evil-backward-section-begin)
+
+  (define-key evil-motion-state-map "}" nil)
+  (define-key evil-motion-state-map "{" nil)
+
+  (define-key evil-motion-state-map "}]" 'evil-forward-section-begin)
+  (define-key evil-motion-state-map "}[" 'evil-forward-section-end)
+  (define-key evil-motion-state-map "{[" 'evil-backward-section-begin)
+  (define-key evil-motion-state-map "{]" 'evil-backward-section-end)
+  (define-key evil-motion-state-map "{(" 'evil-previous-open-paren)
+  (define-key evil-motion-state-map "})" 'evil-next-close-paren)
+  (define-key evil-motion-state-map "{{" 'evil-previous-open-brace)
+  (define-key evil-motion-state-map "}}" 'evil-next-close-brace)
+
+  (define-key evil-motion-state-map (kbd "M-]") 'evil-forward-section-end)
+  (define-key evil-motion-state-map (kbd "M-[") 'evil-backward-section-end)
+
+  (define-key evil-motion-state-map (kbd "M-{") 'evil-previous-open-brace)
+  (define-key evil-motion-state-map (kbd "M-}") 'evil-next-close-brace)
 
   ;; relative line numbers ----------------------------------
   (linum-relative-toggle)
