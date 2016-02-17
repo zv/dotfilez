@@ -30,7 +30,7 @@ values."
      ;; haskell
      ocaml
      ;; ruby
-     rust
+     (rust :variables rust-enable-racer t)
      ;; sql
      (shell :variables shell-default-term-shell "/usr/bin/zsh")
      syntax-checking
