@@ -10,11 +10,12 @@ export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//
 # Build
 export CC=clang
 export CXX=clang++
-
 export AR=ar
 
 # Language
-export LANG='en_US.UTF-8'
+if [[ -z "$LANG" ]]; then
+    export LANG='en_US.UTF-8'
+fi
 export LC_CTYPE=$LANG
 
 # Environment
@@ -29,12 +30,12 @@ export DISABLE_AUTO_TITLE="true"
 export GOROOT=$HOME/Development/go
 export GOPATH=$HOME/Development/golang
 # Rust
-export RUST_SRC_PATH=$HOME/Development/rust/src
+export RUST_SRC_PATH=/usr/local/src/rust/src
 # NVM
 export NVM_DIR="$HOME/.nvm"
 
 # Ensure path arrays do not contain duplicates.
-typeset -gU fpath mailpath path #cdpath
+typeset -gU fpath mailpath path cdpath
 
 # Paths
 path=(
@@ -67,19 +68,25 @@ export PAGER='less'
 # Remove -X and -F (exit if the content fits on one screen) to enable it.
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
+# Set the Less input preprocessor.
+# Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
+if (( $#commands[(i)lesspipe(|.sh)] )); then
+  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
+fi
+
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
     export TMPDIR="/tmp/$LOGNAME" 
     mkdir -p -m 700 "$TMPDIR" 
 fi
-export TMPPREFIX="${TMPDIR%/}/zsh"
+TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Browser
-(( $+commands[google-chrome] )) && export BROWSER=google-chrome
+if (( $+commands[google-chrome] )); then
+    export BROWSER==google-chrome
+fi
 
-# History
-export HISTFILE=$HOME/.zsh_history
-
-# Lines to store
-export HISTSIZE=$((2**14 - 1))
-export SAVEHIST=$((2**14 - 1))
+# Font Config
+if [[ "$OSTYPE" == linux* ]]; then
+    export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
+fi
