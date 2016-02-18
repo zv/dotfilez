@@ -2,8 +2,11 @@ aws/*
 !aws/*.gpg
 !aws/*.asc
 gnupg/*
+!gnupg/gpg-agent-wrapper
 !gnupg/gpg.conf
-!gnupg/secring.gpg
+!gnupg/gpg-agent.conf
+!gnupg/dirmngr.conf
+!gnupg/scdaemon.conf
 !gnupg/pubring.gpg
 !gnupg/trustring.gpg
 !gnupg/*.asc
