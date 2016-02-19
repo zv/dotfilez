@@ -1,8 +1,6 @@
 #!/bin/zsh
 # My personal key
 typeset key_id='0xF6F2D0445DC172F8'
-# Set to `true` to install yubikey dependencies
-typeset twofa_dependencies="false"
 typeset -a protected groups packages npm_packages
 
 ###
@@ -95,6 +93,13 @@ function two_factor_auth {
 }
 
 function configure_env {
+    if [[ $0:a:h != ~/dotfilez ]]; then
+        echo "It's recommended that this directory be located in ~/dotfilez"
+        echo "Are you sure you want to continue? (Y/N)"
+        if ! read -q; then
+            exit
+        fi
+    fi
     # Set my shell to zsh
     chsh -s =zsh zv
 
@@ -108,14 +113,8 @@ function configure_env {
     print "%F{cyan}Linking Personal Directories%f"
     ln -s $HOME/Development/ $HOME/z
 
-    ## Install NVM
-    #print -P "%F{green}Installing NVM...%f"
-    #(curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash)&
-
-    #print -P "%F{green}Installing Lein...%f"
-    #(curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > ~/bin )&
-
     # Install my custom /etc files
+    echo "Installing custom /etc files"
     for f in etc/**/*; do
         cp -i "/$f" "$f"
     done
@@ -126,7 +125,7 @@ function configure_env {
     done
 
     # Import certificates into gpg
-    gpg --import certificates/*
+    # gpg --import certificates/*
 }
 
 function ocaml {
@@ -233,12 +232,16 @@ case $1 in
         unprotect
         ;;
     keyring)
-        local destination=gnome-keyring.tar.gpg
+        local destination=~/Dropbox/gnome-keyring.tar.gpg
         local keyring_path=~/.local/share/keyrings
         if [[ $2 = "backup" ]]; then
             echo 'Backing up gnome keyring';
             tar --create -C $keyring_path(:h) --wildcards -O $keyring_path(:t) | gpg --encrypt -r $key_id -o $destination - && echo "Wrote file to $destination"
         elif [[ $2 = "restore" ]]; then
+            # Use gpg not gnome ssh-agent
+            if [[ $(gconftool-2 --get /apps/gnome-keyring/daemon-components/ssh) != "false" ]]; then
+                gconftool-2 --type bool --set /apps/gnome-keyring/daemon-components/ssh false
+            fi
             if [[ -e $destination ]]; then
                 local temp_dir=$(mktemp -d)
                 gpg2 -d $destination > $temp_dir/gnome-keyring.tar
@@ -271,3 +274,32 @@ case $1 in
         echo "keyring"
         echo "js"
 esac
+
+
+# install packages
+
+# configure env (setup keys, shell, yubikey)
+
+# cryptographic setup
+## unpack gpg
+### configure yubikey
+### disable gnome ssh-agent && enable gnupg agent
+### udev rules
+## setup ssh keys
+## install certificates
+
+# configure gnome stuff
+## gnome-terminal (dconf)
+
+# restore thunderbird
+## restore feeds
+
+### gpg-agent
+
+### systemd unit files
+
+# configure emacs
+
+# configure {javascript,haskell,ocaml,rust,erlang/elixir}
+
+# setup dropbox
