@@ -172,20 +172,20 @@ This function is called at the very end of Spacemacs initialization."
   (define-key evil-motion-state-map "]" 'evil-forward-paragraph)
   (define-key evil-motion-state-map "[" 'evil-backward-paragraph)
 
-  (define-key evil-motion-state-map "}}" 'evil-forward-section-begin)
-  (define-key evil-motion-state-map "{{" 'evil-backward-section-begin)
 
   (define-key evil-motion-state-map "}" nil)
   (define-key evil-motion-state-map "{" nil)
 
+  ;;(define-key evil-motion-state-map "}}" 'evil-forward-section-begin)
+  ;;(define-key evil-motion-state-map "{{" 'evil-backward-section-begin)
+  (define-key evil-motion-state-map "{{" 'evil-previous-open-brace)
+  (define-key evil-motion-state-map "}}" 'evil-next-close-brace)
   (define-key evil-motion-state-map "}]" 'evil-forward-section-begin)
   (define-key evil-motion-state-map "}[" 'evil-forward-section-end)
   (define-key evil-motion-state-map "{[" 'evil-backward-section-begin)
   (define-key evil-motion-state-map "{]" 'evil-backward-section-end)
   (define-key evil-motion-state-map "{(" 'evil-previous-open-paren)
   (define-key evil-motion-state-map "})" 'evil-next-close-paren)
-  (define-key evil-motion-state-map "{{" 'evil-previous-open-brace)
-  (define-key evil-motion-state-map "}}" 'evil-next-close-brace)
 
   (define-key evil-motion-state-map (kbd "M-]") 'evil-forward-section-end)
   (define-key evil-motion-state-map (kbd "M-[") 'evil-backward-section-end)
