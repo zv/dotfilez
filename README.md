@@ -3,6 +3,7 @@ To get a file by file install prompt for each dotfile, simply run
 
     $ ./dotfilez.sh install
 
+- [CVim Configuration URL](https://gist.github.com/zv/143f07207cde5b74d557)
 
 ## Public Keys
 
