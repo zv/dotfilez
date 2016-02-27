@@ -132,7 +132,7 @@
   g = grep
 
   # log - show commit logs.
-	l	= log --date=short --pretty=\"format:%C(blue)%ad%  %C(yellow)%h%Creset %<(75,trunc)%s %C(red)%<(18)%d %C(013)[%><(20)%an] %Creset\"
+	l	= log --date=short --pretty=\"format:%C(blue)%ad%  %C(yellow)%h%Creset %<(85,trunc)%s %C(013)[%><(20)%an]%C(red)%<(22)%d%Creset\"
 
   # merge - join two or more development histories together.
   m = merge
