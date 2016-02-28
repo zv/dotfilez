@@ -17,8 +17,8 @@ values."
      elixir
      emacs-lisp
      (erlang :variables
-             erlang-root-dir "/usr/local/lib/erlang/erts-7.1"
-             edts-man-root   "/usr/local/lib/erlang/erts-7.1")
+             erlang-root-dir "/usr/local/lib/erlang"
+             edts-man-root   "/usr/local/lib/erlang/erts-7.2.1/")
      git
      ;; go
      haskell
@@ -32,12 +32,14 @@ values."
      ;; ruby
      (rust :variables rust-enable-racer t)
      ;; sql
-     (shell :variables shell-default-term-shell "/usr/bin/zsh")
+     (shell :variables
+            shell-default-term-shell "/usr/bin/zsh"
+            shell-default-shell 'shell)
      syntax-checking
      ;; dash
      zv)
 
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(edts)
    dotspacemacs-excluded-packages '(org-pomodoro spray yasnippet)
    dotspacemacs-delete-orphan-packages t))
 
