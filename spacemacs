@@ -52,7 +52,7 @@ values."
   (setq-default
    dotspacemacs-elpa-https t
    dotspacemacs-elpa-timeout 5
-   dotspacemacs-check-for-update t
+   dotspacemacs-check-for-update nil
    dotspacemacs-editing-style 'vim
    dotspacemacs-verbose-loading nil
    dotspacemacs-startup-banner nil
@@ -80,13 +80,12 @@ values."
    dotspacemacs-emacs-command-key "SPC"
    dotspacemacs-distinguish-gui-tab nil
    dotspacemacs-remap-Y-to-y$ nil
-   dotspacemacs-ex-substitute-global nil
    dotspacemacs-default-layout-name "Default"
    dotspacemacs-display-default-layout nil
    dotspacemacs-auto-resume-layouts nil
    dotspacemacs-auto-save-file-location 'cache
    dotspacemacs-max-rollback-slots 5
-   dotspacemacs-use-ido nil
+   dotspacemacs-use-ido t
    dotspacemacs-helm-resize nil
    dotspacemacs-helm-no-header nil
    dotspacemacs-helm-position 'bottom
@@ -168,32 +167,22 @@ This function is called at the very end of Spacemacs initialization."
   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . shell-script-mode))
 
-
   ;; ;; As I never distinguish between [[ & [{, I might as well get the
   ;; ;; benefit of use of the easier one
   (define-key evil-motion-state-map "]" 'evil-forward-paragraph)
   (define-key evil-motion-state-map "[" 'evil-backward-paragraph)
 
-
   (define-key evil-motion-state-map "}" nil)
   (define-key evil-motion-state-map "{" nil)
 
-  ;;(define-key evil-motion-state-map "}}" 'evil-forward-section-begin)
-  ;;(define-key evil-motion-state-map "{{" 'evil-backward-section-begin)
-  (define-key evil-motion-state-map "{{" 'evil-previous-open-brace)
-  (define-key evil-motion-state-map "}}" 'evil-next-close-brace)
-  (define-key evil-motion-state-map "}]" 'evil-forward-section-begin)
-  (define-key evil-motion-state-map "}[" 'evil-forward-section-end)
-  (define-key evil-motion-state-map "{[" 'evil-backward-section-begin)
-  (define-key evil-motion-state-map "{]" 'evil-backward-section-end)
-  (define-key evil-motion-state-map "{(" 'evil-previous-open-paren)
-  (define-key evil-motion-state-map "})" 'evil-next-close-paren)
-
-  (define-key evil-motion-state-map (kbd "M-]") 'evil-forward-section-end)
-  (define-key evil-motion-state-map (kbd "M-[") 'evil-backward-section-end)
-
-  (define-key evil-motion-state-map (kbd "M-{") 'evil-previous-open-brace)
-  (define-key evil-motion-state-map (kbd "M-}") 'evil-next-close-brace)
+  ;; Evil motion state bindings
+  (dolist (binding '(("{{" evil-previous-open-brace) ("}}" evil-next-close-brace)
+                     ("}]" evil-forward-section-begin) ("}[" evil-forward-section-end)
+                     ("{[" evil-backward-section-begin) ("{]" evil-backward-section-end)
+                     ("{(" evil-previous-open-paren) ("})" evil-next-close-paren)
+                     ("\M-]" evil-forward-section-end) ("\M-[" evil-backward-section-end)
+                     ("\M-{" evil-previous-open-brace) ("\M-}" evil-next-close-brace)))
+    (define-key evil-motion-state-map (car binding) (cadr binding)))
 
   ;; relative line numbers ----------------------------------
   (linum-relative-toggle)
@@ -317,4 +306,3 @@ This function is called at the very end of Spacemacs initialization."
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(org-document-title ((t (:foreground "black" :weight bold :height 1.35 :family "Sans Serif")))))
-
