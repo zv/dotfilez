@@ -92,6 +92,10 @@ function two_factor_auth {
     sudo dnf install ykpers-devel libyubikey-devel libusb-devel autoconf gnupg gnupg2-smime pcsc-lite
 }
 
+function rpms {
+    https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+}
+
 function configure_env {
     if [[ $0:a:h != ~/dotfilez ]]; then
         echo "It's recommended that this directory be located in ~/dotfilez"
@@ -123,6 +127,11 @@ function configure_env {
     for uf in systemd/user/default.target.wants/*; do
         systemctl --user link "$uf"
     done
+
+    # Load bitlbee on startup
+    if [[ $+commands[bitlbee] ]]; then
+        systemctl enable bitlbee
+    fi
 
     # Import certificates into gpg
     # gpg --import certificates/*
@@ -174,6 +183,10 @@ function javascript {
     npm install -g ${(@)npm_packages}
 
     popd
+}
+
+function rust {
+    curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
 }
 
 # Link all relevant RC files.
