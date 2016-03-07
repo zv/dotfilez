@@ -49,6 +49,11 @@
 ;; tern
 (setq tern-command '("node" "/bin/tern"))
 
+;; GDB configuration
+(setq gdb-many-windows t
+      gdb-show-main t
+      )
+
 ;; VC Mode
 (eval-after-load 'vc
   '(progn

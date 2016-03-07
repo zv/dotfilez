@@ -38,12 +38,7 @@
 
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
-;; buffer
-(global-set-key (kbd "C-x C-k") 'switch-to-prev-buffer)
-(global-set-key (kbd "C-x C-j") 'switch-to-next-buffer)
-
 ;; utilities
-(global-set-key (kbd "C-x l") 'find-library)
 (global-set-key (kbd "C-x C-r") 're-builder)
 (global-set-key (kbd "M-/") 'hippie-expand)
 
