@@ -67,6 +67,8 @@ irssi/*.crt
 irssi/*.pem
 weechat/logs
 weechat/weechat.log
+weechat/sec.conf
+weechat/passphrase
 
 *npm-debug.log
 
