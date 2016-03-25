@@ -1,6 +1,6 @@
 set $mod Mod4
 
-font pango:Source Code Pro 11px
+font pango:Monospace 11px
 
 new_window pixel 3
 focus_follows_mouse  no
@@ -11,9 +11,9 @@ force_focus_wrapping yes
 set $gray1 #373d48
 set $gray2 #29303a
 
-client.focused            $gray1   $gray1   #FFFFFF   $gray1
-client.focused_inactive   $gray2   $gray2   #FFFFFF   #000000
-client.unfocused          $gray2   $gray2   #FFFFFF   #000000
+client.focused            #000000 #808080 #FFFFFF $gray1
+client.focused_inactive   $gray2  $gray2  #FFFFFF #000000
+client.unfocused          $gray2  $gray2  #FFFFFF #000000
 
 # use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -100,11 +100,12 @@ bindsym $mod+z reload
 bindsym $mod+Shift+x restart
 bindsym $mod+Shift+z exit
 
+bindsym $mod+s mode "resize"
 mode "resize" {
-        bindsym h   resize shrink width 5 px or 5 ppt
-        bindsym j   resize grow height 5 px or 5 ppt
-        bindsym k   resize shrink height 5 px or 5 ppt
-        bindsym l   resize grow width 5 px or 5 ppt
+        bindsym h resize shrink width 5 px or 5 ppt
+        bindsym j resize grow height 5 px or 5 ppt
+        bindsym k resize shrink height 5 px or 5 ppt
+        bindsym l resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape or q or ^[
         bindsym Return mode "default"
@@ -112,8 +113,6 @@ mode "resize" {
         bindsym Escape mode "default"
         bindcode Control+34 mode "default"
 }
-
-bindsym $mod+s mode "resize"
 
 bindsym $mod+0 exec "gnome-terminal --profile=IRC"
 bindsym $mod+9 exec "vlc"
@@ -137,11 +136,11 @@ bar {
 }
 
 # Window configuration
-
-for_window [title="Terminal"] border pixel 1
-for_window [title="emacs@sigstkflt"] border pixel 1
-for_window [title="Google Chrome"] border none
-for_window [title="zhesaurus"] floating enable
+for_window [title="Terminal"]         border pixel 1
+for_window [title="emacs@sigstkflt"]  border pixel 1
+for_window [title="Google Chrome"]    border none
+for_window [title="Firefox"]          border none
+for_window [title="zhesaurus"]        floating enable
 
 exec_always --no-startup-id ~/.xinitrc
 exec_always --no-startup-id nm-applet
