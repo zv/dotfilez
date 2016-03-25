@@ -3,7 +3,7 @@
 # Set the background color
 # [[ $(xrandr | grep "HDMI2 connected") ]] &&  xrandr --output HDMI2 --left-of eDP1 --primary --auto
 
-xsetroot -solid gray
+xsetroot -gray
 
 ## Fire up apps
 # xscreensaver -no-splash &
