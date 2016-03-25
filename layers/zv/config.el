@@ -21,7 +21,12 @@
  js2-basic-offset                 2
  js2-strict-missing-semi-warning  nil
  js2-include-node-externs         t
- js2-include-browser-externs      t)
+ js2-include-browser-externs      t
+ user-mail-address                "zv@nxvr.org"
+ )
+
+(defvar zv-whitelist '() "List of helm buffers in which to show dots.")
+
 
 ;; Additional emacs modes ------------------------------------
 (mapc (lambda (x) (evil-set-initial-state x 'emacs))
@@ -393,3 +398,8 @@
 ;; -------------------------------------------------------------------------
 ;;;
 ;; -------------------------------------------------------------------------
+(with-eval-after-load 'helm-files
+  (advice-add 'helm-ff-filter-candidate-one-by-one
+              :around 'zv/helm-ff-filter-candidate-one-by-one)
+  (advice-add 'helm-find-files-up-one-level
+              :around 'zv/helm-find-files-up-one-level))

@@ -85,9 +85,9 @@ values."
    dotspacemacs-auto-resume-layouts nil
    dotspacemacs-auto-save-file-location 'cache
    dotspacemacs-max-rollback-slots 5
-   dotspacemacs-use-ido t
+   dotspacemacs-use-ido nil
    dotspacemacs-helm-resize nil
-   dotspacemacs-helm-no-header nil
+   dotspacemacs-helm-no-header t
    dotspacemacs-helm-position 'bottom
    dotspacemacs-enable-paste-micro-state nil
    dotspacemacs-which-key-delay 0.6

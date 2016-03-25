@@ -108,3 +108,23 @@ FUN function callback"
 (defun delete-tern-process ()
   (interactive)
   (delete-process "Tern"))
+
+;; advice functions for not showing dots
+(defun zv/whitelistedp ()
+  (member (with-helm-buffer (buffer-name)) zv-whitelist))
+
+(defun zv/helm-ff-filter-candidate-one-by-one (fcn file)
+  (when (or (zv/whitelistedp)
+            (not (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)))
+    (funcall fcn file)))
+
+(defun zv/helm-file-completion-source-p (&rest args) t)
+
+(defun zv/helm-find-files-up-one-level (fcn &rest args)
+  (prog2
+      (advice-add 'helm-file-completion-source-p
+                  :around 'zv/helm-file-completion-source-p)
+      (apply fcn args)
+    (advice-remove 'helm-file-completion-source-p
+                   'zv/helm-file-completion-source-p)))
+
