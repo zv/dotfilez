@@ -27,6 +27,7 @@ values."
      javascript
      markdown
      org
+     racket
      ;; haskell
      ocaml
      ;; ruby
