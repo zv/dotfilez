@@ -32,8 +32,8 @@
       (global-set-key prev-buffer-key 'evil-window-prev)
       (global-set-key (kbd "C-H-j" )(lambda () (interactive) (rotate-windows 1)))
       (global-set-key (kbd "C-H-k" )(lambda () (interactive) (rotate-windows -1)))
-      (global-set-key (kbd "H-h" )(lambda () (interactive) (zv/enlarge-window-by-dominant-dimension -10)))
-      (global-set-key (kbd "H-l" )(lambda () (interactive) (zv/enlarge-window-by-dominant-dimension 10)))
+      (global-set-key (kbd "H-h" )(lambda () (interactive) (zv/enlarge-window-by-dominant-dimension -7)))
+      (global-set-key (kbd "H-l" )(lambda () (interactive) (zv/enlarge-window-by-dominant-dimension 7)))
       (global-set-key (kbd "C-H-<return>") 'zv/tile-split-window)))
 
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
@@ -155,8 +155,7 @@
 (evil-leader/set-key
   "oo" 'org-capture
   "oa" 'org-agenda
-  "oc" 'org-clock-in
-  )
+  "oc" 'org-clock-in)
 
 (defun zv//initial-path-keybinding (key-file-map)
   "Create leader keybindings from an alist of the form (KEYS . PATH)"

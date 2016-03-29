@@ -37,9 +37,10 @@
         Man-mode))
 
 ;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist `(("/home/.*" . ,temporary-file-directory))
-      auto-save-default t
-      auto-save-file-name-transforms `(("/home/.*" ,temporary-file-directory t)))
+(setq backup-directory-alist `(("" ,temporary-file-directory))
+      ;; auto-save-default t
+      ;; auto-save-file-name-transforms `(("" ,temporary-file-directory t))
+      )
 
 ;; Fix this dagnabbit evil-escape f/t issue
 (define-key evil-motion-state-map "f" 'evil-find-char)
@@ -56,8 +57,7 @@
 
 ;; GDB configuration
 (setq gdb-many-windows t
-      gdb-show-main t
-      )
+      gdb-show-main t)
 
 ;; VC Mode
 (eval-after-load 'vc
@@ -259,6 +259,7 @@
     (setq org-agenda-include-diary t)
     ;; Catch edits to invisible sections of the screen
     (setq org-catch-invisible-edits t)
+
     ;; When running babel blocks in sh, I usually mean `zsh'
     (setq org-babel-sh-command "zsh")
 
@@ -293,19 +294,18 @@
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((emacs-lisp . t)
-             (dot . t)
-             (ditaa . t)
-             (R . t)
-             (python . t)
-             (ruby . t)
-             (gnuplot . t)
-             (clojure . t)
-             (sh . t)
-             (ledger . t)
-             (org . t)
-             (plantuml . t)
-             (latex . t)))
-
+       (dot . t)
+       (ditaa . t)
+       (R . t)
+       (python . t)
+       (ruby . t)
+       (gnuplot . t)
+       (clojure . t)
+       (sh . t)
+       (ledger . t)
+       (org . t)
+       (plantuml . t)
+       (latex . t)))
 
     ;; Priorities
     (setq org-highest-priority ?A
@@ -366,8 +366,7 @@
                ; NM's comments use two spaces after a period and are
                ; (generally) wrapped at 80 characters
                (sentence-end-double-space . t)
-               (fill-column . 80)
-               ))
+               (fill-column . 80)))
 
 ;; http://www.emacswiki.org/emacs/SmartTabs
 ;; (require 'smart-tabs-mode)
