@@ -4,12 +4,9 @@
 export EDITOR='vim'
 export VISUAL='vim'
 
-# Man
-export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 norelativenumber nomod nolist nonu noma showtabline=0' -\""
-
 # Build
-export CC=clang
-export CXX=clang++
+#export CC=clang
+#export CXX=clang++
 export AR=ar
 
 # Language
@@ -27,7 +24,7 @@ export LISTPROMPT=''
 export DISABLE_AUTO_TITLE="true"
 
 # Golang
-export GOROOT=$HOME/Development/go
+export GOROOT=/usr/local/go
 export GOPATH=$HOME/Development/golang
 # Rust
 export RUST_SRC_PATH=/usr/local/src/rust/src
@@ -43,7 +40,7 @@ path=(
     /usr/local/{bin,sbin}
     /usr/local/lib
     $path
-    #{$GOROOT,$GOPATH}/bin
+    {$GOROOT,$GOPATH}/bin
     #/usr/local/{pgsql,heroku,plan9}/bin
     $HOME/depot_tools
 )
@@ -76,8 +73,8 @@ fi
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
-    export TMPDIR="/tmp/$LOGNAME" 
-    mkdir -p -m 700 "$TMPDIR" 
+    export TMPDIR="/tmp/$LOGNAME"
+    mkdir -p -m 700 "$TMPDIR"
 fi
 TMPPREFIX="${TMPDIR%/}/zsh"
 
