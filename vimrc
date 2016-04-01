@@ -42,9 +42,9 @@ set synmaxcol=512
 " 'desert' or 'default' give what you'd expect, 'solarized_dark' and
 " 'solarized_light' are special codes for setting the colorscheme and
 " background.
-let color_scheme='solarized_dark'
+"let color_scheme='solarized_dark'
 " Don't need this w/ solarized, but useful to set sometimes with other params.
-"set background=dark
+"colorscheme desert
 
 " =============== Vundle Initialization ===============
 if filereadable(expand("~/.vim/vundles.vim"))
@@ -193,3 +193,5 @@ endfor
 runtime ftplugin/man.vim
 
 nnoremap <silent> Q :quit!<CR>
+
+set background=dark
