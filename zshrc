@@ -99,11 +99,25 @@ alias jkl="jekyll serve -D"
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
+alias pr="print"
+
 alias zthree="z3 -in"
 alias gpg=gpg2
 
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+
+# Moves the last created file to $2
+function mvlast {
+    local last_file=($1/*(.oc[1]))
+    mv $last_file $2 && print $last_file
+}
+
+# Removes the last created file in the specified directory, defaulting to the
+# current directory.
+function rmlast {
+  [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
+}
 
 nocorrect noglob function calc () {
     if [ $# -ne 0 ]; then
@@ -138,7 +152,8 @@ if (( $+commands[dnf] )); then
     alias dnfs="dnf search"                       # search package
     alias dnfp="dnf info"                         # show package info
     alias dnfl="dnf list"                         # list packages
-    alias dnfh="sudo dnf history"                      # get dnf history
+    alias dnfcu="dnf check-update"                # check updates
+    alias dnfh="sudo dnf history"                 # get dnf history
     alias dnfu="sudo dnf upgrade"                 # upgrade packages
     alias dnfi="sudo dnf install"                 # install package
     alias dnfr="sudo dnf remove"                  # remove package
@@ -322,6 +337,34 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
+# Tmux Pane Completion
+_tmux_pane_words() {local expl
+  local -a w
+  if [[ -z "$TMUX_PANE" ]]; then
+    _message "not running inside tmux!"
+    return 1
+  fi
+  # capture current pane first
+  w=( ${(u)=$(tmux capture-pane -J -p)} )
+  for i in $(tmux list-panes -F '#P'); do
+    # skip current pane (handled above)
+    [[ "$TMUX_PANE" = "$i" ]] && continue
+    w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
+  done
+  _wanted values expl 'words from current tmux pane' compadd -a w
+}
+
+zle -C tmux-pane-words-prefix   complete-word _generic
+zle -C tmux-pane-words-anywhere complete-word _generic
+bindkey '^X^X' tmux-pane-words-prefix
+bindkey '^X^T' tmux-pane-words-anywhere
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer _tmux_pane_words
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
+# display the (interactive) menu on first execution of the hotkey
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
+zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
+
+
 # **********************************************************
 # Don't do any of the following if we have a dumb terminal *
 # **********************************************************
@@ -360,7 +403,10 @@ bindkey -M viins "^N" down-line-or-search
 
 # Some convienent alt bindings
 bindkey -M viins "\eh" vi-backward-blank-word
+bindkey -M vicmd "\eh" vi-backward-blank-word
 bindkey -M viins "\el" vi-forward-blank-word
+bindkey -M vicmd "\el" vi-forward-blank-word
+
 bindkey -M viins "\ed" delete-word
 bindkey -M viins "^F" vi-cmd-mode
 
@@ -370,19 +416,22 @@ zle -N edit-command-line
 bindkey -M vicmd "v" edit-command-line
 
 # History
-bindkey -M vicmd "?" history-incremental-pattern-search-backward
-bindkey -M vicmd "/" history-incremental-pattern-search-forward
+bindkey -M vicmd "^R" history-incremental-pattern-search-backward
+bindkey -M viins "^S" history-incremental-pattern-search-forward
+#bindkey -M vicmd "?" vi-history-search-forward
+#bindkey -M vicmd "/" vi-history-search-backward
+
 # *-or-search searches for existing history items currently in the command
 # *-string, while '*-or-history' ignores this.
 bindkey -M vicmd "k" up-line-or-search # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
 
-bindkey '\ew' kill-region
 bindkey -s '\eu' "..\n"
 bindkey -s '\es' "git status\n"
-bindkey '^r' history-incremental-search-backward
-bindkey "^[[5~" up-line-or-history
-bindkey "^[[6~" down-line-or-history
+# bindkey '\ew' kill-region
+#bindkey '^r' history-incremental-search-backward
+#bindkey "^[[5~" up-line-or-history
+#bindkey "^[[6~" down-line-or-history
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' up-line-or-search
@@ -395,6 +444,12 @@ bindkey '^?' backward-delete-char
 bindkey "^[[3~" delete-char
 bindkey "^[3;5~" delete-char
 bindkey "\e[3~" delete-char
+
+# Alt-Backspace deletes a word
+bindkey -M viins "\e^?" backward-delete-word
+
+# Insert the last argument
+bindkey -M viins "\e0" insert-last-word
 
 bindkey ' ' magic-space # [Space] - do history expansion
 
