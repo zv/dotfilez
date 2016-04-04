@@ -416,10 +416,10 @@ zle -N edit-command-line
 bindkey -M vicmd "v" edit-command-line
 
 # History
-bindkey -M vicmd "^R" history-incremental-pattern-search-backward
-bindkey -M viins "^S" history-incremental-pattern-search-forward
-#bindkey -M vicmd "?" vi-history-search-forward
-#bindkey -M vicmd "/" vi-history-search-backward
+bindkey "^R" history-incremental-pattern-search-backward
+bindkey "^S" history-incremental-pattern-search-forward
+bindkey -M vicmd "?" vi-history-search-forward
+bindkey -M vicmd "/" vi-history-search-backward
 
 # *-or-search searches for existing history items currently in the command
 # *-string, while '*-or-history' ignores this.
