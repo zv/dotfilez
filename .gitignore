@@ -2,7 +2,6 @@ aws/*
 !aws/*.gpg
 !aws/*.asc
 gnupg/*
-!gnupg/gpg-agent-wrapper
 !gnupg/gpg.conf
 !gnupg/gpg-agent.conf
 !gnupg/dirmngr.conf
