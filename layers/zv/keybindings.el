@@ -81,7 +81,7 @@
 (evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 (evil-define-key 'normal evil-surround-mode-map "S" 'evil-substitute)
 
-(define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
+;; (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
 (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
 
@@ -230,6 +230,7 @@
   "D" 'Info-directory
   "u" 'Info-scroll-down
   "d" 'Info-scroll-up
+  "V" 'evil-visual-line
   "\C-u" 'Info-scroll-down
   "\C-d" 'Info-scroll-up
   "\C-t" 'Info-history-back ; "l"
@@ -265,6 +266,19 @@
   (progn
     (spacemacs/declare-prefix-for-mode 'elixir-mode "mk" "quickfixes")
     (spacemacs/set-leader-keys-for-major-mode 'elixir-mode "kd"
-      'zv/elixir-convert-def-to-block)
-    )
-  )
+      'zv/elixir-convert-def-to-block)))
+
+
+;; Racket
+(evil-set-initial-state 'racket-describe-mode 'emacs)
+
+
+;; Search
+(spacemacs|use-package-add-hook helm-ag
+  :post-config
+  (progn
+    (define-key helm-ag-map (kbd "<XF86Forward>") 'helm-ag--next-file)
+    (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)
+    ))
+
+

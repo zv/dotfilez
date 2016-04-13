@@ -37,10 +37,10 @@
         Man-mode))
 
 ;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist `(("" ,temporary-file-directory))
-      ;; auto-save-default t
-      ;; auto-save-file-name-transforms `(("" ,temporary-file-directory t))
-      )
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 ;; Fix this dagnabbit evil-escape f/t issue
 (define-key evil-motion-state-map "f" 'evil-find-char)
@@ -340,31 +340,31 @@
 
 (c-add-style "NetworkManager"
              '(
-               ; Start with the "bsd" style
+                                        ; Start with the "bsd" style
                "bsd"
 
-               ; ...but remove the rule saying labels must be indented at
-               ; least one space
+                                        ; ...but remove the rule saying labels must be indented at
+                                        ; least one space
                (c-label-minimum-indentation . 0)
 
-               ; 4-space tabs/indents
+                                        ; 4-space tabs/indents
                (tab-width . 4)
                (c-basic-offset . 4)
 
-               ; Use smart-tabs-mode (see below) to get tabs for indentation
-               ; but spaces for alignment of continuation lines.
+                                        ; Use smart-tabs-mode (see below) to get tabs for indentation
+                                        ; but spaces for alignment of continuation lines.
                (smart-tabs-mode . t)
 
-               ; Multi-line "if" conditions are indented like this:
-               ;     if (   foo
-               ;         && bar)
-               ; (You have to add the spaces on the first line yourself, but
-               ; this will make emacs align the "&&" correctly.)
+                                        ; Multi-line "if" conditions are indented like this:
+                                        ;     if (   foo
+                                        ;         && bar)
+                                        ; (You have to add the spaces on the first line yourself, but
+                                        ; this will make emacs align the "&&" correctly.)
                (c-offsets-alist (arglist-cont-nonempty . (nm-lineup-arglist))
                                 (arglist-close . (nm-lineup-arglist)))
 
-               ; NM's comments use two spaces after a period and are
-               ; (generally) wrapped at 80 characters
+                                        ; NM's comments use two spaces after a period and are
+                                        ; (generally) wrapped at 80 characters
                (sentence-end-double-space . t)
                (fill-column . 80)))
 
@@ -391,8 +391,8 @@
 ;; Now add a line like the following for every directory where you want the
 ;; "NetworkManager" style to be the default
 
-; (dir-locals-set-directory-class "/home/danw/gnome/NetworkManager/" 'nm)
-; (dir-locals-set-directory-class "/home/danw/gnome/network-manager-applet/" 'nm)
+                                        ; (dir-locals-set-directory-class "/home/danw/gnome/NetworkManager/" 'nm)
+                                        ; (dir-locals-set-directory-class "/home/danw/gnome/network-manager-applet/" 'nm)
 
 ;; -------------------------------------------------------------------------
 ;;;
@@ -402,3 +402,14 @@
               :around 'zv/helm-ff-filter-candidate-one-by-one)
   (advice-add 'helm-find-files-up-one-level
               :around 'zv/helm-find-files-up-one-level))
+
+
+;; smartparens
+;; (eval-after-load 'smartparens
+;;   '(progn
+;;      (sp-pair "(" nil :actions :rem)
+;;      (sp-pair "<" nil :actions :rem)
+;;      (sp-pair "[" nil :actions :rem)
+;;      (sp-pair "'" nil :actions :rem)
+;;      (sp-pair "\"" nil :actions :rem)))
+
