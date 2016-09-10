@@ -17,8 +17,7 @@ function backup_profile {
 
 function restore_profile {
     echo "Extracting profile..."
-    # ugly hack to avoid sigpipe on mac osx where no <(gpg) or =(gpg) is
-    # permitted by the kernel
+    # ugly hack to avoid sigpipe on mac osx where no <(gpg) or =(gpg) is allowed
     gpg --decrypt profile.tar.xz.gpg > profile.tar.xz
     tar xf profile.tar.xz -C ~/.thunderbird
     rm profile.tar.xz
