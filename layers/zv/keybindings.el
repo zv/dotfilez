@@ -30,10 +30,18 @@
     (progn
       (global-set-key next-buffer-key 'evil-window-next)
       (global-set-key prev-buffer-key 'evil-window-prev)
-      (global-set-key (kbd "C-H-j" )(lambda () (interactive) (rotate-windows 1)))
-      (global-set-key (kbd "C-H-k" )(lambda () (interactive) (rotate-windows -1)))
-      (global-set-key (kbd "H-h" )(lambda () (interactive) (zv/enlarge-window-by-dominant-dimension -7)))
-      (global-set-key (kbd "H-l" )(lambda () (interactive) (zv/enlarge-window-by-dominant-dimension 7)))
+      (global-set-key (kbd "C-H-j") (lambda ()
+                                      (interactive)
+                                      (rotate-windows 1)))
+      (global-set-key (kbd "C-H-k") (lambda ()
+                                      (interactive)
+                                      (rotate-windows -1)))
+      (global-set-key (kbd "H-h") (lambda ()
+                                    (interactive)
+                                    (zv/enlarge-window-by-dominant-dimension -7)))
+      (global-set-key (kbd "H-l") (lambda ()
+                                    (interactive)
+                                    (zv/enlarge-window-by-dominant-dimension 7)))
       (global-set-key (kbd "C-H-<return>") 'zv/tile-split-window)))
 
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
@@ -60,8 +68,7 @@
              (define-key evil-motion-state-map "}" 'evil-forward-section-begin)
              (define-key evil-motion-state-map "{" 'evil-backward-section-begin))))
 
-(evil-leader/set-key
-  "t[" 'zv/swap-bracket-behavior)
+(evil-leader/set-key "t[" 'zv/swap-bracket-behavior)
 
 ;; previously was evil-lookup
 (defun zv/join-up ()

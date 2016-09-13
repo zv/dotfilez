@@ -13,6 +13,7 @@
   (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
   (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
 
+
 (defun add-semicolon-to-end-of-line ()
     "Unsurprisingly, this adds a semicolon to the end of the line"
     (interactive)
@@ -67,6 +68,7 @@ used as the prefix command."
   "Wrap `spacemacs/enlarge-window-horizontally'."
   (interactive "p") (enlarge-window 10 t))
 
+
 ;; Org Mode
 ;; --------
 
@@ -104,11 +106,13 @@ FUN function callback"
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
 
+
 ;; Restart `tern-mode`
 (defun delete-tern-process ()
   (interactive)
   (delete-process "Tern"))
 
+
 ;; advice functions for not showing dots
 (defun zv/whitelistedp ()
   (member (with-helm-buffer (buffer-name)) zv-whitelist))

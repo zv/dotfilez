@@ -27,6 +27,16 @@
 
 (defvar zv-whitelist '() "List of helm buffers in which to show dots.")
 
+;; You can modify the syntax table of the mode in question. To do so you can
+;; include this on your =dotspacemacs/user-config=.
+
+;; ;; For python
+;; (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+;; ;; For ruby
+;; (add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+;; ;; For Javascript
+;; (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+
 
 ;; Additional emacs modes ------------------------------------
 (mapc (lambda (x) (evil-set-initial-state x 'emacs))
@@ -53,7 +63,8 @@
       browse-url-generic-program "google-chrome")
 
 ;; tern
-(setq tern-command '("node" "/bin/tern"))
+;; tern baby tern
+;; (setq tern-command '("node" "/bin/tern"))
 
 ;; GDB configuration
 (setq gdb-many-windows t
@@ -106,10 +117,7 @@
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 
-(setq dotspacemacs-themes '(solarized-dark
-                            solarized-dark
-                            leuven))
-
+(setq dotspacemacs-themes '(solarized-dark solarized-dark leuven)) 
 ;; dired -----------------------------------------------------
 (eval-after-load 'dired
   '(progn (define-key dired-mode-map "u" 'dired-up-directory )
@@ -143,7 +151,6 @@
                  (define-key calendar-mode-map "]" 'calendar-end-of-month)
                  (define-key calendar-mode-map "gg" 'calendar-beginning-of-year)
                  (define-key calendar-mode-map "G" 'calendar-end-of-year)))))
-
 (eval-after-load 'calc
   '(progn
      (define-key calc-mode-map next-buffer-key 'next-buffer)))
@@ -296,16 +303,15 @@
      '((emacs-lisp . t)
        (dot . t)
        (ditaa . t)
-       (R . t)
        (python . t)
        (ruby . t)
-       (gnuplot . t)
        (clojure . t)
-       (sh . t)
+       ;; (sh . t)
        (ledger . t)
        (org . t)
-       (plantuml . t)
-       (latex . t)))
+       ;; (plantuml . t)
+       ;; (latex . t)
+       ))
 
     ;; Priorities
     (setq org-highest-priority ?A

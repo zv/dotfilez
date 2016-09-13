@@ -2,7 +2,6 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -14,25 +13,29 @@ values."
    '(
      auto-completion
      (c-c++ :variables c-c++-enable-clang-support t)
-     clojure
+     ;; clojure
      elixir
      emacs-lisp
      (erlang :variables
              erlang-root-dir "/usr/local/lib/erlang"
              edts-man-root   "/usr/local/lib/erlang/erts-7.2.1/")
+     ess
      git
      ;; go
-     haskell
+     ;; haskell
      gtags
      html
      javascript
      markdown
      org
      racket
+     python
      ;; haskell
      ocaml
      ;; ruby
      (rust :variables rust-enable-racer t)
+     react
+     typescript
      ;; sql
      (shell :variables
             shell-default-term-shell "/usr/bin/zsh"
@@ -47,11 +50,15 @@ values."
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
-  "Initialization function.
-This function is called at the very startup of Spacemacs initialization
-before layers configuration.
-You should not put any user code in there besides modifying the variable
-values."
+  "Initialization function. This function is called at the very startup of
+Spacemacs initialization before layers configuration. You should not put any
+user code in there besides modifying the variable values."
+  ;; store all backup and autosave files in the tmp dir
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+
   (setq-default
    dotspacemacs-elpa-https t
    dotspacemacs-elpa-timeout 5
@@ -80,9 +87,9 @@ values."
    dotspacemacs-major-mode-leader-key ","
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
    ;; dotspacemacs-command-key ":"
-   dotspacemacs-emacs-command-key "SPC"
+   ;; dotspacemacs-emacs-command-key "SPC"
    dotspacemacs-distinguish-gui-tab nil
-   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-remap-Y-to-y$ t
    dotspacemacs-default-layout-name "Default"
    dotspacemacs-display-default-layout nil
    dotspacemacs-auto-resume-layouts nil
@@ -104,7 +111,7 @@ values."
    dotspacemacs-show-transient-state-title t
    dotspacemacs-show-transient-state-color-guide t
    dotspacemacs-mode-line-unicode-symbols nil
-   dotspacemacs-smooth-scrolling t
+   dotspacemacs-smooth-scrolling nil
    dotspacemacs-line-numbers nil
    dotspacemacs-smartparens-strict-mode nil
    dotspacemacs-highlight-delimiters 'all
@@ -123,11 +130,11 @@ values."
         ;; Undo tree file directory
         zv//undo-tree-directory "/tmp/zv/.emacs-undo")
 
-  (setq-default
-   exec-path-from-shell-check-startup-files nil
-   evil-escape-delay 0.2
-   org-directory (expand-file-name "~/Documents/")
-   git-enable-github-support t))
+  (setq powerline-default-separator nil)
+  (setq-default exec-path-from-shell-check-startup-files nil
+                evil-escape-delay 0.2
+                org-directory (expand-file-name "~/Documents/")
+                git-enable-github-support t))
 
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
@@ -165,6 +172,9 @@ This function is called at the very end of Spacemacs initialization."
   ;; Mode setting
   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . shell-script-mode))
+  (evil-leader/set-key "bi" 'ibuffer)
+  (spacemacs/set-leader-keys "bi" 'ibuffer)
+
 
   ;; ;; As I never distinguish between [[ & [{, I might as well get the
   ;; ;; benefit of use of the easier one
@@ -175,9 +185,9 @@ This function is called at the very end of Spacemacs initialization."
   (define-key evil-motion-state-map "{" nil)
 
   ;; Evil motion state bindings
-  (dolist (binding '(("{{" evil-previous-open-brace) ("}}" evil-next-close-brace)
-                     ("}]" evil-forward-section-begin) ("}[" evil-forward-section-end)
-                     ("{[" evil-backward-section-begin) ("{]" evil-backward-section-end)
+  (dolist (binding '(("{[" evil-previous-open-brace) ("}}" evil-next-close-brace)
+                     ("}}" evil-forward-section-begin) ("}}" evil-forward-section-end)
+                     ("{{" evil-backward-section-begin) ("{{" evil-backward-section-end)
                      ("{(" evil-previous-open-paren) ("})" evil-next-close-paren)
                      ("\M-]" evil-forward-section-end) ("\M-[" evil-backward-section-end)
                      ("\M-{" evil-previous-open-brace) ("\M-}" evil-next-close-brace)))
@@ -191,19 +201,16 @@ This function is called at the very end of Spacemacs initialization."
         helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
         helm-ff-file-name-history-use-recentf t)
 
+
   ;; persistent undo ----------------------------------------
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist `(("." . ,zv//undo-tree-directory)))
 
-  ;; store all backup and autosave files in the tmp dir
-  (setq backup-directory-alist
-        `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms
-        `((".*" ,temporary-file-directory t)))
-
-
   (unless (file-exists-p zv//undo-tree-directory)
     (make-directory zv//undo-tree-directory))
+
+  ;; Dont create .#FILES
+  (setq create-lockfiles nil)
 
   ;; abbrev-mode --------------------------------------------
   (setq-default abbrev-mode t))
@@ -215,11 +222,11 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ac-ispell-requires 4 t)
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
+ '(ahs-case-fold-search nil t)
+ '(ahs-default-range (quote ahs-range-whole-buffer) t)
+ '(ahs-idle-interval 0.25 t)
  '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
+ '(ahs-inhibit-face-list nil t)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
@@ -234,7 +241,7 @@ This function is called at the very end of Spacemacs initialization."
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#073642" t)
- '(global-eldoc-mode nil)
+ '(global-eldoc-mode t)
  '(gud-tooltip-mode t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
@@ -278,7 +285,7 @@ This function is called at the very end of Spacemacs initialization."
      (verbatim . "<span class=\"verbatim\">%s</span>"))))
  '(package-selected-packages
    (quote
-    (nasm-mode clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode geiser racket-mode faceup caml powerline rust-mode hydra spinner markdown-mode json-snatcher json-reformat multiple-cursors js2-mode parent-mode projectile request haml-mode gitignore-mode flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu highlight f erlang eproject web-completion-data s dash-functional tern deferred pos-tip ghc haskell-mode yasnippet auto-highlight-symbol packed company dash elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build bind-key bind-map evil solarized-theme nil xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe utop use-package tuareg toml-mode toc-org tagedit spacemacs-theme spaceline smooth-scrolling smeargle slim-mode shm shell-pop scss-mode sass-mode ruby-end restart-emacs rainbow-delimiters racer quelpa popwin persp-mode pcre2el paradox page-break-lines orgit org-repo-todo org-present org-plus-contrib org-bullets open-junk-file ocp-indent neotree multi-term move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-jumper evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav edts disaster define-word company-web company-tern company-statistics company-racer company-quickhelp company-ghc company-cabal company-c-headers coffee-mode cmm-mode cmake-mode clean-aindent-mode clang-format buffer-move bracketed-paste auto-yasnippet auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode tss yaxception log4e pyvenv pytest pyenv-mode py-yapf pip-requirements hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic go-eldoc company-go go-mode nasm-mode clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode geiser racket-mode faceup caml powerline rust-mode hydra spinner markdown-mode json-snatcher json-reformat multiple-cursors js2-mode parent-mode projectile request haml-mode gitignore-mode flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu highlight f erlang eproject web-completion-data s dash-functional tern deferred pos-tip ghc haskell-mode yasnippet auto-highlight-symbol packed company dash elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build bind-key bind-map evil solarized-theme nil xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe utop use-package tuareg toml-mode toc-org tagedit spacemacs-theme spaceline smooth-scrolling smeargle slim-mode shm shell-pop scss-mode sass-mode ruby-end restart-emacs rainbow-delimiters racer quelpa popwin persp-mode pcre2el paradox page-break-lines orgit org-repo-todo org-present org-plus-contrib org-bullets open-junk-file ocp-indent neotree multi-term move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-jumper evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav edts disaster define-word company-web company-tern company-statistics company-racer company-quickhelp company-ghc company-cabal company-c-headers coffee-mode cmm-mode cmake-mode clean-aindent-mode clang-format buffer-move bracketed-paste auto-yasnippet auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
