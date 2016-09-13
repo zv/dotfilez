@@ -1,12 +1,7 @@
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
-
-# Editors
-export EDITOR='vim'
-export VISUAL='vim'
-
 # Build
-#export CC=clang
-#export CXX=clang++
+#export CC=gcc
+#export CXX=g++
 export AR=ar
 
 # Language
@@ -15,13 +10,17 @@ if [[ -z "$LANG" ]]; then
 fi
 export LC_CTYPE=$LANG
 
-# Environment
-export GREP_COLORS="37;45"
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE="true"
+
+export EDITOR='vim'
+export PAGER='less'
+
+# Environment
+export GREP_COLORS="37;45"
 
 # Golang
 export GOROOT=/usr/local/go
@@ -37,12 +36,15 @@ typeset -gU fpath mailpath path cdpath
 # Paths
 path=(
     $HOME/.bin
+    $HOME/.local/bin
     /usr/local/{bin,sbin}
     /usr/local/lib
     $path
     {$GOROOT,$GOPATH}/bin
     #/usr/local/{pgsql,heroku,plan9}/bin
     $HOME/depot_tools
+    /usr/local/cuda/bin
+    $HOME/.multirust/toolchains/stable/cargo/bin
 )
 
 # Remove all empty directories from the path
@@ -57,20 +59,6 @@ fpath=(
     $fpath
 )
 
-# Set the the list of directories that cd searches. Less
-export PAGER='less'
-
-# Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X and -F (exit if the content fits on one screen) to enable it.
-export LESS='-F -g -i -M -R -S -w -X -z-4'
-
-# Set the Less input preprocessor.
-# Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
-if (( $#commands[(i)lesspipe(|.sh)] )); then
-  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
-fi
-
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
     export TMPDIR="/tmp/$LOGNAME"
@@ -84,6 +72,6 @@ if (( $+commands[google-chrome] )); then
 fi
 
 # Font Config
-if [[ "$OSTYPE" == linux* ]]; then
+if [[ "$OSTYPE" == linux-gnu ]]; then
     export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
 fi

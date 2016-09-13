@@ -36,12 +36,12 @@ function spectrum_ls() {
 local baseprompt='>>'
 if [[ $TERM == 'dumb' ]]; then
     PROMPT="%2~ $baseprompt "
-    unsetopt zle
+    # unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
     # Ensure we don't set preexec && precmd
 elif [[ $TERM == 'eterm-color' ]]; then
-    unsetopt zle
+    # unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
     PROMPT="[%y] %2~ $baseprompt "
@@ -80,6 +80,25 @@ setopt cdablevarS   # CD into variable from var name
 setopt prompt_subst # Setup the prompt with pretty colors
 
 #############################################
+# Misc. Env Vars
+#############################################
+# Editors
+export VISUAL='vim'
+
+
+# Set the default Less options.
+# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
+# Remove -X and -F (exit if the content fits on one screen) to enable it.
+#export LESS='-F -g -i -M -R -S -w -X -z-4'
+
+# Set the Less input preprocessor.
+# Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
+if (( $#commands[(i)lesspipe(|.sh)] )); then
+  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
+fi
+
+
+#############################################
 # Aliasing
 #############################################
 # Disable correction.
@@ -89,6 +108,8 @@ for cmd (ack cd cp ebuild gcc gist grep heroku
 
 # Define general aliases.
 alias p="print"
+alias pr="print -l"
+
 alias _='sudo'
 alias e="emacsclient -t"
 alias edit="emacs -nw"
@@ -99,13 +120,15 @@ alias jkl="jekyll serve -D"
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
-alias pr="print"
-
 alias zthree="z3 -in"
 alias gpg=gpg2
 
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+
+function vman {
+    vim -c "SuperMan $1" -c "set nonu"
+}
 
 # Moves the last created file to $2
 function mvlast {
@@ -227,7 +250,7 @@ export SAVEHIST=$((2**14 - 1))
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
 # Man
-export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man ts=8 norelativenumber nomod nolist nonu noma showtabline=0' -\""
+# export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist nonu noma showtabline=0 shortmess+=T' -\""
 
 ############################################
 #  Modules & Completions
@@ -383,6 +406,7 @@ fi
 #############################################
 #  Vim & ZSH Line Editor
 ############################################
+bindkey -v
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 function zle-line-init zle-keymap-select {
@@ -396,7 +420,6 @@ zle -N zle-keymap-select
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
-set VI # equivalent to bindkey -v
 
 bindkey -M viins "^P" up-line-or-search
 bindkey -M viins "^N" down-line-or-search
@@ -466,3 +489,17 @@ source $HOME/.gnupg/gpg-agent-wrapper
 . /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # cdpath=($cdpath)
+
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+
+if [[ -x /usr/bin/virtualenvwrapper.sh ]]; then
+    source /usr/bin/virtualenvwrapper.sh # Virtualenvwrapper
+fi
+
+export RUST_SRC_PATH=/usr/local/src/rust/src
+
+# The next line updates PATH for the Google Cloud SDK.
+source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
+
+# The next line enables shell command completion for gcloud.
+source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
