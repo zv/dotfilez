@@ -316,3 +316,6 @@ esac
 # configure {javascript,haskell,ocaml,rust,erlang/elixir}
 
 # setup dropbox
+
+
+# pcsc-tools pcsc-lite-ccid:q
