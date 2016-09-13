@@ -148,5 +148,7 @@ for_window [title="Google Chrome"]    border none
 for_window [title="Firefox"]          border none
 for_window [title="zhesaurus"]        floating enable
 
-exec_always --no-startup-id ~/.xinitrc
-exec_always --no-startup-id nm-applet
+exec --no-startup-id ~/.i3/xinitrc
+exec --no-startup-id nm-applet
+exec --no-startup-id abrt-applet
+# exec --no-startup-id /usr/libexec/gnome-settings-daemon -r
