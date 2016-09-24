@@ -21,17 +21,6 @@ setopt BARE_GLOB_QUAL
 ############################################
 #  Theme
 #############################################
-function spectrum_ls() {
-    string=${1-Test}
-    if [[ $1 == "block" ]]
-    then
-        string="███████████████████████████████"
-    fi
-    for code in {000..255}; do
-        print -P -- "$code: %F{$code}${string}%f"
-    done
-}
-
 # If we're in a dumb terminal then dont play fancy pants with our prompt
 local baseprompt='>>'
 if [[ $TERM == 'dumb' ]]; then
@@ -149,6 +138,19 @@ nocorrect noglob function calc () {
     else
         emacsclient -t -c --eval "(full-calc)"
     fi
+}
+
+alias calc="noglob calc"
+
+function spectrum_ls() {
+    string=${1-Test}
+    if [[ $1 == "block" ]]
+    then
+        string="███████████████████████████████"
+    fi
+    for code in {000..255}; do
+        print -P -- "$code: %F{$code}${string}%f"
+    done
 }
 
 # # mkdir & cd to it
