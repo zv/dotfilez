@@ -1,6 +1,9 @@
 # Show comments at right of disassembly if they fit in screen
 e asm.cmtright=true
 
+# Don't show the bytes in the middle
+e asm.bytes = false
+
 # Don't show pseudocode in disassembly. Eg mov eax, str.ok = > eax = str.ok
 e asm.pseudo = false
 
