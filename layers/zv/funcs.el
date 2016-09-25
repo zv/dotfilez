@@ -51,6 +51,14 @@ used as the prefix command."
         (evil-window-vsplit)
       (evil-window-split))))
 
+(defun zv/join-up ()
+  "hacky way to join parent's lines"
+  (interactive)
+  (save-excursion
+    (progn
+      (previous-line 2)
+      (evil-join (point) (+ 1 (point))))))
+
 ;; Monkeypatch some spacemacs internal window positioning
 (defun spacemacs/shrink-window-horizontally (delta)
   "Wrap `spacemacs/shrink-window-horizontally'."
@@ -132,3 +140,18 @@ FUN function callback"
     (advice-remove 'helm-file-completion-source-p
                    'zv/helm-file-completion-source-p)))
 
+
+(defun sort-sexps-by-cadr (reverse beg end)
+  "Sort by particular sexp field (in this casse, the cadr)"
+  (interactive "P\nr")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (sort-subr nil
+                 'end-of-defun
+                 #'(lambda () nil)
+                 #'(lambda () (forward-symbol 1) nil)
+                 #'(lambda () (forward-symbol 1) nil)))))
+
+

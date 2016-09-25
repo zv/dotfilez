@@ -1,3 +1,4 @@
+;; -*- mode: emacs-lisp -*-
 ;;; keybindings.el --- zv contrib key-bindings File
 ;;
 ;; Copyright (c) 2012-2014 Zephyr Pellerin
@@ -6,18 +7,8 @@
 ;; URL: https://github.com/zv/spacemacs
 ;;
 ;;; License: GPLv3
-
-;; ---------------------------------------------------------------------------
-;; Prefixes
-;; ---------------------------------------------------------------------------
-;; swap C-j for C-x prefix keys
-;; (global-set-key (kbd "C-j") ctl-x-map)
-(add-to-list 'spacemacs/key-binding-prefixes '("ar" . "applications-repl"))
-
-;; ---------------------------------------------------------------------------
+
 ;; global bindings
-;; ---------------------------------------------------------------------------
-
 ;; Forward/Backward mice keys
 (global-set-key (kbd "<mouse-8>") 'switch-to-prev-buffer)
 (global-set-key (kbd "<mouse-9>") 'switch-to-next-buffer)
@@ -30,12 +21,8 @@
     (progn
       (global-set-key next-buffer-key 'evil-window-next)
       (global-set-key prev-buffer-key 'evil-window-prev)
-      (global-set-key (kbd "C-H-j") (lambda ()
-                                      (interactive)
-                                      (rotate-windows 1)))
-      (global-set-key (kbd "C-H-k") (lambda ()
-                                      (interactive)
-                                      (rotate-windows -1)))
+      (global-set-key (kbd "C-H-j") (lambda () (interactive) (rotate-windows 1)))
+      (global-set-key (kbd "C-H-k") (lambda () (interactive) (rotate-windows -1)))
       (global-set-key (kbd "H-h") (lambda ()
                                     (interactive)
                                     (zv/enlarge-window-by-dominant-dimension -7)))
@@ -45,7 +32,14 @@
       (global-set-key (kbd "C-H-<return>") 'zv/tile-split-window)))
 
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
+
+;; EWW
 
+(evil-define-key 'motion eww-mode-map
+  "d" 'scroll-up-command
+  "u" 'scroll-down-command
+  "D" 'eww-download)
+
 ;; utilities
 (global-set-key (kbd "C-x C-r") 're-builder)
 (global-set-key (kbd "M-/") 'hippie-expand)
@@ -54,36 +48,11 @@
 (global-set-key (kbd "<XF86Calculator>") 'calc)
 (global-set-key (kbd "<XF86Mail>") 'gnus)
 
-(defun zv/swap-bracket-behavior ()
-  "Swap the behavior of our brackets between section/paragraph jumping"
-  (interactive)
-  (if (eq 'evil-backward-paragraph (lookup-key evil-motion-state-map "["))
-      (progn (define-key evil-motion-state-map "}" 'evil-forward-paragraph)
-             (define-key evil-motion-state-map "{" 'evil-backward-paragraph)
-             (define-key evil-motion-state-map "]" 'evil-forward-section-begin)
-             (define-key evil-motion-state-map "[" 'evil-backward-section-begin))
-
-      (progn (define-key evil-motion-state-map "]" 'evil-forward-paragraph)
-             (define-key evil-motion-state-map "[" 'evil-backward-paragraph)
-             (define-key evil-motion-state-map "}" 'evil-forward-section-begin)
-             (define-key evil-motion-state-map "{" 'evil-backward-section-begin))))
-
-(evil-leader/set-key "t[" 'zv/swap-bracket-behavior)
-
 ;; previously was evil-lookup
-(defun zv/join-up ()
-  "hacky way to join parent's lines"
-  (interactive)
-  (save-excursion
-    (progn
-      (previous-line 2)
-      (evil-join (point) (+ 1 (point))))))
-
 (define-key evil-normal-state-map "K" 'zv/join-up)
 
-;; ---------------------------------------------------------------------------
+
 ;; evil state bindings
-;; ---------------------------------------------------------------------------
 (setq evil-cross-lines t)
 (evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 (evil-define-key 'normal evil-surround-mode-map "S" 'evil-substitute)
@@ -108,58 +77,14 @@
 ;; (define-key evil-insert-state-map (kbd "C-i") 'backward-delete-char)
 ;; (define-key evil-insert-state-map (kbd "C-s") 'undo-tree-undo)
 
-;; normal mode
-(define-key evil-visual-state-map (kbd "C-e") 'eval-region)
-
-;; H/L should go to the first / last non blank character respectively
-;; (define-key evil-visual-state-map "L" 'evil-last-non-blank)
-;; (define-key evil-visual-state-map "H" 'evil-first-non-blank)
-;; (define-key evil-normal-state-map "L" 'evil-last-non-blank)
-;; (define-key evil-normal-state-map "H" 'evil-first-non-blank)
-
-;; Add surround-inner-word keybindings at s{char} and S{char} appropriately
-;; e.x 9" -> ysiw"
-;; (let ((inner-word-key "s")
-;;       (outer-word-key "S"))
-;;   (progn
-;;   (define-key evil-normal-state-map inner-word-key nil)
-;;   (define-key evil-normal-state-map outer-word-key nil)
-;;   (mapcar (lambda (char)
-;;             (define-key evil-normal-state-map (concat inner-word-key char) (concat "ysiw" char))
-;;             (define-key evil-normal-state-map (concat outer-word-key char) (concat "ysiW" char))
-;;             ) '("'" "\"" ")" "(" "[" "]" "{" "}"))))
-
-
-;; ---------------------------------------------------------------------------
+
 ;; evil-leader key bindings
-;; ---------------------------------------------------------------------------
-(evil-leader/set-key
-  ;; applications
-  ;; overridden by package
-  "aw" 'woman
-  "am" 'man
-  "ag" 'gnus
-  ;; Should check if we're in a normal select mode really.
-  "an" 'remember
-  ;; repls
-  "arn" 'nodejs-repl
-  "are" 'ielm
-  ;; [l]ast
-  ;; "l" 'previous-buffer
-  ;; temporary hack to fix sc remote highlihg
-  "sc" 'evil-search-highlight-persist-remove-all
-  ;; Align keybinding
-  "al" 'align-regexp
-  ";"  'evilnc-comment-operator
-  "cl" 'evilnc-comment-or-uncomment-lines
-  "ci" 'evilnc-toggle-invert-comment-line-by-line
-  "cp" 'evilnc-comment-or-uncomment-paragraphs
-  "ct" 'evilnc-quick-comment-or-uncomment-to-the-line
-  "cy" 'evilnc-copy-and-comment-lines)
-
-
 ;; Set our special "o" keys
 (evil-leader/set-key
+  "am" 'man
+
+  "oaw" 'woman
+  "oag" 'gnus
   "oo" 'org-capture
   "oa" 'org-agenda
   "oc" 'org-clock-in)
@@ -178,28 +103,16 @@
                                               `(lambda () (interactive) (find-file-existing ,path))))))
   key-file-map))
 
-(zv//initial-path-keybinding `(("fez" . ,zv-configuration-layer-directory)
-                               ("fel" . "~/Development/")
-                               ("fzd" . "~/dotfilez/")
-                               ("fzo" . ,org-directory)
-                               ("fzn" . ,(concat org-directory "/notes.org"))
-                               ("fzb" . ,zv//blog-path)
-                               ("fzp" . ,(concat zv//blog-path "org/_posts/"))))
+(zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
+                               ("ofel" . "~/Development/")
+                               ("ofzd" . "~/dotfilez/")
+                               ("ofzo" . ,org-directory)
+                               ("ofzn" . ,(concat org-directory "/notes.org"))
+                               ("ofzb" . ,zv//blog-path)
+                               ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
-;; ---------------------------------------------------------------------------
+
 ;; mode bindings
-;; ---------------------------------------------------------------------------
-;; Magit
-(eval-after-load 'magit
-  (evil-leader/set-key-for-mode 'magit-status-mode
-    "mf" 'magit-key-mode-popup-gitflow))
-
-;; ;; cc mode
-;; ;; (define-key c-mode-map next-buffer-key 'evil-window-next)
-;; (evil-leader/set-key-for-mode 'c-mode
-;;   ;; guess style
-;;   "mq" 'c-guess)
-
 ;; js2 mode
 (eval-after-load 'js2-mode
   '(progn
@@ -208,10 +121,8 @@
      (define-key js2-mode-map prev-buffer-key 'evil-window-prev)))
 
 ;; delete line
-
 (eval-after-load 'helm
   '(define-key helm-map (kbd "C-u") 'helm-delete-minibuffer-contents))
-
 
 ;; Autocomplete
 (eval-after-load 'auto-complete
@@ -225,7 +136,6 @@
 (eval-after-load 'shell
   '(progn
      (define-key shell-mode-map "\C-d" nil)))
-
 
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
@@ -248,6 +158,58 @@
   (kbd "<mouse-5>") 'Info-scroll-up
   (kbd "DEL") 'Info-scroll-down)
 
+
+                                        ; dired
+(with-eval-after-load 'dired
+  (evil-define-key 'normal dired-mode-map "u" 'dired-up-directory)
+  (evil-define-key 'normal dired-mode-map "j" 'dired-next-line)
+  (evil-define-key 'normal dired-mode-map "k" 'dired-prev-line)
+  (evil-define-key 'normal dired-mode-map "f" 'dired-goto-file)
+  (evil-define-key 'normal dired-mode-map "\C-h" 'dired-tree-up)
+  (evil-define-key 'normal dired-mode-map "\C-l" 'dired-tree-down)
+  (evil-define-key 'normal dired-mode-map "\C-j"'dired-next-subdir)
+  (evil-define-key 'normal dired-mode-map "\C-k"'dired-prev-subdir)
+  ;; dired-do-hardlink hard link [h]
+  ;; dired-do-load
+  (evil-define-key 'normal dired-mode-map "r" 'dired-unmark )
+  (evil-define-key 'normal dired-mode-map (kbd "<f5>") 'dired-do-redisplay))
+
+
+                                        ; calendar
+(with-eval-after-load 'calendar
+  (progn
+    (setq diary-file (concat org-directory "events"))
+    (add-hook 'calendar-mode-hook
+              (lambda ()
+                (define-key calendar-mode-map "l" 'calendar-forward-day)
+                (define-key calendar-mode-map "h" 'calendar-backward-day)
+                (define-key calendar-mode-map "j" 'calendar-forward-week)
+                (define-key calendar-mode-map "k" 'calendar-backward-week)
+                (define-key calendar-mode-map "{" 'calendar-forward-month)
+                (define-key calendar-mode-map "}" 'calendar-backward-month)
+                (define-key calendar-mode-map "0" 'calendar-beginning-of-week)
+                (define-key calendar-mode-map "$" 'calendar-end-of-week)
+                (define-key calendar-mode-map "[" 'calendar-beginning-of-month)
+                (define-key calendar-mode-map "]" 'calendar-end-of-month)
+                (define-key calendar-mode-map "gg" 'calendar-beginning-of-year)
+                (define-key calendar-mode-map "G" 'calendar-end-of-year)))))
+
+
+; emacs vc
+(with-eval-after-load 'vc
+  (define-key vc-git-log-view-mode-map "j" 'log-view-msg-next)
+  (define-key vc-git-log-view-mode-map "J" 'log-view-file-next)
+  (define-key vc-git-log-view-mode-map "k" 'log-view-msg-prev)
+  (define-key vc-git-log-view-mode-map "K" 'log-view-file-prev)
+  (define-key vc-git-log-view-mode-map (kbd "<RET>") 'log-view-find-revision)
+
+  (setq
+   ;; Don't make backups of git history files
+   vc-make-backup-files nil
+   ;; Always follow a symlink inside of a git repository that slnz things
+   vc-follow-symlinks t))
+
+
 ;; neotree
 (eval-after-load "neotree"
   (lambda ()
@@ -257,6 +219,14 @@
     (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
     (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
 
+;; speedbar
+(spacemacs/set-leader-keys
+  "oft" 'speedbar)
+
+(evil-define-key 'motion speedbar-file-key-map
+  "l" 'speedbar-expand-line
+  "h" 'speedbar-contract-line)
+
 (eval-after-load "view"
   (lambda ()
     (define-key view-mode-map (kbd "H-q") 'View-quit)))
@@ -276,16 +246,15 @@
       'zv/elixir-convert-def-to-block)))
 
 
-;; Racket
-(evil-set-initial-state 'racket-describe-mode 'emacs)
-
-
 ;; Search
 (spacemacs|use-package-add-hook helm-ag
   :post-config
   (progn
     (define-key helm-ag-map (kbd "<XF86Forward>") 'helm-ag--next-file)
-    (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)
-    ))
+    (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)))
 
-
+;; brackets
+(define-key evil-normal-state-map "]" 'evil-forward-paragraph)
+(define-key evil-normal-state-map "[" 'evil-backward-paragraph)
+(define-key evil-motion-state-map "]" 'evil-forward-paragraph)
+(define-key evil-motion-state-map "[" 'evil-backward-paragraph)
