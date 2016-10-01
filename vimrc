@@ -1,7 +1,6 @@
 set nocompatible " rube would be proud
 syntax enable "turn on syntax highlighting
 filetype plugin indent on
-let mapleader="9"
 
 " ================ General Config ====================
 set autoread                   " Reload files changed outside vim
@@ -22,7 +21,6 @@ set shortmess=aIoO             " Show short messages, no intro.
 set showcmd                    " Show incomplete cmds down the bottom
 set showmode                   " Show current mode down the bottom
 set visualbell                 " No sounds
-set path+=/usr/include/linux;/usr/include
 
 set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode
 
@@ -127,7 +125,47 @@ if has("autocmd")
   autocmd FileType yaml       setlocal sw=2 sts=2 ts=2 et
   autocmd FileType zsh        setlocal sw=4 sts=4 ts=4 et
 endif
+" ================ Abbr ============================
+autocmd BufRead,BufNewFile *.c* iabbr packed __attribute__ ((__packed__))
+autocmd BufRead,BufNewFile *.c* iabbr packedstruct struct __attribute__ ((__packed__)) PACKED_STRUCT {<CR>};
 
+abbr cdl console.log
+
+" Guillemets
+abbr lbraket «
+abbr rbraket »
+
+" close our stuff
+iabbr (C ( )<Left><Left>
+iabbr {C { }<Left><Left>
+iabbr [C [ ]<Left><Left>
+
+" =============== Keybindings =======================
+" ==============================
+" Window/Tab/Split Manipulation
+" ==============================
+nnoremap <silent> <C-h> <C-w>h
+nnoremap <silent> <C-l> <C-w>l
+nnoremap <silent> <C-k> <C-w>k
+nnoremap <silent> <C-j> <C-w>j
+
+" Create window splits easier.
+nnoremap <silent> vv <C-w>v
+" nnoremap <silent> ss <C-w>s
+
+"Clear current search highlight by double tapping //
+nmap <silent> // :nohlsearch<CR>
+
+" A Classic
+cnoremap w!! w !sudo tee % >/dev/null
+
+" These are very similar keys. Typing 'a will jump to the line in the current
+" file marked with ma. However, `a will jump to the line and column marked
+" with ma.  It’s more useful in any case I can imagine, but it’s located way
+" off in the corner of the keyboard. The best way to handle this is just to
+" swap them: http://items.sjbach.com/319/configuring-vim-right
+nnoremap ' `
+nnoremap ` '
 
 " ================ Folds ============================
 
@@ -183,15 +221,9 @@ set scrolloff=3     "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
 
-" ================ External Settings ========================
-for f in split(glob('~/.vim/plugin/settings/*.vim'), '\n')
-  exe 'source' f
-endfor
-
 " ================ Vim as MAN ========================
-
-runtime ftplugin/man.vim
+runtime! ftplugin/man.vim
 
 nnoremap <silent> Q :quit!<CR>
 
-set background=dark
+set background=light
