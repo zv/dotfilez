@@ -8,7 +8,7 @@ Xft.rgba:       rgb
 
 ! Emacs.font: Inconsolata-14
 ! Use source-code-pro instead
-URxvt.font: xft:Source Code Pro:size=11,xft:Deja Vu Sans Mono:size=11
+URxvt.font: xft:Source Code Pro:size=11,xft:Terminus:size=11
 
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
@@ -17,26 +17,74 @@ URxvt.scrollTtyOutput:   false
 URxvt.scrollWithBuffer:  false
 URxvt.scrollTtyKeypress: true
 URxvt.cursorBlink:       true
-URxvt.colorUL:      #269BC9
+URxvt.colorUL:          #269BC9
 
-*color0:  rgb:00/00/00
-*color1:  rgb:ff/00/00
-*color2:  rgb:12/91/4e
-*color3:  rgb:a0/a0/70
-*color4:  rgb:3e/45/81
-*color5:  rgb:a0/70/a0
-*color6:  rgb:70/a0/a0
-*color7:  rgb:a0/a0/a0
-*color8:  rgb:60/60/60
-*color9:  rgb:b0/70/50
-*color10: rgb:12/91/4e
-*color11: rgb:c0/c0/90
-*color12: rgb:3e/45/81
-*color13: rgb:c0/90/c0
-*color14: rgb:90/c0/c0
-*color15: rgb:ff/ff/ff
+! Dark Colors
+!! *color0:  rgb:00/00/00
+!! *color1:  rgb:ff/00/00
+!! *color2:  rgb:12/91/4e
+!! *color3:  rgb:a0/a0/70
+!! *color4:  rgb:3e/45/81
+!! *color5:  rgb:a0/70/a0
+!! *color6:  rgb:70/a0/a0
+!! *color7:  rgb:a0/a0/a0
+!! *color8:  rgb:60/60/60
+!! *color9:  rgb:b0/70/50
+!! *color10: rgb:12/91/4e
+!! *color11: rgb:c0/c0/90
+!! *color12: rgb:3e/45/81
+!! *color13: rgb:c0/90/c0
+!! *color14: rgb:90/c0/c0
+!! *color15: rgb:ff/ff/ff
+!! 
+!! *intensityStyles: false
+!! 
+!! *foreground: rgb:dd/dd/dd
+!! *background: rgb:22/22/22
+! End Dark Colors
 
-*intensityStyles: false
+! Solarized
+! ! Dark
+!! *background: #002b36
+!! *foreground: #839496
+! ! Light
+*background: #fdf6e3
+*foreground: #657b83
 
-*foreground: rgb:dd/dd/dd
-*background: rgb:22/22/22
+!!*fading: 40
+*fadeColor: #002b36
+*cursorColor: #93a1a1
+*pointerColorBackground: #586e75
+*pointerColorForeground: #93a1a1
+
+!! black dark/light
+*color0: #073642
+*color8: #002b36
+
+!! red dark/light
+*color1: #dc322f
+*color9: #cb4b16
+
+!! green dark/light
+*color2: #859900
+*color10: #586e75
+
+!! yellow dark/light
+*color3: #b58900
+*color11: #657b83
+
+!! blue dark/light
+*color4: #268bd2
+*color12: #839496
+
+!! magenta dark/light
+*color5: #d33682
+*color13: #6c71c4
+
+!! cyan dark/light
+*color6: #2aa198
+*color14: #93a1a1
+
+!! white dark/light
+*color7: #eee8d5
+*color15: #fdf6e3
