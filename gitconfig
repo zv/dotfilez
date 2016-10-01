@@ -7,15 +7,19 @@
 [github]
 	user = zv
 
+[sendemail]
+  smtpEncryption = tls
+  smtpServer     = smtp.gmail.com
+  smtpUser       = zv@nxvr.org
+  smtpServerPort = 587
+
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	# true resulted in some painful dialog with Windows developers.
-	autocrlf = false
-
-[remote "origin"]
-	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
+  safecrlf = true
+	# autocrlf = false
 
 [gpg]
 	program = gpg2
@@ -24,27 +28,15 @@
 	signoff = true
 
 [color]
-	branch = auto
-	diff = auto
-	interactive = auto
-	pager = true
-	status = auto
-	ui = true
-
-[color "branch"]
-	current = yellow reverse
-	local = yellow
-	remote = green
-
-[color "branch"]
-	current = cyan reverse
-	local = cyan
-	remote = green
+	pager       = true
+	ui          = true
 
 [color "diff"]
-    old = red
-    new = green 
-    whitespace = reverse
+	meta = yellow bold
+	frag = magenta bold
+	old = red
+	new = green
+	whitespace = red reverse
 
 [color "status"]
 	added     = green
@@ -62,19 +54,18 @@
 	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
 	# instead of a/b/c/d as prefixes for patches
 	mnemonicprefix = true
-	algorithm      = patience
 	tool           = vimdiff
 
 [difftool]
-	prompt = true
+	prompt = false
 
 [merge]
 	summary = true
 	verbosity = 1
-	tool = ediff
+  tool = ediff
 
 [mergetool "ediff"]
-	cmd = emacsclient -t -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+  cmd = emacsclient -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
 
 [branch]
 	autosetupmerge = true
@@ -82,20 +73,16 @@
 [advice]
 	statusHints = false
 
-[apply]
-	whitespace = nowarn
-
 [push]
-	default = current
+	default = simple
 
 [rebase]
 	stat = true
 
 [rerere]
-	enabled = true
+	enabled = false
 
 [alias]
-
 	# For help on git aliases:
 	#
 	#   * <https://git.wiki.kernel.org/index.php/Aliases>
