@@ -44,11 +44,13 @@ path=(
     #/usr/local/{pgsql,heroku,plan9}/bin
     $HOME/depot_tools
     /usr/local/cuda/bin
-    $HOME/.multirust/toolchains/stable/cargo/bin
+    $HOME/.cargo/bin
 )
 
 # Remove all empty directories from the path
 #for np ($path) if [[ ! -d $np ]] path=(${path#$np})
+
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 # Load our completion functions
 fpath=(

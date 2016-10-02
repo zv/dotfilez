@@ -35,7 +35,7 @@ elif [[ $TERM == 'eterm-color' ]]; then
     unsetopt prompt_subst
     PROMPT="[%y] %2~ $baseprompt "
 else
-    export KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
+    export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
     # shows a slightly different prompt for vicmd vs other ZLE command modes to let
     # you know what you are dealing with.
     autoload -Uz vcs_info
@@ -51,17 +51,14 @@ else
 
     zle_vim_prompt_notifier() {
         if [[ "$KEYMAP" == vicmd ]]; then
-            print "%F{red}>>%f"
+            print "%F{red}$baseprompt%f"
         else
-            print ">>"
+            print "$baseprompt"
         fi
     }
 
     PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
 fi
-
-# ls colors
-autoload -U colors && colors;
 
 setopt no_beep      # Stop the beep insanity
 setopt auto_cd      # Automatic CD on directory specification
@@ -131,7 +128,7 @@ function rmlast {
   [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
 }
 
-nocorrect noglob function calc () {
+function calc () {
     if [ $# -ne 0 ]; then
          local wrapped_args="\"${argv}\""
          emacsclient --eval "(calc-eval $wrapped_args)" | sed 's/^\"//' |  sed 's/\"$//'
@@ -210,9 +207,9 @@ function authorstats {
     echo ''
 }
 
-####
+#############################################
 # Expansion and Globbing
-####
+#############################################
 
 # Directories
 setopt AUTO_CD              # Auto changes to a directory without typing cd.
@@ -389,21 +386,19 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 
-
 # **********************************************************
 # Don't do any of the following if we have a dumb terminal *
 # **********************************************************
-if [[ "$TERM" == 'dumb' ]]; then
-    return 1
-fi
+[[ "$TERM" == 'dumb' ]] && return 1
 
 # Prompt for correction
 setopt correct_all
 
+# ls colors
+autoload -U colors && colors;
+
 # The crazier the better!
-if [[ -x =dircolors && -e ~/.zsh/LS_COLORS ]]; then
-    eval `dircolors --sh ~/.zsh/LS_COLORS`
-fi
+(( $+commands[dircolors] )) && eval "$(dircolors --sh ~/.zsh/LS_COLORS)"
 
 #############################################
 #  Vim & ZSH Line Editor
@@ -421,7 +416,6 @@ zle -N zle-keymap-select
 
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
-
 
 bindkey -M viins "^P" up-line-or-search
 bindkey -M viins "^N" down-line-or-search
@@ -491,17 +485,16 @@ source $HOME/.gnupg/gpg-agent-wrapper
 . /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # cdpath=($cdpath)
-
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
-if [[ -x /usr/bin/virtualenvwrapper.sh ]]; then
-    source /usr/bin/virtualenvwrapper.sh # Virtualenvwrapper
-fi
-
 export RUST_SRC_PATH=/usr/local/src/rust/src
 
+# Virtualenvwrapper
+[[ -x /usr/bin/virtualenvwrapper.sh ]] && source /usr/bin/virtualenvwrapper.sh
+
 # The next line updates PATH for the Google Cloud SDK.
-source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
+[[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
 
 # The next line enables shell command completion for gcloud.
-source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
+[[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
+
+# source ~/.cargo/env
