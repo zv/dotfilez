@@ -5,3 +5,7 @@
 ;;; End of mode settings
 (define-key calc-mode-map next-buffer-key 'next-buffer)
 
+(defmath nradix (n base)
+  "This function convertions the number `n' to the radix specified by `base'"
+  (let ((calc-number-radix base))
+    (math-format-radix n)))
