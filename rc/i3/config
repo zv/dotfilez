@@ -115,9 +115,6 @@ mode "resize" {
 }
 
 
-# bindsym $mod+Shift+b bar hidden_state toggle
-bindsym $mod+a bar mode toggle
-
 # Printscreen
 bindsym Print exec gnome-screenshot -f '/tmp/screenshot.jpg'
 bindsym $mod+Print exec gnome-screenshot -i
@@ -132,6 +129,8 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $sink toggle
 
 bindsym $mod+1 exec --no-startup-id "gnome-terminal --profile=IRC"
 bindsym $mod+2 exec --no-startup-id vlc
+# bindsym $mod+Shift+b bar hidden_state toggle
+bindsym $mod+3 bar mode toggle
 
 bar {
         position top
