@@ -51,3 +51,9 @@
 
 ;; Turn on encrypt hook
 ;; (add-hook 'after-save-hook 'zv/encrypt-secrets)
+(if (and (file-executable-p "/usr/sbin/sendmail")
+         (require 'sendmail nil t))
+    (setq message-send-mail-function 'sendmail-send-it
+          send-mail-function 'sendmail-send-it)
+  (setq message-send-mail-function 'smtpmail-send-it
+        send-mail-function 'smtpmail-send-it))
