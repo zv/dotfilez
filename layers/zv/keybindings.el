@@ -84,13 +84,9 @@
 ;; evil-leader key bindings
 ;; Set our special "o" keys
 (evil-leader/set-key
-  "am" 'man
+  "ob" 'spacemacs-layouts/non-restricted-buffer-list)
 
-  "oaw" 'woman
-  "oag" 'gnus
-  "oo" 'org-capture
-  "oa" 'org-agenda
-  "oc" 'org-clock-in)
+
 
 (defun zv//initial-path-keybinding (key-file-map)
   "Create leader keybindings from an alist of the form (KEYS . PATH)"
@@ -109,8 +105,9 @@
 (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
                                ("ofel" . "~/Development/")
                                ("ofzd" . "~/dotfilez/")
-                               ("ofzo" . ,org-directory)
-                               ("ofzn" . ,(concat org-directory "/notes.org"))
+                               ("ofod" . ,org-directory)
+                               ("ofoz" . ,(concat org-directory "/zv.org"))
+                               ("ofon" . ,(concat org-directory "/notes.org"))
                                ("ofzb" . ,zv//blog-path)
                                ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
