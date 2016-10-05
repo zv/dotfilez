@@ -54,12 +54,9 @@
 (global-set-key (kbd "<XF86Calculator>") 'calc)
 (global-set-key (kbd "<XF86Mail>") 'gnus)
 
-;; previously was evil-lookup
-(define-key evil-normal-state-map "K" 'zv/join-up)
 
 
 ;; evil state bindings
-(setq evil-cross-lines t)
 (evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 (evil-define-key 'normal evil-surround-mode-map "S" 'evil-substitute)
 
