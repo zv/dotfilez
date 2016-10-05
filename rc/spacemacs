@@ -275,6 +275,9 @@ This function is called at the very end of Spacemacs initialization."
                 ;; abbrev-mode
                 abbrev-mode t)
 
+
+  ;; previously was evil-lookup
+  ;; (define-key evil-normal-state-map "K" 'zv/join-up)
   (unless (file-exists-p zv//undo-tree-directory)
     (make-directory zv//undo-tree-directory)))
 
