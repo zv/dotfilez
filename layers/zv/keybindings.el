@@ -152,48 +152,56 @@
 
                                         ; dired
 (with-eval-after-load 'dired
-  (evil-define-key 'normal dired-mode-map "u" 'dired-up-directory)
-  (evil-define-key 'normal dired-mode-map "j" 'dired-next-line)
-  (evil-define-key 'normal dired-mode-map "k" 'dired-prev-line)
-  (evil-define-key 'normal dired-mode-map "f" 'dired-goto-file)
-  (evil-define-key 'normal dired-mode-map "\C-h" 'dired-tree-up)
-  (evil-define-key 'normal dired-mode-map "\C-l" 'dired-tree-down)
-  (evil-define-key 'normal dired-mode-map "\C-j"'dired-next-subdir)
-  (evil-define-key 'normal dired-mode-map "\C-k"'dired-prev-subdir)
-  ;; dired-do-hardlink hard link [h]
-  ;; dired-do-load
-  (evil-define-key 'normal dired-mode-map "r" 'dired-unmark )
-  (evil-define-key 'normal dired-mode-map (kbd "<f5>") 'dired-do-redisplay))
+  ;; (evil-define-key 'normal dired-mode-map "s" 'dired-sort-toggle-or-edit)
+  ;; (evil-define-key 'normal dired-mode-map "u" 'dired-up-directory)
+  ;; (evil-define-key 'normal dired-mode-map "r" 'dired-unmark )
+  ;; (evil-define-key 'normal dired-mode-map (kbd "<f5>") 'dired-do-redisplay)
+  (evilified-state-evilify dired-mode dired-mode-map
+    [mouse-1] 'diredp-find-file-reuse-dir-buffer
+    [mouse-2] 'dired-find-alternate-file
+    "f"  'helm-find-files
+    "h"  'diredp-up-directory-reuse-dir-buffer
+    "l"  'diredp-find-file-reuse-dir-buffer
+    "c"  'helm-find-files
+
+    "gg" 'evil-goto-first-line
+    "G"  'evil-goto-line
+
+    "j" 'dired-next-line
+    "k" 'dired-previous-line
+    "h" 'dired-up-directory
+    "l" 'dired-find-file
+    "u" 'dired-up-directory
+    "f" 'dired-goto-file
+    "/" 'evil-search-forward
+    "?" 'evil-search-backward
+    "\C-u" 'evil-scroll-up
+    "\C-d" 'evil-scroll-down
+    "r" 'dired-unmark
+    (kbd "<f5>") 'dired-do-redisplay))
 
 
                                         ; calendar
 (with-eval-after-load 'calendar
-  (progn
-    (setq diary-file (concat org-directory "events"))
-    (add-hook 'calendar-mode-hook
-              (lambda ()
-                (define-key calendar-mode-map "l" 'calendar-forward-day)
-                (define-key calendar-mode-map "h" 'calendar-backward-day)
-                (define-key calendar-mode-map "j" 'calendar-forward-week)
-                (define-key calendar-mode-map "k" 'calendar-backward-week)
-                (define-key calendar-mode-map "{" 'calendar-forward-month)
-                (define-key calendar-mode-map "}" 'calendar-backward-month)
-                (define-key calendar-mode-map "0" 'calendar-beginning-of-week)
-                (define-key calendar-mode-map "$" 'calendar-end-of-week)
-                (define-key calendar-mode-map "[" 'calendar-beginning-of-month)
-                (define-key calendar-mode-map "]" 'calendar-end-of-month)
-                (define-key calendar-mode-map "gg" 'calendar-beginning-of-year)
-                (define-key calendar-mode-map "G" 'calendar-end-of-year)))))
+  (setq diary-file (concat org-directory "events"))
+  (add-hook 'calendar-mode-hook
+            (lambda ()
+              (define-key calendar-mode-map "l" 'calendar-forward-day)
+              (define-key calendar-mode-map "h" 'calendar-backward-day)
+              (define-key calendar-mode-map "j" 'calendar-forward-week)
+              (define-key calendar-mode-map "k" 'calendar-backward-week)
+              (define-key calendar-mode-map "{" 'calendar-forward-month)
+              (define-key calendar-mode-map "}" 'calendar-backward-month)
+              (define-key calendar-mode-map "0" 'calendar-beginning-of-week)
+              (define-key calendar-mode-map "$" 'calendar-end-of-week)
+              (define-key calendar-mode-map "[" 'calendar-beginning-of-month)
+              (define-key calendar-mode-map "]" 'calendar-end-of-month)
+              (define-key calendar-mode-map "gg" 'calendar-beginning-of-year)
+              (define-key calendar-mode-map "G" 'calendar-end-of-year))))
 
 
 ; emacs vc
 (with-eval-after-load 'vc
-  (define-key vc-git-log-view-mode-map "j" 'log-view-msg-next)
-  (define-key vc-git-log-view-mode-map "J" 'log-view-file-next)
-  (define-key vc-git-log-view-mode-map "k" 'log-view-msg-prev)
-  (define-key vc-git-log-view-mode-map "K" 'log-view-file-prev)
-  (define-key vc-git-log-view-mode-map (kbd "<RET>") 'log-view-find-revision)
-
   (setq
    ;; Don't make backups of git history files
    vc-make-backup-files nil
@@ -203,9 +211,8 @@
 
 ;; neotree
 (with-eval-after-load "neotree"
-  (lambda ()
-    (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-    (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
+  (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
+  (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))
 
 ;; speedbar
 (spacemacs/set-leader-keys
@@ -215,9 +222,34 @@
   "l" 'speedbar-expand-line
   "h" 'speedbar-contract-line)
 
+                                        ; Quitting Emacs Mode
 (eval-after-load "view"
   (lambda ()
     (define-key view-mode-map (kbd "H-q") 'View-quit)))
+
+
+                                        ; Manpages
+(with-eval-after-load "Man"
+  ;; Define our lookup funtion with `K' to be 'man' rather than 'woman'
+  (setq evil-lookup-func #'man)
+  (evil-define-motion evil-lookup ()
+    (call-interactively evil-lookup-func))
+  ;; Format our man pages with a width of 80 chars
+  (setenv "MANWIDTH" "80")
+  (define-key Man-mode-map " "    'scroll-up-command)
+  (define-key Man-mode-map "\177" 'scroll-down-command)
+  (define-key Man-mode-map "}"    'Man-next-section)
+  (define-key Man-mode-map "{"    'Man-previous-section)
+  (define-key Man-mode-map "]" 'evil-forward-paragraph)
+  (define-key Man-mode-map "[" 'evil-backward-paragraph)
+  (define-key Man-mode-map ">"    'end-of-buffer)
+  (define-key Man-mode-map "<"    'beginning-of-buffer)
+  (define-key Man-mode-map "."    'beginning-of-buffer)
+  (define-key Man-mode-map "RET"  'woman-follow)
+  (define-key Man-mode-map "d"    'scroll-up-command)
+  (define-key Man-mode-map "u"    'scroll-down-command)
+  (define-key Man-mode-map "q"    'Man-quit)
+  (define-key Man-mode-map "m"    'man))
 
 
 ;; Elixir Configuration
