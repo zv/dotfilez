@@ -124,15 +124,6 @@
 (eval-after-load 'helm
   '(define-key helm-map (kbd "C-u") 'helm-delete-minibuffer-contents))
 
-;; Autocomplete
-(eval-after-load 'auto-complete
-  '(global-set-key (kbd "<backtab>") 'ac-start))
-
-(eval-after-load 'company
-  '(progn
-     ;; Don't forget C-s (search candidates)
-     (global-set-key (kbd "<backtab>") 'company-complete)))
-
 (eval-after-load 'shell
   '(progn
      (define-key shell-mode-map "\C-d" nil)))
