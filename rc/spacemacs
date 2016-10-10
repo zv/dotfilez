@@ -23,45 +23,48 @@ values."
    dotspacemacs-ask-for-lazy-installation t
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
-   '(
-     auto-completion
-     (c-c++ :variables c-c++-enable-clang-support t)
-     ;; clojure
-     elixir
-     emacs-lisp
+   '(;; dash
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'nothing
+                      auto-completion-tab-key-behavior 'complete)
+     (c-c++ :variables
+            c-c++-default-mode-for-headers 'c-mode
+            c-c++-enable-clang-support t)
+     clojure
      (erlang :variables
              erlang-root-dir "/usr/local/lib/erlang"
-             edts-man-root   "/usr/local/lib/erlang/erts-7.2.1/")
+             erlang-man-root-dir "/usr/local/lib/erlang/man")
+     elixir
+     emacs-lisp
      ess
      git
-     ;; go
-     ;; haskell
      gtags
+     helm
      html
      javascript
      markdown
-     org
-     racket
-     python
-     helm
-     ;; haskell
      ocaml
-     ;; ruby
-     (rust :variables rust-enable-racer t)
+     org
+     python
+     racket
+     (rust :variables
+           rust-enable-racer t)
      react
-     typescript
-     ;; sql
-     (shell :variables
+     (shell :variables shell-default-shell 'eshell
+            shell-protect-eshell-prompt t
             shell-default-term-shell "/usr/bin/zsh")
-     shell-scripts
      scheme
+     sql
+     shell-scripts
      syntax-checking
      systemd
-     ;; dash
-     )
+     typescript
+     vimscript
+     version-control
+     zv)
 
    dotspacemacs-additional-packages '(edts nasm-mode)
-   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode)
+   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode eyebrowse)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only
    ))
@@ -227,26 +230,46 @@ user code in there besides modifying the variable values."
                 powerline-default-separator nil
                 evil-escape-delay 0.2
                 org-directory (expand-file-name "~/Documents/")
-                git-enable-github-support t))
+                git-enable-github-support t
+                ;; Dont show entire (long) line
+                truncate-lines t))
 
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
 
+  ;; Internal shell tools are more accommodating  to bash in Emacs.
+  (setenv "SHELL" "/bin/bash")
+
+  ;; Setup erlang (add to %PATH & set inferior node configuration)
+  ;; Add erlang to our execution path
+  (add-to-list 'exec-path (expand-file-name
+                           (concat erlang-root-dir "/bin")))
+  (add-hook 'erlang-mode-hook
+            (lambda ()
+              (setq mode-name "Erlang")
+              ;; when starting an Erlang shell in Emacs, with a custom node name
+              ;; (setq inferior-erlang-machine-options '("-sname" "zv"))
+              ))
+
+  (define-key evil-motion-state-map (kbd "C-e") 'evil-end-of-line)
+
   ;; Where I keep my git controlled repos
   (setq-default magit-repo-dirs '("~/Development/")
-
                 ;; Powerline default separator
                 powerline-default-separator nil
 
                 ;; Use Gtags to generate
                 projectile-tags-command "gtags %s"
-
+                ;; Add `' to the list of of surround pairs
+                evil-surround-pairs-alist (cons '(?l . ("`" . "'")) evil-surround-pairs-alist)
+                ;; Evil should move across more than one line
+                evil-cross-lines t
                 ;; store all backup and autosave files in the tmp dir
-                ;; backup-directory-alist
-                ;; `((".*" . ,temporary-file-directory))
-                ;; auto-save-file-name-transforms
-                ;; `((".*" ,temporary-file-directory t))
+                backup-directory-alist
+                `((".*" . ,temporary-file-directory))
+                auto-save-file-name-transforms
+                `((".*" ,temporary-file-directory t))
 
                 ;; helm configuration
                 ;; move to end or beginning of source when reaching top or bottom of source.
@@ -305,9 +328,10 @@ This function is called at the very end of Spacemacs initialization."
  '(cua-normal-cursor-color "#839496")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
+ '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
- '(fci-rule-color "#073642")
+ '(fci-rule-color "#073642" t)
  '(global-eldoc-mode t)
  '(gud-tooltip-mode t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
@@ -342,7 +366,7 @@ This function is called at the very end of Spacemacs initialization."
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(org-agenda-files
    (quote
-    ("/home/zv/Documents/agenda.org" "/home/zv/Documents/notes.org" "/home/zv/Documents/zv.org" "/home/zv/Documents/SFGOV/affordable_housing.org" "/home/zv/Documents/SFGOV/oracle_vouchers.org" "/home/zv/Documents/SFGOV/planning_commission.org")))
+    ("/home/zv/Documents/notes.org" "/home/zv/Documents/zv.org")))
  '(org-default-notes-file (quote "/home/zv/Documents/notes.org"))
  '(org-html-text-markup-alist
    (quote
@@ -352,9 +376,12 @@ This function is called at the very end of Spacemacs initialization."
      (strike-through . "<del>%s</del>")
      (underline . "<span class=\"underline\">%s</span>")
      (verbatim . "<span class=\"verbatim\">%s</span>"))))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (systemd fish-mode company-shell wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify uuidgen tide typescript-mode py-isort org-projectile org org-download livid-mode skewer-mode simple-httpd live-py-mode link-hint git-link seq flycheck-mix eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff goto-chg undo-tree eshell-z dumb-jump diminish column-enforce-mode cargo ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode tss yaxception log4e pyvenv pytest pyenv-mode py-yapf pip-requirements hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic go-eldoc company-go go-mode nasm-mode clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode geiser racket-mode faceup caml powerline rust-mode hydra spinner markdown-mode json-snatcher json-reformat multiple-cursors js2-mode parent-mode projectile request haml-mode gitignore-mode flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu highlight f erlang eproject web-completion-data s dash-functional tern deferred pos-tip ghc haskell-mode yasnippet auto-highlight-symbol packed company dash elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build bind-key bind-map evil solarized-theme nil xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe utop use-package tuareg toml-mode toc-org tagedit spacemacs-theme spaceline smooth-scrolling smeargle slim-mode shm shell-pop scss-mode sass-mode ruby-end restart-emacs rainbow-delimiters racer quelpa popwin persp-mode pcre2el paradox page-break-lines orgit org-repo-todo org-present org-plus-contrib org-bullets open-junk-file ocp-indent neotree multi-term move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-jumper evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav edts disaster define-word company-web company-tern company-statistics company-racer company-quickhelp company-ghc company-cabal company-c-headers coffee-mode cmm-mode cmake-mode clean-aindent-mode clang-format buffer-move bracketed-paste auto-yasnippet auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (sql-indent git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl clojure-snippets vimrc-mode dactyl-mode systemd fish-mode company-shell wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify uuidgen tide typescript-mode py-isort org-projectile org org-download livid-mode skewer-mode simple-httpd live-py-mode link-hint git-link seq flycheck-mix eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff goto-chg undo-tree eshell-z dumb-jump diminish column-enforce-mode cargo ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode tss yaxception log4e pyvenv pytest pyenv-mode py-yapf pip-requirements hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic go-eldoc company-go go-mode nasm-mode clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode geiser racket-mode faceup caml powerline rust-mode hydra spinner markdown-mode json-snatcher json-reformat multiple-cursors js2-mode parent-mode projectile request haml-mode gitignore-mode flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu highlight f erlang eproject web-completion-data s dash-functional tern deferred pos-tip ghc haskell-mode yasnippet auto-highlight-symbol packed company dash elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build bind-key bind-map evil solarized-theme nil xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe utop use-package tuareg toml-mode toc-org tagedit spacemacs-theme spaceline smooth-scrolling smeargle slim-mode shm shell-pop scss-mode sass-mode ruby-end restart-emacs rainbow-delimiters racer quelpa popwin persp-mode pcre2el paradox page-break-lines orgit org-repo-todo org-present org-plus-contrib org-bullets open-junk-file ocp-indent neotree multi-term move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-jumper evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav edts disaster define-word company-web company-tern company-statistics company-racer company-quickhelp company-ghc company-cabal company-c-headers coffee-mode cmm-mode cmake-mode clean-aindent-mode clang-format buffer-move bracketed-paste auto-yasnippet auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
