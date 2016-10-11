@@ -211,11 +211,8 @@
 
 
 ;; neotree
-(eval-after-load "neotree"
+(with-eval-after-load "neotree"
   (lambda ()
-    (define-key neotree-mode-map "p" 'neotree-jump-to-parent)
-    (define-key neotree-mode-map "u" 'neotree-up-dir)
-    (define-key neotree-mode-map "C" 'neotree-change-root)
     (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
     (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
 
@@ -258,3 +255,15 @@
 (define-key evil-normal-state-map "[" 'evil-backward-paragraph)
 (define-key evil-motion-state-map "]" 'evil-forward-paragraph)
 (define-key evil-motion-state-map "[" 'evil-backward-paragraph)
+
+
+                                        ; Initial State
+(mapc (lambda (x) (evil-set-initial-state x 'emacs))
+      '(epa-key-list-mode
+        epa-key-mode
+        epa-mail-mode
+        Info-mode
+        Man-mode
+        term-mode
+        calendar-mode
+        racket-describe-mode))

@@ -1,5 +1,4 @@
-(defvar zv-packages '(calendar
-                      magit
+(defvar zv-packages '(magit
                       org))
 
 (defvar zv-excluded-packages '())
@@ -54,6 +53,8 @@
 
        org-todo-keywords '((sequence "TODO" "STARTED" "DONE"))
 
+       ;; My shell variant is zsh
+       org-babel-sh-command "zsh"
 
        ;; Priorities
        org-highest-priority ?A
@@ -64,9 +65,6 @@
        org-agenda-include-diary t
        ;; Catch edits to invisible sections of the screen
        org-catch-invisible-edits t
-
-       ;; When running babel blocks in sh, I usually mean `zsh'
-       org-babel-sh-command "zsh"
 
        ;; Files
        org-capture-templates `(("t" "Tasks" entry (file+headline ,(concat org-directory "tasks.org") "Tasks")
@@ -111,7 +109,7 @@
        org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
 
 
-      ;; Load babel results
+      ;; When running babel blocks in sh, I usually mean `zsh'
       (org-babel-do-load-languages 'org-babel-load-languages
                                    '((emacs-lisp . t)
                                      (dot . t)
@@ -123,4 +121,6 @@
                                      ;; (plantuml . t)
                                      ;; (latex . t)
                                      (ledger . t)
-                                     (org . t))))))
+                                     ;; (org . t)
+                                     ))
+      )))
