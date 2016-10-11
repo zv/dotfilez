@@ -4,6 +4,12 @@ aws/*
 org/*
 !org/*.gpg
 
+# Tags
+GPATH
+GRTAGS
+GTAGS
+
+# certs
 certificates/nxvr.crt
 certificates/gpgsm-nxvr.crt
 certificates/gpgsm-nxvr.csr
