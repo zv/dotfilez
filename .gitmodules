@@ -1,9 +1,6 @@
-[submodule "rc/zsh/zsh-completions"]
-	path = rc/zsh/zsh-completions
-	url = https://github.com/zsh-users/zsh-completions.git
 [submodule "emacs.d"]
 	path = emacs.d
 	url = https://github.com/zv/spacemacs.git
-[submodule "rc/zsh/completion/rust-completion"]
-	path = rc/zsh/completion/rust-completion
-	url = git@github.com:rust-lang/zsh-config.git
+[submodule "rc/zsh/zsh-completions"]
+	path = rc/zsh/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git
