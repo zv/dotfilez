@@ -1,23 +1,6 @@
 aws/*
 !aws/*.gpg
 !aws/*.asc
-gnupg/*
-!gnupg/gpg.conf
-!gnupg/gpg-agent.conf
-!gnupg/dirmngr.conf
-!gnupg/scdaemon.conf
-!gnupg/pubring.gpg
-!gnupg/trustring.gpg
-!gnupg/*.asc
-ssh/*
-!ssh/config
-!ssh/known_hosts
-!ssh/id_rsa.pub
-!ssh/id_ed25519.pub
-!ssh/id_ecdsa.pub
-!ssh/yubi.pub
-!ssh/*.gpg
-!ssh/*.asc
 org/*
 !org/*.gpg
 
@@ -30,26 +13,7 @@ certificates/README
 keys.tar.gz
 keys.tar
 secrets.tar.gz
-
-zsh/functions/private.zsh
-zsh/extras/private.zsh
-zsh/cache
-credentials.sh
-vim/.netrwhist
-vim/backups
-vim/bundle
-xmonad/xmonad
-xmonad/xmonad-x86_64-linux
-xmonad/xmonad.errors
-xmonad/xmonad.hi
-xmonad/xmonad.o
-pentadactyl/info/default
-
-lib/ag
-lib/vim
-
 gnome-keyring.tar.gpg
-
 
 *.beam
 " for YCM
@@ -59,18 +23,55 @@ gnome-keyring.tar.gpg
 # !emacs.d/private/zv/*
 # emacs.d
 
-# IRC
-irssi/irssi-scripts
-irssi/sasl.auth
-irssi/*.crt
-irssi/*.pem
-weechat/logs
-weechat/weechat.log
-weechat/sec.conf
-weechat/passphrase
-
 *npm-debug.log
 
 ghc/
 
-gnupg/secring.gpg
+# rc ################################################## 
+rc/zsh/functions/private.zsh
+rc/zsh/extras/private.zsh
+rc/zsh/cache
+rc/credentials.sh
+rc/vim/.netrwhist
+rc/vim/backups
+rc/vim/bundle
+rc/xmonad/xmonad
+rc/xmonad/xmonad-x86_64-linux
+rc/xmonad/xmonad.errors
+rc/xmonad/xmonad.hi
+rc/xmonad/xmonad.o
+rc/pentadactyl/info/default
+rc/lib/ag
+rc/lib/vim
+
+## IRC
+rc/irssi/irssi-scripts
+rc/irssi/sasl.auth
+rc/irssi/*.crt
+rc/irssi/*.pem
+rc/weechat/logs
+rc/weechat/weechat.log
+rc/weechat/sec.conf
+rc/weechat/passphrase
+
+## Sec
+rc/gnupg/*
+rc/gnupg/secring.gpg
+!rc/gnupg/gpg-agent-wrapper
+!rc/gnupg/gpg.conf
+!rc/gnupg/gpg-agent.conf
+!rc/gnupg/dirmngr.conf
+!rc/gnupg/scdaemon.conf
+!rc/gnupg/pubring.gpg
+!rc/gnupg/trustring.gpg
+!rc/gnupg/*.asc
+
+rc/ssh/*
+!rc/ssh/config
+!rc/ssh/known_hosts
+!rc/ssh/id_rsa.pub
+!rc/ssh/id_ed25519.pub
+!rc/ssh/id_ecdsa.pub
+!rc/ssh/yubi.pub
+!rc/ssh/*.gpg
+!rc/ssh/*.asc

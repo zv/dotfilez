@@ -400,7 +400,7 @@
 (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
 (defun zv/gnus-group-mode-hook ()
-  (evil-set-initial-state 'gnus-group-mode 'motion)
+  (add-to-list evil-motion-state-modes 'gnus-group-mode)
 
   ;; • Define our keys
   (evil-define-key 'motion gnus-group-mode-map
@@ -575,7 +575,8 @@
 ;; --------------------
 ;; Article Mode
 ;; --------------------
-(evil-set-initial-state 'gnus-article-mode 'motion)
+(add-to-list evil-motion-state-modes 'gnus-article-mode)
+(add-to-list evil-normal-state-modes 'gnus-article-mode)
 
 (use-package gnus-art
   :defer t
@@ -733,7 +734,7 @@
 ;; --------------------
 
 ;; Server Browse Mode
-(evil-set-initial-state 'gnus-browse-mode 'motion)
+(add-to-list evil-motion-state-modes 'gnus-browse-mode)
 
 (eval-after-load 'gnus-browse-mode
   '(zv/define-keymap gnus-browse-mode-map

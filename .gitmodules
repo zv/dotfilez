@@ -1,13 +1,9 @@
-[submodule "vim/bundle/vundle"]
-	path = vim/bundle/vundle
-	url = git://github.com/gmarik/vundle.git
-	ignore = dirty
-[submodule "zsh/zsh-completions"]
-	path = zsh/zsh-completions
+[submodule "rc/zsh/zsh-completions"]
+	path = rc/zsh/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
 [submodule "emacs.d"]
 	path = emacs.d
 	url = https://github.com/zv/spacemacs.git
-[submodule "zsh/completion/rust-completion"]
-	path = zsh/completion/rust-completion
+[submodule "rc/zsh/completion/rust-completion"]
+	path = rc/zsh/completion/rust-completion
 	url = git@github.com:rust-lang/zsh-config.git
