@@ -1,0 +1,44 @@
+usage: dotfilez.sh  [--version] [--user <username>] [--fake-path <path>]
+                    [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+                    <command> [<args>]
+
+Install a package set:
+  newenv                  Configure environment
+  install TAG1 TAG2       Install the packages that match tags
+                          The biggest tags are as follows:
+                            - base
+                            - system
+                            - desktop (includes the most packages)
+
+Link Configuration:
+  link                    Link all configuration RC files
+
+Encrypt & Backup:
+  backup dconf            Backup dconf settings
+  backup keyring          Backup gnome keyring
+  backup thunderbird      Backup thunderbird
+  backup encrypt          Backup `protected' files
+
+Restore & Decrypt:
+  restore dconf           Restore dconf settings
+  restore keyring         Restore gnome keyring
+  restore thunderbird     Restore thunderbird
+  restore encrypt         Descrypt `protected' files
+
+Configure Software Packages:
+  all-new                 Configure all packages on a new system
+  shell
+  yubikey
+  udev
+  global-config           Restore global configuration (/etc and /usr files)
+  gpg-agent
+  dconf
+  auditing
+  journalctl
+  language
+    javascript
+    rust
+    erlang
+    elixir
+
+'./dotfilez.sh help -a' will list all available help commands.

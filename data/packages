@@ -1,0 +1,48 @@
+## Fedora Package Tags
+acpitool                    # desktop 
+avahi-tools                 # desktop
+checksec                    # desktop system 
+clang                       # desktop system base
+cmake                       # desktop
+curl                        # desktop system base
+dmenu                       # desktop
+dunst                       # desktop
+emacs                       # desktop system base
+ettercap                    # desktop 
+git                         # desktop system base
+global                      # desktop system base
+gnupg2                      # desktop system base
+graphviz                    # desktop
+hping3                      # desktop system
+i3                          # desktop
+i3lock                      # desktop
+i3status                    # desktop
+java-1.8.0-openjdk          # desktop 
+libvirt                     # desktop
+mtr                         # desktop system
+nmap                        # desktop system base
+ocaml-calendar-devel        # ocaml
+ocaml-camlp4-devel          # ocaml 
+ocaml-extlib-devel          # ocaml
+ocaml-findlib-devel         # ocaml
+ocaml-ocamldoc              # ocaml
+openssl                     # desktop
+openssl-devel               # desktop
+pcsc-lite                   # desktop
+redhat-rpm-config           # desktop system
+rlwrap                      # desktop system base
+scrot                       # desktop
+socat                       # desktop system
+the_silver_searcher         # desktop system base
+thunderbird                 # desktop
+tmux                        # desktop system base
+vim-enhanced                # desktop system base
+virt-manager                # desktop
+weechat                     # desktop
+wireshark                   # desktop
+xclip                       # desktop
+ykclient                    # desktop
+ykpers                      # desktop
+yubikey-personalization-gui # desktop
+zsh                         # desktop system base
+adobe-source-code-pro-fonts # font desktop

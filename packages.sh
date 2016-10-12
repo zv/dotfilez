@@ -3,281 +3,105 @@
 ## A bootstrapping package    #####
 ###################################
 
-function install_base_packages {
-    echo "--------------------------------------------------------------------------------"
-    echo "--------------------------------------------------------------------------------"
-    echo "Installing base packages, grab some coffee"
-    echo "--------------------------------------------------------------------------------"
-    echo "--------------------------------------------------------------------------------"
+# TODO: Write code to pull in rust, setup rust path (RUST_SRC_PATH), etc.
+BASEDIR=$(dirname "$0")
 
-    sudo dnf check-update
-    sudo dnf update
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+magenta=$(tput setaf 5)
+cyan=$(tput setaf 6)
+bold=$(tput bold)
+reset=$(tput sgr0)
 
-    # Development tools
-    ## List of yum groups to be installed
-    groups=(
-        "'C Development Tools and Libraries'"
-        "'Development Tools'"
-    )
 
-    if [[ "$TYPE" -ge 2 ]]; then
-        groups+=" 'System Tools'"
-    fi
+function zv_debug {
+    echo "$1"
+}
 
-    # List of packages to be installed
-    packages=(clang
-              curl
-              emacs
-              global
-              git
-              gnupg2
-              nmap
-              rlwrap
-              the_silver_searcher
-              tmux
-              vim-enhanced
-              zsh)
+function zv_info  {
+    echo "$bold$*$reset"
+}
 
-    if [[ "$TYPE" -ge 2 ]]; then
-        packages+=(checksec
-                   hping3
-                   mtr
-                   socat)
-    fi
+function zv_warn  {
+    echo "$yellow$*$reset"
+}
 
-    if [[ "$TYPE" -ge 3 ]]; then
-        packages+=(acpitool
-                   avahi-tools
-                   cmake
-                   dmenu
-                   dunst
-                   ettercap
-                   graphviz
-                   i3
-                   i3lock
-                   i3status
-                   java-1.8.0-openjdk
-                   libvirt
-                   openssl
-                   openssl-devel
-                   pcsc-lite
-                   scrot
-                   thunderbird
-                   virt-manager
-                   wireshark
-                   ykclient
-                   ykpers
-                   yubikey-personalization-gui)
-    fi
+function zv_error {
+    echo "$bold$red$*$reset"
+}
 
-    sudo dnf group install -y ${groups[@]}
+###
+# e.x read_configuration data/packages base ocaml
+# This will fetch all the files with the ocaml and base fields
+###
+function find_tagged {
+    local file=$1
+    local tags=$(echo "${@:2}" | sed -e "s/ /|/g")
+    cat "$file" | awk "/$tags/ { FS=\"#\"; print \$1 }"
+}
+
+function install_by_tag {
+    local package_location="$BASEDIR/data/packages"
+    local tags="$1"
+    local packages=$(find_tagged $package_location "$tags")
     sudo dnf install -y ${packages[@]}
 }
 
-# Link all relevant RC files.
-function link_dotfiles() {
-    # basic install list
-    local install_list=(
-        zsh
-        zshrc
-        zshenv
-        vim
-        vimrc
-        gitconfig
-        gitignore
-        psqlrc
-        lesskey
-        ssh
-    )
-
-    # List of files & directories *not* to link
-    local nolink=("^\."
-                  .asc
-                  .pub
-                  .sh
-                  .gpg
-                  .txt
-                  Makefile
-                  README.md
-                  certificates
-                  dconf
-                  ebin
-                  etc
-                  ida.cfg
-                  layers
-                  lesskey
-                  /lib
-                  newsrc
-                  org
-                  ssh_config
-                  systemd
-                  xmobarrc
-                  xmonadrc)
-
-    if [[ $TYPE -le 2 ]]; then
-        for file in ${install_list[@]}; do
-            ln -s $file "~/.$file"
-        done
-    else
-        local dontlink
-        for p in ${nolink[@]}; do dontlink+="${p}\|"; done
-        dontlink+=".sh"
-        git ls-tree --name-only HEAD |\
-            grep -v "${dontlink}" |\
-            xargs -I % sh -c "ln -s $(realpath %) $HOME/.%"
-    fi
+function install_base_packages {
+    zv_info "Installing base packages, grab some coffee"
+    local tags="$*"
+    local group_location="data/groups"
+    local groups=$(find_tagged "$group_location" "$tags")
+    sudo dnf check-update
+    sudo dnf update
+    install_by_tag $tags
+    sudo dnf group install -y ${groups[@]}
 }
 
+# Link all relevant RC files.
+function link_dotfiles {
+    git ls-tree --name-only @ rc/ | xargs -I % sh -c "ln -s $(realpath %) $HOME/.%"
+}
 
 ###
 # This function downloads and installs all the fonts I use.
 ###
 function install_fonts {
-    local tmp_font_dir
-    pushd
-    tmp_font_dir=`mktemp -d`
-    cd "$tmp_font_dir"
-    echo "Installing Source Code Pro Fonts..."
-    sudo dnf install adobe-source-code-pro-fonts
-    echo "Installing Powerline Fonts..."
-    (git clone git@github.com:powerline/fonts.git && install.sh)&
-    popd
-}
-
-################################################################################
-# Javascript
-################################################################################
-function install_javascript {
-    pushd
-    ## Build nodejs
-    if [[ -x =node ]]; then
-        mkdir -p ~/Development/node/local
-        cd ~/Development/node
-        curl https://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1
-        ./configure --prefix=~/Development/node/local
-        make install
-        rehash node
-    fi
-
-    # Build / install npm
-    if [[ -x =npm ]]; then
-        curl https://www.npmjs.org/install.sh | sh
-        rehash npm
-    fi
-
-    ## Install our NPM packages
-    npm_packages=(
-        tern
-        js-beautify
-        yo
-        ember-cli
-        gulp
-        lodash
-        bower
-        babel-core
-        babel-cli
-        webpack
-        webpack-dev-server
-    )
-
-    npm install -g ${(@)npm_packages}
-
-    popd
-}
-
-################################################################################
-# Rust
-################################################################################
-function install_rust {
-    curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
-}
-
-################################################################################
-# Chrome
-################################################################################
-function install_chrome {
-    https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
-}
-
-################################################################################
-# OCaml
-################################################################################
-function install_ocaml {
-    if [[ -x =ocaml ]]; then
-        # Install ocaml-proper
-        _ dnf install ocaml-camlp4-devel ocaml-ocamldoc ocaml-findlib-devel ocaml-extlib-devel ocaml-calendar-devel
-        # Install opam
-        wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin/
-        # Now install utop
+    zv_info "Installing Distribution Fonts"
+    install_by_tag "font"
+    zv_debug "Making temporary font directory..."
+    if hash git 2>/dev/null; then
+        local tmp_font_dir=$(mktemp -d)
+        pushd
+        cd "$tmp_font_dir"
+        zv_info "Installing Powerline Fonts..."
+        git clone git@github.com:powerline/fonts.git && install.sh
+        zv_debug "Popping directory stack"
+        popd
+    else
+        zv_error "No git binary detected, unable to install Powerline"
     fi
 }
 
-################################################################################
-# Emacs
-################################################################################
-function install_emacs {
-    echo "Created build-directory"
-    local destination=~/extern
-    pushd
-    mkdir $destination
-    cd $destination
-    echo "Installing dependencies"
-    sudo dnf builddep emacs
-    ## Emacs Developers Keyring
-    echo "Install our toolchain"
-    # gpg --import =(wget -q "http://savannah.gnu.org/project/memberlist-gpgkeys.php?group=emacs&download=1" -O -)
-    git clone -b emacs25 git://git.savannah.gnu.org/emacs.git
-    ./configure
-    make
-    sudo make install
-    make clean
-    popd
-}
 
-function print_help {
-    echo "--------------------------------------------------------------------------------"
-    echo "--------------------------------------------------------------------------------"
-    echo "$0"
-    echo "Options "
-    echo "$0 system  # Just the basics"
-    echo "$0 server  # Administration Tools"
-    echo "$0 full    # Everything on my environment"
-    echo "$0 osx     # OSX Environment (incomplete)"
-    echo "--------------------------------------------------------------------------------"
-    echo "--------------------------------------------------------------------------------"
-}
-
-
-#TYPE=""
-# Items are assigned numbers because each 'packageset' is a strict subset of
-# the item below it.
-if [[ $(pwd):a:h != ~/dotfilezx ]]; then
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo "It's recommended that this directory be located in ~/dotfilez"
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    exit
+if [ "$#" -lt 1 ]; then
+    cat $BASEDIR/data/usage
+    return 1;
 fi
-
 
 case "$1" in
-    system)
-        TYPE=1 ;;
-    server)
-        TYPE=2 ;;
-    full)
-        TYPE=3 ;;
+    newenv)
+        asdfadfs
+        ;;
+    install)
+        install_base_packages ${@:2}
+        ;;
+    link)
+        link_dotfiles
+        ;;
     *)
-        print_help
-        exit
+        $BASEDIR/script/main.zsh "$*"
+        ;;
 esac
-
-install_base_packages
-link_dotfiles
-
-if [[ $TYPE -eq 3 ]]; then
-    install_fonts
-    install_chrome
-    install_emacs
-    # install_javascript
-    # install_rust
-fi
