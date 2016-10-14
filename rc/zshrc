@@ -21,19 +21,22 @@ setopt BARE_GLOB_QUAL
 ############################################
 #  Theme
 #############################################
-# If we're in a dumb terminal then dont play fancy pants with our prompt
 local baseprompt='>>'
+# If we're in a dumb terminal then dont play fancy pants with our prompt
 if [[ $TERM == 'dumb' ]]; then
-    PROMPT="%2~ $baseprompt "
-    # unsetopt zle
+    # Ensure we don't set preexec && precmd
+    unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
-    # Ensure we don't set preexec && precmd
+    # PROMPT="%2~ $baseprompt "
+    PS1='$ '
+    return
 elif [[ $TERM == 'eterm-color' ]]; then
     # unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
     PROMPT="[%y] %2~ $baseprompt "
+    return
 else
     export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
     # shows a slightly different prompt for vicmd vs other ZLE command modes to let
