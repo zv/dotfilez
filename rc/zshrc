@@ -131,7 +131,7 @@ function rmlast {
 
 function calc () {
     if [ $# -ne 0 ]; then
-         local wrapped_args="\"${argv}\""
+         local wrapped_args="\"$@\""
          emacsclient --eval "(calc-eval $wrapped_args)" | sed 's/^\"//' |  sed 's/\"$//'
     else
         emacsclient -t -c --eval "(full-calc)"
