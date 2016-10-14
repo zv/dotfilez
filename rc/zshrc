@@ -98,6 +98,7 @@ alias pr="print -l"
 
 alias _='sudo'
 alias e="emacsclient -t"
+alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
 alias jkl="jekyll serve -D"
@@ -385,11 +386,6 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 # display the (interactive) menu on first execution of the hotkey
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
-
-# **********************************************************
-# Don't do any of the following if we have a dumb terminal *
-# **********************************************************
-[[ "$TERM" == 'dumb' ]] && return 1
 
 # Prompt for correction
 setopt correct_all
