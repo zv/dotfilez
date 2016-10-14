@@ -227,8 +227,8 @@ setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt AUTO_NAME_DIRS       # Auto add variable-stored paths to ~ list.
 setopt MULTIOS              # Write to multiple descriptors.
 unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
-setopt RC_EXPAND_PARAM # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
-setopt EXTENDED_GLOB   # Use extended globbing syntax.
+setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
+setopt EXTENDED_GLOB        # Use extended globbing syntax.
 
 # History
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
