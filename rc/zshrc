@@ -114,7 +114,9 @@ alias gpg=gpg2
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
 function vman {
-    vim -c "SuperMan $1" -c "set nonu"
+    # Man
+    MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist nonu noma showtabline=0 shortmess+=T' -\"" man $*
+
 }
 
 # Moves the last created file to $2
