@@ -278,6 +278,15 @@
 (define-key evil-normal-state-map "[" 'evil-backward-paragraph)
 (define-key evil-motion-state-map "]" 'evil-forward-paragraph)
 (define-key evil-motion-state-map "[" 'evil-backward-paragraph)
+(define-key evil-visual-state-map "]" 'evil-forward-paragraph)
+(define-key evil-visual-state-map "[" 'evil-backward-paragraph)
+
+(define-key evil-normal-state-map "}" 'evil-forward-section-begin)
+(define-key evil-normal-state-map "{" 'evil-backward-section-end)
+(define-key evil-motion-state-map "}" 'evil-forward-section-begin)
+(define-key evil-motion-state-map "{" 'evil-backward-section-end)
+(define-key evil-visual-state-map "}" 'evil-forward-section-begin)
+(define-key evil-visual-state-map "{" 'evil-backward-section-end)
 
 
                                         ; Initial State
