@@ -1,8 +1,9 @@
 aws/*
 !aws/*.gpg
 !aws/*.asc
+
 org/*
-!org/*.gpg
+
 
 # Tags
 GPATH
@@ -10,11 +11,9 @@ GRTAGS
 GTAGS
 
 # certs
-certificates/nxvr.crt
-certificates/gpgsm-nxvr.crt
-certificates/gpgsm-nxvr.csr
-certificates/startssl-nxvr.crt
-certificates/README
+certificates/*
+!certificates/*.gpg
+!certificates/*.asc
 
 keys.tar.gz
 keys.tar
