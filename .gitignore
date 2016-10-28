@@ -14,6 +14,8 @@ GTAGS
 certificates/*
 !certificates/*.gpg
 !certificates/*.asc
+certificates/GandiStandardSSLCA.crt
+certificates/sks-keyservers.netCA.pem
 
 keys.tar.gz
 keys.tar
@@ -80,3 +82,5 @@ rc/ssh/*
 !rc/ssh/yubi.pub
 !rc/ssh/*.gpg
 !rc/ssh/*.asc
+rc/ssh/known_hosts.asc
+rc/ssh/config.asc
