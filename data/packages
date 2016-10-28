@@ -43,6 +43,14 @@ wireshark                   # desktop
 xclip                       # desktop
 ykclient                    # desktop
 ykpers                      # desktop
+shellcheck                  # desktop development emacs
 yubikey-personalization-gui # desktop
 zsh                         # desktop system base
 adobe-source-code-pro-fonts # font desktop
+ykpers-devel # 2factor_auth
+libyubikey-devel # 2factor_auth
+libusb-devel # 2factor_auth
+autoconf # 2factor_auth
+gnupg # 2factor_auth
+gnupg2-smime # 2factor_auth
+pcsc-lite # 2factor_auth

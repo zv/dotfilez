@@ -1,0 +1,4 @@
+filename | destination
+---------------------------
+dunstrc	 | ~/.config/dunstrc
+

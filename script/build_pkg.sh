@@ -4,7 +4,7 @@
 ################################################################################
 # Javascript
 ################################################################################
-function install_javascript {
+install_javascript () {
     pushd
     ## Build nodejs
     if [[ -x =node ]]; then
@@ -32,21 +32,21 @@ function install_javascript {
 ################################################################################
 # Rust
 ################################################################################
-function install_rust {
+install_rust () {
     curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
 }
 
 ################################################################################
 # Chrome
 ################################################################################
-function install_chrome {
+install_chrome () {
     https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 }
 
 ################################################################################
 # OCaml
 ################################################################################
-function install_ocaml {
+install_ocaml () {
     if [[ -x =ocaml ]]; then
         # Install
         install_by_tag "ocaml"
@@ -59,14 +59,12 @@ function install_ocaml {
 ################################################################################
 # Python
 ################################################################################
-function install_python {
-    sudo pip install virtualenvwrapper
-}
+install_python () { sudo pip install virtualenvwrapper }
 
 ################################################################################
 # Emacs
 ################################################################################
-function install_emacs {
+install_emacs () {
     echo "Created build-directory"
     local destination=~/extern
     pushd .
@@ -88,7 +86,7 @@ function install_emacs {
 ################################################################################
 # OCaml
 ################################################################################
-function install_ocaml {
+install_ocaml () {
     echo "Downloading OPAM"
     wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin
 

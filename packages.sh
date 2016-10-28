@@ -16,40 +16,29 @@ bold=$(tput bold)
 reset=$(tput sgr0)
 
 
-function zv_debug {
-    echo "$1"
-}
-
-function zv_info  {
-    echo "$bold$*$reset"
-}
-
-function zv_warn  {
-    echo "$yellow$*$reset"
-}
-
-function zv_error {
-    echo "$bold$red$*$reset"
-}
+zv_debug () { echo "$1" }
+zv_info ()  { echo "$bold$*$reset" }
+zv_warn ()  { echo "$yellow$*$reset" }
+zv_error () { echo "$bold$red$*$reset" }
 
 ###
 # e.x read_configuration data/packages base ocaml
 # This will fetch all the files with the ocaml and base fields
 ###
-function find_tagged {
+find_tagged () {
     local file=$1
     local tags=$(echo "${@:2}" | sed -e "s/ /|/g")
     cat "$file" | awk "/$tags/ { FS=\"#\"; print \$1 }"
 }
 
-function install_by_tag {
+install_by_tag () {
     local package_location="$BASEDIR/data/packages"
     local tags="$1"
     local packages=$(find_tagged $package_location "$tags")
     sudo dnf install -y ${packages[@]}
 }
 
-function install_base_packages {
+install_base_packages () {
     zv_info "Installing base packages, grab some coffee"
     local tags="$*"
     local group_location="data/groups"
@@ -61,14 +50,21 @@ function install_base_packages {
 }
 
 # Link all relevant RC files.
-function link_dotfiles {
-    git ls-tree --name-only @ rc/ | xargs -I % sh -c "ln -s $(realpath %) $HOME/.%"
+link_dotfiles () {
+    for filen in rc/*; do
+        read -p "Link $filen to $HOME/.$filen : y/n " CONDITION
+        if [ "$CONDITION" != "n" ]; then
+            echo "linking $filen to $HOME/.$filen"
+            echo "ln -s $(realpath $filen) $HOME/.$filen"
+        fi
+    done
 }
 
 ###
-# This function downloads and installs all the fonts I use.
+# This downloads () and installs all the fonts I use.
 ###
-function install_fonts {
+install_fonts () {
+    # mkdir -p ~/.local/share/fonts && mv *.ttf ~/.local/share/fonts && fc-cache
     zv_info "Installing Distribution Fonts"
     install_by_tag "font"
     zv_debug "Making temporary font directory..."
@@ -85,6 +81,10 @@ function install_fonts {
     fi
 }
 
+post_install () {
+    local CVIM_URL="https://gist.githubusercontent.com/zv/143f07207cde5b74d557/raw/f5a9028027be915135c8e7776131ae0e467c7808/cvim.vim   "
+    zv_info "Install a new Cvim configuration located at $CVIM_URL"
+}
 
 if [ "$#" -lt 1 ]; then
     cat $BASEDIR/data/usage
