@@ -1,22 +1,49 @@
 #!/bin/zsh
 # My personal key
+setopt EXTENDED_GLOB
+
 typeset key_id='0xF6F2D0445DC172F8'
 typeset -a protected groups packages npm_packages
+
+BASEDIR=$(dirname "$0")
+
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+magenta=$(tput setaf 5)
+cyan=$(tput setaf 6)
+bold=$(tput bold)
+reset=$(tput sgr0)
+
+
+zv_debug () { echo "$1" }
+zv_info ()  { echo "$bold$*$reset" }
+zv_warn ()  { echo "$yellow$*$reset" }
+zv_error () { echo "$bold$red$*$reset" }
 
 ###
 # Pack/Unpack my encrypted documents and configuration examples
 ###
 local -aU protected
 protected=(
-    irssi/sasl.auth
-    ssh/id_{rsa,ed25519}
-    ssh/config
-    org/*
-    certificates/{nxvr.crt,gpgsm-nxvr.crt,gpsm-nxvr.csr,startssl-nxvr.crt,README}
+    rc/ssh/(^*(pub|asc|gpg))
+    certificates/(^*(gpg|asc))
 )
 
-function protect   { gpg -a -r "$key_id" --encrypt-files ${(@)protected} }
-function unprotect { gpg --decrypt-files **/*.asc }
+protect() {
+    zv_info "[protect] Encrypting files"
+    print -l $protected
+    gpg -a -r "$key_id" --encrypt-files "${(@)protected}"
+}
+
+unprotect() {
+    echo "${protected[@]}"
+    gpg --decrypt-files "${protected[@]}"
+}
+
+
+
 
 case $1 in
     protect)
