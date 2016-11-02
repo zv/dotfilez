@@ -59,6 +59,14 @@ used as the prefix command."
       (previous-line 2)
       (evil-join (point) (+ 1 (point))))))
 
+(defun zv/scroll-up-one-line ()
+  (interactive)
+  (scroll-up-line 1))
+
+(defun zv/scroll-down-one-line ()
+  (interactive)
+  (scroll-down-line 1))
+
 ;; Monkeypatch some spacemacs internal window positioning
 (defun spacemacs/shrink-window-horizontally (delta)
   "Wrap `spacemacs/shrink-window-horizontally'."
@@ -155,3 +163,18 @@ FUN function callback"
                  #'(lambda () (forward-symbol 1) nil)))))
 
 
+
+(defun zv//initial-path-keybinding (key-file-map)
+  "Create leader keybindings from an alist of the form (KEYS . PATH)"
+  (mapc (lambda (binding)
+          (let* ((path        (cdr binding))
+                 (keybinding  (car binding)))
+            ;; We check if it is an integer because keyseq returns a number if
+            ;; the preceeding keys are also unbound.
+            (evil-leader/set-key keybinding (if (string-match "\/$" path)
+                                                ;; use ido-find-file-in-dir if we're binding a directory
+                                                `(lambda () (interactive) (ido-find-file-in-dir ,path))
+                                              ;; Otherwise we're looking at a file, jump directly to it
+                                              `(lambda () (interactive) (find-file-existing ,path))))))
+        key-file-map))
+

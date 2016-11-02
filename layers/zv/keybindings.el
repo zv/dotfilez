@@ -87,31 +87,6 @@
   "ob" 'spacemacs-layouts/non-restricted-buffer-list)
 
 
-
-(defun zv//initial-path-keybinding (key-file-map)
-  "Create leader keybindings from an alist of the form (KEYS . PATH)"
-  (mapc (lambda (binding)
-          (let* ((path        (cdr binding))
-                 (keybinding  (car binding)))
-            ;; We check if it is an integer because keyseq returns a number if
-            ;; the preceeding keys are also unbound.
-            (evil-leader/set-key keybinding (if (string-match "\/$" path)
-                                                ;; use ido-find-file-in-dir if we're binding a directory
-                                                `(lambda () (interactive) (ido-find-file-in-dir ,path))
-                                              ;; Otherwise we're looking at a file, jump directly to it
-                                              `(lambda () (interactive) (find-file-existing ,path))))))
-  key-file-map))
-
-(zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
-                               ("ofel" . "~/Development/")
-                               ("ofzd" . "~/dotfilez/")
-                               ("ofod" . ,org-directory)
-                               ("ofoz" . ,(concat org-directory "/zv.org"))
-                               ("ofon" . ,(concat org-directory "/notes.org"))
-                               ("ofzb" . ,zv//blog-path)
-                               ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
-
-
 ;; mode bindings
 ;; js2 mode
 (eval-after-load 'js2-mode
@@ -132,12 +107,16 @@
 (evil-add-hjkl-bindings Info-mode-map 'emacs
   "0" 'evil-digit-argument-or-evil-beginning-of-line
   (kbd "M-h") 'Info-help   ; "h"
+  "j" 'zv/scroll-up-one-line
+  "k" 'zv/scroll-down-one-line
+  "n" 'Info-search-next
   "/" 'Info-search
   "?" 'Info-search-backward
   "U" 'Info-up
   "D" 'Info-directory
   "u" 'Info-scroll-down
   "d" 'Info-scroll-up
+  "p" 'evil-window-next ; "p"op out of info window
   "V" 'evil-visual-line
   "\C-u" 'Info-scroll-down
   "\C-d" 'Info-scroll-up
@@ -156,6 +135,12 @@
   ;; (evil-define-key 'normal dired-mode-map "u" 'dired-up-directory)
   ;; (evil-define-key 'normal dired-mode-map "r" 'dired-unmark )
   ;; (evil-define-key 'normal dired-mode-map (kbd "<f5>") 'dired-do-redisplay)
+
+  (setq-local
+   ;; This ensures that `dired-other-window' doesn't split when using it as a
+   ;; directory-manager.
+   split-width-threshold 220)
+
   (evilified-state-evilify dired-mode dired-mode-map
     [mouse-1] 'diredp-find-file-reuse-dir-buffer
     [mouse-2] 'dired-find-alternate-file
@@ -245,7 +230,13 @@
   (define-key Man-mode-map ">"    'end-of-buffer)
   (define-key Man-mode-map "<"    'beginning-of-buffer)
   (define-key Man-mode-map "."    'beginning-of-buffer)
+  (define-key Man-mode-map "?"    'evil-search-backward)
+  (define-key Man-mode-map "/"    'evil-search-forward)
   (define-key Man-mode-map "RET"  'woman-follow)
+
+  (define-key Man-mode-map "k"    'evil-previous-line)
+  (define-key Man-mode-map "j"    'evil-next-line)
+
   (define-key Man-mode-map "d"    'scroll-up-command)
   (define-key Man-mode-map "u"    'scroll-down-command)
   (define-key Man-mode-map "q"    'Man-quit)
