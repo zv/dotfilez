@@ -23,7 +23,7 @@ values."
    dotspacemacs-ask-for-lazy-installation t
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
-   '(;; dash
+   '(
      (auto-completion :variables
                       auto-completion-return-key-behavior 'nothing
                       auto-completion-tab-key-behavior 'complete)
@@ -229,10 +229,14 @@ user code in there besides modifying the variable values."
                 exec-path-from-shell-check-startup-files nil
                 powerline-default-separator nil
                 evil-escape-delay 0.2
-                org-directory (expand-file-name "~/Documents/")
                 git-enable-github-support t
+                org-directory (expand-file-name "~/Documents/")
+                ;; My personal org folders
+                org-default-notes-file (concat org-directory "notes.org")
+                zv//org-personal (concat org-directory "zv.org")
                 ;; Dont show entire (long) line
-                truncate-lines t))
+                truncate-lines t)
+  )
 
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
@@ -297,6 +301,18 @@ This function is called at the very end of Spacemacs initialization."
 
                 ;; abbrev-mode
                 abbrev-mode t)
+
+
+
+  ;; path keybinding
+  (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
+                                 ("ofel" . "~/Development/")
+                                 ("ofzd" . "~/dotfilez/")
+                                 ("ofod" . ,org-directory)
+                                 ("ofoz" . ,zv//org-personal)
+                                 ("ofon" . ,org-default-notes-file)
+                                 ("ofzb" . ,zv//blog-path)
+                                 ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
 
   ;; previously was evil-lookup
@@ -379,6 +395,10 @@ This function is called at the very end of Spacemacs initialization."
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
+ '(org-refile-targets
+   (quote
+    ((org-agenda-files :maxlevel . 1)
+     (org-default-notes-file :maxlevel . 2))))
  '(package-selected-packages
    (quote
     (sql-indent git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl clojure-snippets vimrc-mode dactyl-mode systemd fish-mode company-shell wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify uuidgen tide typescript-mode py-isort org-projectile org org-download livid-mode skewer-mode simple-httpd live-py-mode link-hint git-link seq flycheck-mix eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff goto-chg undo-tree eshell-z dumb-jump diminish column-enforce-mode cargo ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode tss yaxception log4e pyvenv pytest pyenv-mode py-yapf pip-requirements hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic go-eldoc company-go go-mode nasm-mode clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode geiser racket-mode faceup caml powerline rust-mode hydra spinner markdown-mode json-snatcher json-reformat multiple-cursors js2-mode parent-mode projectile request haml-mode gitignore-mode flycheck flx magit magit-popup git-commit with-editor smartparens iedit anzu highlight f erlang eproject web-completion-data s dash-functional tern deferred pos-tip ghc haskell-mode yasnippet auto-highlight-symbol packed company dash elixir-mode pkg-info epl helm avy helm-core async auto-complete popup package-build bind-key bind-map evil solarized-theme nil xterm-color ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe utop use-package tuareg toml-mode toc-org tagedit spacemacs-theme spaceline smooth-scrolling smeargle slim-mode shm shell-pop scss-mode sass-mode ruby-end restart-emacs rainbow-delimiters racer quelpa popwin persp-mode pcre2el paradox page-break-lines orgit org-repo-todo org-present org-plus-contrib org-bullets open-junk-file ocp-indent neotree multi-term move-text mmm-mode merlin markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hungry-delete htmlize hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gh-md ggtags flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-jumper evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav edts disaster define-word company-web company-tern company-statistics company-racer company-quickhelp company-ghc company-cabal company-c-headers coffee-mode cmm-mode cmake-mode clean-aindent-mode clang-format buffer-move bracketed-paste auto-yasnippet auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))

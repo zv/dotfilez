@@ -65,8 +65,9 @@
     :post-config
     (progn
       ;; Use our custom org link insertion code
-      ;; (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
+      (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
       (require 'org-protocol)
+
 
       (setq-default
        ;; Do not dim blocked tasks
@@ -113,20 +114,20 @@
 
        ;; Files
        org-capture-templates
-       `(("a" "Appointment" entry (file+headline ,(concat org-directory "zv.org") "Appointments") "* APPT %^{Description} %^g\n %?\n Added: %U")
-         ("b" "Book/Article" entry (file+headline ,(concat org-directory "zv.org") "Read") "** READ  %?")
-         ;; ("i" "Ideas" entry (file+headline ,(concat org-directory "zv.org") "Ideas") "* %?\nCaptured On: %U\n")
-         ("r" "Refile" entry (file+headline ,org-default-notes-file "Refile") "* %?\nCaptured On: %U\n")
-         ("q" "Quotes" plain (file ,(concat org-directory "quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE" :empty-lines 1)
+       `(("a" "Appointment" entry (file+headline ,zv//org-personal "Appointments") "* APPT %^{Description} %^g\n %?\n Added: %U")
+         ("b" "Book/Article" entry (file+headline ,zv//org-personal "Read") "** READ  %?")
+         ("q" "Quotes" plain (file ,(concat org-directory "quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE")
          ;; Intentions don't have an active timestamp associated with them, but are marked as TODO items.
-         ("i" "Intentions" entry (file+headline ,(concat org-directory "zv.org") "Tasks") "* TODO %?\nCaptured On: %U\n")
+         ("i" "Intentions" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %U\n")
          ;; Tasks are things that I *need* to get done. They have a clock associated with them and an active timestamp. They appear in the Agenda.
-         ("t" "Tasks" entry (file+headline ,(concat org-directory "zv.org") "Tasks") "* TODO %?\nCaptured On: %T\n"
-          :clock-in t :clock-resume t)
+         ("t" "Tasks" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %T\n" :clock-in t :clock-resume t)
+
+         ;; Refile target
+         ("r" "Refile" entry (file+olp ,org-default-notes-file "Inbox" "Refile") "* %?\nCaptured On: %U\n")
          ;; Org Protocol
-         ("L" "Protocol Link" entry (file+headline ,org-default-notes-file "Inbox") "* %? [[%:link][%:description]] \nCaptured On: %U")
-         ("P" "Protocol" entry (file+headline ,org-default-notes-file "Inbox") "* %? [[%:link][%:description]] \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE \nCaptured On: %U")
-         ("T" "Thunderbird" entry (file+headline ,org-default-notes-file "Inbox") "* %? %:link\n#+BEGIN_QUOTE\n%:description\n#+END_QUOTE \nCaptured On: %U"))
+         ("L" "Protocol Link" entry (file+olp ,org-default-notes-file "Inbox" "Bookmarks") "* %?[[%:link][%:description]] \nCaptured On: %U\n")
+         ("P" "Protocol" entry (file+olp ,org-default-notes-file "Inbox" "Selection") "* %?[[%:link][%:description]] \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE \nCaptured On: %U\n")
+         ("T" "Thunderbird" entry (file+olp ,org-default-notes-file "Inbox" "Thunderbird") "* %? %:link\n#+BEGIN_QUOTE\n%:description\n#+END_QUOTE \nCaptured On: %U\n"))
 
        ;; ORG MODE PUBLISHING
        org-publish-project-alist `(("org-zv"
