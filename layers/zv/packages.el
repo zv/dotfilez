@@ -3,12 +3,16 @@
                       edts
                       erlang
                       eshell
-                      z3-mode))
+                      z3-mode
+                      ))
 
 (defvar zv-excluded-packages '())
 
 
-(defun zv/post-config-erlang ()
+(defun zv/init-z3-mode ()
+  (use-package z3-mode))
+
+(defun zv/post-init-erlang ()
   (use-package erlang
     :config
     (progn
