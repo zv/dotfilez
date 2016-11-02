@@ -223,6 +223,11 @@ user code in there besides modifying the variable values."
   (setq next-buffer-key (kbd "H-j")
         prev-buffer-key (kbd "H-k"))
 
+  ;; Add erlang & tern to our execution path
+  (setq exec-path (append exec-path
+                          '("/usr/local/lib/erlang/bin"
+                            "/home/zv/n/bin")))
+  ;; org mode
   (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
                 ;; Undo tree file directory
                 zv//undo-tree-directory "/tmp/zv/.emacs-undo"
@@ -246,9 +251,7 @@ This function is called at the very end of Spacemacs initialization."
   (setenv "SHELL" "/bin/bash")
 
   ;; Setup erlang (add to %PATH & set inferior node configuration)
-  ;; Add erlang to our execution path
-  (add-to-list 'exec-path (expand-file-name
-                           (concat erlang-root-dir "/bin")))
+
   (add-hook 'erlang-mode-hook
             (lambda ()
               (setq mode-name "Erlang")
