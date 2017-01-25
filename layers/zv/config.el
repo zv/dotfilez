@@ -22,6 +22,7 @@
 
  ;; hippie expand is dabbrev expand on steroids
  hippie-expand-try-functions-list '(try-expand-dabbrev
+                                    try-expand-dabbrev-visible
                                     try-expand-dabbrev-all-buffers
                                     try-expand-dabbrev-from-kill
                                     try-complete-file-name-partially
