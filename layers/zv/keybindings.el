@@ -84,7 +84,7 @@
 ;; evil-leader key bindings
 ;; Set our special "o" keys
 (evil-leader/set-key
-  "ob" 'spacemacs-layouts/non-restricted-buffer-list)
+  "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
 
 
 ;; mode bindings
@@ -261,6 +261,8 @@
 (spacemacs|use-package-add-hook helm-ag
   :post-config
   (progn
+    (define-key helm-ag-map (kbd "<M-down>") 'helm-ag--next-file)
+    (define-key helm-ag-map (kbd "<M-up>") 'helm-ag--previous-file)
     (define-key helm-ag-map (kbd "<XF86Forward>") 'helm-ag--next-file)
     (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)))
 
