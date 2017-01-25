@@ -72,7 +72,6 @@
       (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
       (require 'org-protocol)
 
-
       (setq-default
        ;; Do not dim blocked tasks
        org-agenda-dim-blocked-tasks nil
@@ -112,7 +111,11 @@
        org-default-priority ?C
 
        ;; include the emacs diary
-       org-agenda-include-diary nil
+       holiday-bahai-holidays nil
+       holiday-hebrew-holidays nil
+       holiday-islamic-holidays nil
+       org-agenda-include-diary t
+
        ;; Catch edits to invisible sections of the screen
        org-catch-invisible-edits t
 
@@ -125,7 +128,7 @@
          ("i" "Intentions" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %U\n")
          ;; Tasks are things that I *need* to get done. They have a clock associated with them and an active timestamp. They appear in the Agenda.
          ("t" "Tasks" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %T\n" :clock-in t :clock-resume t)
-
+ 
          ;; Refile target
          ("r" "Refile" entry (file+olp ,org-default-notes-file "Inbox" "Refile") "* %?\nCaptured On: %U\n")
          ;; Org Protocol
