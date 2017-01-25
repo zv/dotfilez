@@ -110,7 +110,7 @@
 	g = grep
 
 	# log - show commit logs.
-	l	= log --date=format:\"%m/%d/%y\" --pretty=\"format:%C(auto)%<(8)%h%Creset│ %C(blue)%ad%Creset │ %C(013)%><(15,trunc)%aN%Creset │ -%C(auto)%d%Creset %s\" --abbrev-commit
+	l	= log --date=format:\"%m/%d/%y\" --pretty=\"format:%C(auto)%<(8)%h%Creset│ %C(blue)%ad%Creset │ %C(013)%><(15,trunc)%aN%Creset │%C(auto)%d%Creset %s\" --abbrev-commit
 
 	# merge - join two or more development histories together.
 	m = merge
