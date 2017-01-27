@@ -16,6 +16,7 @@
 ;; tab/window split manipulation]
 (define-key evil-normal-state-map "Q" 'evil-quit)
 
+
 ;; Check for 'next-buffer-key && 'prev-buffer-key
 
                                         ; Hyper Key
@@ -107,8 +108,8 @@
 (evil-add-hjkl-bindings Info-mode-map 'emacs
   "0" 'evil-digit-argument-or-evil-beginning-of-line
   (kbd "M-h") 'Info-help   ; "h"
-  "j" 'zv/scroll-up-one-line
-  "k" 'zv/scroll-down-one-line
+  ;;"j" 'zv/scroll-up-one-line
+  ;;"k" 'zv/scroll-down-one-line
   "n" 'Info-search-next
   "/" 'Info-search
   "?" 'Info-search-backward
@@ -280,6 +281,7 @@
 (define-key evil-motion-state-map "{" 'evil-backward-section-end)
 (define-key evil-visual-state-map "}" 'evil-forward-section-begin)
 (define-key evil-visual-state-map "{" 'evil-backward-section-end)
+
 
 
                                         ; Initial State
