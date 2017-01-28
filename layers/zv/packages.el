@@ -72,6 +72,10 @@
       (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
       (require 'org-protocol)
 
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "op" (lambda () (interactive)
+               (org-publish "zv-ghpages")))
+
       (setq-default
        ;; Do not dim blocked tasks
        org-agenda-dim-blocked-tasks nil
