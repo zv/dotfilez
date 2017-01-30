@@ -128,6 +128,10 @@ function mvlast {
     mv $last_file $2 && print $last_file
 }
 
+function mvdlhere {
+    mvlast "$HOME/Downloads" $(pwd)
+}
+
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
 function rmlast {
@@ -212,6 +216,14 @@ function authorstats {
     git log --author=$gitauth --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
     echo ''
 }
+
+
+# Format a series of hex into a C-like hex string
+# e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80
+function format_c_hex {
+    echo "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
+}
+
 
 #############################################
 # Expansion and Globbing
