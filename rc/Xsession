@@ -24,4 +24,5 @@ xmodmap ${HOME}/.xmodmaprc
 # Run gpg-agent-wrapper to SSH using our yubikey
 # source $HOME/.gnupg/gpg-agent-wrapper
 
-compton
+# Compton may no longer be needed.
+# compton
