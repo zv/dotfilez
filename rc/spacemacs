@@ -300,9 +300,14 @@ This function is called at the very end of Spacemacs initialization."
                 ;; Dont create .#FILES
                 create-lockfiles nil
 
+                flycheck-pos-tip-timeout 30
+
                 ;; abbrev-mode
                 abbrev-mode t)
 
+  ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
+  (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
+  (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
 
 
   ;; path keybinding
