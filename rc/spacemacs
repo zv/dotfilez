@@ -258,11 +258,12 @@ This function is called at the very end of Spacemacs initialization."
 
   (define-key evil-motion-state-map (kbd "C-e") 'evil-end-of-line)
 
+  (evil-leader/set-key "jk" 'avy-goto-char)
+
   ;; Where I keep my git controlled repos
   (setq-default magit-repo-dirs '("~/Development/")
                 ;; Powerline default separator
                 powerline-default-separator nil
-
                 ;; Use Gtags to generate
                 projectile-tags-command "gtags %s"
                 ;; Add `' to the list of of surround pairs
