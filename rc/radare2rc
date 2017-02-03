@@ -12,3 +12,7 @@ e cmd.stack = true
 
 # Use UTF-8 to show cool arrows that do not look like crap :)
 e scr.utf8 = true
+
+
+# Set `mov` color to blue
+ec mov rgb:000055
