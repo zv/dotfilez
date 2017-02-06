@@ -10,6 +10,7 @@ dunst                       # desktop
 emacs                       # desktop system base
 ettercap                    # desktop 
 git                         # desktop system base
+git-mail                    # desktop
 global                      # desktop system base
 gnupg2                      # desktop system base
 graphviz                    # desktop

@@ -35,15 +35,13 @@ protect() {
     zv_info "[protect] Encrypting files"
     print -l $protected
     gpg -a -r "$key_id" --encrypt-files "${(@)protected}"
-}
+    nf
+
 
 unprotect() {
     echo "${protected[@]}"
     gpg --decrypt-files "${protected[@]}"
 }
-
-
-
 
 case $1 in
     protect)

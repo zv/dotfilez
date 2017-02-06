@@ -39,7 +39,7 @@ function keyring_utils {
         keyring_backup
     elif [[ $2 = "restore" ]]; then
         keyring_restore
-    else
+    els
         zv_info "keyring backup # backup the keyring"
         zv_info "keyring restore # restore the keyring"
     fi
@@ -60,3 +60,24 @@ function fetch-secret {
     local attributes="${(s/=/ /g)@}"
     secret-tool lookup "$keys"
 }
+
+
+case $1 in
+    unpack-templates)
+        protect
+        ;;
+    unprotect)
+        unprotect
+        ;;
+    keyring)
+        keyring_utils
+        ;;
+    js)
+        javascript
+        ;;
+    *)
+        echo "protect"
+        echo "unprotect"
+        echo "keyring"
+esac
+

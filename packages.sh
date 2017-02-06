@@ -35,7 +35,7 @@ install_by_tag () {
     local package_location="$BASEDIR/data/packages"
     local tags="$1"
     local packages=$(find_tagged $package_location "$tags")
-    sudo dnf install -y ${packages[@]}
+    command sudo dnf install -y ${packages[@]}
 }
 
 install_base_packages () {
@@ -43,10 +43,10 @@ install_base_packages () {
     local tags="$*"
     local group_location="data/groups"
     local groups=$(find_tagged "$group_location" "$tags")
-    sudo dnf check-update
-    sudo dnf update
+    command sudo dnf check-update
+    command sudo dnf update
     install_by_tag $tags
-    sudo dnf group install -y ${groups[@]}
+    command sudo dnf group install -y ${groups[@]}
 }
 
 # Link all relevant RC files.
