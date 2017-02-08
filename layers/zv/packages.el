@@ -171,5 +171,6 @@
                                      (ruby . t)
                                      (clojure . t)
                                      (js . t)
+                                     (sh . t)
                                      ))
       )))
