@@ -1,0 +1,13 @@
+
+module my-nvidiamodprobe 1.0;
+
+require {
+	type device_t;
+	type xdm_t;
+	class dir write;
+}
+
+#============= xdm_t ==============
+
+#!!!! WARNING: 'device_t' is a base type.
+allow xdm_t device_t:dir write;
