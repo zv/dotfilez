@@ -26,7 +26,8 @@ export GREP_COLORS="37;45"
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/Development/golang
 # Rust
-export RUST_SRC_PATH=/usr/local/src/rust/src
+export RUST_SRC_PATH="$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust"
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
 
