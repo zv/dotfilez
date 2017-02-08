@@ -4,7 +4,9 @@ Xft.antialias: true
 Xft.hinting:    true
 Xft.hintstyle:  hintfull
 Xft.rgba:       rgb
-*urlCommand:    /usr/bin/google-chrome %s
+*urlCommand:         /usr/bin/google-chrome %s
+URxvt.perl-ext-common: default,matcher
+URxvt.url-launcher:  /usr/bin/google-chrome
 
 ! Emacs.font: Inconsolata-14
 ! Use source-code-pro instead
