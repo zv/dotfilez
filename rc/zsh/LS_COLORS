@@ -643,8 +643,8 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 # printer spool file
 .spl                  38;5;7
 #   GIMP project file
-.scm                  38;5;7
-#   Nokia Symbian OS files
+# .scm                  38;5;7
+#   Nokia Symbian OS filek
 .sis                  38;5;7
 
 .1p                   38;5;7
