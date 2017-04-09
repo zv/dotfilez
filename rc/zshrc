@@ -43,7 +43,7 @@ else
     # you know what you are dealing with.
     autoload -Uz vcs_info
     base_vcs_style='%c%b%u%f'
-    zstyle ':vcs_info:*' enable git hg # svn cvs fossil bzr
+    zstyle ':vcs_info:*' enable git hg svn # cvs fossil bzr
     zstyle ':vcs_info:*' check-for-changes true
     zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
     zstyle ':vcs_info:*' stagedstr '%F{028}'
