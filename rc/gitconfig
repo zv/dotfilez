@@ -56,10 +56,11 @@
 [merge]
 	summary = true
 	verbosity = 1
-  tool = ediff
+  tool = vimdiff
+  conflictstyle = diff3
 
 [mergetool "ediff"]
-  cmd = emacsclient -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+  cmd = "emacsclient -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\""
 
 [branch]
 	autosetupmerge = true
