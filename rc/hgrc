@@ -1,6 +1,6 @@
 [alias]
 ; Edit the current repository's hgrc file.
-editrc = !$EDITOR `$HG root`/.hg/hgrc
+# editrc = !$EDITOR `$HG root`/.hg/hgrc
 
 ; Pretty logs.
 blog  = log --style=/home/zv/.mercurial/templates/map-cmdline.blog
@@ -148,5 +148,5 @@ username = zetavolt <zv@nxvr.org>
 
 [web]
 allow_archive = gz zip bz2
-cacerts = ~/.mercurial/cacerts/dummy-cert.pem
+# cacerts = ~/.mercurial/cacerts/dummy-cert.pem
 
