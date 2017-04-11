@@ -198,11 +198,14 @@
 ;; neotree
 (with-eval-after-load "neotree"
   (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-  (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))
+  (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)
+  )
 
 ;; speedbar
 (spacemacs/set-leader-keys
-  "oft" 'speedbar)
+  "oft" 'speedbar
+  "am" 'man
+  "oaw" 'woman)
 
 (evil-define-key 'motion speedbar-file-key-map
   "l" 'speedbar-expand-line
@@ -234,6 +237,11 @@
   (define-key Man-mode-map "?"    'evil-search-backward)
   (define-key Man-mode-map "/"    'evil-search-forward)
   (define-key Man-mode-map "RET"  'woman-follow)
+
+  (define-key Man-mode-map "n"    'evil-search-next)
+  (define-key Man-mode-map "p"    'evil-search-previous)
+  (define-key Man-mode-map "M-n"  'Man-next-section)
+  (define-key Man-mode-map "M-p"  'Man-previous-section)
 
   (define-key Man-mode-map "k"    'evil-previous-line)
   (define-key Man-mode-map "j"    'evil-next-line)
