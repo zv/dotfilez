@@ -22,11 +22,6 @@ java-1.8.0-openjdk          # desktop
 libvirt                     # desktop
 mtr                         # desktop system
 nmap                        # desktop system base
-ocaml-calendar-devel        # ocaml
-ocaml-camlp4-devel          # ocaml 
-ocaml-extlib-devel          # ocaml
-ocaml-findlib-devel         # ocaml
-ocaml-ocamldoc              # ocaml
 openssl                     # desktop
 openssl-devel               # desktop
 pcsc-lite                   # desktop
@@ -48,10 +43,15 @@ shellcheck                  # desktop development emacs
 yubikey-personalization-gui # desktop
 zsh                         # desktop system base
 adobe-source-code-pro-fonts # font desktop
-ykpers-devel # 2factor_auth
-libyubikey-devel # 2factor_auth
-libusb-devel # 2factor_auth
-autoconf # 2factor_auth
-gnupg # 2factor_auth
-gnupg2-smime # 2factor_auth
-pcsc-lite # 2factor_auth
+ocaml-calendar-devel        # ocaml
+ocaml-camlp4-devel          # ocaml 
+ocaml-extlib-devel          # ocaml
+ocaml-findlib-devel         # ocaml
+ocaml-ocamldoc              # ocaml
+ykpers-devel                # 2factor_auth
+libyubikey-devel            # 2factor_auth
+libusb-devel                # 2factor_auth
+autoconf                    # 2factor_auth
+gnupg                       # 2factor_auth
+gnupg2-smime                # 2factor_auth
+pcsc-lite                   # 2factor_auth
