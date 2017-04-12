@@ -327,6 +327,10 @@ This function is called at the very end of Spacemacs initialization."
 
   (add-hook 'asm-mode-hook #'zv/asm-mode-hook)
 
+  ;; lfe hooks
+  (defvar lfe-dir (concat (getenv "HOME") "/extern/lfe/emacs"))
+  (setq load-path (cons lfe-dir load-path))
+  (require 'lfe-start)
 
   ;; previously was evil-lookup
   ;; (define-key evil-normal-state-map "K" 'zv/join-up)
