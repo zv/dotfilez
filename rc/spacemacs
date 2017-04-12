@@ -362,6 +362,7 @@ This function is called at the very end of Spacemacs initialization."
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#073642" t)
+ '(geiser-default-implementation nil)
  '(global-eldoc-mode t)
  '(gud-tooltip-mode t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
