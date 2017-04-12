@@ -308,7 +308,6 @@ This function is called at the very end of Spacemacs initialization."
   (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
   (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
 
-
   ;; path keybinding
   (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
                                  ("ofel" . "~/Development/")
@@ -319,13 +318,14 @@ This function is called at the very end of Spacemacs initialization."
                                  ("ofzb" . ,zv//blog-path)
                                  ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
+  ;; assembly programming hooks
   (defun zv/asm-mode-hook ()
     ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
     (local-unset-key (vector asm-comment-char))
     ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
     (setq tab-always-indent (default-value 'tab-always-indent)))
-
   (add-hook 'asm-mode-hook #'zv/asm-mode-hook)
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode))
 
   ;; lfe hooks
   (defvar lfe-dir (concat (getenv "HOME") "/extern/lfe/emacs"))
@@ -336,7 +336,6 @@ This function is called at the very end of Spacemacs initialization."
   ;; (define-key evil-normal-state-map "K" 'zv/join-up)
   (unless (file-exists-p zv//undo-tree-directory)
     (make-directory zv//undo-tree-directory)))
-
 
 ;; Custom variables
 (custom-set-variables
