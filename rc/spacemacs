@@ -364,6 +364,7 @@ This function is called at the very end of Spacemacs initialization."
  '(fci-rule-color "#073642" t)
  '(geiser-default-implementation nil)
  '(global-eldoc-mode t)
+ '(gud-gdb-command-name "gdb -i=mi -nh")
  '(gud-tooltip-mode t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
