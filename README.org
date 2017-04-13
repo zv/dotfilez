@@ -128,31 +128,44 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCMbMY01S86OnaP7Q5H9kYHeBUdfTsZkGh1AwQC1VJI
 * Overview
 ** Configurations
 *** ZSH
-    My zsh configuration is contained in one file (outside of additional
-    completion scripts and =.zshenv=) and is fairly brief. I think it provides
-    sane defaults, while still being aligned with the 'standard operating behavior'
-    of a new =.zshrc=.
-    
-    I use built-in functions or /small/ shell scripts to provide features that whole
-    shell scripts are written for in other ZSH 'configuration frameworks':
+    [[http://www.zsh.org/][zsh]] is a very fine shell derived from ksh88 and with fantastic bourne-again
+    compatibility.
 
-    - Changing prompt color when in Insert/Normal mode
+    My zsh configuration is contained in one file (outside of additional
+    completion scripts and =.zshenv=) and is fairly brief (about 500 lines). I
+    don't use any plugins or extend the behavior through the use of zmodules
+    outside of those provided by ~zsh-core~. I generally try to keep my
+    configuration essentially compatible with what I believe to be the spirit of
+    the project.
+    
+    - Changing prompt color when in Insert/Normal mode 
     - Displaying current Git, CVS and Mercurial working branch.
-    - Autocompleting for any string in the Tmux screen.
+    - Autocompleting for any string in the Tmux screen (=C-x C-x= for first completion & =C-x C-t= for menu)
     #+CAPTION: zshrc
-    #+NAME:   toprc.jpg
+    #+NAME:   zsh.jpg
     [[./data/zsh.jpg]]
 *** [[http://www.vim.org/][Vim]]
-    These dotfilez come with a barebones Vim configuration. I used Vim for 10
-    years before switching to Emacs. I still have unresolved feelings about it
-    and I think that it's still the superior option for quick-n-dirty system
-    editing.
+    I used Vim for 10 years before switching to Emacs but I still maintain a
+    barebones configuration without any plugins. 
+*** =mail=
+    Most UNIX systems come with a package called =mail=. If you are a younger
+    programmer you might not know about it or how to configure it. Because it
+    contains sensitive information, I have a function =evaluate-mail-template=
+    that builds the /actual/ configuration for me after prompting for my
+    password.
 *** babel
-*** Top
+    
+*** toprc
+    Most people have only seen the basics of top process management. Top
+    actually contains a fairly sophisticated set of tools with essentially the
+    same functionality as others like htop.
+
+    My topRC splits process management into 4 panels: Overview, Process Tree,
+    Real memory-statistics and CPU-related statistics.
+
     #+CAPTION: Top in Action
     #+NAME:   toprc.jpg
     [[./data/toprc.jpg]]
-*** X11
 *** readline/editline
 *** dunst
 *** Erlang Job Control
@@ -161,13 +174,15 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCMbMY01S86OnaP7Q5H9kYHeBUdfTsZkGh1AwQC1VJI
 *** Rubygems
 *** GDB
 *** Tmux
+*** Radare
+    #+CAPTION: A picture of radare disassembler
+    #+NAME: radare.jpg
+    [[./data/radare.jpg]]
 *** Spacemacs
 *** XPDF
 *** RubyPry
-*** Radare
 *** Dig
-*** Heirloom mailx
-*** [[https://github.com/ggreer/the_silver_searcher][The Silver Surfer]]
+*** [[https://github.com/ggreer/the_silver_searcher][The Silver Searcher]]
 
 ** Installation Process:
    1) Determine system info
@@ -214,7 +229,6 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCMbMY01S86OnaP7Q5H9kYHeBUdfTsZkGh1AwQC1VJI
     set of patterns which can make new ones.
 
     I have a simple setup composed of three files:
-
 **** =notes.org=
 ***** Inbox
       This is a special heading for refile content that is primarily generated in

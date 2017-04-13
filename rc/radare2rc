@@ -13,6 +13,32 @@ e cmd.stack = true
 # Use UTF-8 to show cool arrows that do not look like crap :)
 e scr.utf8 = true
 
+# Show invalid instruction as hex
+e asm.invhex=true
+
+# The cowsay fortunes are cute and all but..
+e cfg.fortunetype=tips
+
+# Align disassembly bytes to right
+e asm.lbytes=false
+
+# Show accesses of local variables
+e asm.varxs=true
+
+# Colorscheme
+# eco solarized
+eco white
 
 # Set `mov` color to blue
 ec mov rgb:000055
+
+# Demangle C++
+e asm.demangle = true
+e bin.demangle = true
+
+# Show DWARF assembly comments
+e asm.dwarf = true
+e bin.dwarf = true
+
+# Keep track of the total stack allocation
+e asm.stackptr = true
