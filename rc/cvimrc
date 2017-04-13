@@ -20,7 +20,7 @@ command g tabnew google
 clickSel(arg) -> {{
      document.querySelectorAll(arg)[0].click()
 }}
-" This is a function for sending a URL via org-protocol. 
+" This is a function for sending a URL via org-protocol.
 " It also sends the selection text if the user has selected anything on the page.
 bookmarkInOrg -> {{
     // In addition to encoding the URI, we have to escape org-mode metasyntax
@@ -57,7 +57,7 @@ site '*://www.gnu.org/software/*/manual/*' {
   map [[ :call clickSel('a[rel=prev]')<CR>
 }
 site '*://elixir-lang.org/getting-started/*' {
-  let previousmatchpattern = "← Previous" 
+  let previousmatchpattern = "← Previous"
   let nextmatchpattern = "Next →"
 }
 " Code blocks (see below for more info)

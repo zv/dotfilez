@@ -217,13 +217,11 @@ function authorstats {
     echo ''
 }
 
-
 # Format a series of hex into a C-like hex string
 # e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80
 function format_c_hex {
     echo "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
 }
-
 
 #############################################
 # Expansion and Globbing

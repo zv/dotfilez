@@ -50,8 +50,7 @@ path=(
 
 # Remove all empty directories from the path
 #for np ($path) if [[ ! -d $np ]] path=(${path#$np})
-
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 # Load our completion functions
 fpath=(
