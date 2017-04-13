@@ -16,10 +16,21 @@ bold=$(tput bold)
 reset=$(tput sgr0)
 
 
-zv_debug () { echo "$1" }
-zv_info ()  { echo "$bold$*$reset" }
-zv_warn ()  { echo "$yellow$*$reset" }
-zv_error () { echo "$bold$red$*$reset" }
+zv_debug() {
+    echo "$1"
+}
+
+zv_info()  {
+    echo "$bold$*$reset"
+}
+
+zv_warn()  {
+    echo "$yellow$*$reset"
+}
+
+zv_error() {
+    echo "$bold$red$*$reset"
+}
 
 ###
 # e.x read_configuration data/packages base ocaml
@@ -82,8 +93,7 @@ install_fonts () {
 }
 
 post_install () {
-    local CVIM_URL="https://gist.githubusercontent.com/zv/143f07207cde5b74d557/raw/f5a9028027be915135c8e7776131ae0e467c7808/cvim.vim   "
-    zv_info "Install a new Cvim configuration located at $CVIM_URL"
+    return 1
 }
 
 if [ "$#" -lt 1 ]; then
@@ -92,16 +102,8 @@ if [ "$#" -lt 1 ]; then
 fi
 
 case "$1" in
-    newenv)
-        asdfadfs
-        ;;
-    install)
-        install_base_packages ${@:2}
-        ;;
-    link)
-        link_dotfiles
-        ;;
-    *)
-        $BASEDIR/script/main.zsh "$*"
-        ;;
+    newenv) asdfadfs ;;
+    install) install_base_packages ${@:2} ;;
+    link) link_dotfiles ;;
+    *) $BASEDIR/script/main.zsh "$*" ;;
 esac

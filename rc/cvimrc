@@ -1,0 +1,69 @@
+let homedirectory = '/home/zv'
+let configpath = '~/.cvimrc'
+
+set localconfig
+let vimcommand = 'urxvtc -e vim'
+
+let hintcharacters = "alskierudjfhg"
+" let hintcharacters =   ";ghrueiwotlaskdjf"
+" let hintcharacters = "gh;aureiwozxtyqpmnkdlsfj"
+" let hintcharacters = "dsaghweruiocjklf"
+let blacklists = ["https://groups.google.com/*","https://www.hackerrank.com/*","https://twitter.com/*"]
+let qmark r = "https://reddit.com"
+let qmark t = "https://twitter.com"
+let qmark b = ["http://localhost:4000"]
+command blog tabnew http://localhost:4000
+let qmark w = ["http://localhost:8080"]
+command webpack tabnew http://localhost:8080
+command g tabnew google
+" Click an XPATH selector passed into `arg'
+clickSel(arg) -> {{
+     document.querySelectorAll(arg)[0].click()
+}}
+" This is a function for sending a URL via org-protocol. 
+" It also sends the selection text if the user has selected anything on the page.
+bookmarkInOrg -> {{
+    // In addition to encoding the URI, we have to escape org-mode metasyntax
+    var esc = (text) => encodeURIComponent(text)
+                        .split('')
+                        .map((c) => c.match("[()']") ? escape(c) : c)
+                        .join('');
+    var escSelection = (text) => esc(text).replace(/\*/g, '∗');
+    var selection = window.getSelection().toString();
+    var uri = 'org-protocol://' + ((selection != "") ? 'capture:/P/' : 'capture:/L/');
+    uri += encodeURIComponent(location.href) + '/' + esc(document.title);
+    if (selection != "") { uri += '/' + escSelection(selection); };
+    location.href = uri;
+}}
+map h previousTab
+map l nextTab
+map w goBack
+map e goForward
+map <C-m> :call bookmarkInOrg<CR>
+" Rust Documentation
+site '*://doc.rust-lang.org/*' {
+  map ]] :call clickSel("[rel=next]")<CR>
+  map [[ :call clickSel("[rel=prev]")<CR>
+}
+" Find Rust Dox
+let searchengine rustdocs = "https://doc.rust-lang.org/std/?search=%s"
+command rust tabnew rustdocs
+site '*://rustbyexample.com/*' {
+  map ]] :call clickSel('.navigation-next')<CR>
+  map [[ :call clickSel('.navigation-prev')<CR>
+}
+site '*://www.gnu.org/software/*/manual/*' {
+  map ]] :call clickSel('a[rel=next]')<CR>
+  map [[ :call clickSel('a[rel=prev]')<CR>
+}
+site '*://elixir-lang.org/getting-started/*' {
+  let previousmatchpattern = "← Previous" 
+  let nextmatchpattern = "Next →"
+}
+" Code blocks (see below for more info)
+getIP() -> {{
+httpRequest({url: 'http://api.ipify.org/?format=json', json: true},
+            function(res) { Status.setMessage('IP: ' + res.ip); });
+}}
+" Displays your public IP address in the status bar
+map ci :call getIP<CR>
