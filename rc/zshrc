@@ -164,7 +164,7 @@ function spectrum_ls() {
 function mcd() { mkdir -p "$1" && cd "$1"; }
 
 function ptrsp {
-    if [[ !$+commands[xinput] ]] return;
+    (( !$+commands[xinput] )) && return;
     # Grep through for the actual ID. Hack.
     local prop_id=$(xinput list --short | \
         grep 'Lenovo.*pointer' | \
