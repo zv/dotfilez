@@ -129,7 +129,41 @@ function mvlast {
 }
 
 function mvdlhere {
-    mvlast "$HOME/Downloads" $(pwd)
+    mvlast "$HOME/Downloads/" $(pwd)
+}
+
+# compile and run
+# function crun {
+#     local dargs=${argv:2}
+#     local file="$1"
+#     local name="${file%\.*}"
+#     local dest="$(mktemp)"
+
+#     if [[ $file =~ "\.cc$" ]]; then
+#         g++ -g -Wall $file -o $dest
+#     elif [[ $file =~ "\.c$" ]]; then
+#         gcc -g -Wall $file -o $dest
+#     else
+#         echo "no filetype detected"
+#         return
+#     fi
+
+#     $dest $dargs
+#     echo $?
+# }
+
+crun() {
+    local file=$1
+    shift
+    local command=$(mktemp)
+    if [[ $file =~ "\.cc$" ]]; then
+        g++ -g -Wall -Weffc++ $file -o $command || return 42
+    elif [[ $file =~ "\.c$" ]]; then
+        gcc -g -Wall $file -o $command || return 42
+    else
+        return 126;
+    fi
+    $command "$@"
 }
 
 # Removes the last created file in the specified directory, defaulting to the
