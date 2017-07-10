@@ -150,7 +150,7 @@ function calc () {
 alias calc="noglob calc"
 
 function spectrum_ls() {
-    string=${1-Test}
+    string="${1-Test}"
     if [[ $1 == "block" ]]
     then
         string="███████████████████████████████"
@@ -166,11 +166,11 @@ function mcd() { mkdir -p "$1" && cd "$1"; }
 function ptrsp {
     (( !$+commands[xinput] )) && return;
     # Grep through for the actual ID. Hack.
-    local prop_id=$(xinput list --short | \
+    local prop_id="$(xinput list --short | \
         grep 'Lenovo.*pointer' | \
         awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
-        sed 's/id\=//')
-   xinput --set-prop $prop_id 140 $1 0 0 0 $1 0 0 0 $2
+        sed 's/id\=//')"
+   xinput --set-prop "$prop_id" 140 "$1" 0 0 0 "$1" 0 0 0 "$2"
 }
 
 alias ls='ls --group-directories-first --color=auto'
@@ -212,8 +212,8 @@ alias git-ignorelog='git ls-files -v | grep "^h"'
 
 # Displays some git related author statistics
 function authorstats {
-    gitauth=$1;
-    git log --author=$gitauth --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+    gitauth="$1";
+    git log --author="$gitauth" --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
     echo ''
 }
 
@@ -400,7 +400,9 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interac
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 
 # Prompt for correction
-setopt correct_all
+# setopt correct_all
+# Disable correction
+setopt nocorrect_all
 
 # ls colors
 autoload -U colors && colors;
@@ -487,17 +489,17 @@ bindkey ' ' magic-space # [Space] - do history expansion
 for fn (~/.zsh/modules/*.zsh) source $fn
 
 #  Gnupg Agent Wrapper
-source $HOME/.gnupg/gpg-agent-wrapper
+[[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
 
 # Configure Ocaml package manager
-. /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+[[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
 # cdpath=($cdpath)
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # Virtualenvwrapper
-[[ -x /usr/bin/virtualenvwrapper.sh ]] && source /usr/bin/virtualenvwrapper.sh
+[[ -x "/usr/bin/virtualenvwrapper.sh" ]] && source /usr/bin/virtualenvwrapper.sh
 
 # The next line updates PATH for the Google Cloud SDK.
 [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
