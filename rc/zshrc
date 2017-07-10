@@ -93,7 +93,7 @@ fi
 # Disable correction.
 for cmd (ack cd cp ebuild gcc gist grep heroku
         ln man mkdir mv mysql rm nmcli ip ag
-        git npm ember dnf jekyll) alias $cmd="nocorrect $cmd"
+        git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
 
 # Define general aliases.
 alias p="print"
