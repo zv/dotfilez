@@ -4,10 +4,27 @@
                       erlang
                       eshell
                       z3-mode
+                      cc-mode
                       ))
 
 (defvar zv-excluded-packages '())
 
+(defun zv/post-init-cc-mode ()
+  (add-hook 'c++-mode-hook
+            (lambda () (progn
+                         (setq company-clang-arguments '("-std=c++14")
+                               flycheck-clang-language-standard "c++14"
+                               flycheck-gcc-language-standard "c++14"
+                               disaster-cxxflags "-std=c++14 -O1 -g3")))))
+
+
+(defun zv/post-init-c++-mode ()
+  (use-package c++
+    :defer t
+    :config
+    (progn
+      (setq flycheck-clang-language-standard "c++14")
+      (setq flycheck-gcc-language-standard "c++14"))))
 
 (defun zv/init-z3-mode ()
   (use-package z3-mode))
@@ -172,5 +189,6 @@
                                      (clojure . t)
                                      (js . t)
                                      (sh . t)
+                                     (C . t)
                                      ))
       )))
