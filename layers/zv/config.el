@@ -44,23 +44,6 @@
 
 (defvar zv-whitelist '() "List of helm buffers in which to show dots.")
 
-;; encrypt hook ------------------------------------------------------------------
-(defun zv/encrypt-secrets ()
-  "Encrypt this file if it is in one of our `dirs-to-encrypt'"
-  (require 'epa-mail)
-  (let* ((zv-dotfiles (expand-file-name "~/Development/dotfilez/"))
-         (files-to-encrypt `(,(expand-file-name "~/.authinfo")))
-         (dirs-to-encrypt `(,(expand-file-name "~/.gnupg")
-                            ,(expand-file-name (concat org-directory "/"))
-                            ,(concat zv-dotfiles "gnupg/")
-                            ,(concat zv-dotfiles "ssh/")
-                            ,(expand-file-name "~/.ssh/")))
-         (recipient (epg-list-keys (epg-make-context epa-protocol) "<zv@nxvr.org>" 'public)))
-    (when (or (member (file-name-directory (buffer-file-name)) dirs-to-encrypt) (member buffer-file-name files-to-encrypt))
-      (epa-encrypt-file (buffer-file-name) recipient))))
-
-;; Turn on encrypt hook
-;; (add-hook 'after-save-hook 'zv/encrypt-secrets)
 (if (and (file-executable-p "/usr/sbin/sendmail")
          (require 'sendmail nil t))
     (setq message-send-mail-function 'sendmail-send-it

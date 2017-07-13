@@ -178,3 +178,36 @@ FUN function callback"
                                               `(lambda () (interactive) (find-file-existing ,path))))))
         key-file-map))
 
+
+(defun zv/encrypt-secrets ()
+  "Encrypt this file if it is in one of our `dirs-to-encrypt'"
+  (require 'epa-mail)
+  (let* ((zv-dotfiles (expand-file-name "~/Development/dotfilez/"))
+         (files-to-encrypt (list (expand-file-name "~/.authinfo")))
+         (dirs-to-encrypt (list (expand-file-name "~/.gnupg")
+                                (expand-file-name (concat org-directory "/"))
+                                (concat zv-dotfiles "gnupg/")
+                                (concat zv-dotfiles "ssh/")
+                                (expand-file-name "~/.ssh/")))
+         (recipient (epg-list-keys (epg-make-context epa-protocol) "<zv@nxvr.org>" 'public)))
+    (when (or (member (file-name-directory (buffer-file-name)) dirs-to-encrypt) (member buffer-file-name files-to-encrypt))
+      (epa-encrypt-file (buffer-file-name) recipient))))
+
+;; Turn on encrypt hook
+(add-hook 'after-save-hook 'zv/encrypt-secrets)
+
+
+(defun zv/auto-publish ()
+  "Automatically publish any ORG project files"
+  (require 'ox-publish)
+  (save-excursion
+    (dolist (project org-publish-project-alist)
+      (let ((dir (getf (cdr project) :base-directory))
+            (file (buffer-file-name)))
+        (if dir
+            (if (file-in-directory-p file dir)
+                (org-publish-file (buffer-file-name (buffer-base-buffer)))))))))
+
+;; (remove-hook 'after-save-hook 'auto-publish)
+(add-hook 'after-save-hook 'zv/auto-publish)
+
