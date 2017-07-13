@@ -116,7 +116,7 @@ mode "resize" {
 }
 
 # Printscreen
-bindsym Print exec gnome-screenshot -f '/tmp/screenshot.jpg'
+bindsym Print exec gnome-screenshot -f '/tmp/screenshot.png'
 bindsym $mod+Print exec gnome-screenshot -i
 
 # Pulse Audio controls
@@ -149,6 +149,8 @@ for_window [title="Terminal"]         border pixel 1
 for_window [title="urxvt"]            border pixel 1
 for_window [title="emacs@sigstkflt"]  border pixel 1
 for_window [title="zhesaurus"]        floating enable
+# ImageMagick
+for_window [title="ImageMagick: -"]        floating enable
 
 exec --no-startup-id ~/.i3/xinitrc
 exec --no-startup-id nm-applet
