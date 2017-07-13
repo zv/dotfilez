@@ -9,13 +9,27 @@
 ;;; License: GPLv3
 
 ;; global bindings
+(defun zv/set-available-leader (key def &rest bindings)
+  "Sets a leader key as long as that key is not already bound"
+  (while key
+    (let ((bound-key (lookup-key spacemacs-default-map (kbd key))))
+      (if (and (symbolp bound-key) (fboundp bound-key))
+          (message (concat "Leader key " key " already set"))
+        (spacemacs/set-leader-keys key def))
+      (setq key (pop bindings) def (pop bindings)))))
+
+(zv/set-available-leader
+ "am" 'man
+ "oaw" 'woman
+ "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm
+ "ib" 'ibuffer)
+
 ;; Forward/Backward mice keys
 (global-set-key (kbd "<mouse-8>") 'switch-to-prev-buffer)
 (global-set-key (kbd "<mouse-9>") 'switch-to-next-buffer)
 
 ;; tab/window split manipulation]
 (define-key evil-normal-state-map "Q" 'evil-quit)
-
 
 ;; Check for 'next-buffer-key && 'prev-buffer-key
 
@@ -80,12 +94,6 @@
 ;; (define-key evil-insert-state-map (kbd "C-d") 'delete-char)
 ;; (define-key evil-insert-state-map (kbd "C-i") 'backward-delete-char)
 ;; (define-key evil-insert-state-map (kbd "C-s") 'undo-tree-undo)
-
-
-;; evil-leader key bindings
-;; Set our special "o" keys
-(evil-leader/set-key
-  "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
 
 
 ;; mode bindings
@@ -200,12 +208,6 @@
   (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
   (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)
   )
-
-;; speedbar
-(spacemacs/set-leader-keys
-  "oft" 'speedbar
-  "am" 'man
-  "oaw" 'woman)
 
 (evil-define-key 'motion speedbar-file-key-map
   "l" 'speedbar-expand-line
