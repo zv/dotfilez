@@ -350,7 +350,7 @@
 	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 
 	# Find text in any commit ever
-	grep-all = !"git rev-list --all | xargs git grep '$1'"
+  grep-all = !"git grep $@ $(git rev-list --all) #"
 
 	# Given a merge commit, find the span of commits that exist(ed).
 	# Not so useful in itself, but used by other aliases.
