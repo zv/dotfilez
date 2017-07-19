@@ -191,6 +191,54 @@ function ptrsp {
    xinput --set-prop "$prop_id" 140 "$1" 0 0 0 "$1" 0 0 0 "$2"
 }
 
+pronounce_number() {
+    local result
+    local significand # our current exponent (hundreds, thousands, etc.)
+    local -A numeric_names=(2   "Hundred"
+                            3   "Thousand"
+                            6   "Million"
+                            9   "Billion"
+                            12  "Trillion"
+                            15  "Quadrillion"
+                            18  "Quintillion"
+                            21  "Sextillion"
+                            24  "Septillion"
+                            27  "Octillion"
+                            30  "Nonillion"
+                            33  "Decillion"
+                            36  "Undecillion"
+                            39  "Duodecillion"
+                            42  "Tredecillion"
+                            45  "Quattuordecillion"
+                            48  "Quindecillion"
+                            51  "Sexdecillion"
+                            54  "Septendecillion"
+                            57  "Octodecillion"
+                            60  "Novemdecillion"
+                            63  "Vigintillion"
+                            303 "Centillion")
+    local number=$1
+    let length=${#number}
+    for i in {1..$((length - 1))}; do
+        significand+=${number[i]};
+        local number_name=${numeric_names[$((length - i))]}
+        # if $number_name, insert our significand + radix name
+        if [[ $number_name ]] {
+               # but don't include "0" billions or "000 millions"
+               if [[ ${significand:#0*} ]] {
+                      result+="${significand} ${number_name}, "
+               }
+               # Reset our significander
+               significand=""
+           }
+    done
+
+    local tens=${number[-2, -1]##0#}
+    [[ $tens ]] && result+="and ${tens}"
+
+    echo $result
+}
+
 alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
