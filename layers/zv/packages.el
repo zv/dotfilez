@@ -102,6 +102,8 @@
        org-agenda-window-setup 'current-window
        ;;warn me of any deadlines in next 7 days
        org-deadline-warning-days 7
+       ;; dont split middle of line when hitting M-RET
+       org-M-RET-may-split-line '((default . nil))
        ;;show me tasks scheduled or due in next fortnight
        org-agenda-span 'fortnight
        ;;don't show tasks as scheduled if they are already shown as a deadline
@@ -149,7 +151,6 @@
          ("i" "Intentions" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %U\n")
          ;; Tasks are things that I *need* to get done. They have a clock associated with them and an active timestamp. They appear in the Agenda.
          ("t" "Tasks" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %T\n" :clock-in t :clock-resume t)
- 
          ;; Refile target
          ("r" "Refile" entry (file+olp ,org-default-notes-file "Inbox" "Refile") "* %?\nCaptured On: %U\n")
          ;; Org Protocol
