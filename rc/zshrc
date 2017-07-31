@@ -225,8 +225,9 @@ function ptrsp {
 }
 
 pronounce_number() {
-    local result
-    local significand # our current exponent (hundreds, thousands, etc.)
+    integer number=$1
+    let length=${#number}
+
     local -A numeric_names=(2   "Hundred"
                             3   "Thousand"
                             6   "Million"
@@ -250,8 +251,9 @@ pronounce_number() {
                             60  "Novemdecillion"
                             63  "Vigintillion"
                             303 "Centillion")
-    local number=$1
-    let length=${#number}
+
+    local result
+    local significand # our current exponent (hundreds, thousands, etc.)
     for i in {1..$((length - 1))}; do
         significand+=${number[i]};
         local number_name=${numeric_names[$((length - i))]}
