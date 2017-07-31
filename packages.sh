@@ -63,10 +63,16 @@ install_base_packages () {
 # Link all relevant RC files.
 link_dotfiles () {
     for filen in rc/*; do
-        read -p "Link $filen to $HOME/.$filen : y/n " CONDITION
+	sourcefile=$(realpath $filen)
+	basefile=$(basename $filen)
+	destination="$HOME/.$basefile"
+        read -p "Link $sourcefile to $destination (y/n/q) :" CONDITION
+	if [ "$CONDITION" = "q" ]; then
+		return 1
+	fi
         if [ "$CONDITION" != "n" ]; then
-            echo "linking $filen to $HOME/.$filen"
-            echo "ln -s $(realpath $filen) $HOME/.$filen"
+            echo "linking $sourcefile to $destination"
+            ln -sf $sourcefile $destination
         fi
     done
 }
@@ -93,17 +99,17 @@ install_fonts () {
 }
 
 post_install () {
-    return 1
+	echo "POST_INSTALL"
 }
 
 if [ "$#" -lt 1 ]; then
     cat $BASEDIR/data/usage
-    return 1;
 fi
 
 case "$1" in
     newenv) asdfadfs ;;
     install) install_base_packages ${@:2} ;;
-    link) link_dotfiles ;;
+    link) link_dotfiles 
+;;
     *) $BASEDIR/script/main.zsh "$*" ;;
 esac

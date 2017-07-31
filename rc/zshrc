@@ -587,7 +587,9 @@ bindkey ' ' magic-space # [Space] - do history expansion
 # Other
 #############################################
 # Run our external modules
-for fn (~/.zsh/modules/*.zsh) source $fn
+if [[ -e ~/.zsh/modules ]]; then
+  for fn (~/.zsh/modules/*.zsh) source $fn
+fi
 
 #  Gnupg Agent Wrapper
 [[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
