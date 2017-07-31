@@ -105,10 +105,11 @@ which `{pid}` is expanded with the process identifier of the target program.""",
             },
             # common styles
             'style_selected_1': {
-                'default': '1;32'
+                'default': '1;35' # light red
             },
             'style_selected_2': {
-                'default': '32'
+                # 'default': '32'
+                'default': '3' # italics
             },
             'style_low': {
                 'default': '1;30'
