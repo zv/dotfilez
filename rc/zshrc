@@ -134,20 +134,53 @@ function mvdlhere {
 
 # # compile and run
 function crun {
-    local file=$1
-    shift
+    local -a custom_compiler copts
+    local file=${@[-1]}
     local exepath="$(mktemp)"
 
-    if [[ $file = *.cc ]]; then
-        g++ -std=c++1z -g -Wall -Weffc++ $file -o $exepath
+    zparseopts -clang::=isclang -gcc::=use_gcc \
+               c:=custom_compiler \
+               o+:=copts \
+               h::=usage
+
+    # select unique entries of `copts` and then slice copts[2..] (copts[1]
+    # contains the flag, e.g "-o")
+    local options=${${(u)copts}[2,-1]}
+    if [[ -n $usage ]]; then
+				cat <<- EOF
+				usage: crun [OPTION]... <filename>"
+
+				  --clang    (default) use clang for C & C++ files"
+				  --gcc      use GCC for C & C++ files"
+				  -o         supply an option (e.g -o -Wall)
+
+				Compiles and runs a C, C++ or x86 Assembly file."
+				EOF
+        return 126
+    elif [[ -n $custom_compiler ]]; then
+        local compiler=${custom_compiler[-1]}
+        local noptions=${${(u)options}[2,-1]}
+        "$compiler" "$noptions -o $exepath $file"
+    # handle C++
+    elif [[ $file = *.cc || $file = *.cpp ]]; then
+        local cppcompiler="clang++"
+        if [[ -n $use_gcc ]] { $cppcompiler="g++" }
+        $cppcompiler -std=c++1z -g -Wall -Weffc++ $options $file -o $exepath
+    # handle C
     elif [[ $file = *.c ]]; then
-        gcc -g -Wall $file -o $exepath
+       local ccompiler="clang"
+       if [[ -n $use_gcc ]] { ccompiler="gcc" }
+       $ccompiler -g -Wall $options $file -o $exepath
+    # handle assembly
+    elif [[ $file = *.s || $file = *.asm ]]; then
+         local objpath="$(mktemp)"
+         nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
     else
         echo "no filetype detected"
         return 126
     fi  || return $?
 
-    $exepath "$@"
+    "$exepath" "$@" & fg
 }
 
 # Removes the last created file in the specified directory, defaulting to the
