@@ -188,6 +188,7 @@
                                      (python . t)
                                      (ruby . t)
                                      (clojure . t)
+                                     (scheme . t)
                                      (js . t)
                                      (sh . t)
                                      (C . t)
