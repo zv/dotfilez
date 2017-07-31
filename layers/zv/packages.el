@@ -1,6 +1,6 @@
 (defvar zv-packages '(magit
-                      org
-                      edts
+                      (org :location built-in)
+                      ; edts
                       erlang
                       eshell
                       z3-mode
