@@ -60,19 +60,47 @@ install_base_packages () {
     command sudo dnf group install -y ${groups[@]}
 }
 
+# Returns the intended destination of a RC/Dotfile Reads a special destination
+# database (rc/rc_destination) which contains a `filename' / `destination' pair,
+# separated by a pipe (|). In addition to ordinary "source/dest" strings, this
+# file may also contain regular expressions to match source filenames & special
+# optional modifiers:
+#
+#   %filename   Replace the path in the destination with the filename that is
+#               currectly being used (used for globbing)
+#   %skip       Return an empty string (we shouldn't link this)
+rc_file_destination() {
+    local file=$1
+    local RC_SPECIAL_DEST="$BASEDIR/data/rc_destination"
+    if [[ ! -e $RC_SPECIAL_DEST ]]; then
+           echo "Could not find special destination file @ $RC_SPECIAL_DEST"
+           return -1;
+    fi
+    cat $RC_SPECIAL_DEST | awk -v file="$file" \
+                           'file ~ $1 {
+                               dst=$3
+                               sub(/%skip/, "", dst)
+                               sub(/%filename/, file, dst)
+                               print dst
+                               exit
+                           }'
+}
+
 # Link all relevant RC files.
 link_dotfiles () {
     for filen in rc/*; do
-	sourcefile=$(realpath $filen)
-	basefile=$(basename $filen)
-	destination="$HOME/.$basefile"
+        local destination=$(eval echo $(rc_file_destination $(basename $filen)))
+        local sourcefile=$(realpath $filen)
+        if [[ -z $destination ]]; then
+            continue;
+        fi
         read -p "Link $sourcefile to $destination (y/n/q) :" CONDITION
-	if [ "$CONDITION" = "q" ]; then
-		return 1
-	fi
+        if [ "$CONDITION" = "q" ]; then
+            return 1
+        fi
         if [ "$CONDITION" != "n" ]; then
             echo "linking $sourcefile to $destination"
-            ln -sf $sourcefile $destination
+            ln -s $sourcefile $destination
         fi
     done
 }
@@ -106,10 +134,11 @@ if [ "$#" -lt 1 ]; then
     cat $BASEDIR/data/usage
 fi
 
+
 case "$1" in
     newenv) asdfadfs ;;
     install) install_base_packages ${@:2} ;;
-    link) link_dotfiles 
+    link) link_dotfiles
 ;;
     *) $BASEDIR/script/main.zsh "$*" ;;
 esac
