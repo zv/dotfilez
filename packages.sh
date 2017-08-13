@@ -15,7 +15,6 @@ cyan=$(tput setaf 6)
 bold=$(tput bold)
 reset=$(tput sgr0)
 
-
 zv_debug() {
     echo "$1"
 }
@@ -32,32 +31,21 @@ zv_error() {
     echo "$bold$red$*$reset"
 }
 
-###
-# e.x read_configuration data/packages base ocaml
-# This will fetch all the files with the ocaml and base fields
-###
-find_tagged () {
-    local file=$1
-    local tags=$(echo "${@:2}" | sed -e "s/ /|/g")
-    cat "$file" | awk "/$tags/ { FS=\"#\"; print \$1 }"
+# Find all packages that match the 'tag' supplied by the user
+find_matching_packages() {
+    local tag=$1
+    awk -v tag="$tag" -f "$BASEDIR/script/search_packages.awk" "$BASEDIR/data/packages"
 }
 
-install_by_tag () {
-    local package_location="$BASEDIR/data/packages"
-    local tags="$1"
-    local packages=$(find_tagged $package_location "$tags")
-    command sudo dnf install -y ${packages[@]}
-}
-
-install_base_packages () {
-    zv_info "Installing base packages, grab some coffee"
-    local tags="$*"
-    local group_location="data/groups"
-    local groups=$(find_tagged "$group_location" "$tags")
+install_packages() {
+    local tag
+    # Update DNF
     command sudo dnf check-update
     command sudo dnf update
-    install_by_tag $tags
-    command sudo dnf group install -y ${groups[@]}
+    # Find all packages / groups matching our tags
+    local package_specs=$(find_matching_packages $tag)
+    # .. and install them
+    command sudo dnf install -y ${packages[@]}
 }
 
 # Returns the intended destination of a RC/Dotfile Reads a special destination
@@ -76,14 +64,7 @@ rc_file_destination() {
            echo "Could not find special destination file @ $RC_SPECIAL_DEST"
            return -1;
     fi
-    cat $RC_SPECIAL_DEST | awk -v file="$file" \
-                           'file ~ $1 {
-                               dst=$3
-                               sub(/%skip/, "", dst)
-                               sub(/%filename/, file, dst)
-                               print dst
-                               exit
-                           }'
+    awk -v file="$file" -f $BASEDIR/script/read_rc_path.awk $RC_SPECIAL_DEST
 }
 
 # Link all relevant RC files.
@@ -94,11 +75,11 @@ link_dotfiles () {
         if [[ -z $destination ]]; then
             continue;
         fi
-        read -p "Link $sourcefile to $destination (y/n/q) :" CONDITION
+        read -p "Link $(zv_info $sourcefile) to $(zv_info $destination) (y/n/q) : " CONDITION
         if [ "$CONDITION" = "q" ]; then
             return 1
         fi
-        if [ "$CONDITION" != "n" ]; then
+        if [ "$CONDITION" = "y" ]; then
             echo "linking $sourcefile to $destination"
             ln -s $sourcefile $destination
         fi
@@ -133,7 +114,6 @@ post_install () {
 if [ "$#" -lt 1 ]; then
     cat $BASEDIR/data/usage
 fi
-
 
 case "$1" in
     newenv) asdfadfs ;;

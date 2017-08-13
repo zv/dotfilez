@@ -1,57 +1,60 @@
-## Fedora Package Tags
-acpitool                    # desktop 
-avahi-tools                 # desktop
-checksec                    # desktop system 
-clang                       # desktop system base
-cmake                       # desktop
-curl                        # desktop system base
-dmenu                       # desktop
-dunst                       # desktop
-emacs                       # desktop system base
-ettercap                    # desktop 
-git                         # desktop system base
-git-mail                    # desktop
-global                      # desktop system base
-gnupg2                      # desktop system base
-graphviz                    # desktop
-hping3                      # desktop system
-i3                          # desktop
-i3lock                      # desktop
-i3status                    # desktop
-java-1.8.0-openjdk          # desktop 
-libvirt                     # desktop
-mtr                         # desktop system
-nmap                        # desktop system base
-openssl                     # desktop
-openssl-devel               # desktop
-pcsc-lite                   # desktop
-redhat-rpm-config           # desktop system
-rlwrap                      # desktop system base
-scrot                       # desktop
-socat                       # desktop system
-the_silver_searcher         # desktop system base
-thunderbird                 # desktop
-tmux                        # desktop system base
-vim-enhanced                # desktop system base
-virt-manager                # desktop
-weechat                     # desktop
-wireshark                   # desktop
-xclip                       # desktop
-ykclient                    # desktop
-ykpers                      # desktop
-shellcheck                  # desktop development emacs
-yubikey-personalization-gui # desktop
-zsh                         # desktop system base
-adobe-source-code-pro-fonts # font desktop
-ocaml-calendar-devel        # ocaml
-ocaml-camlp4-devel          # ocaml 
-ocaml-extlib-devel          # ocaml
-ocaml-findlib-devel         # ocaml
-ocaml-ocamldoc              # ocaml
-ykpers-devel                # 2factor_auth
-libyubikey-devel            # 2factor_auth
-libusb-devel                # 2factor_auth
-autoconf                    # 2factor_auth
-gnupg                       # 2factor_auth
-gnupg2-smime                # 2factor_auth
-pcsc-lite                   # 2factor_auth
+Package                     | Tags
+---------------------------------------------------
+@Development Tools                 | desktop
+@C Development Tools and Libraries | desktop
+acpitool                    | desktop 
+avahi-tools                 | desktop
+checksec                    | desktop system 
+clang                       | desktop system base
+cmake                       | desktop
+curl                        | desktop system base
+dmenu                       | desktop
+dunst                       | desktop
+emacs                       | desktop system base
+ettercap                    | desktop 
+git                         | desktop system base
+git-mail                    | desktop
+global                      | desktop system base
+gnupg2                      | desktop system base
+graphviz                    | desktop
+hping3                      | desktop system
+i3                          | desktop
+i3lock                      | desktop
+i3status                    | desktop
+java-1.8.0-openjdk          | desktop 
+libvirt                     | desktop
+mtr                         | desktop system
+nmap                        | desktop system base
+openssl                     | desktop
+openssl-devel               | desktop
+pcsc-lite                   | desktop
+redhat-rpm-config           | desktop system
+rlwrap                      | desktop system base
+scrot                       | desktop
+socat                       | desktop system
+the_silver_searcher         | desktop system base
+thunderbird                 | desktop
+tmux                        | desktop system base
+vim-enhanced                | desktop system base
+virt-manager                | desktop
+weechat                     | desktop
+wireshark                   | desktop
+xclip                       | desktop
+ykclient                    | desktop
+ykpers                      | desktop
+shellcheck                  | desktop development emacs
+yubikey-personalization-gui | desktop
+zsh                         | desktop system base
+adobe-source-code-pro-fonts | font desktop
+ocaml-calendar-devel        | ocaml
+ocaml-camlp4-devel          | ocaml 
+ocaml-extlib-devel          | ocaml
+ocaml-findlib-devel         | ocaml
+ocaml-ocamldoc              | ocaml
+ykpers-devel                | 2factor_auth
+libyubikey-devel            | 2factor_auth
+libusb-devel                | 2factor_auth
+autoconf                    | 2factor_auth
+gnupg                       | 2factor_auth
+gnupg2-smime                | 2factor_auth
+pcsc-lite                   | 2factor_auth
