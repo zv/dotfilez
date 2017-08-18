@@ -4,7 +4,6 @@
     <strength>10</strength>
     <screen_edge_strength>20</screen_edge_strength>
   </resistance>
-
   <focus>
     <focusNew>yes</focusNew>
     <!-- always try to focus new windows when they appear. other rules do
@@ -23,7 +22,6 @@
     <!-- when followMouse is enabled, and a window is given focus by moving the
          mouse into it, also raise the window -->
   </focus>
-
   <placement>
     <policy>Smart</policy>
     <!-- 'Smart' or 'UnderMouse' -->
@@ -36,9 +34,8 @@
          the active window is -->
     <primaryMonitor/>
   </placement>
-
   <theme>
-    <name>Onyx</name>
+    <name>Clearlooks</name>
     <titleLayout>NLIMC</titleLayout>
     <!--
         available characters are NDSLIMC, each can occur at most once.
@@ -90,6 +87,9 @@
     </font>
     <font place="ActiveOnScreenDisplay">
       <name/>
+      <size>8</size>
+      <weight/>
+      <slant/>
     </font>
     <font place="InactiveOnScreenDisplay">
       <name>Sans</name>
@@ -98,7 +98,6 @@
       <slant/>
     </font>
   </theme>
-
   <desktops>
     <number>9</number>
     <firstdesk>1</firstdesk>
@@ -117,7 +116,6 @@
     <!-- The number of milliseconds to show the popup for when switching
          desktops.  Set this to 0 to disable the popup. -->
   </desktops>
-
   <resize>
     <drawContents>yes</drawContents>
     <popupShow>Nonpixel</popupShow>
@@ -134,7 +132,6 @@
            distance from bottom edge, or 'Center' -->
     </popupFixedPosition>
   </resize>
-
   <!-- You can reserve a portion of your screen where windows will not cover when
        they are maximized, or when they are initially placed.
        Many programs reserve space automatically, but you can use this in other
@@ -145,7 +142,6 @@
     <left>0</left>
     <right>0</right>
   </margins>
-
   <dock>
     <position>TopLeft</position>
     <!-- (Top|Bottom)(Left|Right|)|Top|Bottom|Left|Right|Floating -->
@@ -164,7 +160,6 @@
     <moveButton>Middle</moveButton>
     <!-- 'Left', 'Middle', 'Right' -->
   </dock>
-
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
     <!-- Window manager keybindings -->
@@ -213,7 +208,6 @@
         <desktop>9</desktop>
       </action>
     </keybind>
-
     <!-- Move Window to Desktop -->
     <keybind key="W-S-q">
       <action name="SendToDesktop">
@@ -260,10 +254,10 @@
         <to>9</to>
       </action>
     </keybind>
-
     <!-- <keybind key="W-d"> <action name="ToggleShowDesktop"/> </keybind> -->
-    <keybind key="C-A-d"> <action name="ToggleShowDesktop"/> </keybind>
-
+    <keybind key="C-A-d">
+      <action name="ToggleShowDesktop"/>
+    </keybind>
     <!-- Keybindings for windows -->
     <keybind key="W-c">
       <action name="Close"/>
@@ -282,7 +276,6 @@
       </action>
     </keybind>
     <!-- Tiling -->
-
     <!-- Switch tiling -->
     <keybind key="W-m">
       <action name="If">
@@ -345,8 +338,7 @@
         </else>
       </action>
     </keybind>
-
-    <!-- Restore window dimensions -->
+    <!-- Restore all window dimensions -->
     <keybind key="W-n">
       <action name="maximize"/>
       <action name="NextWindow">
@@ -357,12 +349,12 @@
         </finalactions>
       </action>
     </keybind>
-
     <keybind key="W-S-n">
-      <action name="ToggleMaximize" />
+      <action name="ToggleMaximize"/>
     </keybind>
-
-
+    <keybind key="W-v">
+      <action name="Iconify"/>
+    </keybind>
     <!-- Move between windows -->
     <keybind key="W-l">
       <action name="If">
@@ -375,7 +367,12 @@
           </action>
         </then>
         <else>
-          <action name="NextWindow"/>
+          <action name="NextWindow">
+            <dialog>yes</dialog>
+            <linear>yes</linear>
+            <interactive>no</interactive>
+            <bar>yes</bar>
+          </action>
         </else>
       </action>
     </keybind>
@@ -390,7 +387,12 @@
           </action>
         </then>
         <else>
-          <action name="PreviousWindow"/>
+          <action name="PreviousWindow">
+            <dialog>yes</dialog>
+            <linear>yes</linear>
+            <interactive>no</interactive>
+            <bar>yes</bar>
+          </action>
         </else>
       </action>
     </keybind>
@@ -449,12 +451,49 @@
         </finalactions>
       </action>
     </keybind>
-
-    <keybind key="W-S-j"><action name="UnmaximizeFull"/><action name="MoveResizeTo"><x>0</x><y>0</y><width>100%</width><height>50%</height></action>
-    <action name="NextWindow"><interactive>no</interactive><dialog>none</dialog><finalactions><action name="UnmaximizeFull"/><action name="MoveResizeTo"><x>0</x><y>-0</y><width>100%</width><height>50%</height></action></finalactions></action>
+    <keybind key="W-S-j">
+      <action name="UnmaximizeFull"/>
+      <action name="MoveResizeTo">
+        <x>0</x>
+        <y>0</y>
+        <width>100%</width>
+        <height>50%</height>
+      </action>
+      <action name="NextWindow">
+        <interactive>no</interactive>
+        <dialog>none</dialog>
+        <finalactions>
+          <action name="UnmaximizeFull"/>
+          <action name="MoveResizeTo">
+            <x>0</x>
+            <y>-0</y>
+            <width>100%</width>
+            <height>50%</height>
+          </action>
+        </finalactions>
+      </action>
     </keybind>
-    <keybind key="W-S-k"><action name="UnmaximizeFull"/><action name="MoveResizeTo"><x>0</x><y>-0</y><width>100%</width><height>50%</height></action>
-    <action name="NextWindow"><interactive>no</interactive><dialog>none</dialog><finalactions><action name="UnmaximizeFull"/><action name="MoveResizeTo"><x>0</x><y>0</y><width>100%</width><height>50%</height></action></finalactions></action>
+    <keybind key="W-S-k">
+      <action name="UnmaximizeFull"/>
+      <action name="MoveResizeTo">
+        <x>0</x>
+        <y>-0</y>
+        <width>100%</width>
+        <height>50%</height>
+      </action>
+      <action name="NextWindow">
+        <interactive>no</interactive>
+        <dialog>none</dialog>
+        <finalactions>
+          <action name="UnmaximizeFull"/>
+          <action name="MoveResizeTo">
+            <x>0</x>
+            <y>0</y>
+            <width>100%</width>
+            <height>50%</height>
+          </action>
+        </finalactions>
+      </action>
     </keybind>
     <keybind key="W-S-f">
       <action name="ToggleFullscreen"/>
@@ -538,16 +577,13 @@
         <command>lxrandr</command>
       </action>
     </keybind>
-
     <!-- Lock Screen -->
-    <keybind key="C-W-L">      
-      <action name="Execute">        
-        <command>xscreensaver-command -lock</command>      
-      </action>    
+    <keybind key="C-W-L">
+      <action name="Execute">
+        <command>xscreensaver-command -lock</command>
+      </action>
     </keybind>
-
   </keyboard>
-
   <mouse>
     <dragThreshold>8</dragThreshold>
     <!-- number of pixels the mouse must move before a drag begins -->
