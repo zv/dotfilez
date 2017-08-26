@@ -99,6 +99,10 @@ copy_templates() {
 
         echo "Templating $filen"
         dest="$HOME/.${filen%.*}"
+        if [[ $dest = "$HOME/" || $dest = "$HOME/." ]]; then
+            echo "\$dest was set incorrectly"
+            return;
+        fi
         m4 zv.m4 $filen > $dest
         echo "Success, template copied to $dest"
     done
