@@ -861,6 +861,12 @@
       </mousebind>
     </context>
     <context name="Desktop">
+      <!-- Open file manager on Alt-Doubleclick -->
+      <mousebind button="A-Left" action="DoubleClick">
+        <action name="Execute">
+          <command>pcmanfm</command>
+        </action>
+      </mousebind>
       <mousebind button="Up" action="Click">
         <action name="DesktopPrevious"/>
       </mousebind>
