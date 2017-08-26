@@ -966,16 +966,32 @@ role="the window's WM_WINDOW_ROLE property (see xprop)">
     -->
     <!-- # enable or disable window decorations -->
     <application class="*">
-      <decor>no</decor>
+      <decor>yes</decor>
       <!-- # if the window should try be given focus when it appears. if this is set -->
       <!-- # to yes it doesn't guarantee the window will be given focus. some -->
       <!-- # restrictions may apply, but Openbox will try to -->
       <focus>yes</focus>
       <!-- # make the window in fullscreen mode when it appears -->
       <fullscreen>no</fullscreen>
-      <maximized>true</maximized>
+      <maximized>no</maximized>
       <!-- # 'above', 'normal', or 'below' -->
       <layer>normal</layer>
+    </application>
+    <application class="Google-chrome">
+      <decor>no</decor>
+      <maximized>yes</maximized>
+    </application>
+    <application class="Emacs">
+      <decor>no</decor>
+      <maximized>yes</maximized>
+    </application>
+    <application class="URxvt">
+      <decor>no</decor>
+      <maximized>yes</maximized>
+    </application>
+    <application class="Gnome-terminal">
+      <decor>no</decor>
+      <maximized>yes</maximized>
     </application>
     <!--
         # enable or disable window decorations
