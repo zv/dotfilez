@@ -30,6 +30,9 @@ gnome-keyring.tar.gpg
 # !emacs.d/private/zv/*
 # emacs.d
 
+# our macro definitions
+templates/zv.m4
+
 *npm-debug.log
 
 ghc/

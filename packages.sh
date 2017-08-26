@@ -2,6 +2,8 @@
 ###################################
 ## A bootstrapping package    #####
 ###################################
+set -eu -o pipefail
+shopt -s failglob
 
 # TODO: Write code to pull in rust, setup rust path (RUST_SRC_PATH), etc.
 BASEDIR=$(dirname "$0")
@@ -86,6 +88,22 @@ link_dotfiles () {
     done
 }
 
+# copy all of our templates
+copy_templates() {
+    cd templates/
+    # look into bash globbing - this is trivial in ZSH
+    for filen in *; do
+        if [[ $filen = 'zv.m4' ]]; then
+            continue;
+        fi
+
+        echo "Templating $filen"
+        dest="$HOME/.${filen%.*}"
+        m4 zv.m4 $filen > $dest
+        echo "Success, template copied to $dest"
+    done
+}
+
 ###
 # This downloads () and installs all the fonts I use.
 ###
@@ -118,7 +136,7 @@ fi
 case "$1" in
     newenv) asdfadfs ;;
     install) install_base_packages ${@:2} ;;
-    link) link_dotfiles
-;;
+    link) link_dotfiles ;;
+    templates) copy_templates ;;
     *) $BASEDIR/script/main.zsh "$*" ;;
 esac
