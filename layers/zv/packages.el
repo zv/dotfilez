@@ -182,12 +182,11 @@
 
       ;; When running babel blocks in sh, I usually mean `zsh'
       (org-babel-do-load-languages 'org-babel-load-languages
-                                   '((emacs-lisp . t)
-                                     (dot . t)
                                      (ditaa . t)
                                      (python . t)
                                      (ruby . t)
                                      (clojure . t)
+                                     (awk . t)
                                      (scheme . t)
                                      (js . t)
                                      (sh . t)
