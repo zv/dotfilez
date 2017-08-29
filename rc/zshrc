@@ -1,34 +1,25 @@
 #!/usr/bin/env zsh
 # This is zv's ZSHRC.
-# meow nyan meow nyan meow
-# 2009
-setopt BRACE_CCL          # Allow brace character class list expansion.
-setopt COMBINING_CHARS    # Combine zero-length punctuation characters
-                          # with the base character.
-# setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
-setopt C_BASES            # Output hex numbers in 0xFF instead of 16#FF
-unsetopt MAIL_WARNING     # Don't print a warning message if a mail file has been accessed.
-setopt LONG_LIST_JOBS     # List jobs in the long format by default.
+
+# ━━ Initialization ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# ── Job Control ────────────────────────────────────────────
 setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
+setopt LONG_LIST_JOBS     # List jobs in the long format by default.
 setopt NOTIFY             # Report status of background jobs immediately.
 unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
-unsetopt HUP              # Don't kill jobs on shell exit.
 unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
+unsetopt HUP              # Don't kill jobs on shell exit.
 
-setopt EXTENDED_GLOB
-setopt BARE_GLOB_QUAL
-
-############################################
-#  Theme
-#############################################
-local baseprompt='>>'
+# ── Prompting ──────────────────────────────────────────────
+setopt PROMPT_SUBST # Setup the prompt with pretty colors
+typeset baseprompt='>>'
 # If we're in a dumb terminal then dont play fancy pants with our prompt
 if [[ $TERM == 'dumb' ]]; then
     # Ensure we don't set preexec && precmd
-    unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    # PROMPT="%2~ $baseprompt "
+    unsetopt ZLE
+    unsetopt PROMPT_CR
+    unsetopt PROMPT_SUBST
     PS1='$ '
     return
 elif [[ $TERM == 'eterm-color' ]]; then
@@ -63,17 +54,10 @@ else
     PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
 fi
 
-setopt no_beep      # Stop the beep insanity
-setopt auto_cd      # Automatic CD on directory specification
-setopt cdablevarS   # CD into variable from var name
-setopt prompt_subst # Setup the prompt with pretty colors
 
-#############################################
-# Misc. Env Vars
-#############################################
+# ── Environment Variables ──────────────────────────────────
 # Editors
 export VISUAL='vim'
-
 
 # Set the default Less options.
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
@@ -86,17 +70,13 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-
-#############################################
-# Aliasing
-#############################################
+# ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Disable correction.
 for cmd (ack cd cp ebuild gcc gist grep heroku
         ln man mkdir mv mysql rm nmcli ip ag
         git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
 
 # Define general aliases.
-alias p="print"
 alias pr="print -l"
 
 alias _='sudo'
@@ -110,7 +90,6 @@ alias jkl="jekyll serve -D"
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
-alias zthree="z3 -in"
 alias gpg=gpg2
 
 # Bullshit workaround to unlock my yubikey
@@ -119,7 +98,6 @@ alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 function vman {
     # Man
     MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist nonu noma showtabline=0 shortmess+=T' -\"" man $*
-
 }
 
 # Moves the last created file to $2
@@ -212,7 +190,7 @@ function spectrum_ls() {
 }
 
 # # mkdir & cd to it
-function mcd() { mkdir -p "$1" && cd "$1"; }
+function mcd { mkdir -p "$1" && cd "$1"; }
 
 function ptrsp {
     (( !$+commands[xinput] )) && return;
@@ -324,50 +302,62 @@ function format_c_hex {
     echo "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
 }
 
-#############################################
-# Expansion and Globbing
-#############################################
+# ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+setopt BAD_PATTERN         # Print error if filename glob pat. is badly formed
+setopt EXTENDED_GLOB       # Use extended globbing syntax.
+setopt BARE_GLOB_QUAL      # Treat trailing parens as qualifier list.
+setopt GLOB_STAR_SHORT     # Abbreviate `**/*` to `**` and `***/*` to `***`
+# setopt WARN_CREATE_GLOBAL  # Print a warning when global parmeter is created within a fun
+setopt NULL_GLOB           # Delete patterns without match from argument list
+setopt BRACE_CCL          # Allow brace character class list expansion.
 
-# Directories
-setopt AUTO_CD              # Auto changes to a directory without typing cd.
-setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
-setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
-setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
+# ── Directories ────────────────────────────────────────────
 setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
-setopt CDABLE_VARS          # Change directory to a path stored in a variable.
+setopt AUTO_CD              # Auto changes to a directory without typing cd.
 setopt AUTO_NAME_DIRS       # Auto add variable-stored paths to ~ list.
-setopt MULTIOS              # Write to multiple descriptors.
-unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
+setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
+setopt CDABLE_VARS          # Change directory to a path stored in a variable.
+setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
 setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
-setopt EXTENDED_GLOB        # Use extended globbing syntax.
+unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
-# History
+# ── Scripts and Functions ──────────────────────────────────
+setopt C_BASES            # Output hex numbers in 0xFF instead of 16#FF
+setopt MULTIOS              # Write to multiple descriptors.
+
+# ── History ────────────────────────────────────────────────
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
-setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
-setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_BEEP                 # Beep when accessing non-existent history.
 setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming history.
-setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
-setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
 setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
+setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
 setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
-setopt HIST_BEEP                 # Beep when accessing non-existent history.
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY             # Share history between all sessions.
 
 # History
 export HISTFILE=$HOME/.zsh_history
 
 # Lines to store
-export HISTSIZE=$((2**14 - 1))
-export SAVEHIST=$((2**14 - 1))
+export HISTSIZE=$((2**16 - 1))
+export SAVEHIST=$((2**16 - 1))
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
-############################################
-#  Modules & Completions
-############################################
+# ─ Input/ Output ───────────────────────────────────────────
+# setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
+unsetopt CORRECT        # Don't correct the spelling of commands
+unsetopt CORRECT_ALL        # Don't correct any arguments
+unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
+# setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
+unsetopt MAIL_WARNING     # Don't print a warning message if a mail file has been accessed.
+
+# ── Modules and Completions ────────────────────────────────
 autoload -U compinit && compinit
 
 setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
@@ -376,9 +366,9 @@ setopt AUTO_MENU           # Show completion menu on a succesive tab press.
 setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
 setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
 setopt PATH_DIRS           # Perform path search even on command names with slashes.
-
-unsetopt MENU_COMPLETE     # Do not autoselect the first completion entry.
+setopt MENU_COMPLETE       # Do not autoselect the first completion entry.
 unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
+setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
 
 # Use caching to make completion for commands such as dpkg and apt usable.
 zstyle ':completion::complete:*' use-cache on
@@ -500,21 +490,15 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 
-# Prompt for correction
-# setopt correct_all
-# Disable correction
-setopt nocorrect_all
-
 # ls colors
 autoload -U colors && colors;
 
 # The crazier the better!
 (( $+commands[dircolors] )) && eval "$(dircolors --sh ~/.zsh/LS_COLORS)"
 
-#############################################
-#  Vim & ZSH Line Editor
-############################################
-bindkey -v
+# ━━ ZLE / Line commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+setopt COMBINING_CHARS    # Combine zero-length punctuation characters
+setopt NO_BEEP      # Stop the beep insanity
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 function zle-line-init zle-keymap-select {
@@ -583,9 +567,7 @@ bindkey -M viins "\e0" insert-last-word
 
 bindkey ' ' magic-space # [Space] - do history expansion
 
-#############################################
-# Other
-#############################################
+# ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Run our external modules
 if [[ -e ~/.zsh/modules ]]; then
   for fn (~/.zsh/modules/*.zsh) source $fn
@@ -595,19 +577,21 @@ fi
 [[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
 
 # Configure Ocaml package manager
-[[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
+# [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
 # cdpath=($cdpath)
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # Virtualenvwrapper
-[[ -x "/usr/bin/virtualenvwrapper.sh" ]] && source /usr/bin/virtualenvwrapper.sh
+# [[ -x "/usr/bin/virtualenvwrapper.sh" ]] && source /usr/bin/virtualenvwrapper.sh
 
 # The next line updates PATH for the Google Cloud SDK.
-[[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
+# [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
 
 # The next line enables shell command completion for gcloud.
-[[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
+# [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
 # source ~/.cargo/env
+
+
