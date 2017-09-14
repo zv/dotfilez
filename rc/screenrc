@@ -25,47 +25,31 @@ defencoding utf-8
 # automatically set title
 setenv SCREENTITLE auto
 startup_message       off             # default: on
-# caption always "%{=b dy}%D, %d. %M '%y %{=b dw}%c:%s %{=b dy}{ %{= dg}${USER}@%{= dr}%H %{=b dy}} %{=b d2}%l %{=b dy}%u %{=b dy} %={ %?%{= dc}%-Lw%?%{+b dy}(%{-b r}%n:%t%{+b dy})%?(%u)%?%{-dc}%?%{= dc}%+Lw%? %{=b dy}}"
-
-caption always
-caption string '%{kw}  %{kw}[%n:%t]%{-} '
-hardstatus alwayslastline '%{= kd}%{= Kd} %1= %>%-w%50>%{= Kr}[%{= KW}%n:%t%{= Kr}]%{= Kd}%{= Kd}%+w %-= %{KG} %{Kd}%-56< [host:%{Kw}%H%{Kd}]%{= Kd}[time:%{Kw}%c%{Kd}][load:%{Bw}%-l%{Kd}]  '
-
 
 # ------------------------------------------------------------------------------
 # SCREEN KEYBINDINGS
 # ------------------------------------------------------------------------------
 
-escape ^Kk
+## Use Alt-K as escape
+# reset escape key to the default
+escape ^Aa
 
-bind w eval 'echo "Operate window"' 'command -c operate'
-bind -c operate ^]  command
-bind -c operate j eval 'focus down' 'command -c operate'
-bind -c operate k eval 'focus up' 'command -c operate'
-bind -c operate h eval 'focus left' 'command -c operate'
-bind -c operate l eval 'focus right' 'command -c operate'
-bind -c operate t eval 'focus top' 'command -c operate'
-bind -c operate b eval 'focus bottom' 'command -c operate'
-bind -c operate + eval 'resize -v +1' 'command -c operate'
-bind -c operate - eval 'resize -v -1' 'command -c operate'
-bind -c operate > eval 'resize -h +1' 'command -c operate'
-bind -c operate < eval 'resize -h -1' 'command -c operate'
-bind -c operate = eval 'resize -v =' 'command -c operate'
-bind -c operate + eval 'resize -h =' 'command -c operate'
-bind -c operate s eval 'split' 'command -c operate'
-bind -c operate c eval 'screen' 'command -c operate'
-bind -c operate x eval 'remove' 'command -c operate'
-bind -c operate v eval 'split -v' 'command -c operate'
-bind -c operate 0 eval 'select 0' 'command -c operate'
-bind -c operate 1 eval 'select 1' 'command -c operate'
-bind -c operate 2 eval 'select 2' 'command -c operate'
-bind -c operate 3 eval 'select 3' 'command -c operate'
-bind -c operate 4 eval 'select 4' 'command -c operate'
-bind -c operate 5 eval 'select 5' 'command -c operate'
-bind -c operate 6 eval 'select 6' 'command -c operate'
-bind -c operate 7 eval 'select 7' 'command -c operate'
-bind -c operate 8 eval 'select 8' 'command -c operate'
-bind -c operate 9 eval 'select 9' 'command -c operate'
+# auxiliary register
+register S ^A
+
+# Alt + space produces ^A and acts as an escape key
+bindkey "^[k" process S
+# End Alt-k
+
+# Setup "Alt" for bindings
+bind "^[" eval  "command -c class_escape" "echo \"command class: escape\""
+
+# press Alt-? to show class_escape bindings
+bind -c class_escape ? help -c class_escape 
+
+# Alt-H/L to switch between panes
+bind -c class_escape l next
+bind -c class_escape h prev
 
 bind x remove
 bind j eval 'focus down'
@@ -81,15 +65,19 @@ bind s eval 'split' focus screen
 bind = eval 'resize -v ='
 bind + eval 'resize -h +'
 
+# Reload screenrc
+bind -c R source "$HOME/.screenrc"
+
 # Remove some stupid / dangerous key bindings
-bind ^k
-#bind L
-bind ^\
 # Make them better
-bind \\ quit
-bind K kill
 #bind I login on
+#bind L
 #bind O login off
+
+bind K kill
+bind \\ quit
+bind ^\
+bind ^k
 bind } history
 
 # An example of a "screen scraper" which will launch urlview on the current
@@ -104,20 +92,20 @@ bind } history
 # The vt100 description does not mention "dl". *sigh*
 termcapinfo vt100 dl=5\E[M
 
-# turn sending of screen messages to hardstatus off
-hardstatus off
+# caption always
+# Just caption with name
+# caption string '%{kw}  %{kw}[%n:%t]%{-} '
+# Give date, time, hostname and load average
+# caption always "%{=b dy}%D, %d. %M '%y %{=b dw}%c:%s %{=b dy}{ %{= dg}${USER}@%{= dr}%H %{=b dy}} %{=b d2}%l %{=b dy}%u %{=b dy} %={ %?%{= dc}%-Lw%?%{+b dy}(%{-b r}%n:%t%{+b dy})%?(%u)%?%{-dc}%?%{= dc}%+Lw%? %{=b dy}}"
+
 # Set the hardstatus prop on gui terms to set the titlebar/icon title
 termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007
-# use this for the hard status string
-#hardstatus alwayslastline I%wI
-#hardstatus string "%h%? users: %u%?"
 
-# An alternative hardstatus to display a bar at the bottom listing the
-# windownames and highlighting the current windowname in blue. (This is only
-# enabled if there is no hardstatus setting for your terminal)
-#
-#hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
-hardstatus alwayslastline "%{= dw} %`%-w%{=bu kw}%n %t%{-}%+w"
+# Simple numeric lastline
+hardstatus off
+hardstatus alwayslastline
+# hardstatus string "%{+b wk} %-w%{+b wk} %n %t %{-}%+w %41=%H @ %l %-= %= %D,%c:%s "
+hardstatus string "%{wk} %-w%{+b wk} %n %t %{-}%+w "
 
 # set these terminals up to be 'optimal' instead of vt100
 termcapinfo xterm*|linux*|rxvt*|Eterm* OP
@@ -130,31 +118,11 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 # To get screen to add lines to xterm's scrollback buffer, uncomment the
 # following termcapinfo line which tells xterm to use the normal screen buffer
 # (which has scrollback), not the alternate screen buffer.
-#
 #termcapinfo xterm|xterms|xs|rxvt ti@:te@
 
-termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+# termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
+term xterm-256color
 defbce "on"
-# 256色表示設定
-#term xterm-256color
-
-# ------------------------------------------------------------------------------
-# STARTUP SCREENS
-# ------------------------------------------------------------------------------
-
-# Example of automatically running some programs in windows on screen startup.
-#
-#   The following will open top in the first window, an ssh session to monkey
-#   in the next window, and then open mutt and tail in windows 8 and 9
-#   respectively.
-#
-# screen top
-# screen -t monkey ssh monkey
-# screen -t mail 8 mutt
-# screen -t daemon 9 tail -f /var/log/daemon.log
-
-#idle 1200
-#blankerprg /opt/local/bin/fortune
-#
 
 termcapinfo xterm* ti@:te@
