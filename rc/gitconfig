@@ -69,7 +69,7 @@
 	statusHints = false
 
 [push]
-	default = simple
+	default = current
 
 [rebase]
 	stat = true
