@@ -16,6 +16,12 @@ e scr.utf8 = true
 # Show invalid instruction as hex
 e asm.invhex=true
 
+# Show stack
+e cmd.stack = true
+
+# Keep track of the total stack allocation
+e asm.stackptr = true
+
 # The cowsay fortunes are cute and all but..
 e cfg.fortunetype=tips
 
@@ -39,6 +45,3 @@ e bin.demangle = true
 # Show DWARF assembly comments
 e asm.dwarf = true
 e bin.dwarf = true
-
-# Keep track of the total stack allocation
-e asm.stackptr = true
