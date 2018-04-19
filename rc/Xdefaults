@@ -10,7 +10,7 @@ URxvt.url-launcher:  /usr/bin/google-chrome
 
 ! Emacs.font: Inconsolata-14
 ! Use source-code-pro instead
-URxvt.font: xft:Source Code Pro:size=11,xft:Terminus:size=11
+URxvt.font: xft:Source Code Pro:size=16,xft:Terminus:size=14
 
 URxvt.scrollBar:         false
 URxvt.saveLines:         40000
