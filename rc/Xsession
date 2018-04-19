@@ -3,7 +3,7 @@
 # Set the background color
 # [[ $(xrandr | grep "HDMI2 connected") ]] &&  xrandr --output HDMI2 --left-of eDP1 --primary --auto
 
-xsetroot -gray
+# xsetroot -gray
 
 ## Fire up apps
 # xscreensaver -no-splash &
@@ -15,10 +15,10 @@ xsetroot -gray
 # else
 #     eval "$(gpg-agent --daemon --enable-ssh-support --write-env-file "$envfile")"
 # fi
-# 
+#
 # export GPG_AGENT_INFO  # the env file does not contain the export statement
 # export SSH_AUTH_SOCK   # enable gpg-agent for ssh
-# 
+#
 xmodmap ${HOME}/.xmodmaprc
 
 # Run gpg-agent-wrapper to SSH using our yubikey

@@ -3,9 +3,8 @@
                       ; edts
                       erlang
                       eshell
-                      z3-mode
-                      cc-mode
-                      ))
+                      (z3-mode :location "/home/zv/Development/z3-mode/")
+                      cc-mode))
 
 (defvar zv-excluded-packages '())
 
@@ -181,15 +180,14 @@
        ) ;; end of `set-default'
 
       ;; When running babel blocks in sh, I usually mean `zsh'
-      (org-babel-do-load-languages 'org-babel-load-languages
-                                     (ditaa . t)
-                                     (python . t)
-                                     (ruby . t)
-                                     (clojure . t)
-                                     (awk . t)
-                                     (scheme . t)
-                                     (js . t)
-                                     (sh . t)
-                                     (C . t)
-                                     ))
+      (org-babel-do-load-languages 'org-babel-load-languages '((python . t)
+                                    (ruby . t)
+                                    (clojure . t)
+                                    (awk . t)
+                                    (scheme . t)
+                                    (js . t)
+                                    (sh . t)
+                                    (ditaa . t)
+                                    (C . t)
+                                    ))
       )))

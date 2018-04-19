@@ -91,6 +91,7 @@ alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
 alias gpg=gpg2
+alias xmm="xmodmap /home/zv/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
@@ -110,55 +111,64 @@ function mvdlhere {
     mvlast "$HOME/Downloads/" $(pwd)
 }
 
-# # compile and run
+# compile and run
 function crun {
-    local -a custom_compiler copts
-    local file=${@[-1]}
-    local exepath="$(mktemp)"
-
-    zparseopts -clang::=isclang -gcc::=use_gcc \
+    zparseopts -E -D -- -gcc::=use_gcc \
                c:=custom_compiler \
                o+:=copts \
-               h::=usage
+               Wl+:=lopts \
+               -dump::=dump_asm \
+               v::=verbose \
+               h::=usage \
+               g::=debug
+
+    if [[ -n $usage ]]; then
+				cat <<- EOF
+				usage: crun [options]... <filename>
+
+				  --clang     (default) use clang for C & C++ files
+				  --gcc       use GCC for C & C++ files
+				  --dump      dump assembly of program
+				  -o          supply an option (e.g -o -Wall)
+				  -v          verbose
+				  -g          debug
+
+				Compiles and runs a C, C++ or x86 Assembly file.
+				EOF
+        return 126
+    fi
 
     # select unique entries of `copts` and then slice copts[2..] (copts[1]
     # contains the flag, e.g "-o")
+    local file=${@[-1]}
     local options=${${(u)copts}[2,-1]}
-    if [[ -n $usage ]]; then
-				cat <<- EOF
-				usage: crun [OPTION]... <filename>"
+    local exepath="$(mktemp)"
 
-				  --clang    (default) use clang for C & C++ files"
-				  --gcc      use GCC for C & C++ files"
-				  -o         supply an option (e.g -o -Wall)
-
-				Compiles and runs a C, C++ or x86 Assembly file."
-				EOF
-        return 126
-    elif [[ -n $custom_compiler ]]; then
-        local compiler=${custom_compiler[-1]}
-        local noptions=${${(u)options}[2,-1]}
-        "$compiler" "$noptions -o $exepath $file"
-    # handle C++
-    elif [[ $file = *.cc || $file = *.cpp ]]; then
-        local cppcompiler="clang++"
-        if [[ -n $use_gcc ]] { $cppcompiler="g++" }
-        $cppcompiler -std=c++1z -g -Wall -Weffc++ $options $file -o $exepath
-    # handle C
-    elif [[ $file = *.c ]]; then
-       local ccompiler="clang"
-       if [[ -n $use_gcc ]] { ccompiler="gcc" }
-       $ccompiler -g -Wall $options $file -o $exepath
-    # handle assembly
-    elif [[ $file = *.s || $file = *.asm ]]; then
-         local objpath="$(mktemp)"
-         nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
+    if [[ $file =~ \.(cc|cpp|cxx)$ ]]; then
+        local compiler="clang++"
+        $compiler -std=c++1z -g -Wall -Weffc++ ${=options} $file -o $exepath
+    elif [[ $file =~ \.c$ ]]; then
+        local compiler="clang"
+        [[ -n $use_gcc ]] && ccompiler="gcc"
+        $compiler -g -Wall ${=options} $file -o $exepath
+    elif [[ $file =~ \.(s|asm)$ ]]; then
+        local objpath="$(mktemp)"
+        nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
     else
         echo "no filetype detected"
         return 126
     fi  || return $?
 
-    "$exepath" "$@" & fg
+    if [[ -n $dump_asm ]]; then
+        objdump -S -M intel -d $exepath
+    else
+        [[ -n $verbose ]] && echo "exepath: $exepath"
+        if [[ -n $debug ]]; then
+            gdb --args "$exepath" "$@"
+        else
+            "$exepath" "$@" & fg
+        fi
+    fi
 }
 
 # Removes the last created file in the specified directory, defaulting to the
@@ -167,7 +177,7 @@ function rmlast {
   [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
 }
 
-function calc () {
+noglob function calc () {
     if [ $# -ne 0 ]; then
          local wrapped_args="\"$@\""
          emacsclient --eval "(calc-eval $wrapped_args)" | sed 's/^\"//' |  sed 's/\"$//'
@@ -175,8 +185,6 @@ function calc () {
         emacsclient -t -c --eval "(full-calc)"
     fi
 }
-
-alias calc="noglob calc"
 
 function spectrum_ls() {
     string="${1-Test}"
@@ -239,7 +247,7 @@ pronounce_number() {
         if [[ $number_name ]] {
                # but don't include "0" billions or "000 millions"
                if [[ ${significand:#0*} ]] {
-                      result+="${significand} ${number_name}, "
+                      result+="${significand} ${number_name} "
                }
                # Reset our significander
                significand=""
@@ -292,7 +300,8 @@ alias git-ignorelog='git ls-files -v | grep "^h"'
 # Displays some git related author statistics
 function authorstats {
     gitauth="$1";
-    git log --author="$gitauth" --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+    git log --author="$gitauth" --pretty=tformat: --numstat | \
+        gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
     echo ''
 }
 
@@ -303,13 +312,13 @@ function format_c_hex {
 }
 
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-setopt BAD_PATTERN         # Print error if filename glob pat. is badly formed
-setopt EXTENDED_GLOB       # Use extended globbing syntax.
-setopt BARE_GLOB_QUAL      # Treat trailing parens as qualifier list.
-setopt GLOB_STAR_SHORT     # Abbreviate `**/*` to `**` and `***/*` to `***`
+setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
+setopt EXTENDED_GLOB        # Use extended globbing syntax.
+setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
+setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 # setopt WARN_CREATE_GLOBAL  # Print a warning when global parmeter is created within a fun
-setopt NULL_GLOB           # Delete patterns without match from argument list
-setopt BRACE_CCL          # Allow brace character class list expansion.
+setopt NULL_GLOB            # Delete patterns without match from argument list
+setopt BRACE_CCL            # Allow brace character class list expansion.
 
 # ── Directories ────────────────────────────────────────────
 setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
@@ -322,7 +331,7 @@ setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobb
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
-setopt C_BASES            # Output hex numbers in 0xFF instead of 16#FF
+setopt C_BASES              # Output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
 # ── History ────────────────────────────────────────────────
@@ -351,11 +360,11 @@ alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r 
 
 # ─ Input/ Output ───────────────────────────────────────────
 # setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
-unsetopt CORRECT        # Don't correct the spelling of commands
+unsetopt CORRECT            # Don't correct the spelling of commands
 unsetopt CORRECT_ALL        # Don't correct any arguments
 unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
 # setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
-unsetopt MAIL_WARNING     # Don't print a warning message if a mail file has been accessed.
+unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
 
 # ── Modules and Completions ────────────────────────────────
 autoload -U compinit && compinit
@@ -594,4 +603,8 @@ export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # source ~/.cargo/env
 
+if [[ -e "$HOME/.rbenv/bin" ]]; then
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
+fi
 

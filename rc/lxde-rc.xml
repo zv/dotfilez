@@ -515,7 +515,7 @@
     <keybind key="W-1">
       <action name="Execute">
         <command>
-          urxvt256c -bg '#002b36' -fg '#839496' -pe 'default,-searchable-scrollback' -e weechat
+          urxvt256c -bg '#002b36' -fg '#839496' -pe 'default,-searchable-scrollback' -e screen weechat
         </command>
       </action>
     </keybind>

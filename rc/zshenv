@@ -36,12 +36,13 @@ typeset -gU fpath mailpath path cdpath
 
 # Paths
 path=(
-    $HOME/.bin
-    $HOME/.local/bin
-    /usr/local/{bin,sbin}
+    # $HOME/.bin
+    # $HOME/.local/bin
+    /usr/local/bin
+    /usr/local/sbin
     /usr/local/lib
     $path
-    {$GOROOT,$GOPATH}/bin
+    # {$GOROOT,$GOPATH}/bin
     #/usr/local/{pgsql,heroku,plan9}/bin
     $HOME/depot_tools
     /usr/local/cuda/bin
@@ -49,7 +50,7 @@ path=(
 )
 
 # Remove all empty directories from the path
-#for np ($path) if [[ ! -d $np ]] path=(${path#$np})
+for np ($path) if [[ ! -d $np ]] path=(${path#$np})
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 # Load our completion functions
@@ -69,9 +70,9 @@ fi
 TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Browser
-if (( $+commands[google-chrome] )); then
-    export BROWSER==google-chrome
-fi
+#if (( $+commands[google-chrome] )); then
+#    export BROWSER==google-chrome
+#fi
 
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then
