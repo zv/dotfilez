@@ -603,8 +603,7 @@ export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # source ~/.cargo/env
 
-if [[ -e "$HOME/.rbenv/bin" ]]; then
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    eval "$(rbenv init -)"
-fi
-
+# if [[ -e "$HOME/.rbenv/bin" ]]; then
+#     export PATH="$HOME/.rbenv/bin:$PATH"
+#     eval "$(rbenv init -)"
+# fi
