@@ -576,20 +576,25 @@ bindkey -M viins "\e0" insert-last-word
 
 bindkey ' ' magic-space # [Space] - do history expansion
 
+# ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+gpg-connect-agent /bye
+export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+export GPG_AGENT_INFO=$HOME/.gnupg/S.gpg-agent
+#  Gnupg Agent Wrapper
+# [[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
+
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Run our external modules
 if [[ -e ~/.zsh/modules ]]; then
   for fn (~/.zsh/modules/*.zsh) source $fn
 fi
 
-#  Gnupg Agent Wrapper
-[[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
-
 # Configure Ocaml package manager
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
 # cdpath=($cdpath)
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+
 export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # Virtualenvwrapper
