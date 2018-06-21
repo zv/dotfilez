@@ -186,7 +186,7 @@
                                     (awk . t)
                                     (scheme . t)
                                     (js . t)
-                                    (sh . t)
+                                    (shell . t)
                                     (ditaa . t)
                                     (C . t)
                                     ))
