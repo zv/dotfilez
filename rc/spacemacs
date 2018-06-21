@@ -21,15 +21,10 @@ values."
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
    '(
-     ruby-on-rails
-     ruby
-     yaml
-     systemd
      php
+     systemd
      cscope
      gtags
-
-
      (auto-completion :variables
                       auto-completion-return-key-behavior 'nothing
                       auto-completion-tab-key-behavior 'complete
@@ -58,6 +53,7 @@ values."
      racket
      (rust :variables
            rust-enable-racer t)
+     ;; ruby
      react
      (shell :variables shell-default-shell 'eshell
             shell-protect-eshell-prompt t
@@ -70,14 +66,22 @@ values."
      typescript
      vimscript
      version-control
-     zv)
+     zv
+     )
 
-   dotspacemacs-additional-packages '(;edts
-                                      nasm-mode)
+   dotspacemacs-additional-packages '(
+                                      ;; edts
+                                      nasm-mode
+                                      ;; (reason-mode
+                                      ;;  :location (recipe
+                                      ;;             :repo "reasonml-editor/reason-mode"
+                                      ;;             :fetcher github
+                                      ;;             :files ("reason-mode.el" "refmt.el" "reason-indent.el" "reason-interaction.el")))
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
                                         ; dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode eyebrowse)
-   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode eyebrowse)
+   dotspacemacs-excluded-packages '(org-pomodoro org-projectile spray pug-mode eyebrowse)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
@@ -116,8 +120,8 @@ user code in there besides modifying the variable values."
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
-   dotspacemacs-themes '(solarized-light
-                         solarized-dark
+   dotspacemacs-themes '(solarized-dark
+                         solarized-light
                          leuven
                          spacemacs-dark
                          spacemacs-light
