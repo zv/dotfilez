@@ -19,8 +19,11 @@
 # export GPG_AGENT_INFO  # the env file does not contain the export statement
 # export SSH_AUTH_SOCK   # enable gpg-agent for ssh
 #
-xmodmap ${HOME}/.xmodmaprc
-
+# xmodmap ${HOME}/.xmodmaprc
+setxkbmap -layout us \
+          -option ctrl:nocaps \
+          -option ctrl:ralt_rctrl \
+          -option ctrl:rctrl_ralt
 # Run gpg-agent-wrapper to SSH using our yubikey
 # source $HOME/.gnupg/gpg-agent-wrapper
 
