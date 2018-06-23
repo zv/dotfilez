@@ -15,6 +15,9 @@
   safecrlf = true
 	# autocrlf = false
 
+[commit]
+  verbose = true
+
 [gpg]
 	program = gpg2
 
