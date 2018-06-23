@@ -23,7 +23,10 @@
     :config
     (progn
       (setq flycheck-clang-language-standard "c++14")
-      (setq flycheck-gcc-language-standard "c++14"))))
+      (setq flycheck-gcc-language-standard "c++14")
+      (setq flycheck-clang-pedantic-errors nil)
+      (setq flycheck-gcc-pedantic-errors nil)
+      )))
 
 (defun zv/init-z3-mode ()
   (use-package z3-mode))
@@ -78,6 +81,14 @@
       (defalias 'e 'find-file-other-window)
       (defalias 'gd 'magit-diff-unstaged)
       (defalias 'gds 'magit-diff-staged))))
+
+(defun zv/post-init-js2-mode ()
+  (with-eval-after-load 'js2-mode
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'js2-mode
+        "or" (lambda () (interactive)
+               (react-mode)))
+      )))
 
 
 (defun zv/post-init-org ()
@@ -155,6 +166,7 @@
          ;; Org Protocol
          ("L" "Protocol Link" entry (file+olp ,org-default-notes-file "Inbox" "Bookmarks") "* %?[[%:link][%:description]] \nCaptured On: %U\n")
          ("P" "Protocol" entry (file+olp ,org-default-notes-file "Inbox" "Selection") "* %?[[%:link][%:description]] \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE \nCaptured On: %U\n")
+         ("M" "Protocol" entry (file+olp ,org-default-notes-file "Inbox" "Selection") "* %?[[%:link][%:description]] \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE \nCaptured On: %U\n")
          ("T" "Thunderbird" entry (file+olp ,org-default-notes-file "Inbox" "Thunderbird") "* %? %:link\n#+BEGIN_QUOTE\n%:description\n#+END_QUOTE \nCaptured On: %U\n"))
 
        ;; ORG MODE PUBLISHING

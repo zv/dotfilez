@@ -6,7 +6,7 @@ if has('syntax') && !exists('g:syntax_on')
 	syntax enable
 endif
 
-" %%%%%%%%%%%%%%%% General Config %%%%%%%%%%%%%%%%%%%%
+" %%%%%%%%%%%%%%% General Config %%%%%%%%%%%%%%%%%%%{{{
 set autoread			" Reload files changed outside vim
 set backspace=indent,eol,start	" Allow backspace in insert mode
 set background=light		" a bright terminal
@@ -49,15 +49,18 @@ endif
 if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
 	set t_Co=16
 endif
-" %%%%%%%%%%%% Search Settings %%%%%%%%%%%%%%%%%%%%%
+"}}}
+
+" %%%%%%%%%%%% Search Settings %%%%%%%%%%%%%%%%%%%%%%{{{
 "
 set incsearch		"Find the next match as we type the search
 set hlsearch		"Hilight searches by default
 set viminfo='100,f1  	"Save up to 100 marks, enable capital marks
 set smartcase		"Smart Case Search
 set ignorecase		"Ignore Case
+"}}}
 
-" %%%%%%%%%%%% Swap & Persistent Undo %%%%%%%%%%%%%%%
+" %%%%%%%%%%%% Swap & Persistent Undo %%%%%%%%%%%%%%%{{{
 set undofile
 set backup
 set noswapfile
@@ -68,17 +71,35 @@ set undodir=/tmp/.undodir//
 set backupdir=/tmp/.backups//
 set directory=/tmp/.backups//
 set backupskip=/tmp/*//,/private/tmp/*//
+"}}}
 
-" %%%%%%%%%%%%%%%%%%  Ctags  %%%%%%%%%%%%%%%%%%%%%%%%
+" %%%%%%%%%%%%%%%%%%  Ctags  %%%%%%%%%%%%%%%%%%%%%%%%{{{
 if has('path_extra')
 	setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
+"}}}
 
-" %%%%%%%%%%%%%%%% Indentation %%%%%%%%%%%%%%%%%%%%%%
-set cindent		" start c lang indent mode
+" %%%%%%%%%%%%%%%% Indentation %%%%%%%%%%%%%%%%%%%%%%{{{
+set autoindent		" copy previous line's indent
+set preserveindent 	" preserve indent structure
+set copyindent		" newline copies existing line structure
+set list
+set nowrap		" Don't wrap lines
+set linebreak		" Wrap lines at convenient points
+
+" set tabstop=8		" actual tabs occupy 8 characters
+" set softtabstop=8	" insert mode tab and backspace use 8 spaces
+" set shiftwidth=4
+
+" set cindent		" start c lang indent mode
+" set expandtab		" insert tabs as spaces
+" set smartindent	" intdent intelligently
+" set smarttab		" tab inserts tab when already tabbed!
+
 set listchars=tab:»·,trail:·
+"}}}
 
-" %%%%%%%%%%%%%%%% Keybindings %%%%%%%%%%%%%%%%%%%%%%
+" %%%%%%%%%%%%%%%% Keybindings %%%%%%%%%%%%%%%%%%%%%%{{{
 let mapleader=" "
 
 " manipulate windows spacemacs-style
@@ -98,20 +119,23 @@ nnoremap <silent> <leader>ft :Lexplore<CR>
 nnoremap <silent> <leader>ad :Explore<CR>
 nnoremap <silent> <leader>bb :buffers<CR>
 nnoremap <silent> Q :q<CR>
+"}}}
 
-" %%%%%%%%%%%%%%%% netrw config %%%%%%%%%%%%%%%%%%%%%
+" %%%%%%%%%%%%%%%% netrw config %%%%%%%%%%%%%%%%%%%%%{{{
 let g:netrw_banner=0 	" disable banner
 let g:netrw_liststyle=3 " tree-style listing
 let g:netrw_preview=1	" preview a document w/ 'p'
 let g:netrw_winsize=80  " percentage for new win
 let g:netrw_altv=1	" open to right
+"}}}
 
-" %%%%%%%%%%%%%%%% Folds %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-set nofoldenable	"dont fold by default
-set foldmethod=indent	"fold based on indent
-set foldnestmax=3	"deepest fold is 3 levels
+" %%%%%%%%%%%%%%%% Folds %%%%%%%%%%%%%%%%%%%%%%%%%%%%{{{
+set foldenable		" dont fold by default
+set foldmethod=marker   " fold based on indent
+set foldnestmax=3	" deepest fold is 3 levels
+"}}}
 
-" %%%%%%%%%%%%%%%% Completion %%%%%%%%%%%%%%%%%%%%%%%
+" %%%%%%%%%%%%%%%% Completion %%%%%%%%%%%%%%%%%%%%%%%{{{
 " dont try to fetch includes
 set complete-=i
 set completeopt=longest,menuone
@@ -123,8 +147,11 @@ set wildmode=longest,list,full
 
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
+"}}}
 
-" %%%%%%%%%%%%%%%% Scrolling %%%%%%%%%%%%%%%%%%%%%%%%
+" %%%%%%%%%%%%%%%% Scrolling %%%%%%%%%%%%%%%%%%%%%%%%{{{
 set scrolloff=3		"Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
+"}}}
+" vim:set ft=vim noet sw=8 ts=8 sts=0:
