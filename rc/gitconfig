@@ -729,17 +729,18 @@
 
 	# show a list of every branch and show their latests commit, sorted by last commit
 	branch-log				= "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/heads --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
-	branch-log-remote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/origin --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
+	branch-log-remote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/$1 --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
 
 	whatis				= show -s --pretty='tformat:%h (%s, %ad)' --date=short
 
+  # find the most recent common ancestor of this branch
 	ancestor			= !bash -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
 
 	whats-new     = !sh -c 'git log $1@{1}..$1@{0} "$@"'
 
 	# Branch Diff
-	branch-diff		= "!f() { head=${1:-HEAD} ; ancestor=`git oldest-ancestor master $head` ; git diff $ancestor..$head ; }; f"
-	branch-vdiff	= "!f() { head=${1:-HEAD} ; ancestor=`git oldest-ancestor master $head` ; git diff --name-only $ancestor..$head | xargs diffuse -s -r $ancestor ; }; f &"
+	branch-diff		= "!f() { head=${1:-HEAD} ; ancestor=`git ancestor master $head` ; git diff $ancestor..$head ; }; f"
+	branch-vdiff	= "!f() { head=${1:-HEAD} ; ancestor=`git ancestor master $head` ; git diff --name-only $ancestor..$head | xargs diffuse -s -r $ancestor ; }; f &"
 
 	# Show our branches as a tree
 	prtree				= log --graph --simplify-by-decoration --pretty=format:'%d' --all
