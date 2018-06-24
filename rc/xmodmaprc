@@ -1,29 +1,9 @@
-
-! Caps Lock -> Control
-! This is now covered by my setxkbmap
-remove Lock      = Caps_Lock
-keysym Caps_Lock = Control_L
-add Control      = Control_L
-
-! ---------------------
-! Left Alt -> Hyper Key
-! goodbye sweet hyper key. i will always remember you fondly.
-! ---------------------
-! remove Mod1 = Alt_R
-! keycode 108 = Hyper_R
-! add Mod3 = Hyper_R
-! ---------------------
-! Swap Right Alt/Control
-! ---------------------
-remove Control = Control_R
-remove Mod1 = Alt_R
-keycode 105 = Alt_R
-keycode 108 = Control_R
-add Control = Control_R
-add Mod1 = Alt_R
-!---------------------
-! Menu Key -> Hyper Key
-!--------------------
-keycode 135 = Hyper_R
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Remapping menu key to right hyper isn't an option
+!! available with redhat's xkeyboard-config. If you can give
+!! the kecodes in a PR I'd buy you a beer.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Menu Key -> Hyper Key
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+keycode 135 = Hyper_R  
 add Mod3 = Hyper_R
-!---------------------
