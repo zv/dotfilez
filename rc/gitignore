@@ -33,3 +33,6 @@ vim/.netrwhist
 .sass-cache
 
 .tern-port
+
+
+.gdb_history
