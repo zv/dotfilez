@@ -10,7 +10,7 @@
  ;; ERC
  zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
  ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
- user-mail-address                "zv@nxvr.org"
+ user-mail-address                "zephyr.pellerin@gmail.com"
 
  ;; default browser used
  browse-url-browser-function 'browse-url-generic

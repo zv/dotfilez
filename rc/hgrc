@@ -71,7 +71,7 @@ git = True
 unified = 5
 
 [email]
-from = zetavolt <zv@nxvr.org>
+from = Zephyr Pellerin <zephyr.pellerin@gmail.com>
 method = smtp
 
 
@@ -139,12 +139,12 @@ ghs = git+ssh://git@github.com/
 host = smtp.gmail.com
 port = 587
 tls = True
-username = zv@nxvr.org
+username = zephyr.pellerin@gmail.com
 
 [ui]
 commitsubrepos = False
 ignore = ~/.hgignore
-username = zetavolt <zv@nxvr.org>
+username = zetavolt <zephyr.pellerin@gmail.com>
 
 [web]
 allow_archive = gz zip bz2

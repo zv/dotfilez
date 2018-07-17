@@ -3,7 +3,7 @@
 ;;
 ;; Copyright (c) 2012-2014 Zephyr Pellerin
 ;;
-;; Author: zv <zv@nxvr.org>
+;; Author: zv <zephyr.pellerin@gmail.com>
 ;; URL: https://github.com/zv/spacemacs
 ;;
 ;;; License: GPLv3

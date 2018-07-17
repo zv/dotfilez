@@ -189,7 +189,7 @@ FUN function callback"
                                 (concat zv-dotfiles "gnupg/")
                                 (concat zv-dotfiles "ssh/")
                                 (expand-file-name "~/.ssh/")))
-         (recipient (epg-list-keys (epg-make-context epa-protocol) "<zv@nxvr.org>" 'public)))
+         (recipient (epg-list-keys (epg-make-context epa-protocol) "<zephyr.pellerin@gmail.com>" 'public)))
     (when (or (member (file-name-directory (buffer-file-name)) dirs-to-encrypt) (member buffer-file-name files-to-encrypt))
       (epa-encrypt-file (buffer-file-name) recipient))))
 

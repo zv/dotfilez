@@ -1,5 +1,5 @@
 ;; -*- geiser-scheme-implementation: 'guile -*-
-;; Copyright 2017 by Zephyr Pellerin <zv@nxvr.org>
+;; Copyright 2017 by Zephyr Pellerin <zephyr.pellerin@gmail.com>
 ;; ------------------------------------------------------------
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 (use-modules (ice-9 match))
 
 (define *weechat/script-name* "gateway_rename")
-(define *weechat/script-author* "zv <zv@nxvr.org>")
+(define *weechat/script-author* "zv <zephyr.pellerin@gmail.com>")
 (define *weechat/script-version* "1.2.1")
 (define *weechat/script-license* "GPL3")
 (define *weechat/script-description* "Convert usernames of gateway connections their real names")
@@ -273,4 +273,4 @@ Adding a Renamer:
 ;; Setup our gateways->regex map
 (assign-gateways-regex)
 
-;;(print "Gateway Nickconverter by zv <zv@nxvr.org>")
+;;(print "Gateway Nickconverter by zv <zephyr.pellerin@gmail.com>")
