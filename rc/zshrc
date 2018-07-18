@@ -96,9 +96,25 @@ alias xmm="xmodmap /home/zv/.xmodmaprc"
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
-function vman {
+vman() {
     # Man
     MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist nonu noma showtabline=0 shortmess+=T' -\"" man $*
+}
+
+man() {
+	local args="$@"
+	(
+		export LESS_TERMCAP_md=$(print -P "%B")
+		export LESS_TERMCAP_md=$(print -P "%B")
+		# export LESS_TERMCAP_md=$(print -P "%B")
+		export LESS_TERMCAP_me=$'\E[0m'
+		export LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}")
+		export LESS_TERMCAP_se=$'\E[0m'
+		export LESS_TERMCAP_us=$(print -P "%U%F{cyan}")
+		export LESS_TERMCAP_ue=$'\E[0m'
+		export GROFF_NO_SGR=1
+		$(whence -a -p man) "$args"
+	)
 }
 
 # Moves the last created file to $2
