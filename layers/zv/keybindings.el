@@ -250,7 +250,7 @@
 
   (define-key Man-mode-map "d"    'scroll-up-command)
   (define-key Man-mode-map "u"    'scroll-down-command)
-  (define-key Man-mode-map "q"    'Man-quit)
+  (define-key Man-mode-map "q"    'Man-kill)
   (define-key Man-mode-map "m"    'man))
 
 
