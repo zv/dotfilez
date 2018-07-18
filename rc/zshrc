@@ -71,11 +71,6 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
 fi
 
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Disable correction.
-for cmd (ack cd cp ebuild gcc gist grep heroku
-        ln man mkdir mv mysql rm nmcli ip ag
-        git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
-
 # Define general aliases.
 alias pr="print -l"
 
@@ -118,17 +113,15 @@ man() {
 }
 
 # Moves the last created file to $2
-function mvlast {
+mvlast() {
     local last_file=($1/*(.oc[1]))
     mv $last_file $2 && print $last_file
 }
 
-function mvdlhere {
-    mvlast "$HOME/Downloads/" $(pwd)
-}
+mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 
 # compile and run
-function crun {
+crun() {
     zparseopts -E -D -- -gcc::=use_gcc \
                c:=custom_compiler \
                o+:=copts \
@@ -189,11 +182,11 @@ function crun {
 
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
-function rmlast {
+rmlast() {
   [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
 }
 
-noglob function calc () {
+calc () {
     if [ $# -ne 0 ]; then
          local wrapped_args="\"$@\""
          emacsclient --eval "(calc-eval $wrapped_args)" | sed 's/^\"//' |  sed 's/\"$//'
@@ -201,8 +194,9 @@ noglob function calc () {
         emacsclient -t -c --eval "(full-calc)"
     fi
 }
+alias calc="noglob calc"
 
-function spectrum_ls() {
+spectrum_ls() {
     string="${1-Test}"
     if [[ $1 == "block" ]]
     then
@@ -214,9 +208,9 @@ function spectrum_ls() {
 }
 
 # # mkdir & cd to it
-function mcd { mkdir -p "$1" && cd "$1"; }
+mcd() { mkdir -p "$1" && cd "$1"; }
 
-function ptrsp {
+ptrsp() {
     (( !$+commands[xinput] )) && return;
     # Grep through for the actual ID. Hack.
     local prop_id="$(xinput list --short | \
@@ -327,6 +321,12 @@ function format_c_hex {
     echo "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
 }
 
+# Disable correction.
+for cmd (ack cd cp ebuild gcc gist grep heroku
+        ln mkdir mv mysql rm nmcli ip ag man
+        git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
+
+
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
@@ -383,23 +383,46 @@ unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use
 unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
 
 # ── Modules and Completions ────────────────────────────────
-autoload -U compinit && compinit
+# Load and initialize the completion system ignoring insecure directories with a
+# cache time of 20 hours, so it should almost always regenerate the first time a
+# shell is opened each day.
+autoload -Uz compinit
+_comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-20))
+if (( $#_comp_files )); then
+  compinit -i -C
+else
+  compinit -i
+fi
+unset _comp_files
 
 setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
 setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
-setopt AUTO_MENU           # Show completion menu on a succesive tab press.
 setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
 setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
 setopt PATH_DIRS           # Perform path search even on command names with slashes.
-unsetopt MENU_COMPLETE       # Do not autoselect the first completion entry.
-unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
+# overridden by MENU_COMPLETE
+# setopt AUTO_MENU           # Show completion menu on a succesive tab press.
+setopt MENU_COMPLETE       # Do not autoselect the first completion entry.
 
+# Experimental
+# not really a completion option
+unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
+
+setopt AUTO_PARAM_KEYS     # Params should complete unusual symbols correctly.
+unsetopt REC_EXACT # Don' override completions for current perfect matches.
+setopt LIST_TYPES # "Show the type of each file for possible completions"
+
+# zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
 
-unsetopt CASE_GLOB
+# Case-insensitive  partial-word and string completion
+zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+setopt CASE_GLOB
+## zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+## unsetopt CASE_GLOB
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select
@@ -418,9 +441,9 @@ zstyle ':completion:*' verbose yes
 # Fuzzy match mistyped completions.
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
-zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
 # Increase the number of errors based on the length of the typed word.
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
 
 # Don't complete unavailable commands.
@@ -444,23 +467,14 @@ zstyle ':completion:*:history-words' menu yes
 
 # Environmental Variables
 zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
-
-# Don't complete uninteresting users...
-zstyle ':completion:*:*:*:users' ignored-patterns                     \
-       adm amanda apache avahi beaglidx bin cacti canna clamav daemon \
-       dbus distcache dovecot fax ftp games gdm gkrellmd gopher       \
-       hacluster haldaemon halt hsqldb ident junkbust ldap lp mail    \
-       mailman mailnull mldonkey mysql nagios                         \
-       named netdump news nfsnobody nobody nscd ntp nut nx openvpn    \
-       operator pcap postfix postgres privoxy pulse pvm quagga radvd  \
-       rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs '_*'
-
-# ... unless we really want to.
-zstyle '*' single-ignored show
+zstyle ':completion:*:*:*:users' users 'zv' 'root' 'zephyr'
 
 # Ignore multiple entries.
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 zstyle ':completion:*:rm:*' file-patterns '*:all-files'
+
+# ... unless we really want to.
+zstyle '*' single-ignored show
 
 # Kill
 zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
@@ -480,16 +494,25 @@ zstyle ':completion:*:*:ogg123:*' file-patterns '*.(ogg|OGG|flac):ogg\ files *(-
 zstyle ':completion:*:*:mocp:*' file-patterns '*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories'
 
 # SSH/SCP/RSYNC
+typeset -a _etc_host_ignores=('0.0.0.0' '127.0.0.1')
+zstyle -e ':completion:*:hosts' hosts 'reply=(
+  ${=${=${=${${(f)"$(cat {/etc/ssh/ssh_,~/.ssh/}known_hosts(|2)(N) 2> /dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
+  ${=${(f)"$(cat /etc/hosts(|)(N) <<(echo))"}%%(\#${_etc_host_ignores:+|${(j:|:)~_etc_host_ignores}})*}
+  ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2> /dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
+)'
+
+zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
 zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
 zstyle ':completion:*:ssh:*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
-zstyle ':completion:*:ssh:*' group-order users hosts-domain hosts-host users hosts-ipaddr
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
+zstyle ':completion:*:ssh:*' group-order users 
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost '0.0.0.<->'
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*' ''
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # Tmux Pane Completion
-_tmux_pane_words() {local expl
+_tmux_pane_words() {
+  local expl
   local -a w
   if [[ -z "$TMUX_PANE" ]]; then
     _message "not running inside tmux!"
@@ -537,6 +560,7 @@ zle -N zle-keymap-select
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
+bindkey -M viins "^A" vi-beginning-of-line
 bindkey -M viins "^P" up-line-or-search
 bindkey -M viins "^N" down-line-or-search
 
