@@ -4,6 +4,7 @@
                       erlang
                       eshell
                       (z3-mode :location "/home/zv/Development/z3-mode/")
+                      js2-mode
                       cc-mode))
 
 (defvar zv-excluded-packages '())
@@ -85,10 +86,12 @@
 (defun zv/post-init-js2-mode ()
   (with-eval-after-load 'js2-mode
     (progn
+      (setq js2-basic-offset                 2
+            js2-strict-missing-semi-warning  nil
+            js2-include-node-externs         t
+            js2-include-browser-externs      t)
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
-        "or" (lambda () (interactive)
-               (react-mode)))
-      )))
+        "or" 'react-mode))))
 
 
 (defun zv/post-init-org ()
