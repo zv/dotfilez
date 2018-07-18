@@ -98,11 +98,11 @@
 
 ;; mode bindings
 ;; js2 mode
-(eval-after-load 'js2-mode
-  '(progn
-     (define-key js2-mode-map (kbd "H-s") 'add-semicolon-to-end-of-line)
-     (define-key js2-mode-map next-buffer-key 'evil-window-next)
-     (define-key js2-mode-map prev-buffer-key 'evil-window-prev)))
+;; (eval-after-load 'js2-mode
+;;   '(progn
+;;      (define-key js2-mode-map (kbd "H-s") 'add-semicolon-to-end-of-line)
+;;      (define-key js2-mode-map next-buffer-key 'evil-window-next)
+;;      (define-key js2-mode-map prev-buffer-key 'evil-window-prev)))
 
 ;; delete line
 (eval-after-load 'helm
@@ -145,10 +145,10 @@
   ;; (evil-define-key 'normal dired-mode-map "r" 'dired-unmark )
   ;; (evil-define-key 'normal dired-mode-map (kbd "<f5>") 'dired-do-redisplay)
 
-  (setq-local
-   ;; This ensures that `dired-other-window' doesn't split when using it as a
-   ;; directory-manager.
-   split-width-threshold 220)
+  ;; (setq-local
+  ;;  ;; This ensures that `dired-other-window' doesn't split when using it as a
+  ;;  ;; directory-manager.
+  ;;  split-width-threshold 220)
 
   (evilified-state-evilify dired-mode dired-mode-map
     [mouse-1] 'diredp-find-file-reuse-dir-buffer
