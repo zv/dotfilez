@@ -554,6 +554,50 @@ function zle-line-init zle-keymap-select {
   zle reset-prompt
 }
 
+function find-history-backwards {
+    typeset -g __searching __savecursor
+
+    if [[ $LBUFFER == *$'\n'* ]]; then
+        zle .up-line-or-history
+        __searching=''
+    elif [[ -n $PREBUFFER ]] &&
+             zstyle -t ':zle:up-line-or-beginning-search' edit-buffer
+    then
+        zle .push-line-or-edit
+    else
+        [[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
+        __savecursor=$CURSOR
+        __searching=$WIDGET
+        zle .history-beginning-search-backward
+        zstyle -T ':zle:up-line-or-beginning-search' leave-cursor &&
+            zle .end-of-line
+    fi
+}
+zle -N find-history-backwards
+
+function find-history-forwards {
+    typeset -g __searching __savecursor
+
+    if [[ ${+NUMERIC} -eq 0 &&
+              ( $LASTWIDGET = $__searching || $RBUFFER != *$'\n'* ) ]]
+    then
+        [[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
+        __searching=$WIDGET
+        __savecursor=$CURSOR
+        if zle .history-beginning-search-forward; then
+            [[ $RBUFFER = *$'\n'* ]] ||
+	              zstyle -T ':zle:down-line-or-beginning-search' leave-cursor &&
+	                  zle .end-of-line
+            return
+        fi
+        [[ $RBUFFER = *$'\n'* ]] || return
+    fi
+    __searching=''
+    zle .down-line-or-history
+}
+zle -N find-history-forwards
+
+
 # ZSH line editor stuff needed for bindkey to work
 zle -N zle-line-init
 zle -N zle-keymap-select
@@ -562,8 +606,9 @@ autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 
 bindkey -M viins "^A" vi-beginning-of-line
-bindkey -M viins "^P" up-line-or-search
-bindkey -M viins "^N" down-line-or-search
+bindkey -M viins "^E" vi-end-of-line
+bindkey -M viins "^P" find-history-backwards
+bindkey -M viins "^N" find-history-forwards
 
 # Some convienent alt bindings
 bindkey -M viins "\eh" vi-backward-blank-word
@@ -584,22 +629,16 @@ bindkey "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward
 bindkey -M vicmd "?" vi-history-search-forward
 bindkey -M vicmd "/" vi-history-search-backward
-
-# *-or-search searches for existing history items currently in the command
-# *-string, while '*-or-history' ignores this.
-bindkey -M vicmd "k" up-line-or-search # up-line-or-history
+bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
 
+# EZKeys
 bindkey -s '\eu' "..\n"
 bindkey -s '\es' "git status\n"
-# bindkey '\ew' kill-region
-#bindkey '^r' history-incremental-search-backward
-#bindkey "^[[5~" up-line-or-history
-#bindkey "^[[6~" down-line-or-history
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
-bindkey '^[[A' up-line-or-search
-bindkey '^[[B' down-line-or-search
+bindkey '^[[A' find-history-backwards # up-line-or-search
+bindkey '^[[B' find-history-forwards  # down-line-or-search
 bindkey ' ' magic-space    # also do history expansion on space
 bindkey '^[[Z' reverse-menu-complete
 
