@@ -86,6 +86,14 @@ alias jkl="jekyll serve -D"
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
+# Initialize key map
+alias cfgkey="setxkbmap -layout us \
+                        -option ctrl:nocaps \
+                        -option ctrl:ralt_rctrl \
+                        -option ctrl:rctrl_ralt \
+&& xmodmap <(print 'keycode 135 = Hyper_R
+add Mod3 = Hyper_R')"
+alias keycfg=cfgkey
 alias gpg=gpg2
 alias xmm="xmodmap /home/zv/.xmodmaprc"
 
