@@ -16,44 +16,44 @@ unsetopt HUP              # Don't kill jobs on shell exit.
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
 typeset baseprompt='>>'
 # If we're in a dumb terminal then dont play fancy pants with our prompt
-if [[ $TERM == 'dumb' ]]; then
-    # Ensure we don't set preexec && precmd
-    unsetopt ZLE
-    unsetopt PROMPT_CR
-    unsetopt PROMPT_SUBST
-    PS1='$ '
-    return
-elif [[ $TERM == 'eterm-color' ]]; then
-    # unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    PROMPT="[%y] %2~ $baseprompt "
-    return
-else
-    export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
-    # shows a slightly different prompt for vicmd vs other ZLE command modes to let
-    # you know what you are dealing with.
-    autoload -Uz vcs_info
-    base_vcs_style='%c%b%u%f'
-    zstyle ':vcs_info:*' enable git hg svn # cvs fossil bzr
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
-    zstyle ':vcs_info:*' stagedstr '%F{028}'
-    zstyle ':vcs_info:*' unstagedstr '*'
-    zstyle ':vcs_info:*' formats " [$base_vcs_style]"
-    zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
-    precmd () { vcs_info }
+	if [[ $TERM == 'dumb' ]]; then
+		# Ensure we don't set preexec && precmd
+		unsetopt ZLE
+		unsetopt PROMPT_CR
+		unsetopt PROMPT_SUBST
+		PS1='$ '
+		return
+	elif [[ $TERM == 'eterm-color' ]]; then
+		# unsetopt zle
+		unsetopt prompt_cr
+		unsetopt prompt_subst
+		PROMPT="[%y] %2~ $baseprompt "
+		return
+	else
+		export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
+		# shows a slightly different prompt for vicmd vs other ZLE command modes to let
+			# you know what you are dealing with.
+			autoload -Uz vcs_info
+			base_vcs_style='%c%b%u%f'
+			zstyle ':vcs_info:*' enable git hg svn # cvs fossil bzr
+			zstyle ':vcs_info:*' check-for-changes true
+				zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
+				zstyle ':vcs_info:*' stagedstr '%F{028}'
+				zstyle ':vcs_info:*' unstagedstr '*'
+				zstyle ':vcs_info:*' formats " [$base_vcs_style]"
+				zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
+				precmd () { vcs_info }
 
-    zle_vim_prompt_notifier() {
-        if [[ "$KEYMAP" == vicmd ]]; then
-            print "%F{red}$baseprompt%f"
-        else
-            print "$baseprompt"
-        fi
-    }
+				zle_vim_prompt_notifier() {
+					if [[ "$KEYMAP" == vicmd ]]; then
+						print "%F{red}$baseprompt%f"
+					else
+						print "$baseprompt"
+					fi
+				}
 
-    PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
-fi
+			PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
+		fi
 
 
 # ── Environment Variables ──────────────────────────────────
