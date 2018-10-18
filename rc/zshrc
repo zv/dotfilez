@@ -310,32 +310,33 @@ alias git-ignorelog='git ls-files -v | grep "^h"'
 
 # Displays some git related author statistics
 function authorstats {
-    gitauth="$1";
-    git log --author="$gitauth" --pretty=tformat: --numstat | \
-        gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
-    echo ''
+	gitauth="$1";
+	git log --author="$gitauth" --pretty=tformat: --numstat | \
+	gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+	echo ''
 }
 
 # Format a series of hex into a C-like hex string
 # e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80
 function format_c_hex {
-    echo "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
+	echo "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
 }
 
 # Disable correction.
 for cmd (ack cd cp ebuild gcc gist grep heroku
-        ln mkdir mv mysql rm nmcli ip ag man
-        git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
+	ln mkdir mv mysql rm nmcli ip ag man
+	git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
 
 
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
-setopt EXTENDED_GLOB        # Use extended globbing syntax.
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
-# setopt WARN_CREATE_GLOBAL  # Print a warning when global parmeter is created within a fun
+setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+unsetopt WARN_NESTED_VAR    # Warn when a local variable sets a global denested variable
 setopt NULL_GLOB            # Delete patterns without match from argument list
 setopt BRACE_CCL            # Allow brace character class list expansion.
+setopt EXTENDED_GLOB        # Use extended globbing syntax.
 
 # ── Directories ────────────────────────────────────────────
 setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
@@ -351,6 +352,9 @@ unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or po
 setopt C_BASES              # Output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
+# ── Shell Emulation ────────────────────────────────────────
+unsetopt APPEND_CREATE        # Don't warn if `>>` is used on a file that doesn't exist
+
 # ── History ────────────────────────────────────────────────
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
@@ -364,6 +368,7 @@ setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
 setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_FCNTL_LOCK           # Don't bother with old-school locking. We're on new POSIX here.
 
 # History
 export HISTFILE=$HOME/.zsh_history
@@ -380,8 +385,11 @@ alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r 
 unsetopt CORRECT            # Don't correct the spelling of commands
 unsetopt CORRECT_ALL        # Don't correct any arguments
 unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
-# setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
+setopt SHORT_LOOPS          # Allow short loops.
+# setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
+# setopt HASH_CMDS            # Note the location of a command before it's executed
+# setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
 
 # ── Modules and Completions ────────────────────────────────
 # Load and initialize the completion system ignoring insecure directories with a
@@ -506,7 +514,7 @@ zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:d
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
 zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
 zstyle ':completion:*:ssh:*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
-zstyle ':completion:*:ssh:*' group-order users 
+zstyle ':completion:*:ssh:*' group-order users
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost '0.0.0.<->'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*' ''
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
@@ -544,6 +552,9 @@ autoload -U colors && colors;
 
 # The crazier the better!
 (( $+commands[dircolors] )) && eval "$(dircolors --sh ~/.zsh/LS_COLORS)"
+
+# Enable man completion when using Vim as a manpager
+compdef '_dispatch man man' manvi
 
 # ━━ ZLE / Line commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt COMBINING_CHARS    # Combine zero-length punctuation characters
