@@ -156,6 +156,9 @@ for_window [title="zhesaurus"]        floating enable
 # ImageMagick
 for_window [title="ImageMagick: -"]        floating enable
 
+for_window [title="[[[:digit:]]*]@sigstkflt"] border pixel 10
+
+
 exec --no-startup-id ~/.i3/xinitrc
 exec --no-startup-id nm-applet
 exec --no-startup-id abrt-applet
