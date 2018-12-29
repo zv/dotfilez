@@ -704,7 +704,7 @@ eval $(gpg-agent --enable-ssh-support --daemon  2>!$HOME/.gnupg/zsh-gpg-agent.lo
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Run our external modules
 if [[ -e ~/.zsh/modules ]]; then
-  for fn (~/.zsh/modules/*.zsh) source $fn
+    source ~/.zsh/modules/*.zsh
 fi
 
 # Configure Ocaml package manager

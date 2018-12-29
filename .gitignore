@@ -1,5 +1,4 @@
 #━━━━━ local configuration ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-rc/zsh/modules/*
 
 aws/*
 !aws/*.gpg
@@ -19,8 +18,7 @@ certificates/GandiStandardSSLCA.crt
 certificates/sks-keyservers.netCA.pem
 
 #━━━━━━RC FILES━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-rc/zsh/functions/private.zsh
-rc/zsh/extras/private.zsh
+rc/zsh/**/private.zsh
 rc/zsh/cache
 rc/credentials.sh
 rc/vim/.netrwhist
