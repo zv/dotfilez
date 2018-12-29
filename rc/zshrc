@@ -100,24 +100,19 @@ alias xmm="xmodmap /home/zv/.xmodmaprc"
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
-vman() {
-    # Man
-    MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist nonu noma showtabline=0 shortmess+=T' -\"" man $*
-}
-
 man() {
-	local args="$@"
+	local args=$@
 	(
 		export LESS_TERMCAP_md=$(print -P "%B")
 		export LESS_TERMCAP_md=$(print -P "%B")
-		# export LESS_TERMCAP_md=$(print -P "%B")
+		export LESS_TERMCAP_md=$(print -P "%B")
 		export LESS_TERMCAP_me=$'\E[0m'
 		export LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}")
 		export LESS_TERMCAP_se=$'\E[0m'
 		export LESS_TERMCAP_us=$(print -P "%U%F{cyan}")
 		export LESS_TERMCAP_ue=$'\E[0m'
 		export GROFF_NO_SGR=1
-		$(whence -a -p man) "$args"
+		$(whence -a -p man) ${=args}
 	)
 }
 
@@ -279,11 +274,13 @@ pronounce_number() {
 	echo $result
 }
 
+alias diff='diff --color=auto'
 alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias grep="$aliases[grep] --color=auto"
+alias w3m="noglob w3m"
 
 # dnf
 if (( $+commands[dnf] )); then
@@ -309,12 +306,13 @@ alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gcm='git checkout master'
 alias ga='git add'
-alias chr="google-chrome"
 
 alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
 
 # Lists all files that have been ignored with git update-index
 alias git-ignorelog='git ls-files -v | grep "^h"'
+
+alias aws="MANPAGER='more' aws"
 
 # Displays some git related author statistics
 function authorstats {
@@ -332,7 +330,7 @@ function format_c_hex {
 
 # Disable correction.
 for cmd (ack cd cp ebuild gcc gist grep heroku
-	ln mkdir mv mysql rm nmcli ip ag man
+	ln mkdir mv mysql rm nmcli ip ag man w3m
 	git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
 
 
@@ -677,8 +675,17 @@ bindkey ' ' magic-space # [Space] - do history expansion
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 gpg-connect-agent /bye
-export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
-export GPG_AGENT_INFO=$HOME/.gnupg/S.gpg-agent
+# XXX: remove whackness. This is a heavy hack that relies on =gpg-agent=
+# replacing the contents of SSH_AUTH_SOCK if it successfully starts.
+SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh
+export SSH_AUTH_SOCK;
+eval $(gpg-agent --enable-ssh-support --daemon  2>!$HOME/.gnupg/zsh-gpg-agent.log)
+
+#export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+
+# Actual output of gpg-agent
+#export GPG_AGENT_INFO=$HOME/.gnupg/S.gpg-agent
+
 #  Gnupg Agent Wrapper
 # [[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
 
@@ -696,16 +703,13 @@ export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PR
 
 export RUST_SRC_PATH=/usr/local/src/rust/src
 
-# Virtualenvwrapper
-# [[ -x "/usr/bin/virtualenvwrapper.sh" ]] && source /usr/bin/virtualenvwrapper.sh
-
 # The next line updates PATH for the Google Cloud SDK.
 # [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
 
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-# source ~/.cargo/env
+[[ -e ~/.cargo/env ]] && source ~/.cargo/env
 
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
 #     export PATH="$HOME/.rbenv/bin:$PATH"
