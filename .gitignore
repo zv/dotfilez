@@ -87,3 +87,9 @@ rc/ssh/*
 !rc/ssh/*.asc
 rc/ssh/known_hosts.asc
 rc/ssh/config.asc
+
+rc/w3m/w3mtmp*
+rc/w3m/w3mcache*
+rc/w3m/*.html
+rc/w3m/cookie
+rc/w3m/history
