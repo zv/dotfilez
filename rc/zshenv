@@ -1,4 +1,5 @@
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
+# vim: set filetype=zsh
 # Build
 #export CC=gcc
 #export CXX=g++
@@ -6,7 +7,7 @@ export AR=ar
 
 # Language
 if [[ -z "$LANG" ]]; then
-    export LANG='en_US.UTF-8'
+	export LANG='en_US.utf8'
 fi
 export LC_CTYPE=$LANG
 
@@ -17,14 +18,13 @@ export LISTPROMPT=''
 export DISABLE_AUTO_TITLE="true"
 
 export EDITOR='vim'
-export PAGER='less'
 
 # Environment
 export GREP_COLORS="37;45"
 
 # Golang
 export GOROOT=/usr/local/go
-export GOPATH=$HOME/Development/golang
+export GOPATH=$HOME/golang
 # Rust
 export RUST_SRC_PATH="$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust"
 
@@ -55,26 +55,29 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 
 # Load our completion functions
 fpath=(
-    $HOME/.zsh/completion
-    $HOME/.zsh/completion/rust-completion
-    $HOME/.zsh/functions
-    $HOME/.zsh/zsh-completions/src
-    $fpath
+	$HOME/.zsh/completion
+	$HOME/.zsh/completion/rust-completion
+	$HOME/.zsh/functions
+	$HOME/.zsh/zsh-completions/src
+	$fpath
 )
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
-    export TMPDIR="/tmp/$LOGNAME"
-    mkdir -p -m 700 "$TMPDIR"
+	export TMPDIR="/tmp/$LOGNAME"
+	mkdir -p -m 700 "$TMPDIR"
 fi
-TMPPREFIX="${TMPDIR%/}/zsh"
+export TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Browser
 #if (( $+commands[google-chrome] )); then
-#    export BROWSER==google-chrome
+#	export BROWSER==google-chrome
 #fi
 
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then
-    export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
+	export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
 fi
+
+# virtualenvwrapper
+export WORKON_HOME="$HOME/.local/environments"

@@ -1,9 +1,7 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! Remapping menu key to right hyper isn't an option
-!! available with redhat's xkeyboard-config. If you can give
-!! the kecodes in a PR I'd buy you a beer.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! Menu Key -> Hyper Key
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-keycode 135 = Hyper_R  
+! I use xkeyboard-config to do the rest of everything now.
+!---------------------
+! Menu Key -> Hyper Key
+!--------------------
+keycode 135 = Hyper_R
 add Mod3 = Hyper_R
+!---------------------
