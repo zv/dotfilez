@@ -1,10 +1,11 @@
+#━━━━━ local configuration ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+rc/zsh/modules/*
+
 aws/*
 !aws/*.gpg
 !aws/*.asc
 
 org/*
-
-
 # Tags
 GPATH
 GRTAGS
@@ -17,27 +18,7 @@ certificates/*
 certificates/GandiStandardSSLCA.crt
 certificates/sks-keyservers.netCA.pem
 
-keys.tar.gz
-keys.tar
-secrets.tar.gz
-gnome-keyring.tar.gpg
-
-*.beam
-" for YCM
-*.pyc
-
-*.elc
-# !emacs.d/private/zv/*
-# emacs.d
-
-# our macro definitions
-templates/zv.m4
-
-*npm-debug.log
-
-ghc/
-
-# rc ################################################## 
+#━━━━━━RC FILES━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/zsh/functions/private.zsh
 rc/zsh/extras/private.zsh
 rc/zsh/cache
@@ -54,17 +35,27 @@ rc/pentadactyl/info/default
 rc/lib/ag
 rc/lib/vim
 
-## IRC
-rc/irssi/irssi-scripts
-rc/irssi/sasl.auth
-rc/irssi/*.crt
-rc/irssi/*.pem
-rc/weechat/logs
-rc/weechat/weechat.log
-rc/weechat/sec.conf
-rc/weechat/passphrase
+#━━━━ temporary script s*** ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Sec
+keys.tar.gz
+keys.tar
+secrets.tar.gz
+gnome-keyring.tar.gpg
+
+*.beam
+*.pyc
+
+*.elc
+# !emacs.d/private/zv/*
+# emacs.d
+
+# our macro definitions
+templates/zv.m4
+*npm-debug.log
+
+ghc/
+
+#━━━━ ssh / gpg ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/gnupg/*
 rc/gnupg/secring.gpg
 !rc/gnupg/gpg-agent-wrapper
@@ -75,7 +66,6 @@ rc/gnupg/secring.gpg
 !rc/gnupg/pubring.gpg
 !rc/gnupg/trustring.gpg
 !rc/gnupg/*.asc
-
 rc/ssh/*
 !rc/ssh/config
 !rc/ssh/known_hosts
@@ -88,8 +78,23 @@ rc/ssh/*
 rc/ssh/known_hosts.asc
 rc/ssh/config.asc
 
+#━━━━ w3m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/w3m/w3mtmp*
 rc/w3m/w3mcache*
 rc/w3m/*.html
 rc/w3m/cookie
 rc/w3m/history
+
+#━━━━ irc ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+rc/weechat
+rc/weechat
+
+rc/irssi/irssi-scripts
+rc/irssi/sasl.auth
+rc/irssi/*.crt
+rc/irssi/*.pem
+rc/weechat/logs
+rc/weechat/weechat.log
+rc/weechat/sec.conf
+rc/weechat/passphrase
