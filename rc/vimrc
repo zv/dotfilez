@@ -1,4 +1,4 @@
-set nocompatible 
+set nocompatible
 if has('autocmd')
 	filetype plugin indent on
 endif
@@ -6,7 +6,7 @@ if has('syntax') && !exists('g:syntax_on')
 	syntax enable
 endif
 
-" %%%%%%%%%%%%%%% General Config %%%%%%%%%%%%%%%%%%%{{{
+" ――――――――――――――― General Config ――――――――――――――――――――{{{
 set autoread			" Reload files changed outside vim
 set backspace=indent,eol,start	" Allow backspace in insert mode
 set background=light		" a bright terminal
@@ -40,18 +40,20 @@ set switchbuf=useopen		" reveal already opened files from the
 
 " set our font to terminus
 if has('gui_running')
-	  set guifont=Terminus\ 11
-	  set guioptions-=T
-	  set guioptions-=m
+	set guifont=Source\ Code\ Pro\ 14
+	set guioptions-=T
+	set guioptions-=m
 endif
 
 " Allow color schemes to do bright colors without forcing bold.
 if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
 	set t_Co=16
 endif
+
+colorscheme desert
 "}}}
 
-" %%%%%%%%%%%% Search Settings %%%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――― Search Settings ――――――――――――――――――――――{{{
 "
 set incsearch		"Find the next match as we type the search
 set hlsearch		"Hilight searches by default
@@ -60,7 +62,7 @@ set smartcase		"Smart Case Search
 set ignorecase		"Ignore Case
 "}}}
 
-" %%%%%%%%%%%% Swap & Persistent Undo %%%%%%%%%%%%%%%{{{
+" ―――――――――――― Swap & Persistent Undo ―――――――――――――――{{{
 set undofile
 set backup
 set noswapfile
@@ -73,13 +75,13 @@ set directory=/tmp/.backups//
 set backupskip=/tmp/*//,/private/tmp/*//
 "}}}
 
-" %%%%%%%%%%%%%%%%%%  Ctags  %%%%%%%%%%%%%%%%%%%%%%%%{{{
+" ――――――――――――――――――  Ctags  ――――――――――――――――――――――――{{{
 if has('path_extra')
 	setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
 "}}}
 
-" %%%%%%%%%%%%%%%% Indentation %%%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――――――― Indentation ――――――――――――――――――――――{{{
 set autoindent		" copy previous line's indent
 set preserveindent 	" preserve indent structure
 set copyindent		" newline copies existing line structure
@@ -99,7 +101,7 @@ set linebreak		" Wrap lines at convenient points
 set listchars=tab:»·,trail:·
 "}}}
 
-" %%%%%%%%%%%%%%%% Keybindings %%%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――――――― Keybindings ――――――――――――――――――――――{{{
 let mapleader=" "
 
 " manipulate windows spacemacs-style
@@ -112,30 +114,60 @@ nnoremap <silent> <leader>wj <C-w>j
 nnoremap <silent> <leader>wv <C-w>v
 nnoremap <silent> <leader>ws <C-w>s
 
-" spacemacs compatibility bindings
+" basic spacemacs compatibility bindings
 nnoremap <silent> <leader>sc :nohlsearch<CR>
 nnoremap <silent> <leader>fs :w<CR>
 nnoremap <silent> <leader>ft :Lexplore<CR>
 nnoremap <silent> <leader>ad :Explore<CR>
 nnoremap <silent> <leader>bb :buffers<CR>
 nnoremap <silent> Q :q<CR>
+nnoremap <silent> <leader>fed :e ~/.vimrc<CR>
+nnoremap <silent> <leader>bp :bprevious<CR>
+nnoremap <silent> <leader>bn :bnext<CR>
+nnoremap <leader>ff :e<SPACE>
+
+
+" map [ => { and ] => }
+augroup bracket_remap
+	autocmd BufReadPost * :silent! unmap <buffer> []
+	autocmd BufReadPost * :silent! unmap <buffer> ["
+	autocmd BufReadPost * :silent! unmap <buffer> [[
+	autocmd BufReadPost * :silent! unmap <buffer> ]]
+	autocmd BufReadPost * :silent! unmap <buffer> ]"
+	autocmd BufReadPost * :silent! unmap <buffer> ][
+augroup end
+
+nnoremap ] }
+vnoremap ] }
+nnoremap [ {
+vnoremap [ {
+
+nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
 "}}}
 
-" %%%%%%%%%%%%%%%% netrw config %%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――――――― netrw config ―――――――――――――――――――――{{{
 let g:netrw_banner=0 	" disable banner
 let g:netrw_liststyle=3 " tree-style listing
 let g:netrw_preview=1	" preview a document w/ 'p'
-let g:netrw_winsize=80  " percentage for new win
-let g:netrw_altv=1	" open to right
-"}}}
+let g:netrw_winsize=25  " percentage for new win
+" let g:netrw_altv=1	" open to right
+"
+" let g:netrw_browse_split = 4
+"
+" augroup ProjectDrawer
+"   autocmd!
+"   autocmd VimEnter * :Vexplore
+" augroup END
+" "}}}
 
-" %%%%%%%%%%%%%%%% Folds %%%%%%%%%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――――――― Folds ――――――――――――――――――――――――――――{{{
 set foldenable		" dont fold by default
 set foldmethod=marker   " fold based on indent
 set foldnestmax=3	" deepest fold is 3 levels
 "}}}
 
-" %%%%%%%%%%%%%%%% Completion %%%%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――――――― Completion ―――――――――――――――――――――――{{{
 " dont try to fetch includes
 set complete-=i
 set completeopt=longest,menuone
@@ -149,9 +181,10 @@ set wildmode=longest,list,full
 set wildoptions=tagfile
 "}}}
 
-" %%%%%%%%%%%%%%%% Scrolling %%%%%%%%%%%%%%%%%%%%%%%%{{{
+" ―――――――――――――――― Scrolling ――――――――――――――――――――――――{{{
 set scrolloff=3		"Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
 "}}}
+
 " vim:set ft=vim noet sw=8 ts=8 sts=0:
