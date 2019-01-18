@@ -91,9 +91,6 @@
 ;; insert mode
 (define-key evil-insert-state-map (kbd "C-h") 'backward-char)
 (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
-;; (define-key evil-insert-state-map (kbd "C-d") 'delete-char)
-;; (define-key evil-insert-state-map (kbd "C-i") 'backward-delete-char)
-;; (define-key evil-insert-state-map (kbd "C-s") 'undo-tree-undo)
 
 
 ;; mode bindings
