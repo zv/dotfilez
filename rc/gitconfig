@@ -21,9 +21,6 @@
 [gpg]
 	program = gpg2
 
-[format]
-	signoff = true
-
 [color]
 	pager       = true
 	ui          = true
