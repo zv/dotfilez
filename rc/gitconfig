@@ -725,7 +725,8 @@
 	################################################################################
 
 	# show a list of every branch and show their latests commit, sorted by last commit
-	branch-log				= "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/heads --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
+	branch-log = for-each-ref --sort=-committerdate refs/heads/ -- format='%(committerdate:short) %(authorname) %(refname:short)'
+	# branch-log				= "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/heads --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
 	branch-log-remote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/$1 --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
 
 	whatis				= show -s --pretty='tformat:%h (%s, %ad)' --date=short
