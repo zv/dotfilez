@@ -98,15 +98,11 @@ alias gpg=gpg2
 alias xmm="xmodmap /home/zv/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
-alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+alias gpginit="date | gpg -a --encrypt -r zephyr.pellerin@gmail.com | gpg --decrypt"
 
-vman() {
-    # Man
-    MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist nonu noma showtabline=0 shortmess+=T' -\"" man $*
-}
-
+# Enable colorization of manpages
 man() {
-	local args="$@"
+	local args=$@
 	(
 		export LESS_TERMCAP_md=$(print -P "%B")
 		export LESS_TERMCAP_md=$(print -P "%B")
@@ -117,8 +113,17 @@ man() {
 		export LESS_TERMCAP_us=$(print -P "%U%F{cyan}")
 		export LESS_TERMCAP_ue=$'\E[0m'
 		export GROFF_NO_SGR=1
-		$(whence -a -p man) "$args"
+		$(whence -a -p man) ${=args}
 	)
+}
+
+# Use vim as a pager for man
+manvi() {
+	  local args=$@
+    (
+        export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' -c 'nnoremap <silent> d <C-d>' -c 'nnoremap <silent> u <C-u>' -\""
+        $(whence -a -p man) ${=args}
+    )
 }
 
 # Moves the last created file to $2
