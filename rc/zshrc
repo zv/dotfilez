@@ -197,37 +197,40 @@ crun () {
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
 rmlast() {
-  [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
+	[[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
 }
 
 # calculator
 calc () { gdb -n -quiet -batch -ex="p $*" }
 alias calc="noglob calc"
 
+# print the color spectrum
 spectrum_ls() {
-    string="${1-Test}"
-    if [[ $1 == "block" ]]
-    then
-        string="███████████████████████████████"
-    fi
-    for code in {000..255}; do
-        print -P -- "$code: %F{$code}${string}%f"
-    done
+	string="${1-Test}"
+	if [[ $1 == "block" ]]
+	then
+		string="███████████████████████████████"
+	fi
+	for code in {000..255}; do
+		print -P -- "$code: %F{$code}${string}%f"
+	done
 }
 
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
 
+# try to configure pointer speed
 ptrsp() {
-    (( !$+commands[xinput] )) && return;
-    # Grep through for the actual ID. Hack.
-    local prop_id="$(xinput list --short | \
-        grep 'Lenovo.*pointer' | \
-        awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
-        sed 's/id\=//')"
-   xinput --set-prop "$prop_id" 140 "$1" 0 0 0 "$1" 0 0 0 "$2"
+	(( !$+commands[xinput] )) && return
+	# Grep through for the actual ID. Hack.
+	local prop_id="$(xinput list --short | \
+	grep 'Lenovo.*pointer' | \
+	awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
+	sed 's/id\=//')"
+	xinput --set-prop "$prop_id" 140 "$1" 0 0 0 "$1" 0 0 0 "$2"
 }
 
+# pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
 pronounce_number() {
 	integer number=$1
 	let length=${#number}
@@ -286,17 +289,17 @@ alias grep="$aliases[grep] --color=auto"
 
 # dnf
 if (( $+commands[dnf] )); then
-    alias dnfs="dnf search"                       # search package
-    alias dnfp="dnf info"                         # show package info
-    alias dnfl="dnf list"                         # list packages
-    alias dnfcu="dnf check-update"                # check updates
-    alias dnfh="sudo dnf history"                 # get dnf history
-    alias dnfu="sudo dnf upgrade"                 # upgrade packages
-    alias dnfi="sudo dnf install"                 # install package
-    alias dnfr="sudo dnf remove"                  # remove package
-    alias dnfgr="sudo dnf groupremove"            # remove pagage group
-    alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
-    alias dnfc="sudo dnf clean all"               # clean cachefi
+	alias dnfs="dnf search"                       # search package
+	alias dnfp="dnf info"                         # show package info
+	alias dnfl="dnf list"                         # list packages
+	alias dnfcu="dnf check-update"                # check updates
+	alias dnfh="sudo dnf history"                 # get dnf history
+	alias dnfu="sudo dnf upgrade"                 # upgrade packages
+	alias dnfi="sudo dnf install"                 # install package
+	alias dnfr="sudo dnf remove"                  # remove package
+	alias dnfgr="sudo dnf groupremove"            # remove pagage group
+	alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
+	alias dnfc="sudo dnf clean all"               # clean cachefi
 fi
 
 # Git
@@ -569,49 +572,46 @@ setopt NO_BEEP      # Stop the beep insanity
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 function zle-line-init zle-keymap-select {
-  zle reset-prompt
+	zle reset-prompt
 }
 
 function find-history-backwards {
-    typeset -g __searching __savecursor
+	typeset -g __searching __savecursor
 
-    if [[ $LBUFFER == *$'\n'* ]]; then
-        zle .up-line-or-history
-        __searching=''
-    elif [[ -n $PREBUFFER ]] &&
-             zstyle -t ':zle:up-line-or-beginning-search' edit-buffer
-    then
-        zle .push-line-or-edit
-    else
-        [[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
-        __savecursor=$CURSOR
-        __searching=$WIDGET
-        zle .history-beginning-search-backward
-        zstyle -T ':zle:up-line-or-beginning-search' leave-cursor &&
-            zle .end-of-line
-    fi
+	if [[ $LBUFFER == *$'\n'* ]]; then
+		zle .up-line-or-history
+		__searching=''
+	elif [[ -n $PREBUFFER ]] && zstyle -t ':zle:up-line-or-beginning-search' edit-buffer
+	then
+		zle .push-line-or-edit
+	else
+		[[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
+		__savecursor=$CURSOR
+		__searching=$WIDGET
+		zle .history-beginning-search-backward
+		zstyle -T ':zle:up-line-or-beginning-search' leave-cursor &&
+		zle .end-of-line
+	fi
 }
+
 zle -N find-history-backwards
 
 function find-history-forwards {
-    typeset -g __searching __savecursor
-
-    if [[ ${+NUMERIC} -eq 0 &&
-              ( $LASTWIDGET = $__searching || $RBUFFER != *$'\n'* ) ]]
-    then
-        [[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
-        __searching=$WIDGET
-        __savecursor=$CURSOR
-        if zle .history-beginning-search-forward; then
-            [[ $RBUFFER = *$'\n'* ]] ||
-	              zstyle -T ':zle:down-line-or-beginning-search' leave-cursor &&
-	                  zle .end-of-line
-            return
-        fi
-        [[ $RBUFFER = *$'\n'* ]] || return
-    fi
-    __searching=''
-    zle .down-line-or-history
+	typeset -g __searching __savecursor
+	if [[ ${+NUMERIC} -eq 0 &&
+		( $LASTWIDGET = $__searching || $RBUFFER != *$'\n'* ) ]]
+	then
+		[[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
+		__searching=$WIDGET
+		__savecursor=$CURSOR
+		if zle .history-beginning-search-forward; then
+		[[ $RBUFFER = *$'\n'* ]] || zstyle -T ':zle:down-line-or-beginning-search' leave-cursor && zle .end-of-line
+		return
+		fi
+	[[ $RBUFFER = *$'\n'* ]] || return
+	fi
+	__searching=''
+	zle .down-line-or-history
 }
 zle -N find-history-forwards
 
