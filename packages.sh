@@ -137,10 +137,12 @@ if [ "$#" -lt 1 ]; then
     cat $BASEDIR/data/usage
 fi
 
-case "$1" in
-    newenv) asdfadfs ;;
-    install) install_base_packages ${@:2} ;;
-    link) link_dotfiles ;;
-    templates) copy_templates ;;
-    *) $BASEDIR/script/main.zsh "$*" ;;
-esac
+if [[ "$#" -gt 0 ]]; then
+	case "$1" in
+		newenv) asdfadfs ;;
+		install) install_base_packages "${@:2}" ;;
+		link) link_dotfiles ;;
+		templates) copy_templates ;;
+		*) $BASEDIR/script/main.zsh "$*" ;;
+	esac
+fi

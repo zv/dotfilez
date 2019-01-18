@@ -16,44 +16,40 @@ unsetopt HUP              # Don't kill jobs on shell exit.
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
 typeset baseprompt='>>'
 # If we're in a dumb terminal then dont play fancy pants with our prompt
-	if [[ $TERM == 'dumb' ]]; then
-		# Ensure we don't set preexec && precmd
-		unsetopt ZLE
-		unsetopt PROMPT_CR
-		unsetopt PROMPT_SUBST
-		PS1='$ '
-		return
-	elif [[ $TERM == 'eterm-color' ]]; then
-		# unsetopt zle
-		unsetopt prompt_cr
-		unsetopt prompt_subst
-		PROMPT="[%y] %2~ $baseprompt "
-		return
-	else
-		export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
-		# shows a slightly different prompt for vicmd vs other ZLE command modes to let
-			# you know what you are dealing with.
-			autoload -Uz vcs_info
-			base_vcs_style='%c%b%u%f'
-			zstyle ':vcs_info:*' enable git hg svn # cvs fossil bzr
-			zstyle ':vcs_info:*' check-for-changes true
-				zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
-				zstyle ':vcs_info:*' stagedstr '%F{028}'
-				zstyle ':vcs_info:*' unstagedstr '*'
-				zstyle ':vcs_info:*' formats " [$base_vcs_style]"
-				zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
-				precmd () { vcs_info }
-
-				zle_vim_prompt_notifier() {
-					if [[ "$KEYMAP" == vicmd ]]; then
-						print "%F{red}$baseprompt%f"
-					else
-						print "$baseprompt"
-					fi
-				}
-
-			PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
-		fi
+if [[ $TERM == 'dumb' ]]; then
+	# Ensure we don't set preexec && precmd
+	unsetopt ZLE
+	unsetopt PROMPT_CR
+	unsetopt PROMPT_SUBST
+	PS1='$ '
+	return
+elif [[ $TERM == 'eterm-color' ]]; then
+	# unsetopt zle
+	unsetopt prompt_cr
+	unsetopt prompt_subst
+	PROMPT="[%y] %2~ $baseprompt "
+	return
+else
+	export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
+	# shows a slightly different prompt for vicmd vs other ZLE command modes to let
+	# you know what you are dealing with.
+	autoload -Uz vcs_info
+	base_vcs_style='%c%b%u%f'
+	zstyle ':vcs_info:*' enable git hg # svn # cvs fossil bzr
+	zstyle ':vcs_info:*' check-for-changes true
+	zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
+	zstyle ':vcs_info:*' stagedstr '%F{028}'
+	zstyle ':vcs_info:*' unstagedstr '*'
+	zstyle ':vcs_info:*' formats " [$base_vcs_style]"
+	zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
+	precmd () { vcs_info }
+	zle_vim_prompt_notifier() {
+		[[ "$KEYMAP" == vicmd ]] &&
+			print "%F{red}$baseprompt%f" ||
+			print "$baseprompt"
+	}
+	PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
+fi
 
 
 # ── Environment Variables ──────────────────────────────────
@@ -63,13 +59,9 @@ export VISUAL='vim'
 # Set the default Less options.
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
 # Remove -X and -F (exit if the content fits on one screen) to enable it.
-#export LESS='-F -g -i -M -R -S -w -X -z-4'
-
-# Set the Less input preprocessor.
-# Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
-if (( $#commands[(i)lesspipe(|.sh)] )); then
-  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
-fi
+#   export LESS='-F -g -i -M -R -S -w -X -z-4'
+#   export PAGER='less'
+#   export SYSTEMD_PAGER='less'
 
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Define general aliases.
@@ -87,26 +79,24 @@ alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
 # Initialize key map
-alias cfgkey="setxkbmap -layout us \
-                        -option ctrl:nocaps \
-                        -option ctrl:ralt_rctrl \
-                        -option ctrl:rctrl_ralt \
-&& xmodmap <(print 'keycode 135 = Hyper_R
-add Mod3 = Hyper_R')"
+cfgkey()  {
+	setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
+	xmodmap <(print 'keycode 135 = Hyper_R
+	add Mod3 = Hyper_R')
+}
 alias keycfg=cfgkey
 alias gpg=gpg2
-alias xmm="xmodmap /home/zv/.xmodmaprc"
+alias xmm="xmodmap $HOME/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
-alias gpginit="date | gpg -a --encrypt -r zephyr.pellerin@gmail.com | gpg --decrypt"
+alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
-# Enable colorization of manpages
 man() {
 	local args=$@
 	(
 		export LESS_TERMCAP_md=$(print -P "%B")
 		export LESS_TERMCAP_md=$(print -P "%B")
-		# export LESS_TERMCAP_md=$(print -P "%B")
+		export LESS_TERMCAP_md=$(print -P "%B")
 		export LESS_TERMCAP_me=$'\E[0m'
 		export LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}")
 		export LESS_TERMCAP_se=$'\E[0m'
@@ -128,15 +118,14 @@ manvi() {
 
 # Moves the last created file to $2
 mvlast() {
-    local last_file=($1/*(.oc[1]))
-    mv $last_file $2 && print $last_file
+	local last_file=($1/*(.oc[1]))
+	mv $last_file $2 && print $last_file
 }
 
 mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 
 # compile and run
-crun () {
-	local -a use_gcc custom_compiler copts lopts dump_asm verbose usage debug
+crun() {
 	zparseopts -E -D -- -gcc::=use_gcc \
 		c:=custom_compiler \
 		o+:=copts \
@@ -148,21 +137,22 @@ crun () {
 
 	if [[ -n $usage ]]; then
 		cat <<- EOF
-				usage: crun [options]... <filename>
+		usage: crun [options]... <filename>
 
-				  --clang     (default) use clang for C & C++ files
-				  --gcc       use GCC for C & C++ files
-				  --dump      dump assembly of program
-				  -o          supply an option (e.g -o -Wall)
-				  -v          verbose
-				  -g          debug
+		--clang     (default) use clang for C & C++ files
+		--gcc       use GCC for C & C++ files
+		--dump      dump assembly of program
+		-o          supply an option (e.g -o -Wall)
+		-v          verbose
+		-g          debug
 
-				Compiles and runs a C, C++ or x86 Assembly file.
-				EOF
-		return 126
+		Compiles and runs a C, C++ or x86 Assembly file.
+		EOF
+	return 126
 	fi
 
-	# select unique entries of `copts` and then slice copts[2..] (copts[1] contains the flag, e.g "-o")
+	# select unique entries of `copts` and then slice copts[2..] (copts[1]
+	# contains the flag, e.g "-o")
 	local file=${@[-1]}
 	local options=${${(u)copts}[2,-1]}
 	local exepath="$(mktemp)"
@@ -219,15 +209,33 @@ spectrum_ls() {
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
 
-# try to configure pointer speed
-ptrsp() {
-	(( !$+commands[xinput] )) && return
-	# Grep through for the actual ID. Hack.
-	local prop_id="$(xinput list --short | \
-	grep 'Lenovo.*pointer' | \
-	awk 'BEGIN { FS="[\t]+" } ; {print $2}' | \
-	sed 's/id\=//')"
-	xinput --set-prop "$prop_id" 140 "$1" 0 0 0 "$1" 0 0 0 "$2"
+pointer_speed() {
+	(( !$+commands[xinput] )) && return;
+	local speed=$1
+	local output=$(xinput list  | awk '
+	BEGIN { min=99999; max=0; idl=3; } 
+	match($0, /id=[[:digit:]]+/) {
+		id=strtonum(substr($0, RSTART+idl, RLENGTH-idl));
+	if (id < min)
+		min = id;
+	else
+		max = id
+	}
+	END { print min, max }
+	')
+	local -a ntuple=(${=output})
+	integer min=$ntuple[1]
+	integer max=$ntuple[2]
+	local SPEED_STR="Accel Speed ("
+	local props=""
+	local i
+	for (( i=$min; i < $max; i+=1 )) {
+		props=$(xinput --list-props $i | grep "$SPEED_STR")
+		if [[ $props ]]; then
+			local prop_id=$(echo $props | sed 's/.*(//' | sed 's/).*//')
+			xinput --set-prop $i $prop_id $speed
+		fi
+	}
 }
 
 # pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
@@ -281,11 +289,16 @@ pronounce_number() {
 	echo $result
 }
 
+alias diff='diff --color=auto'
+
 alias ls='ls --group-directories-first --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias grep="$aliases[grep] --color=auto"
+alias w3m="noglob w3m"
+alias ptpython="ptpython3 --vi"
+alias workcfg="xrandr --output HDMI-2 --mode 3840x2160 --right-of eDP-1"
 
 # dnf
 if (( $+commands[dnf] )); then
@@ -311,12 +324,13 @@ alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gcm='git checkout master'
 alias ga='git add'
-alias chr="google-chrome"
 
 alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
 
 # Lists all files that have been ignored with git update-index
 alias git-ignorelog='git ls-files -v | grep "^h"'
+
+alias aws="MANPAGER='more' aws"
 
 # Displays some git related author statistics
 function authorstats {
@@ -334,7 +348,7 @@ function format_c_hex {
 
 # Disable correction.
 for cmd (ack cd cp ebuild gcc gist grep heroku
-	ln mkdir mv mysql rm nmcli ip ag man
+	ln mkdir mv mysql rm nmcli ip ag man w3m
 	git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
 
 
@@ -397,7 +411,7 @@ unsetopt CORRECT_ALL        # Don't correct any arguments
 unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
 unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
 setopt SHORT_LOOPS          # Allow short loops.
-# setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
+unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # setopt HASH_CMDS            # Note the location of a command before it's executed
 # setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
 
@@ -441,7 +455,6 @@ zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
 zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 setopt CASE_GLOB
 ## zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-## unsetopt CASE_GLOB
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select
@@ -531,20 +544,20 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<-
 
 # Tmux Pane Completion
 _tmux_pane_words() {
-  local expl
-  local -a w
-  if [[ -z "$TMUX_PANE" ]]; then
-    _message "not running inside tmux!"
-    return 1
-  fi
-  # capture current pane first
-  w=( ${(u)=$(tmux capture-pane -J -p)} )
-  for i in $(tmux list-panes -F '#P'); do
-    # skip current pane (handled above)
-    [[ "$TMUX_PANE" = "$i" ]] && continue
-    w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
-  done
-  _wanted values expl 'words from current tmux pane' compadd -a w
+	local expl
+	local -a w
+	if [[ -z "$TMUX_PANE" ]]; then
+		_message "not running inside tmux!"
+		return 1
+	fi
+	# capture current pane first
+	w=( ${(u)=$(tmux capture-pane -J -p)} )
+	for i in $(tmux list-panes -F '#P'); do
+		# skip current pane (handled above)
+		[[ "$TMUX_PANE" = "$i" ]] && continue
+		w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
+	done
+	_wanted values expl 'words from current tmux pane' compadd -a w
 }
 
 zle -C tmux-pane-words-prefix   complete-word _generic
@@ -567,8 +580,8 @@ autoload -U colors && colors;
 compdef '_dispatch man man' manvi
 
 # ━━ ZLE / Line commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-setopt COMBINING_CHARS    # Combine zero-length punctuation characters
-setopt NO_BEEP      # Stop the beep insanity
+setopt COMBINING_CHARS     # Combine zero-length punctuation characters
+setopt NO_BEEP             # Stop the beep insanity
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 function zle-line-init zle-keymap-select {
@@ -676,15 +689,24 @@ bindkey ' ' magic-space # [Space] - do history expansion
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 gpg-connect-agent /bye
-export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
-export GPG_AGENT_INFO=$HOME/.gnupg/S.gpg-agent
+# XXX: remove whackness. This is a heavy hack that relies on =gpg-agent=
+# replacing the contents of SSH_AUTH_SOCK if it successfully starts.
+SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh
+export SSH_AUTH_SOCK;
+eval $(gpg-agent --enable-ssh-support --daemon  2>!$HOME/.gnupg/zsh-gpg-agent.log)
+
+#export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+
+# Actual output of gpg-agent
+#export GPG_AGENT_INFO=$HOME/.gnupg/S.gpg-agent
+
 #  Gnupg Agent Wrapper
 # [[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Run our external modules
 if [[ -e ~/.zsh/modules ]]; then
-  for fn (~/.zsh/modules/*.zsh) source $fn
+    source ~/.zsh/modules/*.zsh
 fi
 
 # Configure Ocaml package manager
@@ -695,18 +717,16 @@ export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PR
 
 export RUST_SRC_PATH=/usr/local/src/rust/src
 
-# Virtualenvwrapper
-# [[ -x "/usr/bin/virtualenvwrapper.sh" ]] && source /usr/bin/virtualenvwrapper.sh
-
 # The next line updates PATH for the Google Cloud SDK.
 # [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
 
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-# source ~/.cargo/env
+[[ -e ~/.cargo/env ]] && source ~/.cargo/env
 
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
 #     export PATH="$HOME/.rbenv/bin:$PATH"
 #     eval "$(rbenv init -)"
 # fi
+# [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
