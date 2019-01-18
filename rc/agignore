@@ -2,3 +2,6 @@ cargo_cache
 bower_cache
 npm_cache
 node_modules
+*.png
+*.jpg
+*.jpeg
