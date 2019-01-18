@@ -88,7 +88,7 @@ This function should only modify configuration layer settings."
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
-   ;; dotspacemacs-excluded-packages '(org-pomodoro org-projectile spray pug-mode eyebrowse)
+   dotspacemacs-excluded-packages '(org-pomodoro org-projectile spray pug-mode eyebrowse)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
@@ -96,12 +96,6 @@ This function should only modify configuration layer settings."
   "Initialization function. This function is called at the very startup of
 Spacemacs initialization before layers configuration. You should not put any
 user code in there besides modifying the variable values."
-  ;; store all backup and autosave files in the tmp dir
-  (setq backup-directory-alist
-        `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms
-        `((".*" ,temporary-file-directory t)))
-
   (setq-default
    ;; If non-nil then enable support for the portable dumper. You'll need
    ;; to compile Emacs 27 from source following the instructions in file
@@ -185,8 +179,8 @@ user code in there besides modifying the variable values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '(;;(agenda . 10)
-                                ;;(todos . 5)
+   dotspacemacs-startup-lists '(
+                                ;;(agenda . 10) (todos . 5)
                                 )
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive nil
@@ -363,14 +357,7 @@ user code in there besides modifying the variable values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers '(:relative nil
-                                         :disabled-for-modes
-                                         dired-mode
-                                         doc-view-mode
-                                         markdown-mode
-                                         org-mode
-                                         pdf-view-mode
-                                         text-mode)
+   dotspacemacs-line-numbers 'relative
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -427,7 +414,7 @@ user code in there besides modifying the variable values."
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "%I@%S"
+   dotspacemacs-frame-title-format "[%a] %I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -442,30 +429,7 @@ user code in there besides modifying the variable values."
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
-   dotspacemacs-zone-out-when-idle nil
-
-   ;; Add erlang & tern to our execution path
-   ;; (setq exec-path (append exec-path
-   ;;                         '("/usr/local/lib/erlang/bin"
-   ;;                           "~/n/lib/node_modules/tern"
-   ;;                           "~/n/bin")
-   )
-
-  ;; org mode
-  (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
-                exec-path-from-shell-check-startup-files nil
-                powerline-default-separator nil
-                evil-escape-delay 0.2
-                git-enable-github-support t
-                org-directory (expand-file-name "~/Documents/")
-                ;; My personal org folders
-                org-default-notes-file (concat org-directory "notes.org")
-                ;; Undo tree file directory
-                zv//undo-tree-directory "/tmp/zv/.emacs-undo"
-                zv//org-personal (concat org-directory "zv.org")
-                ;; Dont show entire (long) line
-                truncate-lines t))
-
+   dotspacemacs-zone-out-when-idle nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -481,6 +445,32 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ;; store all backup and autosave files in the tmp dir
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+
+  ;; Add erlang & tern to our execution path
+  ;; (setq exec-path (append exec-path
+  ;;                         '("/usr/local/lib/erlang/bin"
+  ;;                           "~/n/lib/node_modules/tern"
+  ;;                           "~/n/bin")
+
+  ;; org mode
+  (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
+                exec-path-from-shell-check-startup-files nil
+                powerline-default-separator nil
+                evil-escape-delay 0.2
+                git-enable-github-support t
+                org-directory (expand-file-name "~/Documents/")
+                ;; My personal org folders
+                org-default-notes-file (concat org-directory "notes.org")
+                ;; Undo tree file directory
+                zv//undo-tree-directory "/tmp/zv/.emacs-undo"
+                zv//org-personal (concat org-directory "zv.org")
+                ;; Dont show entire (long) line
+                truncate-lines t)
   )
 
 (defun dotspacemacs/user-load ()
@@ -501,40 +491,18 @@ before packages are loaded."
   (setenv "SHELL" "/bin/bash")
 
   ;; Undo / Undo Tree
+  (unless (file-exists-p zv//undo-tree-directory)
+    (make-directory zv//undo-tree-directory))
+
   (setq undo-limit        8388608   ;  8mb
         undo-strong-limit 16777216  ; 16mb
         undo-outer-limit  25165824) ; 24mb
-        ;;; undo-outer-limit  33554432) ;; 32mb history size
 
-  (unless (file-exists-p zv//undo-tree-directory)
-    (make-directory zv//undo-tree-directory))
   (setq undo-tree-auto-save-history t
         undo-tree-history-directory-alist `(("/tmp/.*" . nil)
                                             ("." . ,zv//undo-tree-directory))
         undo-tree-visualizer-diff t
         undo-tree-visualizer-timestamps t)
-
-  ;; Undo history files cannot grow beyond the maximum undo tree size, which
-  ;; is limited by `undo-limit', `undo-strong-limit' and
-  ;; `undo-outer-limit'. Nevertheless, undo history files can grow quite
-  ;; large. If you want to automatically compress undo history, add the
-  ;; following advice to your .emacs file (replacing ".gz" with the filename
-  ;; extension of your favourite compression algorithm):
-  ;; (defadvice undo-tree-make-history-save-file-name
-  ;;     (after undo-tree activate)
-  ;;   (setq ad-return-value (concat ad-return-value ".gz")))
-
-  ;; Setup erlang (add to %PATH & set inferior node configuration)
-  (add-hook 'erlang-mode-hook
-            (lambda ()
-              (setq mode-name "Erlang")
-              ;; when starting an Erlang shell in Emacs, with a custom node name
-              ;; (setq inferior-erlang-machine-options '("-sname" "zv"))
-              ))
-
-  (define-key evil-motion-state-map (kbd "C-e") 'evil-end-of-line)
-
-  (evil-leader/set-key "jk" 'avy-goto-char)
 
   (setq magit-repo-dirs '("~/Development/") ; Where I keep my git controlled repos
         ;; Powerline default separator
@@ -561,23 +529,21 @@ before packages are loaded."
         flycheck-pos-tip-timeout 30
 
         ;; abbrev-mode
-        abbrev-mode t)
+        abbrev-mode t
 
-  (setq-default standard-indent 2
-                ;; C Mode
-                c-electric-mode t
-                c-basic-offset  4
-                c-default-style "k&r"
+        ;; Standard indent
+        standard-indent 2
 
-                ;; Javascript
-                js2-basic-offset                 2
-                js2-strict-missing-semi-warning  nil
-                js2-include-node-externs         t
-                js2-include-browser-externs      t)
+        ;; C Mode
+        c-electric-mode t
+        c-basic-offset  2
+        c-default-style "k&r"
 
-  ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
-  (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
-  (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
+        ;; Javascript
+        js2-basic-offset                 2
+        js2-strict-missing-semi-warning  nil
+        js2-include-node-externs         t
+        js2-include-browser-externs      t)
 
   ;; path keybinding
   (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
@@ -587,26 +553,7 @@ before packages are loaded."
                                  ("ofoz" . ,zv//org-personal)
                                  ("ofon" . ,org-default-notes-file)
                                  ("ofzb" . ,zv//blog-path)
-                                 ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
-
-  ;; Snippets
-  (setq yas-snippet-dirs '("~/dotfilez/layers/zv/local/snippets" ;; personal snippets
-                           "~/.emacs.d/private/snippets/"
-                           "~/.emacs.d/layers/+completion/auto-completion/local/snippets"))
-
-  ;; assembly programming hooks
-  (defun zv/asm-mode-hook ()
-    ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
-    (local-unset-key (vector asm-comment-char))
-    ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-    (setq tab-always-indent (default-value 'tab-always-indent)))
-  (add-hook 'asm-mode-hook #'zv/asm-mode-hook)
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode))
-
-  ;; lfe hooks
-  (defvar lfe-dir (concat (getenv "HOME") "/extern/lfe/emacs"))
-  (setq load-path (cons lfe-dir load-path))
-  (require 'lfe-start))
+                                 ("ofzp" . ,(concat zv//blog-path "org/_posts/")))))
 
 ;; Custom variables
 (custom-set-variables
