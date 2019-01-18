@@ -135,18 +135,19 @@ mvlast() {
 mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 
 # compile and run
-crun() {
-    zparseopts -E -D -- -gcc::=use_gcc \
-               c:=custom_compiler \
-               o+:=copts \
-               Wl+:=lopts \
-               -dump::=dump_asm \
-               v::=verbose \
-               h::=usage \
-               g::=debug
+crun () {
+	local -a use_gcc custom_compiler copts lopts dump_asm verbose usage debug
+	zparseopts -E -D -- -gcc::=use_gcc \
+		c:=custom_compiler \
+		o+:=copts \
+		Wl+:=lopts \
+		-dump::=dump_asm \
+		v::=verbose \
+		h::=usage \
+		g::=debug
 
-    if [[ -n $usage ]]; then
-				cat <<- EOF
+	if [[ -n $usage ]]; then
+		cat <<- EOF
 				usage: crun [options]... <filename>
 
 				  --clang     (default) use clang for C & C++ files
@@ -158,40 +159,39 @@ crun() {
 
 				Compiles and runs a C, C++ or x86 Assembly file.
 				EOF
-        return 126
-    fi
+		return 126
+	fi
 
-    # select unique entries of `copts` and then slice copts[2..] (copts[1]
-    # contains the flag, e.g "-o")
-    local file=${@[-1]}
-    local options=${${(u)copts}[2,-1]}
-    local exepath="$(mktemp)"
+	# select unique entries of `copts` and then slice copts[2..] (copts[1] contains the flag, e.g "-o")
+	local file=${@[-1]}
+	local options=${${(u)copts}[2,-1]}
+	local exepath="$(mktemp)"
 
-    if [[ $file =~ \.(cc|cpp|cxx)$ ]]; then
-        local compiler="clang++"
-        $compiler -std=c++1z -g -Wall -Weffc++ ${=options} $file -o $exepath
-    elif [[ $file =~ \.c$ ]]; then
-        local compiler="clang"
-        [[ -n $use_gcc ]] && ccompiler="gcc"
-        $compiler -g -Wall ${=options} $file -o $exepath
-    elif [[ $file =~ \.(s|asm)$ ]]; then
-        local objpath="$(mktemp)"
-        nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
-    else
-        echo "no filetype detected"
-        return 126
-    fi  || return $?
+	if [[ $file =~ \.(cc|cpp|cxx)$ ]]; then
+		local compiler="clang++"
+		$compiler -std=c++1z -g -Wall -Weffc++ ${=options} $file -o $exepath
+	elif [[ $file =~ \.c$ ]]; then
+		local compiler="clang"
+		[[ -n $use_gcc ]] && ccompiler="gcc"
+		$compiler -g -Wall ${=options} $file -o $exepath
+	elif [[ $file =~ \.(s|asm)$ ]]; then
+		local objpath="$(mktemp)"
+		nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
+	else
+		echo "no filetype detected"
+		return 126
+	fi  || return $?
 
-    if [[ -n $dump_asm ]]; then
-        objdump -S -M intel -d $exepath
-    else
-        [[ -n $verbose ]] && echo "exepath: $exepath"
-        if [[ -n $debug ]]; then
-            gdb --args "$exepath" "$@"
-        else
-            "$exepath" "$@" & fg
-        fi
-    fi
+	if [[ -n $dump_asm ]]; then
+		objdump -S -M intel -d $exepath
+	else
+		[[ -n $verbose ]] && echo "exepath: $exepath"
+		if [[ -n $debug ]]; then
+			gdb --args "$exepath" "$@"
+		else
+			"$exepath" "$@" & fg
+		fi
+	fi
 }
 
 # Removes the last created file in the specified directory, defaulting to the
