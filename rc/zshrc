@@ -200,14 +200,8 @@ rmlast() {
   [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
 }
 
-calc () {
-    if [ $# -ne 0 ]; then
-         local wrapped_args="\"$@\""
-         emacsclient --eval "(calc-eval $wrapped_args)" | sed 's/^\"//' |  sed 's/\"$//'
-    else
-        emacsclient -t -c --eval "(full-calc)"
-    fi
-}
+# calculator
+calc () { gdb -n -quiet -batch -ex="p $*" }
 alias calc="noglob calc"
 
 spectrum_ls() {
