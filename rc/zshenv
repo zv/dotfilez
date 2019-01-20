@@ -40,17 +40,18 @@ typeset -gU fpath mailpath path cdpath
 
 # Paths
 path=(
-    # $HOME/.bin
-    # $HOME/.local/bin
-    /usr/local/bin
-    /usr/local/sbin
-    /usr/local/lib
-    $path
-    # {$GOROOT,$GOPATH}/bin
-    #/usr/local/{pgsql,heroku,plan9}/bin
-    $HOME/depot_tools
-    /usr/local/cuda/bin
-    $HOME/.cargo/bin
+	# $HOME/.bin
+	/usr/local/bin
+	/usr/local/sbin
+	/usr/local/lib
+	$path
+	{$GOROOT,$GOPATH}/bin
+	#/usr/local/{pgsql,heroku,plan9}/bin
+	$HOME/depot_tools
+	/usr/local/cuda/bin
+	$HOME/.cargo/bin
+	$HOME/extern/geth/
+	$HOME/.local/bin
 )
 
 # Remove all empty directories from the path
