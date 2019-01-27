@@ -47,7 +47,29 @@ set menu-complete-display-prefix on
 # Blinks on a matching paren
 set blink-matching-paren on
 
+# Make the delete key work instead of outputting a ~
+"^?" backward-delete-char
+"^[[3~" delete-char
+"^[3;5~" delete-char
+"\e[3~" delete-char
+
+Control-p: history-search-backward
+Control-n: history-search-forward
+Control-r: history-substring-search-backward
+Control-s: history-substring-search-forward
 
 # Tab should complete
 "\t": menu-complete
 "\e[Z": menu-complete-backward
+
+$if mode=vi
+		Control-l: clear-screen
+$endif
+
+$if mode=vicmd
+		?: reverse-search-history
+		/: forward-search-history
+		v: edit-and-execute-command
+		k: previous-history
+		j: next-history
+$endif
