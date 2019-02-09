@@ -312,7 +312,7 @@ function workxrandr() {
 # Set myself up for work
 function workcfg {
 	keycfg
-	workxrandr
+	workxrandr $1
 }
 
 # dnf
