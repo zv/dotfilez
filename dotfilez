@@ -58,13 +58,12 @@ CHANGES_POSSIBLE=0
 DO_BOOTSTRAP=0
 
 function main() {
-
   #; capture full command, for passing to hooks
   FULL_COMMAND="$*"
 
   #; parse command line arguments
   local retval=0
-  internal_commands="^(alt|bootstrap|clean|clone|config|decrypt|encrypt|enter|help|init|introspect|list|perms|version)$"
+  internal_commands="^(alt|bootstrap|clean|clone|config|decrypt|encrypt|enter|etc|help|init|introspect|list|perms|version|installetc)$"
   if [ -z "$*" ] ; then
     #; no argumnts will result in help()
     help
@@ -112,8 +111,21 @@ function main() {
   fi
 
   exit_with_hook $retval
-
 }
+
+function installetc() {
+  shopt -s globstar
+  local dest;
+  for file in etc/**/*; do
+    dest="/etc/${file#etc/}"
+    if [[ ! -d $(dirname "$dest") ]]; then
+      sudo mkdir -p $(dirname "$dest")
+    fi
+    sudo mv -i "$file" "$dest"
+  done
+  shopt -u globstar
+}
+
 
 #; ****** dotfilez Commands ******
 
@@ -245,6 +257,7 @@ Commands:
   dotfilez encrypt               - Encrypt files
   dotfilez decrypt [-l]          - Decrypt files
   dotfilez perms                 - Fix ssh/gpg permissions
+  dotfilez installetc            - Install etc to /etc
 
 Files:
   data               - dotfilez's data directory
