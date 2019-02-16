@@ -96,3 +96,10 @@ rc/weechat/logs
 rc/weechat/weechat.log
 rc/weechat/sec.conf
 rc/weechat/passphrase
+
+data/secrets.m4
+
+
+#━━━━ irc ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+thunderbird/Crash Reports
