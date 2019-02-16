@@ -18,11 +18,8 @@
         (spacemacs/set-leader-keys key def))
       (setq key (pop bindings) def (pop bindings)))))
 
-(zv/set-available-leader
- "am" 'man
- "oaw" 'woman
- "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm
- "ib" 'ibuffer)
+(zv/set-available-leader "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm
+                         "bi" 'ibuffer)
 
 ;; Forward/Backward mice keys
 (global-set-key (kbd "<mouse-8>") 'switch-to-prev-buffer)
@@ -63,7 +60,7 @@
 
 ;; utilities
 (global-set-key (kbd "C-x C-r") 're-builder)
-(global-set-key (kbd "M-/") 'hippie-expand)
+;; (global-set-key (kbd "M-/") 'hippie-expand)
 
 ;; applications
 (global-set-key (kbd "<XF86Calculator>") 'calc)
@@ -194,7 +191,7 @@
               (define-key calendar-mode-map "G" 'calendar-end-of-year))))
 
 
-; emacs vc
+                                        ; emacs vc
 (with-eval-after-load 'vc
   (setq
    ;; Don't make backups of git history files

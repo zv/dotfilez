@@ -193,9 +193,6 @@ FUN function callback"
     (when (or (member (file-name-directory (buffer-file-name)) dirs-to-encrypt) (member buffer-file-name files-to-encrypt))
       (epa-encrypt-file (buffer-file-name) recipient))))
 
-;; Turn on encrypt hook
-(add-hook 'after-save-hook 'zv/encrypt-secrets)
-
 
 (defun zv/auto-publish ()
   "Automatically publish any ORG project files"
