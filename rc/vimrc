@@ -102,13 +102,12 @@ set list
 set nowrap		" Don't wrap lines
 set linebreak		" Wrap lines at convenient points
 
-" set tabstop=8		" actual tabs occupy 8 characters
-" set softtabstop=8	" insert mode tab and backspace use 8 spaces
-" set shiftwidth=4
+set tabstop=4		" actual tabs occupy 8 characters
+set softtabstop=4	" insert mode tab and backspace *should* use 8 spaces
 
-" set cindent		" start c lang indent mode
+set cindent		" start c lang indent mode
+set smartindent		" intdent intelligently
 " set expandtab		" insert tabs as spaces
-" set smartindent	" intdent intelligently
 " set smarttab		" tab inserts tab when already tabbed!
 
 set listchars=tab:»·,trail:·
@@ -159,6 +158,8 @@ nnoremap [ {
 vnoremap [ {
 nnoremap d[ d{
 nnoremap d] d}
+
+nnoremap <leader>sp :set paste!<CR> 
 
 nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
