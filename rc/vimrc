@@ -11,7 +11,7 @@ set autoread			" Reload files changed outside vim
 set backspace=indent,eol,start	" Allow backspace in insert mode
 set background=light		" a bright terminal
 set browsedir=buffer		" Open Dialog should default to current buffer
-set columns=80			" Set column width at 80
+" set columns=80			" Set column width at 80
 set directory-=.		" No .swp/swo etc. in `cwd`
 set encoding=utf-8		" Yes, really
 set gcr=a:blinkon0		" Disable cursor blink
