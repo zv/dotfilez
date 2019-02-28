@@ -12,7 +12,6 @@
 	excludesfile = ~/.gitignore
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	safecrlf = true
-	# autocrlf = false
 
 [commit]
 	verbose = true
@@ -22,7 +21,6 @@
 	program = gpg2
 
 [format]
-	signoff = true
 	numbered = true
 
 [color]
@@ -56,11 +54,8 @@
 
 [merge]
 	verbosity = 1
-	# Don't create an extra metacommit when merging history.
-	ff = only
 	tool = vimdiff3
 	conflictstyle = diff3
-	verifysignatures = true
 
 [mergetool "ediff"]
 	cmd = "emacsclient -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\""
