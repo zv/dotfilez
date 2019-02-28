@@ -136,15 +136,16 @@ nnoremap <silent> <leader>ws <C-w>s
 " basic spacemacs compatibility bindings
 nnoremap <silent> <leader>sc :nohlsearch<CR>
 nnoremap <silent> <leader>fs :w<CR>
-nnoremap <silent> <leader>ft :Lexplore<CR>
-nnoremap <silent> <leader>ad :Explore<CR>
+nnoremap <leader>ft :cd %:p:h<cr>:Lexplore<cr>
+nnoremap <leader>ad :cd %:p:h<cr>:Explore<cr>
 nnoremap <silent> <leader>bb :buffers<CR>
 nnoremap <silent> Q :q<CR>
 nnoremap <silent> <leader>fed :e ~/.vimrc<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
 nnoremap <silent> <leader>bn :bnext<CR>
 nnoremap <leader>ff :e<SPACE>
-
+nnoremap <leader>tw :set nolist!<CR>
+nnoremap <leader>tl :set nowrap!<CR>
 
 " map [ => { and ] => }
 augroup bracket_remap
@@ -162,6 +163,10 @@ nnoremap [ {
 vnoremap [ {
 
 nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" page manipulations
+nnoremap <silent> <CR> <C-f>
+nnoremap <silent> <Backspace> <C-b>
 
 "}}}
 
