@@ -201,7 +201,7 @@
 	lc						= log ORIG_HEAD.. --stat --no-merges
 
 	# Show signatures
-	lsig					= log  --pretty=format:\"%C(blue)%ad%  %C(yellow)%h%C(red)%d%Creset %s %C(013)%C(bold) %m [%G?] %GS %GK %Creset\"
+	lsig					= log  --pretty=format:\"%C(blue)%ad%  %C(yellow)%h%C(red)%d%Creset %s %C(013)%C(bold) %m %an [%G?] %GS %GK %Creset\"
 
 
 	# Log changes
@@ -699,7 +699,7 @@
 	graphviz = !"f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
 
 	# show a list of every branch and show their latests commit, sorted by last commit
-	branch-log				= "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/heads --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
+	branch-log = for-each-ref --sort=-committerdate refs/heads/ -- format='%(committerdate:short) %(authorname) %(refname:short)'
 	branch-log-remote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/$1 --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
 
 	whatis				= show -s --pretty='tformat:%h (%s, %ad)' --date=short
