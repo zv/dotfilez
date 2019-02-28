@@ -1,7 +1,7 @@
 #╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
 # Fetch a key from the AWS authentication config file
 # Arguments:
-#   $1  - Environment name: e.g prod, stage or default
+#   $1 - Environment name: e.g prod, stage or default
 #   $2 - Key name, e.g aws_access_key_id
 # Returns:
 #   String
@@ -54,9 +54,14 @@ poly_connectdocker() {
     else
         local POLY_WORK=$1
     fi
-    ssh -NL localhost:2374:/var/run/docker.sock poly@b."$POLY_WORK".polyswarm.network &
+    local url="poly@b."$POLY_WORK".polyswarm.network"
+    local socket="localhost:2374:/var/run/docker.sock"
+    echo "Using: $POLY_WORK. Connecting to $url on $socket"
+    ssh -NL "$socket" "$url" &
     export DOCKER_HOST=localhost:2374
     export DOCKER_SSH_PID=$!
+    echo "DOCKER_HOST: $DOCKER_HOST"
+    echo "DOCKER_SSH_PID: $DOCKER_SSH_PID"
 }
 
 #╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
