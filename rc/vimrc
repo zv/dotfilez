@@ -67,12 +67,31 @@ set undofile
 set backup
 set noswapfile
 
-silent !mkdir /tmp/.backups > /dev/null 2>&1
-silent !mkdir /tmp/.undodir > /dev/null 2>&1
-set undodir=/tmp/.undodir//
-set backupdir=/tmp/.backups//
-set directory=/tmp/.backups//
-set backupskip=/tmp/*//,/private/tmp/*//
+if has('win32') || has('win64')
+	let s:appdata=$LOCALAPPDATA . '/vim/'
+	if !isdirectory(expand(s:appdata))
+		if exists("*mkdir")
+			silent! call mkdir(expand(s:appdata),"p")
+		endif
+	endif
+else
+	let s:appdata='/var/tmp/'
+endif
+
+let &backupdir=(s:appdata . 'backup//')
+let &directory=(s:appdata . 'swap//')
+let &undodir=(s:appdata . 'undo//')
+
+" Create those folders if they don't exist
+if !isdirectory(expand(&undodir)) && exists("*mkdir")
+	silent! call mkdir(expand(&undodir), "p")
+endif
+if !isdirectory(expand(&backupdir)) && exists("*mkdir")
+	silent! call mkdir(expand(&backupdir), "p")
+endif
+if !isdirectory(expand(&directory)) && exists("*mkdir")
+	silent! call mkdir(expand(&directory), "p")
+endif
 "}}}
 
 " ――――――――――――――――――  Ctags  ――――――――――――――――――――――――{{{
