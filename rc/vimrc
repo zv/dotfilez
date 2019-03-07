@@ -138,6 +138,8 @@ nnoremap <silent> Q :q<CR>
 nnoremap <silent> <leader>fed :e ~/.vimrc<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
 nnoremap <silent> <leader>bn :bnext<CR>
+nnoremap <silent> <leader>tn :tabnext<CR>
+nnoremap <silent> <leader>tp :tabprev<CR>
 nnoremap <leader>ff :e<SPACE>
 nnoremap <leader>tw :set nolist!<CR>
 nnoremap <leader>tl :set nowrap!<CR>
