@@ -158,6 +158,8 @@ nnoremap ] }
 vnoremap ] }
 nnoremap [ {
 vnoremap [ {
+nnoremap d[ d{
+nnoremap d] d}
 
 nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
