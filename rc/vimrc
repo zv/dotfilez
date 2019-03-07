@@ -62,36 +62,31 @@ set smartcase		"Smart Case Search
 set ignorecase		"Ignore Case
 "}}}
 
-" ―――――――――――― Swap & Persistent Undo ―――――――――――――――{{{
+" ――――――━―――――― Swap & Persistent Undo ―――――――――――――――{{{
 set undofile
 set backup
 set noswapfile
 
 if has('win32') || has('win64')
 	let s:appdata=$LOCALAPPDATA . '/vim/'
-	if !isdirectory(expand(s:appdata))
-		if exists("*mkdir")
-			silent! call mkdir(expand(s:appdata),"p")
-		endif
-	endif
+elseif has('win32unix') " cygwin's vim
+	let s:appdata="/tmp/vim"
 else
-	let s:appdata='/var/tmp/'
+	if empty($XDG_CACHE_HOME)
+		let $XDG_CACHE_HOME = '~/.cache'
+	endif
+	let s:appdata=$XDG_CACHE_HOME . '/vim/'
 endif
 
-let &backupdir=(s:appdata . 'backup//')
-let &directory=(s:appdata . 'swap//')
-let &undodir=(s:appdata . 'undo//')
+let &backupdir=(s:appdata . 'backup')
+let &directory=(s:appdata . 'swap')
+let &undodir=(s:appdata . 'undo')
+let &backupskip=(&backupdir)
 
 " Create those folders if they don't exist
-if !isdirectory(expand(&undodir)) && exists("*mkdir")
-	silent! call mkdir(expand(&undodir), "p")
-endif
-if !isdirectory(expand(&backupdir)) && exists("*mkdir")
-	silent! call mkdir(expand(&backupdir), "p")
-endif
-if !isdirectory(expand(&directory)) && exists("*mkdir")
-	silent! call mkdir(expand(&directory), "p")
-endif
+for s:vddir in [&undodir, &backupdir, &directory]
+	silent! call mkdir(expand(s:vddir), "p")
+endfor
 "}}}
 
 " ――――――――――――――――――  Ctags  ――――――――――――――――――――――――{{{
