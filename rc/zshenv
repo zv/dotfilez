@@ -14,6 +14,10 @@ export LC_CTYPE=$LANG
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
+# XDG vars
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache"}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:="$HOME/.config"}
+
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE="true"
 
