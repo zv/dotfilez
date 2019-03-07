@@ -73,11 +73,6 @@ if [[ ! -d "$TMPDIR" ]]; then
 fi
 export TMPPREFIX="${TMPDIR%/}/zsh"
 
-# Browser
-#if (( $+commands[google-chrome] )); then
-#	export BROWSER==google-chrome
-#fi
-
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then
 	export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
