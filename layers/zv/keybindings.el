@@ -88,9 +88,6 @@
 ;; insert mode
 (define-key evil-insert-state-map (kbd "C-h") 'backward-char)
 (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
-;; (define-key evil-insert-state-map (kbd "C-d") 'delete-char)
-;; (define-key evil-insert-state-map (kbd "C-i") 'backward-delete-char)
-;; (define-key evil-insert-state-map (kbd "C-s") 'undo-tree-undo)
 
 
 ;; mode bindings
@@ -101,38 +98,13 @@
 ;;      (define-key js2-mode-map next-buffer-key 'evil-window-next)
 ;;      (define-key js2-mode-map prev-buffer-key 'evil-window-prev)))
 
-;; delete line
-(eval-after-load 'helm
-  '(define-key helm-map (kbd "C-u") 'helm-delete-minibuffer-contents))
+
+;; Bound to 'goto next line and indent' by default
+(evil-leader/set-key "jk" 'avy-goto-char)
 
 (eval-after-load 'shell
   '(progn
      (define-key shell-mode-map "\C-d" nil)))
-
-;; Info Mode
-(evil-add-hjkl-bindings Info-mode-map 'emacs
-  "0" 'evil-digit-argument-or-evil-beginning-of-line
-  (kbd "M-h") 'Info-help   ; "h"
-  ;;"j" 'zv/scroll-up-one-line
-  ;;"k" 'zv/scroll-down-one-line
-  "n" 'Info-search-next
-  "/" 'Info-search
-  "?" 'Info-search-backward
-  "U" 'Info-up
-  "D" 'Info-directory
-  "u" 'Info-scroll-down
-  "d" 'Info-scroll-up
-  "p" 'evil-window-next ; "p"op out of info window
-  "V" 'evil-visual-line
-  "\C-u" 'Info-scroll-down
-  "\C-d" 'Info-scroll-up
-  "\C-t" 'Info-history-back ; "l"
-  "\C-o" 'Info-history-back
-  "\C-]" 'Info-follow-nearest-node
-  ;; The following are for scroll up / scroll down keys
-  (kbd "<mouse-4>") 'Info-scroll-down
-  (kbd "<mouse-5>") 'Info-scroll-up
-  (kbd "DEL") 'Info-scroll-down)
 
 
                                         ; dired
@@ -210,13 +182,13 @@
   "l" 'speedbar-expand-line
   "h" 'speedbar-contract-line)
 
-                                        ; Quitting Emacs Mode
+;; Quitting Emacs Mode
 (eval-after-load "view"
   (lambda ()
     (define-key view-mode-map (kbd "H-q") 'View-quit)))
 
 
-                                        ; Manpages
+;; Manpages
 (with-eval-after-load "Man"
   ;; Define our lookup funtion with `K' to be 'man' rather than 'woman'
   (setq evil-lookup-func #'man)
@@ -289,9 +261,8 @@
 (define-key evil-visual-state-map "}" 'evil-forward-section-begin)
 (define-key evil-visual-state-map "{" 'evil-backward-section-end)
 
-
 
-                                        ; Initial State
+;; Set emacs as the initial state in a variety of modes
 (mapc (lambda (x) (evil-set-initial-state x 'emacs))
       '(epa-key-list-mode
         epa-key-mode
@@ -301,3 +272,29 @@
         term-mode
         calendar-mode
         racket-describe-mode))
+
+
+;; Info Mode
+(evil-add-hjkl-bindings Info-mode-map 'emacs
+  "0" 'evil-digit-argument-or-evil-beginning-of-line
+  (kbd "M-h") 'Info-help   ; "h"
+  ;;"j" 'zv/scroll-up-one-line
+  ;;"k" 'zv/scroll-down-one-line
+  "n" 'Info-search-next
+  "/" 'Info-search
+  "?" 'Info-search-backward
+  "U" 'Info-up
+  "D" 'Info-directory
+  "u" 'Info-scroll-down
+  "d" 'Info-scroll-up
+  "p" 'evil-window-next ; "p"op out of info window
+  "V" 'evil-visual-line
+  "\C-u" 'Info-scroll-down
+  "\C-d" 'Info-scroll-up
+  "\C-t" 'Info-history-back ; "l"
+  "\C-o" 'Info-history-back
+  "\C-]" 'Info-follow-nearest-node
+  ;; The following are for scroll up / scroll down keys
+  (kbd "<mouse-4>") 'Info-scroll-down
+  (kbd "<mouse-5>") 'Info-scroll-up
+  (kbd "DEL") 'Info-scroll-down)

@@ -3,9 +3,10 @@
                       ; edts
                       erlang
                       eshell
-                      (z3-mode :location "/home/zv/Development/z3-mode/")
                       js2-mode
-                      cc-mode))
+                      cc-mode
+                      nasm-mode
+                      ))
 
 (defvar zv-excluded-packages '())
 
@@ -92,6 +93,18 @@
             js2-include-browser-externs      t)
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
         "or" 'react-mode))))
+
+
+(defun zv/pre-init-nasm-mode ()
+  (use-package nasm-mode
+    :defer t
+    :config
+    (progn
+      ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+      (local-unset-key (vector asm-comment-char))
+      ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+      (setq-local tab-always-indent (default-value 'tab-always-indent)))))
+(add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode))
 
 
 (defun zv/post-init-org ()
