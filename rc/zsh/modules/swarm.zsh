@@ -1,7 +1,7 @@
 #╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
 # Fetch a key from the AWS authentication config file
 # Arguments:
-#   $1  - Environment name: e.g prod, stage or default
+#   $1 - Environment name: e.g prod, stage or default
 #   $2 - Key name, e.g aws_access_key_id
 # Returns:
 #   String
@@ -54,9 +54,14 @@ poly_connectdocker() {
     else
         local POLY_WORK=$1
     fi
-    ssh -NL localhost:2374:/var/run/docker.sock poly@b."$POLY_WORK".polyswarm.network &
-    export DOCKER_HOST=localhost:2374
+    local url="poly@b."$POLY_WORK".polyswarm.network"
+    local socket="localhost:2374:/var/run/docker.sock"
+    echo "Using: $POLY_WORK. Connecting to $url on $socket"
+    ssh -NL "$socket" "$url" &
     export DOCKER_SSH_PID=$!
+    export DOCKER_HOST=localhost:2374
+    echo "DOCKER_HOST: $DOCKER_HOST"
+    echo "DOCKER_SSH_PID: $DOCKER_SSH_PID"
 }
 
 #╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
@@ -65,6 +70,18 @@ poly_connectdocker() {
 poly_disconnectdocker() {
     kill $DOCKER_SSH_PID
     unset DOCKER_SSH_PID
+}
+
+#╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+# Hook into existing docker
+#╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+poly_hookdocker() {
+		local output=$(ps -Ao pid,command | grep 'ssh .*localhost:2374:/var/run/docker.sock' | head -n 1)
+		local pid=$(echo $output | awk '{ print $1 }')
+		echo "Using: $output"
+		set -x
+		export DOCKER_SSH_PID="$pid"
+		export DOCKER_HOST=localhost:2374
 }
 
 #╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
@@ -95,4 +112,17 @@ poly_reviewenv() {
     echo "\$AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
     echo "\$AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
     echo "AWS keys are from $(poly_checkenv)"
+}
+
+setup_microengine_terraform ()
+{
+		local env="$1"
+		if [[ ! "$env" ]]; then
+				echo "No environment passed"
+				return
+		fi
+		poly_setenv "$env"
+		export $(cat ".env-$env" | xargs)
+		source setup_tf_env.sh
+		poly_reviewenv
 }

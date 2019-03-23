@@ -14,6 +14,10 @@ export LC_CTYPE=$LANG
 # 10 years I've been listenining to this list prompt and today I am fucking done!
 export LISTPROMPT=''
 
+# XDG vars
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache/"}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:="$HOME/.config/"}
+
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE="true"
 
@@ -36,17 +40,18 @@ typeset -gU fpath mailpath path cdpath
 
 # Paths
 path=(
-    # $HOME/.bin
-    # $HOME/.local/bin
-    /usr/local/bin
-    /usr/local/sbin
-    /usr/local/lib
-    $path
-    # {$GOROOT,$GOPATH}/bin
-    #/usr/local/{pgsql,heroku,plan9}/bin
-    $HOME/depot_tools
-    /usr/local/cuda/bin
-    $HOME/.cargo/bin
+	# $HOME/.bin
+	/usr/local/bin
+	/usr/local/sbin
+	/usr/local/lib
+	$path
+	{$GOROOT,$GOPATH}/bin
+	#/usr/local/{pgsql,heroku,plan9}/bin
+	$HOME/depot_tools
+	/usr/local/cuda/bin
+	$HOME/.cargo/bin
+	$HOME/extern/geth/
+	$HOME/.local/bin
 )
 
 # Remove all empty directories from the path
@@ -68,11 +73,6 @@ if [[ ! -d "$TMPDIR" ]]; then
 	mkdir -p -m 700 "$TMPDIR"
 fi
 export TMPPREFIX="${TMPDIR%/}/zsh"
-
-# Browser
-#if (( $+commands[google-chrome] )); then
-#	export BROWSER==google-chrome
-#fi
 
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then

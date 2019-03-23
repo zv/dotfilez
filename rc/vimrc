@@ -11,7 +11,6 @@ set autoread			" Reload files changed outside vim
 set backspace=indent,eol,start	" Allow backspace in insert mode
 set background=light		" a bright terminal
 set browsedir=buffer		" Open Dialog should default to current buffer
-set columns=80			" Set column width at 80
 set directory-=.		" No .swp/swo etc. in `cwd`
 set encoding=utf-8		" Yes, really
 set gcr=a:blinkon0		" Disable cursor blink
@@ -62,17 +61,31 @@ set smartcase		"Smart Case Search
 set ignorecase		"Ignore Case
 "}}}
 
-" ―――――――――――― Swap & Persistent Undo ―――――――――――――――{{{
+" ――――――━―――――― Swap & Persistent Undo ―――――――――――――――{{{
 set undofile
 set backup
 set noswapfile
 
-silent !mkdir /tmp/.backups > /dev/null 2>&1
-silent !mkdir /tmp/.undodir > /dev/null 2>&1
-set undodir=/tmp/.undodir//
-set backupdir=/tmp/.backups//
-set directory=/tmp/.backups//
-set backupskip=/tmp/*//,/private/tmp/*//
+if has('win32') || has('win64')
+	let s:appdata=$LOCALAPPDATA . '/vim/'
+elseif has('win32unix') " cygwin's vim
+	let s:appdata="/tmp/vim"
+else
+	if empty($XDG_CACHE_HOME)
+		let $XDG_CACHE_HOME = '~/.cache'
+	endif
+	let s:appdata=$XDG_CACHE_HOME . '/vim/'
+endif
+
+let &backupdir=(s:appdata . 'backup')
+let &directory=(s:appdata . 'swap')
+let &undodir=(s:appdata . 'undo')
+let &backupskip=(&backupdir)
+
+" Create those folders if they don't exist
+for s:vddir in [&undodir, &backupdir, &directory]
+	silent! call mkdir(expand(s:vddir), "p")
+endfor
 "}}}
 
 " ――――――――――――――――――  Ctags  ――――――――――――――――――――――――{{{
@@ -89,13 +102,12 @@ set list
 set nowrap		" Don't wrap lines
 set linebreak		" Wrap lines at convenient points
 
-" set tabstop=8		" actual tabs occupy 8 characters
-" set softtabstop=8	" insert mode tab and backspace use 8 spaces
-" set shiftwidth=4
+set tabstop=4		" actual tabs occupy 8 characters
+set softtabstop=4	" insert mode tab and backspace *should* use 8 spaces
 
-" set cindent		" start c lang indent mode
+set cindent		" start c lang indent mode
+set smartindent		" intdent intelligently
 " set expandtab		" insert tabs as spaces
-" set smartindent	" intdent intelligently
 " set smarttab		" tab inserts tab when already tabbed!
 
 set listchars=tab:»·,trail:·
@@ -117,15 +129,18 @@ nnoremap <silent> <leader>ws <C-w>s
 " basic spacemacs compatibility bindings
 nnoremap <silent> <leader>sc :nohlsearch<CR>
 nnoremap <silent> <leader>fs :w<CR>
-nnoremap <silent> <leader>ft :Lexplore<CR>
-nnoremap <silent> <leader>ad :Explore<CR>
+nnoremap <leader>ft :cd %:p:h<cr>:Lexplore<cr>
+nnoremap <leader>ad :cd %:p:h<cr>:Explore<cr>
 nnoremap <silent> <leader>bb :buffers<CR>
 nnoremap <silent> Q :q<CR>
 nnoremap <silent> <leader>fed :e ~/.vimrc<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
 nnoremap <silent> <leader>bn :bnext<CR>
+nnoremap <silent> <leader>tn :tabnext<CR>
+nnoremap <silent> <leader>tp :tabprev<CR>
 nnoremap <leader>ff :e<SPACE>
-
+nnoremap <leader>tw :set nolist!<CR>
+nnoremap <leader>tl :set nowrap!<CR>
 
 " map [ => { and ] => }
 augroup bracket_remap
@@ -141,8 +156,16 @@ nnoremap ] }
 vnoremap ] }
 nnoremap [ {
 vnoremap [ {
+nnoremap d[ d{
+nnoremap d] d}
+
+nnoremap <leader>sp :set paste!<CR> 
 
 nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" page manipulations
+nnoremap <silent> <CR> <C-f>
+nnoremap <silent> <Backspace> <C-b>
 
 "}}}
 

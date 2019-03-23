@@ -18,7 +18,6 @@ certificates/GandiStandardSSLCA.crt
 certificates/sks-keyservers.netCA.pem
 
 #━━━━━━RC FILES━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-rc/zsh/**/private.zsh
 rc/zsh/cache
 rc/credentials.sh
 rc/vim/.netrwhist

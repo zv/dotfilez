@@ -3,7 +3,6 @@
                       ; edts
                       erlang
                       eshell
-                      (z3-mode :location "/home/zv/Development/z3-mode/")
                       js2-mode
                       cc-mode
                       nasm-mode
