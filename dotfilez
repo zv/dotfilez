@@ -114,16 +114,20 @@ function main() {
 }
 
 function installetc() {
-  shopt -s globstar
-  local dest;
-  for file in etc/**/*; do
-    dest="/etc/${file#etc/}"
-    if [[ ! -d $(dirname "$dest") ]]; then
-      sudo mkdir -p $(dirname "$dest")
-    fi
-    sudo mv -i "$file" "$dest"
-  done
-  shopt -u globstar
+    shopt -s globstar
+    local dest;
+    for file in etc/**/*; do
+        if [[ "$(basename file)" -eq "resolv.conf" ]]; then
+            sudo mv -i "$file" 
+        else
+            dest="/etc/${file#etc/}"
+            if [[ ! -d $(dirname "$dest") ]]; then
+                sudo mkdir -p $(dirname "$dest")
+            fi
+            sudo ln -sfi "$file" "$dest"
+        fi
+    done
+    shopt -u globstar
 }
 
 
