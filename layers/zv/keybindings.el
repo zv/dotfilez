@@ -298,3 +298,24 @@
   (kbd "<mouse-4>") 'Info-scroll-down
   (kbd "<mouse-5>") 'Info-scroll-up
   (kbd "DEL") 'Info-scroll-down)
+
+
+;; Python bindings
+(spacemacs|use-package-add-hook python
+  :post-config
+  (progn
+    ;; searches the current buffer's directory and parents up to "/" for a directory
+    ;; named "venv", activating it if it exists.
+    (defun search-parents-for-venv ()
+      (interactive)
+      (defun venv-search (test-dir)
+        (let ((venv-dir (expand-file-name (concat test-dir "/venv/"))))
+          (cond
+           ((string-equal test-dir "/") f)
+           ((file-directory-p venv-dir) (pyvenv-activate venv-dir))
+           (t (venv-search (file-name-directory (directory-file-name test-dir)))))))
+      (venv-search (directory-file-name buffer-file-name)))
+
+    ;; Set our custom keybindings
+    (spacemacs/set-leader-keys-for-major-mode 'python-mode
+      "mv" 'search-parents-for-venv)))
