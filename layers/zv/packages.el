@@ -1,6 +1,7 @@
 (defvar zv-packages '(magit
                       (org :location built-in)
                       ; edts
+                      flycheck
                       erlang
                       eshell
                       js2-mode
@@ -18,6 +19,13 @@
                                flycheck-gcc-language-standard "c++14"
                                disaster-cxxflags "-std=c++14 -O1 -g3")))))
 
+(defun zv/post-init-flycheck ()
+  ;; Place 'python-pylint prior to 'python-flake8 in the list of flycheckers.
+  (use-package flycheck
+    :defer t
+    :config (let* ((flakeless (delete 'python-flake8 flycheck-checkers))
+                   (tail (member 'python-pylint flakeless)))
+              (setcdr tail (cons 'python-flake8 (cdr tail))))))
 
 (defun zv/post-init-c++-mode ()
   (use-package c++
