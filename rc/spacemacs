@@ -440,7 +440,9 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+  ;; Internal shell tools are more accommodating  to bash in Emacs.
+  (setenv "SHELL" "/bin/bash"))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -485,10 +487,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
-  ;; Internal shell tools are more accommodating  to bash in Emacs.
-  (setenv "SHELL" "/bin/bash")
-
   (add-hook 'erlang-mode-hook
             (lambda ()
               (setq mode-name "Erlang")
