@@ -52,7 +52,6 @@
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
 ;; EWW
-
 (evil-define-key 'motion eww-mode-map
   "d" 'scroll-up-command
   "u" 'scroll-down-command
@@ -60,13 +59,9 @@
 
 ;; utilities
 (global-set-key (kbd "C-x C-r") 're-builder)
-;; (global-set-key (kbd "M-/") 'hippie-expand)
-
 ;; applications
 (global-set-key (kbd "<XF86Calculator>") 'calc)
 (global-set-key (kbd "<XF86Mail>") 'gnus)
-
-
 
 ;; evil state bindings
 (evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
@@ -76,73 +71,14 @@
 (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
 
-;; Although this is `helm' package configuration, this is more
-;; accurately a keybinding for a very, very commonly used function
-(use-package helm
-  :defer t
-  :init
-  ;; I literally have never used the default `jj' keybinding.
-  ;; Good riddance
-  (evil-leader/set-key "jj" 'helm-mini))
-
 ;; insert mode
 (define-key evil-insert-state-map (kbd "C-h") 'backward-char)
 (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
-
 
 ;; mode bindings
-;; js2 mode
-;; (eval-after-load 'js2-mode
-;;   '(progn
-;;      (define-key js2-mode-map (kbd "H-s") 'add-semicolon-to-end-of-line)
-;;      (define-key js2-mode-map next-buffer-key 'evil-window-next)
-;;      (define-key js2-mode-map prev-buffer-key 'evil-window-prev)))
-
-
 ;; Bound to 'goto next line and indent' by default
-(evil-leader/set-key "jk" 'avy-goto-char)
-
-(eval-after-load 'shell
-  '(progn
-     (define-key shell-mode-map "\C-d" nil)))
-
-
-                                        ; dired
-(with-eval-after-load 'dired
-  ;; (evil-define-key 'normal dired-mode-map "s" 'dired-sort-toggle-or-edit)
-  ;; (evil-define-key 'normal dired-mode-map "u" 'dired-up-directory)
-  ;; (evil-define-key 'normal dired-mode-map "r" 'dired-unmark )
-  ;; (evil-define-key 'normal dired-mode-map (kbd "<f5>") 'dired-do-redisplay)
-
-  ;; (setq-local
-  ;;  ;; This ensures that `dired-other-window' doesn't split when using it as a
-  ;;  ;; directory-manager.
-  ;;  split-width-threshold 220)
-
-  (evilified-state-evilify dired-mode dired-mode-map
-    [mouse-1] 'diredp-find-file-reuse-dir-buffer
-    [mouse-2] 'dired-find-alternate-file
-    "f"  'helm-find-files
-    "h"  'diredp-up-directory-reuse-dir-buffer
-    "l"  'diredp-find-file-reuse-dir-buffer
-    "c"  'helm-find-files
-
-    "gg" 'evil-goto-first-line
-    "G"  'evil-goto-line
-
-    "j" 'dired-next-line
-    "k" 'dired-previous-line
-    "h" 'dired-up-directory
-    "l" 'dired-find-file
-    "u" 'dired-up-directory
-    "f" 'dired-goto-file
-    "/" 'evil-search-forward
-    "?" 'evil-search-backward
-    "\C-u" 'evil-scroll-up
-    "\C-d" 'evil-scroll-down
-    "r" 'dired-unmark
-    (kbd "<f5>") 'dired-do-redisplay))
-
+(with-eval-after-load 'shell
+  (define-key shell-mode-map "\C-d" nil))
 
                                         ; calendar
 (with-eval-after-load 'calendar
@@ -161,32 +97,15 @@
               (define-key calendar-mode-map "]" 'calendar-end-of-month)
               (define-key calendar-mode-map "gg" 'calendar-beginning-of-year)
               (define-key calendar-mode-map "G" 'calendar-end-of-year))))
-
-
-                                        ; emacs vc
-(with-eval-after-load 'vc
-  (setq
-   ;; Don't make backups of git history files
-   vc-make-backup-files nil
-   ;; Always follow a symlink inside of a git repository that slnz things
-   vc-follow-symlinks t))
-
 
 ;; neotree
 (with-eval-after-load "neotree"
   (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-  (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)
-  )
+  (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find))
 
 (evil-define-key 'motion speedbar-file-key-map
   "l" 'speedbar-expand-line
   "h" 'speedbar-contract-line)
-
-;; Quitting Emacs Mode
-(eval-after-load "view"
-  (lambda ()
-    (define-key view-mode-map (kbd "H-q") 'View-quit)))
-
 
 ;; Manpages
 (with-eval-after-load "Man"
@@ -235,7 +154,6 @@
     (spacemacs/declare-prefix-for-mode 'elixir-mode "mk" "quickfixes")
     (spacemacs/set-leader-keys-for-major-mode 'elixir-mode "kd"
       'zv/elixir-convert-def-to-block)))
-
 
 ;; Search
 (spacemacs|use-package-add-hook helm-ag
@@ -260,7 +178,6 @@
 (define-key evil-motion-state-map "{" 'evil-backward-section-end)
 (define-key evil-visual-state-map "}" 'evil-forward-section-begin)
 (define-key evil-visual-state-map "{" 'evil-backward-section-end)
-
 
 ;; Set emacs as the initial state in a variety of modes
 (mapc (lambda (x) (evil-set-initial-state x 'emacs))

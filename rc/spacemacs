@@ -27,22 +27,16 @@ This function should only modify configuration layer settings."
    dotspacemacs-ask-for-lazy-installation t
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
-   '(
-     windows-scripts
-     yaml
-     php
-     systemd
-     cscope
-     gtags
-     (auto-completion :variables
+   '((auto-completion :variables
                       auto-completion-return-key-behavior 'nothing
                       auto-completion-tab-key-behavior 'complete
                       auto-completion-complete-with-key-sequence nil
                       auto-completion-complete-with-key-sequence-delay 0.1)
+     asm
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
-     ;; clojure
+     cscope
      (erlang :variables
              erlang-root-dir "/usr/local/lib/erlang"
              erlang-man-root-dir "/usr/local/lib/erlang/man")
@@ -54,19 +48,27 @@ This function should only modify configuration layer settings."
      helm
      html
      javascript
+     neotree
      markdown
-     ;; ocaml
      org
      python
      racket
+     react
+     restclient
      (rust :variables
            rust-enable-racer t)
-     ;; ruby
-     react
      (shell :variables shell-default-shell 'eshell
             shell-protect-eshell-prompt t
             shell-default-term-shell "/usr/bin/zsh")
      scheme
+
+     ;; Spacemacs metaconfigs
+     spacemacs-completion
+     spacemacs-defaults
+     spacemacs-navigation
+     spacemacs-evil
+     ;;
+
      sql
      shell-scripts
      syntax-checking
@@ -74,12 +76,12 @@ This function should only modify configuration layer settings."
      typescript
      vimscript
      version-control
-     zv
-     )
+     windows-scripts
+     yaml
+     zv)
 
    dotspacemacs-additional-packages '(
                                       ;; edts
-                                      nasm-mode
                                       ;; (reason-mode
                                       ;;  :location (recipe
                                       ;;             :repo "reasonml-editor/reason-mode"
@@ -171,7 +173,7 @@ user code in there besides modifying the variable values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -195,8 +197,9 @@ user code in there besides modifying the variable values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-dark
-                         solarized-light)
+   dotspacemacs-themes '(leuven
+                         solarized-light
+                         solarized-dark)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -205,7 +208,7 @@ user code in there besides modifying the variable values."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator arrow :separator-scale 1.0)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -214,10 +217,10 @@ user code in there besides modifying the variable values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 18
-                               :weight normal
+                               :size 20
+                               :weight medium
                                :width normal
-                               :powerline-scale 0.8)
+                               :powerline-scale 1.0)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -459,7 +462,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; org mode
   (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
                 exec-path-from-shell-check-startup-files nil
-                powerline-default-separator nil
                 evil-escape-delay 0.2
                 git-enable-github-support t
                 org-directory (expand-file-name "~/Documents/")
@@ -507,10 +509,11 @@ before packages are loaded."
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
   (let ((undo-basedir (file-name-as-directory XDG_CACHE_HOME)))
-    (setq make-backup-files t      ; Enable backups
-          backup-by-copying t      ; Copy the file, don't rename
-          vc-make-backup-files nil ; Don't bother making backups for files in VC
-          version-control t        ; use versioned backups
+    (setq ; make-backup-files t      ; Enable backups
+          ;; backup-by-copying t      ; Copy the file, don't rename
+          ; vc-make-backup-files nil ; Don't bother making backups for files in VC
+          ; version-control t        ; use versioned backups
+          ; vc-follow-symlinks t
           backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
 
           auto-save-default t      ; auto-save every buffer that visits a file
@@ -529,8 +532,6 @@ before packages are loaded."
         (make-directory (concat undo-basedir dir)))))
 
   (setq-default magit-repo-dirs '("~/Development/")
-                ;; Powerline default separator
-                powerline-default-separator nil
                 ;; Use Gtags to generate
                 projectile-tags-command "gtags %s"
                 ;; Evil should move across more than one line
@@ -549,12 +550,31 @@ before packages are loaded."
                 js2-include-node-externs         t
                 js2-include-browser-externs      t
 
+                ;; GDB configuration
+                gdb-many-windows t
+                gdb-show-main t
+
                 create-lockfiles nil ; Dont create .#FILES
 
                 flycheck-pos-tip-timeout 30
 
                 ;; abbrev-mode
-                abbrev-mode t)
+                abbrev-mode t
+
+                ;; default browser used
+                browse-url-browser-function 'browse-url-generic
+                browse-url-generic-program "google-chrome"
+
+                ;; controls the FROM: address
+                user-mail-address  "zephyr.pellerin@gmail.com")
+
+  ;;; Include Underscore in Word Motions
+  ;; For python
+  (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+  ;; For ruby
+  (add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+  ;; For Javascript
+  (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
   ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
   (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
