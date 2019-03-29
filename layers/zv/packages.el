@@ -6,9 +6,10 @@
                       eshell
                       js2-mode
                       cc-mode
-                      nasm-mode
-                      ))
                       (nasm-mode :location elpa)
+                      (z3-mode :location (recipe
+                                          :fetcher github
+                                          :repo "zv/z3-mode"))))
 
 (defvar zv-excluded-packages '())
 
