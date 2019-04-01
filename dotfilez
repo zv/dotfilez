@@ -63,7 +63,7 @@ function main() {
 
   #; parse command line arguments
   local retval=0
-  internal_commands="^(alt|bootstrap|clean|clone|config|decrypt|encrypt|enter|etc|help|init|introspect|list|perms|version|installetc)$"
+  internal_commands="^(alt|bootstrap|clean|clone|config|decrypt|orgprotocol|encrypt|enter|etc|help|init|introspect|list|perms|version|installetc)$"
   if [ -z "$*" ] ; then
     #; no argumnts will result in help()
     help
@@ -202,6 +202,20 @@ function bootstrap() {
 
 }
 
+function orgprotocol() {
+    cat << EOF > "$HOME/.local/share/applications/org-protocol.desktop"
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/org-protocol;
+EOF
+   update-desktop-database $HOME/.local/share/applications
+   cat "$HOME/.local/share/applications/org-protocol.desktop"
+}
+
 function decrypt() {
 
     require_gpg
@@ -258,6 +272,7 @@ Commands:
   dotfilez alt                   - Create links for alternates
   dotfilez encrypt               - Encrypt files
   dotfilez decrypt [-l]          - Decrypt files
+  dotfilez orgprotocol           - Setup org-protocol
   dotfilez perms                 - Fix ssh/gpg permissions
   dotfilez installetc            - Install etc to /etc
 
