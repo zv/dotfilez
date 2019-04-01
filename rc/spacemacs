@@ -379,7 +379,7 @@ user code in there besides modifying the variable values."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -448,29 +448,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq XDG_CONFIG_HOME (file-name-as-directory (or (getenv "XDG_CONFIG_HOME") "~/.config/"))
         XDG_CACHE_HOME  (file-name-as-directory (or (getenv "XDG_CACHE_HOME") "~/.cache/"))
         next-buffer-key (kbd "H-j")
-        prev-buffer-key (kbd "H-k"))
-
-  ;; Add erlang & tern to our execution path
-  ;; (setq exec-path (append exec-path
-  ;;                         '("/usr/local/lib/erlang/bin"
-  ;;                           "~/n/lib/node_modules/tern"
-  ;;                           "~/n/bin")
-
-  ;; org mode
-  (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
-                exec-path-from-shell-check-startup-files nil
-                powerline-default-separator nil
-                evil-escape-delay 0.2
-                git-enable-github-support t
-                org-directory (expand-file-name "~/Documents/")
-                ;; My personal org folders
-                org-default-notes-file (concat org-directory "notes.org")
-                ;; Undo tree file directory
-                zv//undo-tree-directory "/tmp/zv/.emacs-undo"
-                zv//org-personal (concat org-directory "zv.org")
-                ;; Dont show entire (long) line
-                truncate-lines t)
-  )
+        prev-buffer-key (kbd "H-k")))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -488,10 +466,6 @@ before packages are loaded."
 
   ;; Internal shell tools are more accommodating  to bash in Emacs.
   (setenv "SHELL" "/bin/bash")
-
-  ;; Undo / Undo Tree
-  (unless (file-exists-p zv//undo-tree-directory)
-    (make-directory zv//undo-tree-directory))
 
   (setq undo-limit        8388608   ;  8mb
         undo-strong-limit 16777216  ; 16mb
@@ -528,6 +502,7 @@ before packages are loaded."
       (unless (file-exists-p (concat undo-basedir dir))
         (make-directory (concat undo-basedir dir)))))
 
+  (require 'org-protocol)
   (setq-default magit-repo-dirs '("~/Development/")
                 ;; Powerline default separator
                 powerline-default-separator nil
@@ -535,6 +510,10 @@ before packages are loaded."
                 projectile-tags-command "gtags %s"
                 ;; Evil should move across more than one line
                 evil-cross-lines t
+                evil-escape-delay 0.2
+
+                ;; Time in seconds to hide the flycheck position tip after
+                flycheck-pos-tip-timeout 10
 
                 helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
                 helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
@@ -551,7 +530,14 @@ before packages are loaded."
 
                 create-lockfiles nil ; Dont create .#FILES
 
-                flycheck-pos-tip-timeout 30
+                ;; Dont show entire (long) line
+                truncate-lines t
+
+                ;; My personal org folders
+                org-directory "~/Documents"
+                org-default-notes-file (expand-file-name "notes.org" org-directory)
+                zv//org-personal (expand-file-name "zv.org" org-directory)
+                zv//blog-path (expand-file-name "~/zv.github.com/")
 
                 ;; abbrev-mode
                 abbrev-mode t)
@@ -717,12 +703,12 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ac-ispell-requires 4)
- '(ahs-case-fold-search nil t)
- '(ahs-default-range (quote ahs-range-whole-buffer) t)
- '(ahs-idle-interval 0.25 t)
+ '(ac-ispell-requires 4 t)
+ '(ahs-case-fold-search nil)
+ '(ahs-default-range (quote ahs-range-whole-buffer))
+ '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil t)
+ '(ahs-inhibit-face-list nil)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
@@ -777,6 +763,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-agenda-files
    (quote
     ("/home/zv/Documents/notes.org" "/home/zv/Documents/zv.org")))
+ '(org-directory "~/Documents/")
  '(org-html-text-markup-alist
    (quote
     ((bold . "<b>%s</b>")
