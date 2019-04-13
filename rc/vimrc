@@ -6,7 +6,7 @@ if has('syntax') && !exists('g:syntax_on')
 	syntax enable
 endif
 
-" ――――――――――――――― General Config ――――――――――――――――――――{{{
+" ------------ General Config ------------ {{{
 set autoread			" Reload files changed outside vim
 set backspace=indent,eol,start	" Allow backspace in insert mode
 set background=light		" a bright terminal
@@ -52,7 +52,7 @@ endif
 colorscheme desert
 "}}}
 
-" ―――――――――――― Search Settings ――――――――――――――――――――――{{{
+" ------------ Search Settings ------------ {{{
 "
 set incsearch		"Find the next match as we type the search
 set hlsearch		"Hilight searches by default
@@ -61,7 +61,7 @@ set smartcase		"Smart Case Search
 set ignorecase		"Ignore Case
 "}}}
 
-" ――――――━―――――― Swap & Persistent Undo ―――――――――――――――{{{
+" ------------ Swap & Persistent Undo ------------ {{{
 set undofile
 set backup
 set noswapfile
@@ -88,13 +88,13 @@ for s:vddir in [&undodir, &backupdir, &directory]
 endfor
 "}}}
 
-" ――――――――――――――――――  Ctags  ――――――――――――――――――――――――{{{
+" ------------  Ctags  ------------ {{{
 if has('path_extra')
 	setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
 "}}}
 
-" ―――――――――――――――― Indentation ――――――――――――――――――――――{{{
+" ------------ Indentation ------------ {{{
 set autoindent		" copy previous line's indent
 set preserveindent 	" preserve indent structure
 set copyindent		" newline copies existing line structure
@@ -113,7 +113,7 @@ set smartindent		" intdent intelligently
 set listchars=tab:»·,trail:·
 "}}}
 
-" ―――――――――――――――― Keybindings ――――――――――――――――――――――{{{
+" ------------ Keybindings ------------ {{{
 let mapleader=" "
 
 " manipulate windows spacemacs-style
@@ -169,7 +169,7 @@ nnoremap <silent> <Backspace> <C-b>
 
 "}}}
 
-" ―――――――――――――――― netrw config ―――――――――――――――――――――{{{
+" ------------ netrw config ------------ {{{
 let g:netrw_banner=0 	" disable banner
 let g:netrw_liststyle=3 " tree-style listing
 let g:netrw_preview=1	" preview a document w/ 'p'
@@ -184,13 +184,13 @@ let g:netrw_winsize=25  " percentage for new win
 " augroup END
 " "}}}
 
-" ―――――――――――――――― Folds ――――――――――――――――――――――――――――{{{
+" ------------ Folds ------------ {{{
 set foldenable		" dont fold by default
 set foldmethod=marker   " fold based on indent
 set foldnestmax=3	" deepest fold is 3 levels
 "}}}
 
-" ―――――――――――――――― Completion ―――――――――――――――――――――――{{{
+" ------------ Completion ------------ {{{
 " dont try to fetch includes
 set complete-=i
 set completeopt=longest,menuone
@@ -204,7 +204,7 @@ set wildmode=longest,list,full
 set wildoptions=tagfile
 "}}}
 
-" ―――――――――――――――― Scrolling ――――――――――――――――――――――――{{{
+" ------------ Scrolling ------------ {{{
 set scrolloff=3		"Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
