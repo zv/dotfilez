@@ -110,7 +110,7 @@ function main() {
       return 10
   fi
 
-  exit_with_hook $retval
+  exit_consolidated $retval
 }
 
 function installetc() {
@@ -289,7 +289,7 @@ Files:
 Use "man dotfilez" for complete documentation.
 EOF
 
-    exit_with_hook 1
+    exit_consolidated 1
 
 }
 
@@ -327,7 +327,7 @@ function perms() {
 function version() {
 
     echo "dotfilez $VERSION"
-    exit_with_hook 0
+    exit_consolidated 0
 
 }
 
@@ -458,66 +458,11 @@ function debug() {
 
 function error_out() {
     echo_e "ERROR: $*"
-    exit_with_hook 1
+    exit_consolidated 1
 }
 
-function exit_with_hook() {
-    invoke_hook "post" "$1"
+function exit_consolidated() {
     exit "$1"
-}
-
-function invoke_hook() {
-    mode="$1"
-    exit_status="$2"
-    hook_command="$DOTFILEZ_DIR/hooks/${mode}_$HOOK_COMMAND"
-
-    if [ -x "$hook_command" ] ; then
-        debug "Invoking hook: $hook_command"
-
-        #; expose some internal data to all hooks
-        work=$(unix_path "$("$GIT_PROGRAM" config core.worktree)")
-        DOTFILEZ_HOOK_COMMAND=$HOOK_COMMAND
-        DOTFILEZ_HOOK_EXIT=$exit_status
-        DOTFILEZ_HOOK_FULL_COMMAND=$FULL_COMMAND
-        DOTFILEZ_HOOK_REPO=$DOTFILEZ_REPO
-        DOTFILEZ_HOOK_WORK=$work
-        export DOTFILEZ_HOOK_COMMAND
-        export DOTFILEZ_HOOK_EXIT
-        export DOTFILEZ_HOOK_FULL_COMMAND
-        export DOTFILEZ_HOOK_REPO
-        export DOTFILEZ_HOOK_WORK
-
-        "$hook_command"
-        hook_status=$?
-
-        #; failing "pre" hooks will prevent commands from being run
-        if [ "$mode" = "pre" ] && [ "$hook_status" -ne 0 ]; then
-            echo "Hook $hook_command was not successful"
-            echo "$HOOK_COMMAND will not be run"
-            exit "$hook_status"
-        fi
-    fi
-}
-
-function assert_private_dirs() {
-    work=$(unix_path "$("$GIT_PROGRAM" config core.worktree)")
-    for private_dir in "$@"; do
-        if [ ! -d "$work/$private_dir" ]; then
-            debug "Creating $work/$private_dir"
-            #shellcheck disable=SC2174
-            mkdir -m 0700 -p "$work/$private_dir" >/dev/null 2>&1
-        fi
-    done
-}
-
-function display_private_perms() {
-    when="$1"
-    for private_dir in .ssh .gnupg; do
-        if [ -d "$DOTFILEZ_WORK/$private_dir" ]; then
-            private_perms=$(ls -ld "$DOTFILEZ_WORK/$private_dir")
-            debug "$when" private dir perms "$private_perms"
-        fi
-    done
 }
 
 function cd_work() {
