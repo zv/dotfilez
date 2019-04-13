@@ -72,9 +72,10 @@ elseif has('win32unix') " cygwin's vim
 	let s:appdata="/tmp/vim"
 else
 	if empty($XDG_CACHE_HOME)
-		let $XDG_CACHE_HOME = '~/.cache'
+		let s:appdata="/tmp/vim"
+	else
+		let s:appdata=$XDG_CACHE_HOME . '/vim/'
 	endif
-	let s:appdata=$XDG_CACHE_HOME . '/vim/'
 endif
 
 let &backupdir=(s:appdata . 'backup')
