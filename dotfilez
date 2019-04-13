@@ -118,7 +118,7 @@ function installetc() {
     local dest;
     for file in etc/**/*; do
         if [[ "$(basename file)" -eq "resolv.conf" ]]; then
-            sudo mv -i "$file" 
+            sudo mv -i "$file"
         else
             dest="/etc/${file#etc/}"
             if [[ ! -d $(dirname "$dest") ]]; then
@@ -154,6 +154,7 @@ function alt() {
     #; for every file which matches the above regex, create a symlink
     for src in rc/*; do
         dst="$HOME/.$(basename $src)"
+        src="$(realname src)"
         debug "Linking $src to $dst"
         [ -n "$loud" ] && echo "Linking $src to $dst"
         if [ "$do_copy" -eq 1 ]; then
@@ -166,7 +167,9 @@ function alt() {
                 cp -f "$src" "$dst"
             fi
         else
-            if [ -e "$dst" ]; then
+            if [ -d "$dst" ]; then
+                ln -Tis "$src" "$dst"
+            elif [ -e "$dst" ]; then
                 ln -ifs "$src" "$dst"
             else
                 ln -s "$src" "$dst"
