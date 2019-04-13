@@ -108,8 +108,8 @@ set softtabstop=4	" insert mode tab and backspace *should* use 8 spaces
 
 set cindent		" start c lang indent mode
 set smartindent		" intdent intelligently
-" set expandtab		" insert tabs as spaces
-" set smarttab		" tab inserts tab when already tabbed!
+set expandtab		" insert tabs as spaces
+set smarttab		" tab inserts tab when already tabbed!
 
 set listchars=tab:»·,trail:·
 "}}}
