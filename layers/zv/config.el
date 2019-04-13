@@ -10,16 +10,6 @@
  ;; ERC
  zv-erc-directory (expand-file-name (concat user-emacs-directory ".erc/"))
  ignored-irc-commands '("JOIN" "PART" "QUIT" "NICK" "AWAY")
- user-mail-address                "zephyr.pellerin@gmail.com"
-
- ;; default browser used
- browse-url-browser-function 'browse-url-generic
- browse-url-generic-program "google-chrome"
-
- ;; GDB configuration
- gdb-many-windows t
- gdb-show-main t
-
  ;; hippie expand is dabbrev expand on steroids
  hippie-expand-try-functions-list '(try-expand-dabbrev
                                     try-expand-dabbrev-visible
@@ -32,14 +22,6 @@
                                     try-expand-line
                                     try-complete-lisp-symbol-partially
                                     try-complete-lisp-symbol))
-
-;;; Include Underscore in Word Motions
-;; For python
-(add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-;; For ruby
-(add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-;; For Javascript
-(add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
 
 (defvar zv-whitelist '() "List of helm buffers in which to show dots.")

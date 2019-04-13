@@ -27,22 +27,16 @@ This function should only modify configuration layer settings."
    dotspacemacs-ask-for-lazy-installation t
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
-   '(
-     windows-scripts
-     yaml
-     php
-     systemd
-     cscope
-     gtags
-     (auto-completion :variables
+   '((auto-completion :variables
                       auto-completion-return-key-behavior 'nothing
                       auto-completion-tab-key-behavior 'complete
                       auto-completion-complete-with-key-sequence nil
                       auto-completion-complete-with-key-sequence-delay 0.1)
+     asm
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
-     ;; clojure
+     cscope
      (erlang :variables
              erlang-root-dir "/usr/local/lib/erlang"
              erlang-man-root-dir "/usr/local/lib/erlang/man")
@@ -54,19 +48,27 @@ This function should only modify configuration layer settings."
      helm
      html
      javascript
+     neotree
      markdown
-     ;; ocaml
      org
      python
      racket
+     react
+     restclient
      (rust :variables
            rust-enable-racer t)
-     ;; ruby
-     react
      (shell :variables shell-default-shell 'eshell
             shell-protect-eshell-prompt t
             shell-default-term-shell "/usr/bin/zsh")
      scheme
+
+     ;; Spacemacs metaconfigs
+     spacemacs-completion
+     spacemacs-defaults
+     spacemacs-navigation
+     spacemacs-evil
+     ;;
+
      sql
      shell-scripts
      syntax-checking
@@ -74,12 +76,12 @@ This function should only modify configuration layer settings."
      typescript
      vimscript
      version-control
-     zv
-     )
+     windows-scripts
+     yaml
+     zv)
 
    dotspacemacs-additional-packages '(
                                       ;; edts
-                                      nasm-mode
                                       ;; (reason-mode
                                       ;;  :location (recipe
                                       ;;             :repo "reasonml-editor/reason-mode"
@@ -171,7 +173,7 @@ user code in there besides modifying the variable values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -195,8 +197,9 @@ user code in there besides modifying the variable values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-dark
-                         solarized-light)
+   dotspacemacs-themes '(leuven
+                         solarized-light
+                         solarized-dark)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -205,7 +208,7 @@ user code in there besides modifying the variable values."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator arrow :separator-scale 1.0)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -215,9 +218,9 @@ user code in there besides modifying the variable values."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 18
-                               :weight normal
+                               :weight medium
                                :width normal
-                               :powerline-scale 0.8)
+                               :powerline-scale 1.0)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -437,7 +440,9 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
+  (spacemacs/load-spacemacs-env)
+  ;; Internal shell tools are more accommodating  to bash in Emacs.
+  (setenv "SHELL" "/bin/bash"))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -448,7 +453,26 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq XDG_CONFIG_HOME (file-name-as-directory (or (getenv "XDG_CONFIG_HOME") "~/.config/"))
         XDG_CACHE_HOME  (file-name-as-directory (or (getenv "XDG_CACHE_HOME") "~/.cache/"))
         next-buffer-key (kbd "H-j")
-        prev-buffer-key (kbd "H-k")))
+        prev-buffer-key (kbd "H-k"))
+
+  ;; Add erlang & tern to our execution path
+  ;; (setq exec-path (append exec-path
+  ;;                         '("/usr/local/lib/erlang/bin"
+  ;;                           "~/n/lib/node_modules/tern"
+  ;;                           "~/n/bin")
+
+  ;; org mode
+  (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
+                exec-path-from-shell-check-startup-files nil
+                evil-escape-delay 0.2
+                git-enable-github-support t
+                org-directory (expand-file-name "~/Documents/")
+                ;; My personal org folders
+                org-default-notes-file (concat org-directory "notes.org")
+                ;; Undo tree file directory
+                zv//org-personal (concat org-directory "zv.org")
+                ;; Dont show entire (long) line
+                truncate-lines t))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -463,14 +487,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
-  ;; Internal shell tools are more accommodating  to bash in Emacs.
-  (setenv "SHELL" "/bin/bash")
-
-  (setq undo-limit        8388608   ;  8mb
-        undo-strong-limit 16777216  ; 16mb
-        undo-outer-limit  25165824) ; 24mb
-
   (add-hook 'erlang-mode-hook
             (lambda ()
               (setq mode-name "Erlang")
@@ -481,21 +497,27 @@ before packages are loaded."
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
   (let ((undo-basedir (file-name-as-directory XDG_CACHE_HOME)))
-    (setq make-backup-files t      ; Enable backups
-          backup-by-copying t      ; Copy the file, don't rename
-          vc-make-backup-files nil ; Don't bother making backups for files in VC
-          version-control t        ; use versioned backups
-          backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
+    (setq
+     backup-by-copying t      ; Copy the file, don't rename
+     vc-make-backup-files nil ; Don't bother making backups for files in VC
+     version-control t        ; use versioned backups
+     make-backup-files nil    ; Disable backups
 
-          auto-save-default t      ; auto-save every buffer that visits a file
-          auto-save-timeout 30     ; number of seconds idle time before auto-save (default: 30)
-          auto-save-interval 300   ; number of keystrokes between auto-saves
-          auto-save-file-name-transforms  `((".*" ,(concat undo-basedir "autosave") t))
+     vc-follow-symlinks t
+     backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
 
-          undo-tree-visualizer-diff t
-          undo-tree-visualizer-timestamps t
-          undo-tree-auto-save-history t ; Automatically save our undo history.
-          undo-tree-history-directory-alist `(("." . ,(concat undo-basedir "undo"))))
+     auto-save-default t      ; auto-save every buffer that visits a file
+     auto-save-timeout 30     ; number of seconds idle time before auto-save (default: 30)
+     auto-save-interval 300   ; number of keystrokes between auto-saves
+     auto-save-file-name-transforms  `((".*" ,(concat undo-basedir "autosave") t))
+
+     undo-limit        8388608   ;  8mb
+     undo-strong-limit 16777216  ; 16mb
+     undo-outer-limit  25165824 ; 24mb
+     undo-tree-visualizer-diff t
+     undo-tree-visualizer-timestamps t
+     undo-tree-auto-save-history t ; Automatically save our undo history.
+     undo-tree-history-directory-alist `(("." . ,(concat undo-basedir "undo"))))
 
     ;; now create the associated directories
     (dolist (dir '("undo" "autosave" "backup"))
@@ -556,14 +578,7 @@ before packages are loaded."
                                  ("ofzb" . ,zv//blog-path)
                                  ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
-  ;; assembly programming hooks
-  (defun zv/asm-mode-hook ()
-    ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
-    (local-unset-key (vector asm-comment-char))
-    ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-    (setq tab-always-indent (default-value 'tab-always-indent)))
-  (add-hook 'asm-mode-hook #'zv/asm-mode-hook)
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode)))
+  (evil-leader/set-key "jk" 'avy-goto-char))
 
 ;; Custom variables
 (custom-set-variables
@@ -692,139 +707,3 @@ before packages are loaded."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ac-ispell-requires 4 t)
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
- '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
- '(company-selection-wrap-around t)
- '(confirm-nonexistent-file-or-buffer nil)
- '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
- '(evil-want-Y-yank-to-eol nil)
- '(expand-region-contract-fast-key "V")
- '(expand-region-reset-fast-key "r")
- '(geiser-default-implementation nil)
- '(global-eldoc-mode t)
- '(gud-gdb-command-name "gdb -i=mi -nh")
- '(gud-tooltip-mode t)
- '(helm-ff-transformer-show-only-basename t)
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#fdf6e3" 0.25)
-    (quote
-     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
- '(highlight-symbol-foreground-color "#586e75")
- '(highlight-tail-colors
-   (quote
-    (("#eee8d5" . 0)
-     ("#B4C342" . 20)
-     ("#69CABF" . 30)
-     ("#69B7F0" . 50)
-     ("#DEB542" . 60)
-     ("#F2804F" . 70)
-     ("#F771AC" . 85)
-     ("#eee8d5" . 100))))
- '(hl-bg-colors
-   (quote
-    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
- '(hl-fg-colors
-   (quote
-    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
- '(ibuffer-saved-filter-groups nil)
- '(ibuffer-saved-filters
-   (quote
-    (("programming"
-      ((or
-        (mode . emacs-lisp-mode)
-        (mode . cperl-mode)
-        (mode . c-mode)
-        (mode . java-mode)
-        (mode . idl-mode)
-        (mode . lisp-mode)))))))
- '(magit-completing-read-function (quote magit-builtin-completing-read))
- '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
- '(neo-theme (quote arrow))
- '(org-agenda-files
-   (quote
-    ("/home/zv/Documents/notes.org" "/home/zv/Documents/zv.org")))
- '(org-directory "~/Documents/")
- '(org-html-text-markup-alist
-   (quote
-    ((bold . "<b>%s</b>")
-     (code . "<code>%s</code>")
-     (italic . "<i>%s</i>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<span class=\"verbatim\">%s</span>"))))
- '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
- '(org-refile-targets
-   (quote
-    ((org-agenda-files :maxlevel . 1)
-     (org-default-notes-file :maxlevel . 2))))
- '(package-selected-packages
-   (quote
-    (yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode visual-fill-column winum web-mode web-beautify volatile-highlights vimrc-mode vi-tilde-fringe uuidgen toml-mode toc-org tide typescript-mode tagedit systemd symon string-inflection sql-indent spaceline-all-the-icons spaceline powerline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racket-mode faceup racer pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pyvenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode password-generator paradox spinner overseer orgit org-present org-mime org-download org-bullets org-brain open-junk-file ob-elixir neotree nasm-mode nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow magit-popup macrostep lorem-ipsum livid-mode skewer-mode live-py-mode link-hint json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc insert-shebang indent-guide importmagic epc ctable concurrent deferred impatient-mode simple-httpd hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose window-purpose imenu-list helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gtags helm-gitignore request helm-git-grep helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag haml-mode graphviz-dot-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md ggtags geiser fuzzy flycheck-rust flycheck-rtags flycheck-pos-tip pos-tip flycheck-mix flycheck-credo flycheck-bashate flycheck flx-ido flx fish-mode fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit magit transient git-commit with-editor evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emmet-mode elisp-slime-nav editorconfig dumb-jump drupal-mode doom-modeline eldoc-eval shrink-path all-the-icons memoize disaster diff-hl define-word dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-web web-completion-data company-tern dash-functional tern company-statistics company-shell company-rtags rtags company-php ac-php-core xcscope php-mode company-c-headers company-anaconda column-enforce-mode clean-aindent-mode clang-format centered-cursor-mode cargo markdown-mode rust-mode browse-at-remote auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anaconda-mode pythonic f alchemist s company dash elixir-mode pkg-info epl aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core ac-ispell auto-complete popup which-key use-package pcre2el org-plus-contrib hydra font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async)))
- '(page-break-lines-modes
-   (quote
-    (emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode)))
- '(paradox-github-token t)
- '(ring-bell-function (quote ignore))
- '(send-mail-function (quote smtpmail-send-it))
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
- '(term-default-bg-color "#fdf6e3")
- '(term-default-fg-color "#657b83")
- '(vc-annotate-background nil)
- '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#dc322f")
-     (40 . "#c8805d801780")
-     (60 . "#bec073400bc0")
-     (80 . "#b58900")
-     (100 . "#a5008e550000")
-     (120 . "#9d0091000000")
-     (140 . "#950093aa0000")
-     (160 . "#8d0096550000")
-     (180 . "#859900")
-     (200 . "#66aa9baa32aa")
-     (220 . "#57809d004c00")
-     (240 . "#48559e556555")
-     (260 . "#392a9faa7eaa")
-     (280 . "#2aa198")
-     (300 . "#28669833af33")
-     (320 . "#279993ccbacc")
-     (340 . "#26cc8f66c666")
-     (360 . "#268bd2"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (quote
-    (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
- '(xterm-color-names
-   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
- '(xterm-color-names-bright
-   ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)

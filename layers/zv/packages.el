@@ -1,12 +1,14 @@
 (defvar zv-packages '(magit
                       (org :location built-in)
                       ; edts
+                      flycheck
                       erlang
                       eshell
                       js2-mode
                       cc-mode
-                      nasm-mode
-                      ))
+                      (z3-mode :location (recipe
+                                          :fetcher github
+                                          :repo "zv/z3-mode"))))
 
 (defvar zv-excluded-packages '())
 
@@ -18,6 +20,13 @@
                                flycheck-gcc-language-standard "c++14"
                                disaster-cxxflags "-std=c++14 -O1 -g3")))))
 
+(defun zv/post-init-flycheck ()
+  ;; Place 'python-pylint prior to 'python-flake8 in the list of flycheckers.
+  (use-package flycheck
+    :defer t
+    :config (let* ((flakeless (delete 'python-flake8 flycheck-checkers))
+                   (tail (member 'python-pylint flakeless)))
+              (setcdr tail (cons 'python-flake8 (cdr tail))))))
 
 (defun zv/post-init-c++-mode ()
   (use-package c++
@@ -95,7 +104,7 @@
         "or" 'react-mode))))
 
 
-(defun zv/pre-init-nasm-mode ()
+(defun zv/post-init-nasm-mode ()
   (use-package nasm-mode
     :defer t
     :config
@@ -103,8 +112,16 @@
       ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
       (local-unset-key (vector asm-comment-char))
       ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-      (setq-local tab-always-indent (default-value 'tab-always-indent)))))
-(add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode))
+      (setq-local tab-always-indent (default-value 'tab-always-indent))))
+  ;; assembly programming hooks
+  (defun zv/asm-mode-hook ()
+    ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+    (local-unset-key (vector asm-comment-char))
+    ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+    (setq tab-always-indent (default-value 'tab-always-indent)))
+  (add-hook 'asm-mode-hook #'zv/asm-mode-hook)
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode)))
+
 
 
 (defun zv/post-init-org ()
