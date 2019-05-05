@@ -66,7 +66,7 @@ function main() {
   if [ -z "$*" ] ; then
     #; no argumnts will result in help()
     help
-  elif [[ "$1" =~ $(declare -F) ]] ; then
+  elif [[ "$(declare -F)" =~ "$1" ]] ; then
     #; for internal commands, process all of the arguments
     DOTFILEZ_COMMAND="$1"
     DOTFILEZ_ARGS=()
@@ -188,7 +188,7 @@ function alt() {
     #; for every file which matches the above regex, create a symlink
     for src in rc/*; do
         dst="$HOME/.$(basename $src)"
-        src="$(realname src)"
+        src="$(readlink -f src)"
         debug "Linking $src to $dst"
         [ -n "$loud" ] && echo "Linking $src to $dst"
         if [ "$do_copy" -eq 1 ]; then
@@ -211,6 +211,9 @@ function alt() {
         fi
     done
 
+}
+
+function build_templates() {
     #; loop over all "tracked" files
     #; running each through m4 with the definitions provided by 'data/secrets.m4'
     local secrets_file="data/zv.m4"
@@ -237,6 +240,20 @@ function bootstrap() {
     echo "Executing $DOTFILEZ_BOOTSTRAP"
     exec "$DOTFILEZ_BOOTSTRAP"
 
+}
+
+function orgprotocol() {
+    cat << EOF > "$HOME/.local/share/applications/org-protocol.desktop"
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/org-protocol;
+EOF
+   update-desktop-database $HOME/.local/share/applications
+   cat "$HOME/.local/share/applications/org-protocol.desktop"
 }
 
 function decrypt() {
@@ -295,6 +312,7 @@ Commands:
   dotfilez alt                   - Create links for alternates
   dotfilez encrypt               - Encrypt files
   dotfilez decrypt [-l]          - Decrypt files
+  dotfilez orgprotocol           - Setup org-protocol
   dotfilez perms                 - Fix ssh/gpg permissions
   dotfilez installetc            - Install etc to /etc
 
