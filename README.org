@@ -126,6 +126,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 * Workstation Setup
 
 ** Linux  
+*** Fedora
+**** Groups
+     #+begin_src sh
+sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
+     #+end_src
+
 *** org-protocol
     org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions. 
    
