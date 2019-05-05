@@ -267,3 +267,26 @@ exclude=kernel*
     #+begin_src shell
       dconf dump /org/gnome/terminal/ > gnome_terminal_settings_backup.txt
     #+end_src
+
+** keyring
+   Gnome Keyring (accessible through Seahorse) stores it's keys in =~/.local/share/keyrings=. Anytime I'm backing keys up, I encrypt it first.
+#+begin_src 
+KEYRING_PATH="$HOME/.local/share/keyrings"
+tar --create -C $KEYRING_PATH(:h) --wildcards -O $KEYRING_PATH(:t) \
+        | gpg --encrypt -r zv@nxvr.org -o gnome-keyring.tar.gpg
+#+end_src
+*** restore
+    #+begin_src 
+   # Use gpg not gnome ssh-agent
+    if [[ $(gconftool-2 --get /apps/gnome-keyring/daemon-components/ssh) != "false" ]]; then
+        gconftool-2 --type bool --set /apps/gnome-keyring/daemon-components/ssh false
+    fi
+    gpg2 -d gnome-keyring.tar.gpg > gnome-keyring.tar
+    tar xvf gnome-keyring.tar
+    mv keyrings ~/.local/share/keyrings
+    #+end_src
+
+** My files and folder
+   #+begin_src sh
+tar -a -c -v -f /run/media/zv/02A9-16E4/backup.tar.gz ~/Development ~/Backup ~/Books ~/Documents ~/dotfilez ~/zv.github.io
+   #+end_src
