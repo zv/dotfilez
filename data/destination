@@ -1,0 +1,45 @@
+file                | @tags              | destination
+-------------------------------------------------------
+$PWD/rc/agignore    | desktop ag         | $HOME/.agignore
+$PWD/rc/babelrc     | desktop js         | $HOME/.babelrc
+$PWD/rc/cvimrc      | cvim               | $HOME/.cvimrc
+$PWD/rc/digrc       | system             | $HOME/.digrc
+$PWD/rc/dunstrc     | desktop            | $HOME/.dunstrc
+$PWD/rc/editrc      | system             | $HOME/.editrc
+$PWD/rc/ercrc.el    | desktop erlang     | $HOME/.ercrc.el
+$PWD/rc/erlang      | desktop erlang     | $HOME/.erlang
+$PWD/rc/gdbinit     | desktop            | $HOME/.gdbinit
+$PWD/rc/gemrc       | desktop ruby       | $HOME/.gemrc
+$PWD/rc/gitconfig   | system             | $HOME/.gitconfig
+$PWD/rc/gitignore   | system             | $HOME/.gitignore
+$PWD/rc/gnupg       | system             | $HOME/.gnupg
+$PWD/rc/gnus.el     | desktop emacs-news | $HOME/.gnus.el
+$PWD/rc/hgrc        | desktop            | $HOME/.hgrc
+$PWD/rc/i3          | desktop            | $HOME/.i3
+$PWD/rc/ida.cfg     | re                 | $HOME/.ida.cfg
+$PWD/rc/iex         | desktop erlang     | $HOME/.iex
+$PWD/rc/inputrc     | base               | $HOME/.inputrc
+$PWD/rc/lesskey     | system             | $HOME/.lesskey
+$PWD/rc/lxde-rc.xml | lxde               | $HOME/.config/openbox/lxde-rc.xml
+$PWD/rc/newsrc      | desktop emacs      | $HOME/.newsrc
+$PWD/rc/npmrc       | desktop js         | $HOME/.npmrc
+$PWD/rc/pryrc       | desktop ruby       | $HOME/.pryrc
+$PWD/rc/psqlrc      | system             | $HOME/.psqlrc
+$PWD/rc/radare2rc   | re                 | $HOME/.radare2rc
+$PWD/rc/screenrc    | system             | $HOME/.screenrc
+$PWD/rc/spacemacs   | system             | $HOME/.spacemacs
+$PWD/rc/ssh         | base               | $HOME/.ssh
+$PWD/rc/tmux.conf   | base tmux          | $HOME/.tmux.conf
+$PWD/rc/tmux.d      | base tmux          | $HOME/.tmux.d
+$PWD/rc/toprc       | system             | $HOME/.toprc
+$PWD/rc/vimrc       | base vim           | $HOME/.vimrc
+$PWD/rc/w3m         | system w3m         | $HOME/.w3m
+$PWD/rc/weechat     | desktop irc        | $HOME/.weechat
+$PWD/rc/Xdefaults   | desktop x11        | $HOME/.Xdefaults
+$PWD/rc/xmobarrc    | desktop            | $HOME/.xmobarrc
+$PWD/rc/xmodmaprc   | xmonad             | $HOME/.xmodmaprc
+$PWD/rc/xpdfrc      | desktop            | $HOME/.xpdfrc
+$PWD/rc/Xsession    | desktop x11        | $HOME/.Xsession
+$PWD/rc/zsh         | base zsh           | $HOME/.zsh
+$PWD/rc/zshenv      | base zsh           | $HOME/.zshenv
+$PWD/rc/zshrc       | base zsh           | $HOME/.zshrc

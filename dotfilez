@@ -1,636 +1,92 @@
-#!/bin/sh
+#!/bin/bash
+BASEDIR="$(dirname "$(readlink -f "$0")")"
+DATADIR="$BASEDIR/data"
 
-# This program is a trimmed down version of the very excellent YADM by Tim
-# Byrne.
+set -euo pipefail
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 3 of the License.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#; execute script with bash (shebang line is /bin/sh for portability)
-if [ -z "$BASH_VERSION" ]; then
-  [ "$DOTFILEZ_TEST" != 1 ] && exec bash "$0" "$@"
-fi
-
-GPG_KEY="zv@nxvr.org"
-
-VERSION=1.12.0
-
-SCRIPT_PATH=$(dirname "$0")
-DOTFILEZ_WORK="$HOME"
-DOTFILEZ_DIR="$SCRIPT_PATH"
-
-DOTFILEZ_REPO="repo.git"
-DOTFILEZ_CONFIG="config"
-DOTFILEZ_ENCRYPT="data/protected"
-DOTFILEZ_BOOTSTRAP="bootstrap"
-DOTFILEZ_SECRETS="data/secrets.m4"
-DOTFILEZ_ARCHIVE="data/encrypted.gpg"
-
-HOOK_COMMAND=""
-FULL_COMMAND=""
-
-GPG_PROGRAM="gpg"
-GIT_PROGRAM="git"
-LSB_RELEASE_PROGRAM="lsb_release"
-
-PROC_VERSION="/proc/version"
-OPERATING_SYSTEM="Unknown"
-
-ENCRYPT_INCLUDE_FILES="unparsed"
-
-#; flag causing path translations with cygpath
-USE_CYGPATH=0
-
-#; flag when something may have changes (which prompts auto actions to be performed)
-CHANGES_POSSIBLE=0
-
-#; flag when a bootstrap should be performed after cloning
-#; 0: skip auto_bootstrap, 1: ask, 2: perform bootstrap, 3: prevent bootstrap
-DO_BOOTSTRAP=0
-
-function main() {
-  #; capture full command, for passing to hooks
-  FULL_COMMAND="$*"
-
-  #; parse command line arguments
-  local retval=0
-  if [ -z "$*" ] ; then
-    #; no argumnts will result in help()
-    help
-  elif [[ "$(declare -F)" =~ "$1" ]] ; then
-    #; for internal commands, process all of the arguments
-    DOTFILEZ_COMMAND="$1"
-    DOTFILEZ_ARGS=()
-    shift
-
-    while [[ $# -gt 0 ]] ; do
-      key="$1"
-      case $key in
-        -a) #; used by list()
-          LIST_ALL="YES"
-        ;;
-        -d) #; used by all commands
-          DEBUG="YES"
-        ;;
-        -f) #; used by init() and clone()
-          FORCE="YES"
-        ;;
-        -l) #; used by decrypt()
-          DO_LIST="YES"
-        ;;
-        -w) #; used by init() and clone()
-          if [[ ! "$2" =~ ^/ ]] ; then
-            error_out "You must specify a fully qualified work tree"
-          fi
-          DOTFILEZ_WORK="$2"
-          shift
-        ;;
-        *) #; any unhandled arguments
-          DOTFILEZ_ARGS+=("$1")
-        ;;
-      esac
-      shift
-    done
-    [ ! -d "$DOTFILEZ_WORK" ] && error_out "Work tree does not exist: [$DOTFILEZ_WORK]"
-    HOOK_COMMAND="$DOTFILEZ_COMMAND"
-    # invoke_hook "pre"
-    $DOTFILEZ_COMMAND "${DOTFILEZ_ARGS[@]}"
-  else
-      echo "Invalid command"
-      return 10
-  fi
-
-  exit_consolidated $retval
-}
-
-function installetc() {
-    shopt -s globstar
-    local dest;
-    for file in etc/**/*; do
-        if [[ "$(basename file)" -eq "resolv.conf" ]]; then
-            sudo mv -i "$file"
-        else
-            dest="/etc/${file#etc/}"
-            if [[ ! -d $(dirname "$dest") ]]; then
-                sudo mkdir -p $(dirname "$dest")
-            fi
-            sudo ln -sfi "$file" "$dest"
-        fi
-    done
-    shopt -u globstar
-}
-
-
-function configure_env {
-    # Set my shell to zsh
-    sudo chsh -s =zsh zv
-
-    # Setting up environment
-    echo "Making Personal Directories"
-    mkdir ~/{Development,Books,bin}
-
-    echo "Linking Personal Directories"
-    ln -s $HOME/Development/ $HOME/z
-
-    # Install my custom /etc files
-    echo "Installing custom /etc files"
-    for f in etc/**/*; do
-        cp -i "/$f" "$f"
-    done
-
-    # Link a few user systemd unit files
-    for uf in systemd/user/default.target.wants/*; do
-        systemctl --user link "$uf"
-    done
-
-    # Load bitlbee on startup
-    if [[ $+commands[bitlbee] ]]; then
-        systemctl enable bitlbee
-    fi
-
-    # Import certificates into gpg
-    # gpg --import certificates/*
-
-    sudo systemctl enable fstrim.timer
-}
-
-
-
-#; ****** dotfilez Commands ******
-
-function alt() {
-
-    local_system="$(uname -a)"
-    local_host="$(hostname)"
-    local_user="$(whoami)"
-
-    #; only be noisy if the "alt" command was run directly
-    loud="YES"
-
-    #; decide if a copy should be done instead of a symbolic link
-    local do_copy=0
-    if [[ $OPERATING_SYSTEM == CYGWIN* ]] ; then
-        if [[ $(config --bool dotfilez.cygwin-copy) == "true" ]] ; then
-            do_copy=1
-        fi
-    fi
-
-    #; loop over all "tracked" files
-    #; for every file which matches the above regex, create a symlink
-    for src in rc/*; do
-        dst="$HOME/.$(basename $src)"
-        src="$(readlink -f src)"
-        debug "Linking $src to $dst"
-        [ -n "$loud" ] && echo "Linking $src to $dst"
-        if [ "$do_copy" -eq 1 ]; then
-            if [ -L "$dst" ]; then
-                echo rm -f "$dst"
-            fi
-            if [ -e "$dst" ]; then
-                cp -i -f "$src" "$dst"
-            else
-                cp -f "$src" "$dst"
-            fi
-        else
-            if [ -d "$dst" ]; then
-                ln -Tis "$src" "$dst"
-            elif [ -e "$dst" ]; then
-                ln -ifs "$src" "$dst"
-            else
-                ln -s "$src" "$dst"
-            fi
-        fi
-    done
-
-}
-
-function build_templates() {
-    #; loop over all "tracked" files
-    #; running each through m4 with the definitions provided by 'data/secrets.m4'
-    local secrets_file="data/zv.m4"
-    for template in templates/*; do
-        dst="$HOME/.$(basename $template)"
-        [ -n "$loud" ] && echo "Creating $dst from template $template"
-        debug "Creating $dst from template $template"
-        m4 -D DOTFILEZ_CLASS="$local_class" \
-           -D DOTFILEZ_OS="$local_system" \
-           -D DOTFILEZ_HOSTNAME="$local_host" \
-           -D DOTFILEZ_USER="$local_user" \
-           -D DOTFILEZ_DISTRO="$(lsb_release -a)"\
-           "$secrets_file" "$template" > "$dst"
-    done
-}
-
-function bootstrap() {
-
-    bootstrap_available || error_out "Cannot execute bootstrap\n'$DOTFILEZ_BOOTSTRAP' is not an executable program."
-
-    # GIT_DIR should not be set for user's bootstrap code
-    unset GIT_DIR
-
-    echo "Executing $DOTFILEZ_BOOTSTRAP"
-    exec "$DOTFILEZ_BOOTSTRAP"
-
-}
-
-function orgprotocol() {
-    cat << EOF > "$HOME/.local/share/applications/org-protocol.desktop"
-[Desktop Entry]
-Name=org-protocol
-Exec=emacsclient %u
-Type=Application
-Terminal=false
-Categories=System;
-MimeType=x-scheme-handler/org-protocol;
-EOF
-   update-desktop-database $HOME/.local/share/applications
-   cat "$HOME/.local/share/applications/org-protocol.desktop"
-}
-
-function decrypt() {
-
-    require_gpg
-    require_archive
-
-    if [ "$DO_LIST" = "YES" ] ; then
-        tar_option="t"
-    else
-        tar_option="x"
-    fi
-
-    #; decrypt the archive
-    if ($GPG_PROGRAM -d "$DOTFILEZ_ARCHIVE" || echo 1) | tar v${tar_option}f - -C "$HOME"; then
-        [ ! "$DO_LIST" = "YES" ] && echo "All files decrypted."
-    else
-        error_out "Unable to extract encrypted files."
-    fi
-
-    CHANGES_POSSIBLE=1
-}
-
-function encrypt() {
-    require_gpg
-    parse_encrypt
-
-    #; Build gpg options for gpg
-    if [ "$GPG_KEY" = "ASK" ]; then
-        GPG_OPTS=("--no-default-recipient" "-e")
-    elif [ "$GPG_KEY" != "" ]; then
-        GPG_OPTS=("-e" "-r $GPG_KEY")
-    else
-        GPG_OPTS=("-c")
-    fi
-
-    #; report which files will be encrypted
-    echo "Encrypting the following files:"
-    printf '%s\n' "${ENCRYPT_INCLUDE_FILES[@]}"
-    echo
-
-    #; encrypt all files which match the globs
-    if tar -f - -c "${ENCRYPT_INCLUDE_FILES[@]}" | $GPG_PROGRAM --yes "${GPG_OPTS[@]}" --output "$DOTFILEZ_ARCHIVE"; then
-        echo "Wrote new file: $DOTFILEZ_ARCHIVE"
-    else
-        error_out "Unable to write $DOTFILEZ_ARCHIVE"
-    fi
-}
-
-function help() {
-
+usage() {
     cat << EOF
-Usage: dotfilez <command> [options...]
+Usage: ./$0
 
-Commands:
-  dotfilez alt                   - Create links for alternates
-  dotfilez encrypt               - Encrypt files
-  dotfilez decrypt [-l]          - Decrypt files
-  dotfilez orgprotocol           - Setup org-protocol
-  dotfilez perms                 - Fix ssh/gpg permissions
-  dotfilez installetc            - Install etc to /etc
-
-Files:
-  data               - dotfilez's data directory
-  data/protected     - globs of files for encryption/decryption
-  data/encrypted.gpg - tarball of encrypted files
-  data/secrets.m4    - m4 macro definition of secrets
-  data/packages      - list of packages that should be installed
-
-Use "man dotfilez" for complete documentation.
+Flags:
+  -l <TAG>         - Iterate through data/destination, linking all files matching tag (links all if 'all' is provided as tag)
+  -u <TAG>         - Iterate through data/destination, removing all which matchtag (unlinks all if 'all' is provided as tag)
+  -p <TAG>         - Install all packages with TAG (installs all if 'all' is tag)
 EOF
-
-    exit_consolidated 1
-
 }
 
-function list() {
-
-    require_repo
-
-    #; process relative to DOTFILEZ_WORK when --all is specified
-    if [ -n "$LIST_ALL" ] ; then
-        cd_work "List" || return
-    fi
-
-    #; list tracked files
-    "$GIT_PROGRAM" ls-files
-
+function set_secure_permissions() {
+    gs=($HOME/.gnupg $HOME/.ssh $HOME/.ssh/* $HOME/.gnupg/*)
+    chmod -f go-rwx ${gs[@]} > /dev/null 2>&1
 }
 
-function perms() {
-    GLOBS=()
-
-    #; include all .ssh files (unless disabled)
-    GLOBS+=(".ssh" ".ssh/*")
-
-    #; include all gpg files (unless disabled)
-    GLOBS+=(".gnupg" ".gnupg/*")
-
-    #; remove group/other permissions from collected globs
-    #shellcheck disable=SC2068
-    #(SC2068 is disabled because in this case, we desire globbing)
-    chmod -f go-rwx ${GLOBS[@]} >/dev/null 2>&1
-    #; TODO: detect and report changing permissions in a portable way
-
+function match_tag() {
+    taglist="$1"
+    tag="$2"
+    [[ "$tag" == "all" || "$taglist" =~ $tag ]]
 }
 
-function version() {
-
-    echo "dotfilez $VERSION"
-    exit_consolidated 0
-
-}
-
-#; ****** Utility Functions ******
-
-function query_distro() {
-    distro=""
-    if command -v "$LSB_RELEASE_PROGRAM" >/dev/null 2>&1; then
-        distro=$($LSB_RELEASE_PROGRAM -si 2>/dev/null)
-    fi
-    echo "$distro"
-}
-
-function process_global_args() {
-    #; global arguments are removed before the main processing is done
-    MAIN_ARGS=()
-    while [[ $# -gt 0 ]] ; do
-        key="$1"
-        case $key in
-            -Y|--dotfilez-dir) #; override the standard DOTFILEZ_DIR
-                if [[ ! "$2" =~ ^/ ]] ; then
-                    error_out "You must specify a fully qualified dotfilez directory"
-                fi
-                DOTFILEZ_DIR="$2"
-                shift
-                ;;
-            --dotfilez-repo) #; override the standard DOTFILEZ_REPO
-                if [[ ! "$2" =~ ^/ ]] ; then
-                    error_out "You must specify a fully qualified repo path"
-                fi
-                DOTFILEZ_OVERRIDE_REPO="$2"
-                shift
-                ;;
-            --dotfilez-config) #; override the standard DOTFILEZ_CONFIG
-                if [[ ! "$2" =~ ^/ ]] ; then
-                    error_out "You must specify a fully qualified config path"
-                fi
-                DOTFILEZ_OVERRIDE_CONFIG="$2"
-                shift
-                ;;
-            --dotfilez-encrypt) #; override the standard DOTFILEZ_ENCRYPT
-                if [[ ! "$2" =~ ^/ ]] ; then
-                    error_out "You must specify a fully qualified encrypt path"
-                fi
-                DOTFILEZ_OVERRIDE_ENCRYPT="$2"
-                shift
-                ;;
-            --dotfilez-archive) #; override the standard DOTFILEZ_ARCHIVE
-                if [[ ! "$2" =~ ^/ ]] ; then
-                    error_out "You must specify a fully qualified archive path"
-                fi
-                DOTFILEZ_OVERRIDE_ARCHIVE="$2"
-                shift
-                ;;
-            --dotfilez-bootstrap) #; override the standard DOTFILEZ_BOOTSTRAP
-                if [[ ! "$2" =~ ^/ ]] ; then
-                    error_out "You must specify a fully qualified bootstrap path"
-                fi
-                DOTFILEZ_OVERRIDE_BOOTSTRAP="$2"
-                shift
-                ;;
-            *) #; main arguments are kept intact
-                MAIN_ARGS+=("$1")
-                ;;
-        esac
-        shift
-    done
-
-}
-
-function configure_paths() {
-
-    #; change all paths to be relative to DOTFILEZ_DIR
-    DOTFILEZ_REPO="$DOTFILEZ_DIR/$DOTFILEZ_REPO"
-    DOTFILEZ_CONFIG="$DOTFILEZ_DIR/$DOTFILEZ_CONFIG"
-    DOTFILEZ_ENCRYPT="$DOTFILEZ_DIR/$DOTFILEZ_ENCRYPT"
-    DOTFILEZ_ARCHIVE="$DOTFILEZ_DIR/$DOTFILEZ_ARCHIVE"
-    DOTFILEZ_BOOTSTRAP="$DOTFILEZ_DIR/$DOTFILEZ_BOOTSTRAP"
-
-    #; independent overrides for paths
-    if [ -n "$DOTFILEZ_OVERRIDE_REPO" ]; then
-        DOTFILEZ_REPO="$DOTFILEZ_OVERRIDE_REPO"
-    fi
-    if [ -n "$DOTFILEZ_OVERRIDE_CONFIG" ]; then
-        DOTFILEZ_CONFIG="$DOTFILEZ_OVERRIDE_CONFIG"
-    fi
-    if [ -n "$DOTFILEZ_OVERRIDE_ENCRYPT" ]; then
-        DOTFILEZ_ENCRYPT="$DOTFILEZ_OVERRIDE_ENCRYPT"
-    fi
-    if [ -n "$DOTFILEZ_OVERRIDE_ARCHIVE" ]; then
-        DOTFILEZ_ARCHIVE="$DOTFILEZ_OVERRIDE_ARCHIVE"
-    fi
-    if [ -n "$DOTFILEZ_OVERRIDE_BOOTSTRAP" ]; then
-        DOTFILEZ_BOOTSTRAP="$DOTFILEZ_OVERRIDE_BOOTSTRAP"
-    fi
-
-    #; use the dotfilez repo for all git operations
-    GIT_DIR=$(mixed_path "$DOTFILEZ_REPO")
-    export GIT_DIR
-
-}
-
-function set_operating_system() {
-    #; special detection of WSL (windows subsystem for linux)
-    local proc_version
-    proc_version=$(cat "$PROC_VERSION" 2>/dev/null)
-    if [[ "$proc_version" =~ Microsoft ]]; then
-        OPERATING_SYSTEM="WSL"
-    else
-        OPERATING_SYSTEM=$(uname -s)
-    fi
-
-    case "$OPERATING_SYSTEM" in
-        CYGWIN*)
-            git_version=$(git --version 2>/dev/null)
-            if [[ "$git_version" =~ windows ]] ; then
-                USE_CYGPATH=1
+function link_tags() {
+    tag="$1"
+    tail -n "+3" "$DATADIR/destination" | envsubst | {
+        while IFS='|' read -r target taglist dest; do
+            if match_tag "$taglist", "$tag"; then
+                (
+                    dest="${dest// }"
+                    if [[ -d "$(dirname $dest)" ]]; then
+                        set -x
+                        ln -Tis "${target// }" $dest
+                    else
+                        echo "base directory not found, skipping"
+                    fi
+                )
             fi
-            ;;
-        *)
-            ;;
-    esac
-}
-
-function debug() {
-    [ -n "$DEBUG" ] && echo_e "DEBUG: $*"
-}
-
-function error_out() {
-    echo_e "ERROR: $*"
-    exit_consolidated 1
-}
-
-function exit_consolidated() {
-    exit "$1"
-}
-
-function cd_work() {
-    DOTFILEZ_WORK=$(unix_path "$("$GIT_PROGRAM" config core.worktree)")
-    cd "$DOTFILEZ_WORK" || {
-        debug "$1 not processed, unable to cd to $DOTFILEZ_WORK"
-        return 1
+        done
     }
-    return 0
+    ( set_secure_permissions )
 }
 
-function cd_top() {
-    if [ -d "$DOTFILEZ_DIR" ]; then
-        cd "$DOTFILEZ_DIR"
-        return 1
-    else
-        echo "\$DOTFILEZ_DIR ($DOTFILEZ_DIR) isn't a directory"
-        return 0
-    fi
+function unlink_tags() {
+    tag="$1"
+    tail -n "+3" "$DATADIR/destination" | envsubst | {
+        while IFS='|' read -r target taglist dest; do
+            if match_tag "$taglist", "$tag"; then
+                (
+                    dest="${dest// }"
+                    if [[ -e $dest ]]; then
+                        set -x
+                        rm -r "$dest"
+                    else
+                        echo "couldn't find $dest, skipping"
+                    fi
+                )
+            fi
+        done
+    }
 }
 
-function parse_encrypt() {
-    if [ "$ENCRYPT_INCLUDE_FILES" != "unparsed" ]; then
-        #shellcheck disable=SC2034
-        PARSE_ENCRYPT_SHORT="parse_encrypt() not reprocessed"
-        return
-    fi
-
-    ENCRYPT_INCLUDE_FILES=()
-
-    cd_top
-
-    echo "$DOTFILEZ_ENCRYPT"
-    if [ -f "$DOTFILEZ_ENCRYPT" ] ; then
-        #; parse both included/excluded
-        shopt -s extglob
-        while read -r line || [ -n "$line" ]; do
-            local IFS=$'\n'
-            for in_file in $(find $line); do
-                if [ -e "$in_file" ]; then
-                    ENCRYPT_INCLUDE_FILES+=("$in_file")
-                fi
-            done
-        done < "$DOTFILEZ_ENCRYPT"
-        shopt -u extglob
-    fi
+function install_package_tags() {
+    tag="$1"
+    pkgs=($(tail -n "+3" "$DATADIR/packages" | {
+        while IFS='|' read -r name _desc taglist; do
+            if match_tag "$taglist", "$tag"; then
+                # This 'double echo' is intended to get rid of leading/trailing
+                # whitespace without resorting to the much longer parameter
+                # expansion flags.
+                echo "'$(echo $name)'"
+            fi
+        done
+    }))
+    echo dnf install -y "${pkgs[*]}"
 }
 
-#; ****** Prerequisites Functions ******
-
-function require_archive() {
-    [ -f "$DOTFILEZ_ARCHIVE" ] || error_out "$DOTFILEZ_ARCHIVE does not exist. did you forget to create it?"
-}
-
-function require_git() {
-    local alt_git
-    alt_git="git"
-
-    local more_info
-    more_info=""
-
-    if [ "$alt_git" != "" ] ; then
-        GIT_PROGRAM="$alt_git"
-        more_info="\nThis command has been set via the dotfilez.git-program configuration."
-    fi
-    command -v "$GIT_PROGRAM" >/dev/null 2>&1 || \
-        error_out "This functionality requires Git to be installed, but the command '$GIT_PROGRAM' cannot be located.$more_info"
-}
-function require_gpg() {
-    local alt_gpg
-    alt_gpg="gpg2"
-
-    local more_info
-    more_info=""
-
-    if [ "$alt_gpg" != "" ] ; then
-        GPG_PROGRAM="$alt_gpg"
-        more_info="\nThis command has been set via the dotfilez.gpg-program configuration."
-    fi
-    command -v "$GPG_PROGRAM" >/dev/null 2>&1 || \
-        error_out "This functionality requires GPG to be installed, but the command '$GPG_PROGRAM' cannot be located.$more_info"
-}
-function require_repo() {
-    [ -d "$DOTFILEZ_REPO" ] || error_out "Git repo does not exist. did you forget to run 'init' or 'clone'?"
-}
-function require_shell() {
-    [ -x "$SHELL" ] || error_out "\$SHELL does not refer to an executable."
-}
-function bootstrap_available() {
-    [ -f "$DOTFILEZ_BOOTSTRAP" ] && [ -x "$DOTFILEZ_BOOTSTRAP" ] && return
-    return 1
-}
-
-#; ****** Directory tranlations ******
-
-function unix_path() {
-    #; for paths used by bash/dotfilez
-    if [ "$USE_CYGPATH" = "1" ] ; then
-        cygpath -u "$1"
-    else
-        echo "$1"
-    fi
-}
-function mixed_path() {
-    #; for paths used by Git
-    if [ "$USE_CYGPATH" = "1" ] ; then
-        cygpath -m "$1"
-    else
-        echo "$1"
-    fi
-}
-
-#; ****** echo replacements ******
-function echo() {
-    IFS=' '
-    printf '%s\n' "$*"
-}
-function echo_n() {
-    IFS=' '
-    printf '%s' "$*"
-}
-function echo_e() {
-    IFS=' '
-    printf '%b\n' "$*"
-}
-
-#; ****** Main processing (when not unit testing) ******
-
-if [ "$DOTFILEZ_TEST" != 1 ] ; then
-    process_global_args "$@"
-    set_operating_system
-    configure_paths
-    main "${MAIN_ARGS[@]}"
-fi
+while getopts "l:u:p:h" o; do
+    case "${o}" in
+        l) link_tags "${OPTARG}" ;;
+        u) unlink_tags "${OPTARG}" ;;
+        p) install_package_tags "${OPTARG}" ;;
+        h) usage ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND-1))
