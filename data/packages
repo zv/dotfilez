@@ -1,58 +1,59 @@
-pkgname                            | description                                                                     | @tags 
+pkgname                            | description                                                                     | @tags
 -----------------------------------------------------------------------------------------------------------------------------------------
-@Development Tools                 | General Development Tools                                                       | desktop groups
-@C Development Tools and Libraries | C Development Tools                                                             | desktop groups
+@Development Tools                 | General Development Tools                                                       | system groups
+@C Development Tools and Libraries | C Development Tools                                                             | system groups
+autoconf                           | A GNU tool for automatically configuring source code                            | system
 acpitool                           | Command line ACPI client                                                        | desktop
 avahi-tools                        | Command line tools for mDNS browsing and publishing                             | desktop
 checksec                           | Tool to check system for binary-hardening                                       | desktop system
 network-manager-applet             | A network control and status applet for NetworkManager                          | desktop
-clang                              | A C language family front-end for LLVM                                          | desktop system base
-cmake                              | Cross-platform make system                                                      | desktop
-curl                               | A utility for getting files from remote servers (FTP, HTTP, and others)         | desktop system base
-dmenu                              | Generic menu for X                                                              | desktop
-dunst                              | Simple and configurable notification-daemon                                     | desktop
-emacs                              | GNU Emacs text editor                                                           | desktop system base
-ettercap                           | Network traffic sniffer/analyser, NCURSES interface version                     | desktop
-git                                | Fast Version Control System                                                     | desktop system base
-global                             | Source code tag system                                                          | desktop system base
-gnupg2                             | Utility for secure communication and data storage                               | desktop system base
+clang                              | A C language family front-end for LLVM                                          | system
+cmake                              | Cross-platform make system                                                      | system
+curl                               | A utility for getting files from remote servers (FTP, HTTP, and others)         | system
+dmenu                              | Generic menu for X                                                              | i3
+dunst                              | Simple and configurable notification-daemon                                     | dunst
+emacs                              | GNU Emacs text editor                                                           | desktop
+git                                | Fast Version Control System                                                     | base
+global                             | Source code tag system                                                          | desktop
+gnupg2                             | Utility for secure communication and data storage                               | desktop gpg 2factor_auth yubikey
+gnupg2-smime                       | CMS encryption and signing tool and smart card support for GnuPG                | gpg 2factor_auth yubikey
 graphviz                           | Graph Visualization Tools                                                       | desktop
-hping3                             | TCP/IP stack auditing and much more                                             | desktop system
-i3                                 | Improved tiling window manager                                                  | desktop
-i3lock                             | Simple X display locker like slock                                              | desktop
-i3status                           | Status bar generator for i3bar, dzen2, xmobar or similar programs               | desktop
-java-1.8.0-openjdk                 | OpenJDK Runtime Environment 8                                                   | desktop
-libvirt                            | Library providing a simple virtualization API                                   | desktop
+hping3                             | TCP/IP stack auditing and much more                                             | system
+i3                                 | Improved tiling window manager                                                  | i3
+i3lock                             | Simple X display locker like slock                                              | i3
+i3status                           | Status bar generator for i3bar, dzen2, xmobar or similar programs               | i3
+java-1.8.0-openjdk                 | OpenJDK Runtime Environment 8                                                   | desktop java
+libvirt                            | Library providing a simple virtualization API                                   | desktop virtualization
+qemu                               |  QEMU is a FAST! processor emulator                                             | deskop virtualization
 mtr                                | Network diagnostic tool combining 'traceroute' and 'ping'                       | desktop system
-nmap                               | Network exploration tool and security scanner                                   | desktop system base
-openssl                            | Utilities from the general purpose cryptography library with TLS implementation | desktop
-openssl-devel                      | Files for development of applications which will use OpenSSL                    | desktop
-pcsc-lite                          | PC/SC Lite smart card framework and applications                                | desktop
-redhat-rpm-config                  | Red Hat specific rpm configuration files                                        | desktop system
-rlwrap                             | Wrapper for GNU readline                                                        | desktop system base
-scrot                              | Screen-shot capture using Imlib 2                                               | desktop
-socat                              | Bidirectional data relay between two data channels ('netcat++')                 | desktop system
-the_silver_searcher                | Super-fast text searching tool (ag)                                             | desktop system base
+nmap                               | Network exploration tool and security scanner                                   | system
+openssl                            | Utilities from the general purpose cryptography library with TLS implementation | system gpg
+openssl-devel                      | Files for development of applications which will use OpenSSL                    | system gpg
+pcsc-lite                          | PC/SC Lite smart card framework and applications                                | desktop yubikey 2factor_auth gpg
+rpm-build | | desktop rpm
+redhat-rpm-config                  | Red Hat specific rpm configuration files                                        | desktop rpm
+rlwrap                             | Wrapper for GNU readline                                                        | base
+scrot                              | Screen-shot capture using Imlib 2                                               | desktop screenshot
+socat                              | Bidirectional data relay between two data channels ('netcat++')                 | desktop netcat
+the_silver_searcher                | Super-fast text searching tool (ag)                                             | ag textsearch
+ripgrep                            | an even faster searching tool (rg)                                              | system textsearch rg
 thunderbird                        | Mozilla Thunderbird mail/newsgroup client                                       | desktop
-tmux                               | A terminal multiplexer                                                          | desktop system base
-vim-enhanced                       | A version of the VIM editor which includes recent enhancements                  | desktop system base
+tmux                               | A terminal multiplexer                                                          | base
+vim-enhanced                       | A version of the VIM editor which includes recent enhancements                  | base
 virt-manager                       | Desktop tool for managing virtual machines via libvirt                          | desktop
 weechat                            | Portable, fast, light and extensible IRC client                                 | desktop
 wireshark                          | Network traffic analyzer                                                        | desktop
 xclip                              | Command line clipboard grabber                                                  | desktop
-ykclient                           | Yubikey management library and client                                           | desktop
-ykpers                             | Yubikey personalization program                                                 | desktop
-yubikey-personalization-gui        | GUI for Yubikey personalization                                                 | desktop
-zsh                                | Powerful interactive shell                                                      | desktop system base
+ykclient                           | Yubikey management library and client                                           | desktop yubikey
+ykpers                             | Yubikey personalization program                                                 | desktop yubikey
+yubikey-personalization-gui        | GUI for Yubikey personalization                                                 | desktop yubikey
+zsh                                | Powerful interactive shell                                                      | base
 adobe-source-code-pro-fonts        | A set of mono-spaced OpenType fonts designed for coding environments            | font desktop
 ocaml-calendar-devel               | Development files for ocaml-calendar                                            | ocaml
 ocaml-camlp4-devel                 | Pre-Processor-Pretty-Printer for OCaml                                          | ocaml
 ocaml-extlib-devel                 | Development files for ocaml-extlib                                              | ocaml
 ocaml-findlib-devel                | Development files for ocaml-findlib                                             | ocaml
 ocaml-ocamldoc                     | Documentation generator for OCaml                                               | ocaml
-autoconf                           | A GNU tool for automatically configuring source code                            | desktop 2factor_auth
-gnupg                              | A GNU utility for secure communication and data storage                         | desktop 2factor_auth
 ykpers-devel                       | Development files for ykpers                                                    | 2factor_auth
 libyubikey-devel                   | Development files for libyubikey                                                | 2factor_auth
 libusb-devel                       | Development files for libusb                                                    | 2factor_auth
-gnupg2-smime                       | CMS encryption and signing tool and smart card support for GnuPG                | 2factor_auth
