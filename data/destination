@@ -27,7 +27,8 @@ $PWD/rc/pryrc       | desktop ruby       | $HOME/.pryrc
 $PWD/rc/psqlrc      | system             | $HOME/.psqlrc
 $PWD/rc/radare2rc   | re                 | $HOME/.radare2rc
 $PWD/rc/screenrc    | system             | $HOME/.screenrc
-$PWD/rc/spacemacs   | system             | $HOME/.spacemacs
+$PWD/emacs.d        | system emacs       | $HOME/.emacs.d
+$PWD/rc/spacemacs   | system emacs       | $HOME/.spacemacs
 $PWD/rc/ssh         | base               | $HOME/.ssh
 $PWD/rc/tmux.conf   | base tmux          | $HOME/.tmux.conf
 $PWD/rc/tmux.d      | base tmux          | $HOME/.tmux.d
