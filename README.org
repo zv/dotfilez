@@ -263,12 +263,58 @@ exclude=kernel*
     sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
     #+end_example
 
+*** gnome-terminal
+    I prefer a smaller padding on my gnome terminal.
+     :PROPERTIES:
+     :header-args: :tangle "/home/zv/.config/gtk-3.0/gtk.css"
+     :END:
+     #+begin_example
+vte-terminal {
+  padding: 5px
+}
+     #+end_example
+
+     You can also remove the ridiculously huge headerbar in Gnome 3.32+
+#+begin_src sh
+gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
+#+end_src
+
+*** gnome-flashback copr
+    You can find COPR produced by a Redhat employee here: https://copr.fedorainfracloud.org/coprs/yselkowitz/gnome-flashback/
+
+*** NetworkManager
+    NetworkManager is a program for providing detection and configuration for systems to automatically connect to network.
+
+    I use a local resolver (=dnsmasq=) instead of those provided by DHCP.
+**** Enable =dnsmasq=
+***** =NetworkManager.conf=
+      You must ensure NetworkManager globally enables local resolver =dnsmasq=
+      :PROPERTIES:
+      :header-args: :tangle "/etc/NetworkManager/NetworkManager.conf"
+      :END:
+     #+begin_example
+     [main]
+     dns=dnsmasq
+     #+end_example
+
+***** =dnsmasq.conf=
+      This will tack on these servers to the list recieved by DHCP.
+      :PROPERTIES:
+      :header-args: :tangle "/etc/NetworkManager/dnsmasq.d/server.conf"
+      :END:
+     #+begin_example
+     server=8.8.8.8
+     server=1.1.1.1
+     #+end_example
+
+*****
+
 * Backup
 ** Thunderbird
    Thunderbird provides an excellent RSS reader and I keep a list of the feeds which I consume in =thunderbird/zv-feeds.opml=.
 ** =dconf=
    dconf is a low-level configuration system. Its main purpose is to provide a backend to GSettings on platforms that don't already have configuration storage systems.
-   
+
 *** gnome-terminal
     #+begin_src shell
       dconf dump /org/gnome/terminal/ > gnome_terminal_settings_backup.txt
