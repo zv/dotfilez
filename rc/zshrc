@@ -85,6 +85,11 @@ cfgkey()  {
 	add Mod3 = Hyper_R')
 }
 
+# Binds CapsLock -> Control in a vconsole
+vcfgkey() {
+    sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+}
+
 alias keycfg=cfgkey
 alias gpg=gpg2
 alias xmm="xmodmap $HOME/.xmodmaprc"
