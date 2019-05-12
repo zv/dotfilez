@@ -103,13 +103,9 @@ set list
 set nowrap		" Don't wrap lines
 set linebreak		" Wrap lines at convenient points
 
-set tabstop=4		" actual tabs occupy 8 characters
-set softtabstop=4	" insert mode tab and backspace *should* use 8 spaces
-
-set cindent		" start c lang indent mode
-set smartindent		" intdent intelligently
-set expandtab		" insert tabs as spaces
-set smarttab		" tab inserts tab when already tabbed!
+set shiftwidth=4	" Number of spaces to use for each indent step
+set softtabstop=4	" Number of spaces that a <Tab> counts for
+set expandtab		" use spaces to insert a <Tab>
 
 set listchars=tab:»·,trail:·
 "}}}
@@ -167,6 +163,23 @@ nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <
 " page manipulations
 nnoremap <silent> <CR> <C-f>
 nnoremap <silent> <Backspace> <C-b>
+
+function ToggleTabs()
+  if &expandtab
+    set shiftwidth=8
+    set softtabstop=0
+    set noexpandtab
+  else
+    set shiftwidth=4
+    set softtabstop=4
+    set expandtab
+  endif
+endfunction
+nmap <leader>tt mz:execute ToggleTabs()<CR>'z
+
+nnoremap <silent><leader>tn :set number!<CR>
+nnoremap <silent><leader>tr :set number!<CR>:set relativenumber!<CR>
+nnoremap <silent><leader>tl :set wrap!<CR>
 
 "}}}
 
