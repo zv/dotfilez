@@ -728,7 +728,7 @@ bindkey -M viins "\e0" insert-last-word
 bindkey ' ' magic-space # [Space] - do history expansion
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if [[ -x "$(whence -p gpg-connect-agent)" ]]; then
+if [[ -x "$(whence -p gpg-connect-agent)" && -d "$HOME/.gnupg" ]]; then
     gpg-connect-agent /bye
     # XXX: remove whackness. This is a heavy hack that relies on =gpg-agent=
     # replacing the contents of SSH_AUTH_SOCK if it successfully starts.
