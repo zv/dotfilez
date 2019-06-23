@@ -29,13 +29,13 @@ $PWD/rc/radare2rc   | re                 | $HOME/.radare2rc
 $PWD/rc/screenrc    | system             | $HOME/.screenrc
 $PWD/emacs.d        | system emacs       | $HOME/.emacs.d
 $PWD/rc/spacemacs   | system emacs       | $HOME/.spacemacs
-$PWD/rc/ssh         | base               | $HOME/.ssh
+$PWD/rc/ssh         | desktop            | $HOME/.ssh
 $PWD/rc/tmux.conf   | base tmux          | $HOME/.tmux.conf
 $PWD/rc/tmux.d      | base tmux          | $HOME/.tmux.d
 $PWD/rc/toprc       | system             | $HOME/.toprc
 $PWD/rc/vimrc       | base vim           | $HOME/.vimrc
 $PWD/rc/w3m         | system w3m         | $HOME/.w3m
-$PWD/rc/weechat     | desktop irc        | $HOME/.weechat
+$PWD/rc/weechat     | desktop irc weechat| $HOME/.weechat
 $PWD/rc/Xdefaults   | desktop x11        | $HOME/.Xdefaults
 $PWD/rc/xmobarrc    | desktop            | $HOME/.xmobarrc
 $PWD/rc/xmodmaprc   | xmonad             | $HOME/.xmodmaprc

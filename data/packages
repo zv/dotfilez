@@ -41,8 +41,8 @@ thunderbird                        | Mozilla Thunderbird mail/newsgroup client  
 tmux                               | A terminal multiplexer                                                          | base
 vim-enhanced                       | A version of the VIM editor which includes recent enhancements                  | base
 virt-manager                       | Desktop tool for managing virtual machines via libvirt                          | desktop
-weechat                            | Portable, fast, light and extensible IRC client                                 | desktop
-wireshark                          | Network traffic analyzer                                                        | desktop
+weechat                            | Portable, fast, light and extensible IRC client                                 | desktop weechat
+wireshark                          | Network traffic analyzer                                                        | desktop wireshark
 xclip                              | Command line clipboard grabber                                                  | desktop
 ykclient                           | Yubikey management library and client                                           | desktop yubikey
 ykpers                             | Yubikey personalization program                                                 | desktop yubikey
