@@ -2,18 +2,8 @@
 (defun spacemacs/goto-link-line ())
 (defun spacemacs//insert-banner ())
 
-(require 'mm-url) ; to include mm-url-decode-entities-string
-
-;; erc
-(defun erc-connect ()
-  "Connect to IRC."
-  (interactive)
-  ;; disable powerline for ERC ----------------------------
-  (erc :server "irc.freenode.net" :port 6667 :nick "zv")
-  (erc :server "irc.mozilla.org" :port 6667 :nick "zv")
-  (erc :server "irc.oftc.net" :port 6667 :nick "zv"))
-
 
+
 (defun add-semicolon-to-end-of-line ()
     "Unsurprisingly, this adds a semicolon to the end of the line"
     (interactive)
