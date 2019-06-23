@@ -132,6 +132,17 @@ mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 
 # compile and run
 crun() {
+	local lopts
+	local copts
+	local custom_compiler
+	local dump_asm
+	local verbose
+	local usage
+	local debug
+	local use_gcc
+	local match
+	local mbegin
+	local mend
 	zparseopts -E -D -- -gcc::=use_gcc \
 		c:=custom_compiler \
 		o+:=copts \
@@ -747,9 +758,9 @@ fi
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
 # cdpath=($cdpath)
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+# export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-export RUST_SRC_PATH=/usr/local/src/rust/src
+# export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # The next line updates PATH for the Google Cloud SDK.
 # [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
@@ -757,7 +768,10 @@ export RUST_SRC_PATH=/usr/local/src/rust/src
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
+# Rustup
 [[ -e ~/.cargo/env ]] && source ~/.cargo/env
+
+# Node
 
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
 #     export PATH="$HOME/.rbenv/bin:$PATH"
