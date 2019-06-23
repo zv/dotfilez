@@ -61,14 +61,6 @@ This function should only modify configuration layer settings."
             shell-protect-eshell-prompt t
             shell-default-term-shell "/usr/bin/zsh")
      scheme
-
-     ;; Spacemacs metaconfigs
-     spacemacs-completion
-     spacemacs-defaults
-     spacemacs-navigation
-     spacemacs-evil
-     ;;
-
      sql
      shell-scripts
      syntax-checking
@@ -511,13 +503,12 @@ before packages are loaded."
      auto-save-interval 300   ; number of keystrokes between auto-saves
      auto-save-file-name-transforms  `((".*" ,(concat undo-basedir "autosave") t))
 
-     undo-limit        8388608   ;  8mb
-     undo-strong-limit 16777216  ; 16mb
-     undo-outer-limit  25165824 ; 24mb
      undo-tree-visualizer-diff t
      undo-tree-visualizer-timestamps t
      undo-tree-auto-save-history t ; Automatically save our undo history.
-     undo-tree-history-directory-alist `(("." . ,(concat undo-basedir "undo"))))
+     undo-tree-history-directory-alist `((".*gpg" . "/tmp/")
+                                         (".*asc" . "/tmp/")
+                                         ("." . ,(concat undo-basedir "undo"))))
 
     ;; now create the associated directories
     (dolist (dir '("undo" "autosave" "backup"))
@@ -557,9 +548,9 @@ before packages are loaded."
 
                 ;; My personal org folders
                 org-directory "~/Documents"
-                org-default-notes-file (expand-file-name "notes.org" org-directory)
-                zv//org-personal (expand-file-name "zv.org" org-directory)
-                zv//blog-path (expand-file-name "~/zv.github.com/")
+                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
+                zv//org-personal (expand-file-name "zv.org.gpg" org-directory)
+                zv//blog-path (expand-file-name "~/Development/zv.github.com/")
 
                 ;; abbrev-mode
                 abbrev-mode t)
