@@ -92,6 +92,8 @@ alias xmm="xmodmap $HOME/.xmodmaprc"
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
+alias activatevenv="source venv/bin/activate"
+
 man() {
 	local args=$@
 	(
