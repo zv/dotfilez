@@ -697,6 +697,7 @@ bindkey -M vicmd "?" vi-history-search-forward
 bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
+bindkey -M viins '\ep' insert-last-word
 
 # EZKeys
 bindkey -s '\eu' "..\n"
