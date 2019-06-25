@@ -6,6 +6,7 @@
                       eshell
                       js2-mode
                       cc-mode
+                      treemacs-evil
                       (z3-mode :location (recipe
                                           :fetcher github
                                           :repo "zv/z3-mode"))))
@@ -103,6 +104,13 @@
       (spacemacs/set-leader-keys-for-major-mode 'js2-mode
         "or" 'react-mode))))
 
+(defun zv/post-init-treemacs-evil ()
+  (use-package treemacs-evil
+    :after treemacs
+    :config
+    (progn
+      (evil-define-key 'treemacs treemacs-mode-map (kbd "h") #'treemacs-collapse-parent-node)
+      (evil-define-key 'treemacs treemacs-mode-map (kbd "l") #'treemacs-RET-action))))
 
 (defun zv/post-init-nasm-mode ()
   (use-package nasm-mode
