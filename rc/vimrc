@@ -122,6 +122,22 @@ nnoremap <silent> <leader>wh <C-w>h
 nnoremap <silent> <leader>wl <C-w>l
 nnoremap <silent> <leader>wk <C-w>k
 nnoremap <silent> <leader>wj <C-w>j
+nnoremap <silent> <leader>wH <C-w>H
+nnoremap <silent> <leader>wL <C-w>L
+nnoremap <silent> <leader>wK <C-w>K
+nnoremap <silent> <leader>wJ <C-w>J
+
+function! DoMaximize()
+  let view = winheight(0) / str2float(&lines)
+  if (view < 0.80)
+    normal! _
+    normal! |
+  else
+    normal =
+  endif
+endfunction
+
+nnoremap <silent> <leader>wm :call DoMaximize()<CR>
 
 " Create window splits easier.
 nnoremap <silent> <leader>wv <C-w>v
