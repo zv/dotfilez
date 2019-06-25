@@ -83,8 +83,12 @@ function install_package_tags() {
 
 function select_setup() {
 
-  function select_enable_fstrim() { sudo systemctl enable fstrim.timer }
-  function select_chsh() { sudo lchsh -i zv }
+  function select_enable_fstrim() { 
+    sudo systemctl enable fstrim.timer 
+  }
+  function select_chsh() { 
+    sudo lchsh -i zv 
+  }
 
   local -a items=( "enable_fstrim" "chsh" )
   select ts in "$items"; do
