@@ -1,0 +1,6 @@
+irssi/sasl.auth
+rc/ssh/id_rsa
+rc/ssh/id_ed25519
+rc/ssh/config
+org/!(*.asc|*.gpg)
+certificates/!(*.asc)

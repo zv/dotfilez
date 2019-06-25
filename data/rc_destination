@@ -1,6 +1,0 @@
-filename        | destination
----------------------------------------------------
-dunstrc	        | $HOME/.config/dunstrc
-lxde-rc.xml     | $HOME/.config/openbox/lxde-rc.xml
-ida.cfg         | %skip
-.*              | $HOME/.%filename

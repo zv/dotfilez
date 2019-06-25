@@ -10,6 +10,8 @@ GPATH
 GRTAGS
 GTAGS
 
+data/secrets.m4
+
 # certs
 certificates/*
 !certificates/*.gpg
@@ -95,3 +97,8 @@ rc/weechat/logs
 rc/weechat/weechat.log
 rc/weechat/sec.conf
 rc/weechat/passphrase
+
+
+#━━━━ mail ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+thunderbird/Crash Reports

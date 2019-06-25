@@ -85,6 +85,11 @@ cfgkey()  {
 	add Mod3 = Hyper_R')
 }
 
+# Binds CapsLock -> Control in a vconsole
+vcfgkey() {
+    sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+}
+
 alias keycfg=cfgkey
 alias gpg=gpg2
 alias xmm="xmodmap $HOME/.xmodmaprc"
@@ -726,20 +731,14 @@ bindkey -M viins "\e0" insert-last-word
 bindkey ' ' magic-space # [Space] - do history expansion
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-gpg-connect-agent /bye
-# XXX: remove whackness. This is a heavy hack that relies on =gpg-agent=
-# replacing the contents of SSH_AUTH_SOCK if it successfully starts.
-SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh
-export SSH_AUTH_SOCK;
-eval $(gpg-agent --enable-ssh-support --daemon  2>!$HOME/.gnupg/zsh-gpg-agent.log)
-
-#export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
-
-# Actual output of gpg-agent
-#export GPG_AGENT_INFO=$HOME/.gnupg/S.gpg-agent
-
-#  Gnupg Agent Wrapper
-# [[ -e "$HOME/.gnupg/gpg-agent-wrapper" ]] && source "$HOME/.gnupg/gpg-agent-wrapper"
+if [[ -x "$(whence -p gpg-connect-agent)" && -d "$HOME/.gnupg" ]]; then
+    gpg-connect-agent /bye
+    # XXX: remove whackness. This is a heavy hack that relies on =gpg-agent=
+    # replacing the contents of SSH_AUTH_SOCK if it successfully starts.
+    SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh
+    export SSH_AUTH_SOCK;
+    eval $(gpg-agent --enable-ssh-support --daemon  2>!$HOME/.gnupg/zsh-gpg-agent.log)
+fi
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Run our external modules

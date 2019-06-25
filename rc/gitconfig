@@ -11,6 +11,7 @@
 	editor = vim
 	excludesfile = ~/.gitignore
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	safecrlf = true
 	autocrlf = input
 
 [commit]
@@ -20,12 +21,14 @@
 [gpg]
 	program = gpg2
 
-[format]
-	numbered = true
-
 [color]
 	pager       = true
 	ui          = true
+
+[grep]
+  lineNumber = true
+  threads = 4
+  extendedRegex = true
 
 [color "diff"]
 	meta = yellow bold
@@ -47,22 +50,24 @@
 	whitespace = nowarn
 
 [diff]
-# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
-# instead of a/b/c/d as prefixes for patches
+	# Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+	# instead of a/b/c/d as prefixes for patches
 	mnemonicprefix = true
 	tool           = vimdiff
 
+[difftool]
+	prompt = false
+
 [merge]
+	summary = true
 	verbosity = 1
 	tool = vimdiff3
-	conflictstyle = diff3
 
 [mergetool "ediff"]
 	cmd = "emacsclient -c -a \"\"  --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\""
 
-[grep]
-	lineNumber=true
-	extendedRegex=true # patternType=extended threads=2
+[advice]
+	statusHints = false
 
 [push]
 	default = current
@@ -74,6 +79,21 @@
 	enabled = false
 
 [alias]
+	# For help on git aliases:
+	#
+	#   * <https://git.wiki.kernel.org/index.php/Aliases>
+	#   * <http://stackoverflow.com/questions/267761/what-does-your-gitconfig-contain>
+	#   * <http://superuser.com/questions/169695/what-are-your-favorite-git-aliases>
+	#   * <http://stackoverflow.com/questions/1309430/how-to-embed-bash-script-directly-inside-a-git-alias>
+	#   * <http://code.joejag.com/2013/everyday-git-aliases/>
+	#   * <http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/>
+	#   * <https://ochronus.com/git-tips-from-the-trenches/>
+	#   * <http://mislav.uniqpath.com/2010/07/git-tips/>
+
+  ##
+	# One-letter aliases
+	##
+
 	# add - record file contents to the index.
 	a = add
 
@@ -93,7 +113,7 @@
 	g = grep
 
 	# log - show commit logs.
-	l	= log --date=format:\"%m/%d/%y\" --pretty=\"format:%C(auto)%<(8)%h%Creset│ %C(blue)%ad%Creset │ %C(013)%><(15,trunc)%aN%Creset │%C(auto)%d%Creset %s\" --abbrev-commit
+	l	= log --date=format:\"%m/%d/%y\" --pretty=\"format:%C(auto)%<(8)%h%Creset| %C(blue)%ad%Creset | %C(013)%><(15,trunc)%aN%Creset |%C(auto)%d%Creset %s\" --abbrev-commit
 
 	# merge - join two or more development histories together.
 	m = merge
@@ -196,8 +216,7 @@
 	lc						= log ORIG_HEAD.. --stat --no-merges
 
 	# Show signatures
-	lsig					= log  --pretty=format:\"%C(blue)%ad%  %C(yellow)%h%C(red)%d%Creset %s %C(013)%C(bold) %m %an [%G?] %GS %GK %Creset\"
-
+  lsig          = log  --pretty=format:\"%C(blue)%ad%  %C(yellow)%h%C(red)%d%Creset %s %C(013)%C(bold) %m %an [%G?] %GS %GK %Creset\"
 
 	# Log changes
 	changes				= log --pretty=format:\"%C(yellow)%h%C(reset) %C(blue)%cr%Creset %C(013)%cn%Creset - %s\" --name-status
@@ -312,7 +331,7 @@
 	# status - show the working tree differences [same as "s"]
 	st = status
 
-	# ――――――― Inspection Aliases ――――――――――――――――――――――――――――――
+	### INSPECTION ALIASES ###
 
 	# Show our defined aliases
 	aliases = !"git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'"
@@ -332,7 +351,7 @@
 	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 
 	# Find text in any commit ever
-	grep-all = !"git grep $@ $(git rev-list --all) #"
+  grep-all = !"git grep $@ $(git rev-list --all) #"
 
 	# Given a merge commit, find the span of commits that exist(ed).
 	# Not so useful in itself, but used by other aliases.
@@ -365,6 +384,13 @@
 
 	### LOG ALIASES ###
 
+	log-graph = log --all --graph --decorate
+	log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
+	log-timeline = log --format='%h %an %ar - %s'
+	log-local = log --oneline origin..HEAD
+	log-timeline = log --date=local --format='%h %an %ar - %s'
+  log-fetched = log --oneline HEAD..origin/master
+
 	# Show log of changes, most recent first
 	log-changes = log --oneline --reverse
 
@@ -373,8 +399,6 @@
 
 	# Show log with dates in our local timezone
 	log-local = log --date=local
-
-	log-timeline = log --date=local --format='%h %an %ar - %s'
 
 	# Show the log for my own user email
 	log-me = !git log --author $(git config user.email)
@@ -387,8 +411,7 @@
 
 	# Show the recent day
 	log-day = log --since yesterday
-
-	log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
+  log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
 
 	# Summarize your own changes since yesterday, suitable for a daily standup meeting.
 	log-standup = !git log --since yesterday --pretty=short --author $(git config user.email)
@@ -434,7 +457,7 @@
 	# For instance, to see who contributed most to the API part of an application:
 	#
 	#    $ git log --format='%an' --since='1 month ago' app/controllers/api/ | \
-  #      sort | uniq -c | sort -rn | head
+	#      sort | uniq -c | sort -rn | head
 	#
 	#    109 Alice Anderson
 	#    13 Bob Brown
@@ -442,7 +465,8 @@
 	#
 	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count", "file"} {print $1, $2}' | sort -g
 
-	# ――――――― Lookup Aliases ――――――――――――――――――――――――――――――――――
+
+	### LOOKUP ALIASES ###
 
 	# whois: given a string for an author, try to figure out full name and email:
 	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
@@ -453,7 +477,12 @@
 	# Show who contributed with summarized changes
 	who = shortlog -s --
 
-	# ――――――― Workflow Aliases ――――――――――――――――――――――――――――――――
+	# Show who contributed, in descending order by number of commits
+	whorank = shortlog -sn --no-merges
+
+
+	### WORKFLOW ALIASES ###
+  whorank = shortlog -sn --no-merges
 
 	# Stash aliases
 	save = !git stash save
@@ -525,7 +554,6 @@
 	# this cleaning will facilite a rebase, because there won't be any conlfict
 	# due to an "unclean" working directory (not in sync with the index).
 	# The unwip will restore the deleted files to the working tree.
-	#
 	wip = !"git add -A; git ls-files --deleted -z | xargs -0 git rm; git commit -m \"wip\""
 	unwip = !"git log -n 1 | grep -q -c wip && git reset HEAD~1"
 
@@ -580,7 +608,8 @@
 	#
 	reincarnate = !"f() { [[ -n $@ ]] && git checkout \"$@\" && git unpublish && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" && git publish; }; f"
 
-	# ――――――― Shellscripting Aliases ――――――――――――――――――――――――――
+
+	### SHELL SCRIPTING ALIASES ###
 
 	# Get the current branch name
 	branch-name = !"git rev-parse --abbrev-ref HEAD"
@@ -592,8 +621,8 @@
 	# For example "git exec pwd" will always show you the top directory.
 	exec = ! exec
 
-	# ――――――― Maintainence Aliases ――――――――――――――――――――――――――――
 
+	### MAINTENANCE ALIASES ###
 	# repacker: repack a repo the way Linus recommends.
 	#
 	# This command takes a long time to run, perhaps even overnight.
@@ -674,17 +703,19 @@
 
 	# Thanks to cody cutrer
 	cherry-pick-merge = !"bash -c 'git cherry-pick -n -m 1 $0 && \
-		git log -1 --pretty=%P $0 | cut -b 42- > .git/MERGE_HEAD && \
-		git commit -v'"
+	git log -1 --pretty=%P $0 | cut -b 42- > .git/MERGE_HEAD && \
+	git commit -v'"
 
+	# Thanks to jtolds on stackoverflow
 	remote-ref = !"bash -c ' \
-		local_ref=$(git symbolic-ref HEAD); \
-		local_name=${local_ref##refs/heads/}; \
-		remote=$(git config branch.\"#local_name\".remote || echo origin); \
-		remote_ref=$(git config branch.\"$local_name\".merge); \
-		remote_name=${remote_ref##refs/heads/}; \
-		echo remotes/$remote/$remote_name'"
+	local_ref=$(git symbolic-ref HEAD); \
+	local_name=${local_ref##refs/heads/}; \
+	remote=$(git config branch.\"#local_name\".remote || echo origin); \
+	remote_ref=$(git config branch.\"$local_name\".merge); \
+	remote_name=${remote_ref##refs/heads/}; \
+	echo remotes/$remote/$remote_name'"
 
+	# Thanks to jtolds on stackoverflow
 	rebase-recent = !git rebase -i $(git remote-ref)
 
 	# Use graphviz for display.
@@ -699,7 +730,7 @@
 
 	whatis				= show -s --pretty='tformat:%h (%s, %ad)' --date=short
 
-	# find the most recent common ancestor of this branch
+  # find the most recent common ancestor of this branch
 	ancestor			= !bash -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
 
 	whats-new     = !sh -c 'git log $1@{1}..$1@{0} "$@"'

@@ -183,6 +183,23 @@ nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <
 nnoremap <silent> <CR> <C-f>
 nnoremap <silent> <Backspace> <C-b>
 
+function ToggleTabs()
+  if &expandtab
+    set shiftwidth=8
+    set softtabstop=0
+    set noexpandtab
+  else
+    set shiftwidth=4
+    set softtabstop=4
+    set expandtab
+  endif
+endfunction
+nmap <leader>tt mz:execute ToggleTabs()<CR>'z
+
+nnoremap <silent><leader>tn :set number!<CR>
+nnoremap <silent><leader>tr :set number!<CR>:set relativenumber!<CR>
+nnoremap <silent><leader>tl :set wrap!<CR>
+
 "}}}
 
 " ------------ netrw config ------------ {{{

@@ -136,9 +136,9 @@
   (spacemacs|use-package-add-hook org
     :post-config
     (progn
+      (require 'org-protocol)
       ;; Use our custom org link insertion code
       (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
-      (require 'org-protocol)
 
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         "op" (lambda () (interactive)
