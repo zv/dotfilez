@@ -17,9 +17,12 @@ Desktop.ini
 
 # Tags      taken from: https://github.com/github/gitignore/blob/master/Global/Tags.gitignore
 # ----------------------------------------------------------------------------------------------
-# Ignore tags created by etags and ctags
+# Ignore tags created by etags, ctags & gtags
 TAGS
 tags
+GPATH
+GRTAGS
+GTAGS
 
 # Vim       taken from: https://github.com/github/gitignore/blob/master/Global/vim.gitignore
 # ----------------------------------------------------------------------------------------------
