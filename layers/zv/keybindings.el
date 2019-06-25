@@ -18,8 +18,7 @@
         (spacemacs/set-leader-keys key def))
       (setq key (pop bindings) def (pop bindings)))))
 
-(zv/set-available-leader "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm
-                         "bi" 'ibuffer)
+(zv/set-available-leader "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
 
 ;; Forward/Backward mice keys
 (global-set-key (kbd "<mouse-8>") 'switch-to-prev-buffer)
@@ -36,8 +35,8 @@
 (global-set-key (kbd "H-e") 'evil-window-up)
 (global-set-key (kbd "H-d") 'evil-window-down)
 
-(global-set-key (kbd "H-j") 'evil-window-next)
-(global-set-key (kbd "H-k") 'evil-window-prev)
+(global-set-key (kbd "H-k") 'evil-window-next)
+(global-set-key (kbd "H-j") 'evil-window-prev)
 
 ;; (global-set-key (kbd "C-H-j") (lambda () (interactive) (rotate-windows 1)))
 ;; (global-set-key (kbd "C-H-k") (lambda () (interactive) (rotate-windows -1)))
@@ -189,7 +188,6 @@
         term-mode
         calendar-mode
         racket-describe-mode))
-
 
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
