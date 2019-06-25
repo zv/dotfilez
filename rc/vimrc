@@ -105,13 +105,12 @@ set linebreak		" Wrap lines at convenient points
 
 
 " set cindent		" start c lang indent mode
+set listchars=tab:»·,trail:·
 set expandtab		" insert tabs as spaces
 set smartindent		" intdent intelligently
 set smarttab		" tab inserts tab when already tabbed!
 
-set tabstop=4 shiftwidth=4 softtabstop=4	" actual tabs occupy 8 characters
-
-set listchars=tab:»·,trail:·
+set tabstop=2 shiftwidth=2 softtabstop=2	" actual tabs occupy 8 characters
 "}}}
 
 " ------------ Keybindings ------------ {{{
