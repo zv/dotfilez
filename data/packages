@@ -13,6 +13,8 @@ emacs                              |GNU Emacs text editor                       
 ettercap                           |Network traffic sniffer/analyser, NCURSES interface version                     |desktop
 git                                |Fast Version Control System                                                     |desktop system base
 global                             |Source code tag system                                                          |desktop system base
+ncurses | | desktop system base
+global-ctags | | desktop system base
 gnupg2                             |Utility for secure communication and data storage                               |desktop system base
 graphviz                           |Graph Visualization Tools                                                       |desktop
 hping3                             |TCP/IP stack auditing and much more                                             |desktop system
@@ -40,6 +42,7 @@ wireshark                          |Network traffic analyzer                    
 xclip                              |Command line clipboard grabber                                                  |desktop
 ykclient                           |Yubikey management library and client                                           |desktop
 ykpers                             |Yubikey personalization program                                                 |desktop
+python3-pygments |  | desktop
 yubikey-personalization-gui        |GUI for Yubikey personalization                                                 |desktop
 zsh                                |Powerful interactive shell                                                      |desktop system base
 adobe-source-code-pro-fonts        |A set of mono-spaced OpenType fonts designed for coding environments            |font desktop
