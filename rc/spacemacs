@@ -40,7 +40,6 @@ This function should only modify configuration layer settings."
      ;; (erlang :variables
      ;;         erlang-root-dir "/usr/local/lib/erlang"
      ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
-     ;; elixir
      emacs-lisp
      git
      gtags
@@ -50,11 +49,10 @@ This function should only modify configuration layer settings."
      ibuffer
      javascript
      neotree
-     ;; treemacs
+     node
      markdown
      org
      python
-     ;; racket
      react
      restclient
      (rust :variables
@@ -63,14 +61,6 @@ This function should only modify configuration layer settings."
             shell-protect-eshell-prompt t
             shell-default-term-shell "/usr/bin/zsh")
      scheme
-
-     ;; Spacemacs metaconfigs
-     spacemacs-completion
-     spacemacs-defaults
-     spacemacs-navigation
-     spacemacs-evil
-     ;;
-
      sql
      shell-scripts
      syntax-checking
@@ -83,6 +73,7 @@ This function should only modify configuration layer settings."
      zv)
 
    dotspacemacs-additional-packages '(
+                                      yara-mode
                                       ;; edts
                                       ;; (reason-mode
                                       ;;  :location (recipe
