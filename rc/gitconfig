@@ -295,6 +295,9 @@
 	#
 	rbi = !"git rebase -i @{u}"
 
+  # Copy format of ripgrep
+  rg = "grep --heading --break -i"
+
 	# reflog - reference log that manages when tips of branches are updated.
 	rl = reflog
 
