@@ -491,10 +491,10 @@ before packages are loaded."
   ;; `spacemacs-cache-directory' is another enticing option.
   (let ((undo-basedir (file-name-as-directory XDG_CACHE_HOME)))
     (setq
-     backup-by-copying t      ; Copy the file, don't rename
+     backup-by-copying nil    ; Copy the file, don't rename
      vc-make-backup-files nil ; Don't bother making backups for files in VC
      version-control t        ; use versioned backups
-     make-backup-files t      ; Enable backups
+     make-backup-files nil    ; Don't copy
 
      vc-follow-symlinks t
      backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
