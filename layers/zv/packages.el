@@ -36,8 +36,7 @@
       (setq flycheck-clang-language-standard "c++14")
       (setq flycheck-gcc-language-standard "c++14")
       (setq flycheck-clang-pedantic-errors nil)
-      (setq flycheck-gcc-pedantic-errors nil)
-      )))
+      (setq flycheck-gcc-pedantic-errors nil))))
 
 (defun zv/init-z3-mode ()
   (use-package z3-mode))
@@ -189,7 +188,7 @@
        org-capture-templates
        `(("a" "Appointment" entry (file+headline ,zv//org-personal "Appointments") "* APPT %^{Description} %^g\n %?\n Added: %U")
          ("b" "Book/Article" entry (file+headline ,zv//org-personal "Read") "** READ  %?")
-         ("q" "Quotes" plain (file ,(concat org-directory "quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE")
+         ("q" "Quotes" plain (file ,(concat org-directory "/quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE")
          ;; Intentions don't have an active timestamp associated with them, but are marked as TODO items.
          ("i" "Intentions" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %U\n")
          ;; Tasks are things that I *need* to get done. They have a clock associated with them and an active timestamp. They appear in the Agenda.
