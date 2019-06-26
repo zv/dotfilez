@@ -1,8 +1,5 @@
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
-# vim: set filetype=zsh
 # Build
-#export CC=gcc
-#export CXX=g++
 export AR=ar
 
 # Language
@@ -26,37 +23,23 @@ export EDITOR='vim'
 # Environment
 export GREP_COLORS="37;45"
 
-# Golang
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/golang
-# Rust
-export RUST_SRC_PATH="$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust"
-
-# NVM
-export NVM_DIR="$HOME/.nvm"
-
 # Ensure path arrays do not contain duplicates.
 typeset -gU fpath mailpath path cdpath
 
 # Paths
 path=(
-	# $HOME/.bin
 	/usr/local/bin
 	/usr/local/sbin
-	/usr/local/lib
 	$path
-	{$GOROOT,$GOPATH}/bin
-	#/usr/local/{pgsql,heroku,plan9}/bin
-	$HOME/depot_tools
-	/usr/local/cuda/bin
 	$HOME/.cargo/bin
-	$HOME/extern/geth/
 	$HOME/.local/bin
 )
 
 # Remove all empty directories from the path
-for np ($path) if [[ ! -d $np ]] path=(${path#$np})
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+# for np ($path) if [[ ! -d $np ]] path=(${path#$np})
+if [[ -d /usr/local/cuda/lib64 ]]; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+fi
 
 # Load our completion functions
 fpath=(

@@ -771,6 +771,9 @@ fi
 # Rustup
 [[ -e ~/.cargo/env ]] && source ~/.cargo/env
 
+# Rust
+# export RUST_SRC_PATH="$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust"
+
 # Node
 
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
