@@ -41,7 +41,8 @@ This function should only modify configuration layer settings."
      ;;         erlang-root-dir "/usr/local/lib/erlang"
      ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
      emacs-lisp
-     git
+     (git
+      :variables magit-log-arguments ())
      gtags
      graphviz
      helm
@@ -461,7 +462,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 git-enable-github-support t
                 org-directory (expand-file-name "~/Documents/")
                 ;; My personal org folders
-                org-default-notes-file (concat org-directory "notes.org")
+                org-default-notes-file (concat org-directory "notes.org.gpg")
                 ;; Undo tree file directory
                 zv//org-personal (concat org-directory "zv.org")
                 ;; Dont show entire (long) line
@@ -507,7 +508,9 @@ before packages are loaded."
      undo-tree-visualizer-diff t
      undo-tree-visualizer-timestamps t
      undo-tree-auto-save-history t ; Automatically save our undo history.
-     undo-tree-history-directory-alist `(("." . ,(concat undo-basedir "undo"))))
+     undo-tree-history-directory-alist `((".*gpg" . "/tmp/")
+                                         (".*asc" . "/tmp/")
+                                         ("." . ,(concat undo-basedir "undo"))))
 
     ;; now create the associated directories
     (dolist (dir '("undo" "autosave" "backup"))
@@ -535,11 +538,6 @@ before packages are loaded."
                 c-basic-offset  4
                 c-default-style "k&r"
 
-                js2-basic-offset                 2
-                js2-strict-missing-semi-warning  nil
-                js2-include-node-externs         t
-                js2-include-browser-externs      t
-
                 create-lockfiles nil ; Dont create .#FILES
 
                 ;; Dont show entire (long) line
@@ -548,18 +546,23 @@ before packages are loaded."
                 ;; My personal org folders
                 magit-repo-dirs '("~/Development/")
                 org-directory "~/Documents"
-                org-default-notes-file (expand-file-name "notes.org" org-directory)
-                zv//org-personal (expand-file-name "zv.org" org-directory)
-                zv//blog-path (expand-file-name "~/zv.github.com/")
+                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
+                zv//org-personal (expand-file-name "zv.org.gpg" org-directory)
+                zv//blog-path (expand-file-name "~/Development/zv.github.com/")
 
                 ;; abbrev-mode
                 abbrev-mode t)
+
+  ;; spacemacs
+  (spacemacs/declare-prefix "o" "custom")
+  (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
 
   ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
   (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
   (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
 
   ;; path keybinding
+  (spacemacs/declare-prefix "of" "custom-files")
   (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
                                  ("ofel" . "~/Development/")
                                  ("ofzd" . "~/dotfilez/")
@@ -569,20 +572,14 @@ before packages are loaded."
                                  ("ofzb" . ,zv//blog-path)
                                  ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
-  (evil-leader/set-key "jk" 'avy-goto-char))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  (spacemacs/set-leader-keys "jk" 'avy-goto-char))
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
+;; Custom variables
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -603,7 +600,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
- '(geiser-default-implementation nil)
+ '(geiser-default-implementation (quote guile))
  '(global-eldoc-mode t)
  '(gud-gdb-command-name "gdb -i=mi -nh")
  '(gud-tooltip-mode t)
@@ -659,6 +656,8 @@ This function is called at the very end of Spacemacs initialization."
         (mode . java-mode)
         (mode . idl-mode)
         (mode . lisp-mode)))))))
+ '(js-indent-level 2)
+ '(json-reformat:indent-width 2)
  '(magit-completing-read-function (quote magit-builtin-completing-read))
  '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
  '(neo-theme (quote arrow))
