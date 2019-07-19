@@ -362,6 +362,7 @@ alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gcm='git checkout master'
 alias ga='git add'
+alias gfa='git fetch --all'
 
 alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
 
