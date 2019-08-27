@@ -213,10 +213,39 @@ rmlast() {
 calc () { gdb -n -quiet -batch -ex="p $*" }
 alias calc="noglob calc"
 
+ecalc() {
+	emacs '-nw' '-Q' --eval="(progn
+	  (when (display-graphic-p)
+	    (tool-bar-mode -1)
+	    (scroll-bar-mode -1))
+	  (menu-bar-mode -1)
+
+	  (setq
+	     select-enable-primary t
+	     help-window-select t)
+
+	  (cua-mode +1)
+	  (when cua-mode
+	     (defun calc-mode? ()
+	        (eq major-mode (quote calc-mode)))
+
+	     (define-advice cua-paste (:before-while (arg))
+	       (and (calc-mode?) (calc-yank arg))))
+
+	  (full-calc)
+
+	  (define-key calc-mode-map [?q]
+	    (quote save-buffers-kill-terminal))
+
+	  (define-advice calc-full-help (:after nil)
+	    (switch-to-buffer-other-window \"*Help*\")
+	    (message \"Press q to go back to calc\")))"
+}
+
 # print the color spectrum
 spectrum_ls() {
-	string="${@-Test}"
-	if [[ $1 == "block" ]]
+	string="${@:-block}"
+	if [[ "$string" = "block" ]]
 	then
 		string="███████████████████████████████"
 	fi
