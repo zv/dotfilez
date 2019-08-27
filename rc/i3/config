@@ -1,6 +1,6 @@
 set $mod Mod4
 
-font pango:Monospace 11px
+font pango:Monospace 14
 
 new_window pixel 3
 focus_follows_mouse  no
