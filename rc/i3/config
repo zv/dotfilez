@@ -25,17 +25,11 @@ bindsym $mod+Return exec "gnome-terminal"
 # bindsym $mod+Shift+Return exec "urxvt256c -bg '#002b36' -fg '#839496'"
 bindsym $mod+Shift+Return exec "urxvt"
 
-
 # kill focused window
 bindsym $mod+c kill
 
 # start dmenu (a program launcher)
-#bindsym $mod+p exec dmenu_run
-# start dmenu (a program launcher)
 bindsym $mod+p exec "dmenu_run -nb black"
-
-# screen lock
-bindsym Control+$mod+l exec i3lock
 
 # change focus
 bindsym $mod+h focus left
@@ -74,9 +68,6 @@ bindsym $mod+Shift+f floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
-
-# switch to last workspace
-# bindsym $mod+6 workspace back_and_forth
 
 # switch to workspace
 bindsym $mod+q workspace 1: q
@@ -118,24 +109,8 @@ mode "resize" {
         bindcode Control+34 mode "default"
 }
 
-# Printscreen
-bindsym Print exec gnome-screenshot -f '/tmp/screenshot.png'
-bindsym $mod+Print exec gnome-screenshot -i
-
-bindsym $mod+0 exec "urxvt -bg '#002b36' -fg '#839496' -pe 'default,-searchable-scrollback' -e screen -S irc weechat"
-
-# Pulse Audio controls
-set $sink `pactl list short sinks | grep RUNNING | cut -f1`
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $sink +10%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $sink -10%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $sink toggle
-bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
-
-bindsym $mod+2 exec --no-startup-id vlc
-# bindsym $mod+Shift+b bar hidden_state toggle
 bindsym $mod+3 bar mode toggle
-
+bindsym $mod+0 exec "urxvt -bg '#002b36' -fg '#839496' -pe 'default,-searchable-scrollback' -e screen -S irc weechat"
 
 bar {
         position top
@@ -158,8 +133,30 @@ for_window [title="ImageMagick: -"]        floating enable
 
 for_window [title="[[[:digit:]]*]@sigstkflt"] border pixel 10
 
-
-exec --no-startup-id ~/.i3/xinitrc
-exec --no-startup-id nm-applet
-exec --no-startup-id abrt-applet
+# exec --no-startup-id ~/.i3/xinitrc
 # exec --no-startup-id /usr/libexec/gnome-settings-daemon -r
+
+#
+# These bindings are for i3 sessions not running atop flashback.
+#
+# # Printscreen
+# bindsym Print exec gnome-screenshot -f '/tmp/screenshot.png'
+# bindsym $mod+Print exec gnome-screenshot -i
+
+# # screen lock
+# bindsym Control+$mod+l exec i3lock
+
+# # Pulse Audio controls
+# set $sink `pactl list short sinks | grep RUNNING | cut -f1`
+# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $sink +10%
+# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $sink -10%
+# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $sink toggle
+# bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10
+# bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10
+
+# # Other
+# bindsym $mod+2 exec --no-startup-id vlc
+# bindsym $mod+Shift+b bar hidden_state toggle
+
+# exec --no-startup-id nm-applet
+# exec --no-startup-id abrt-applet
