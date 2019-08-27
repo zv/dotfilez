@@ -793,8 +793,6 @@ fi
 # cdpath=($cdpath)
 # export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-# export RUST_SRC_PATH=/usr/local/src/rust/src
-
 # The next line updates PATH for the Google Cloud SDK.
 # [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
 
@@ -803,9 +801,6 @@ fi
 
 # Rustup
 [[ -e ~/.cargo/env ]] && source ~/.cargo/env
-
-# Rust
-# export RUST_SRC_PATH="$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust"
 
 # Node
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
