@@ -78,16 +78,22 @@ else
 	endif
 endif
 
+let s:appdata=simplify(s:appdata)
 let &backupdir=(s:appdata . 'backup')
 let &directory=(s:appdata . 'swap')
 let &undodir=(s:appdata . 'undo')
-let &backupskip=(&backupdir)
+let &backupskip=(&backupskip . ',' . &backupdir)
 
 " Create those folders if they don't exist
 for s:vddir in [&undodir, &backupdir, &directory]
-	silent! call mkdir(expand(s:vddir), "p")
+	let s:d = simplify(s:vddir)
+	if !isdirectory(s:d)
+		echom "Creating directory: " . (s:d)
+		call mkdir(s:d, "p")
+	endif
 endfor
 "}}}
+"
 
 " ------------  Ctags  ------------ {{{
 if has('path_extra')
@@ -157,6 +163,9 @@ nnoremap <silent> <leader>tp :tabprev<CR>
 nnoremap <leader>ff :e<SPACE>
 nnoremap <leader>tw :set nolist!<CR>
 nnoremap <leader>tl :set nowrap!<CR>
+nnoremap <leader>ll :tabnew<CR>
+nnoremap <leader>ln :tabnext<CR>
+nnoremap <leader>lp :tabprev<CR>
 
 " map [ => { and ] => }
 augroup bracket_remap
@@ -175,9 +184,12 @@ vnoremap [ {
 nnoremap d[ d{
 nnoremap d] d}
 
-nnoremap <leader>sp :set paste!<CR> 
+nnoremap <leader>sp :set paste!<CR>
 
-nnoremap <silent> <leader>xdw :let _s=@/ <Bar> :―s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+nnoremap <silent> <leader>xdw :%s/\s\+$//e<CR>
+
+" Execute all VimL code highlighted.
+vnoremap <leader>er :<C-u>for line in getline("'<", "'>") \| execute line \| endfor<CR>
 
 " page manipulations
 nnoremap <silent> <CR> <C-f>
@@ -185,12 +197,8 @@ nnoremap <silent> <Backspace> <C-b>
 
 function ToggleTabs()
   if &expandtab
-    set shiftwidth=8
-    set softtabstop=0
     set noexpandtab
   else
-    set shiftwidth=4
-    set softtabstop=4
     set expandtab
   endif
 endfunction
