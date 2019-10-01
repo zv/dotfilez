@@ -97,7 +97,7 @@ alias xmm="xmodmap $HOME/.xmodmaprc"
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
-alias activatevenv="source venv/bin/activate"
+alias veactivate="source venv/bin/activate"
 
 man() {
 	local args=$@
@@ -782,11 +782,6 @@ if [[ -x "$(whence -p gpg-connect-agent)" && -d "$HOME/.gnupg" ]]; then
 fi
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Run our external modules
-if [[ -e ~/.zsh/modules ]]; then
-	for sz (~/.zsh/modules/*.zsh) source $sz
-fi
-
 # Configure Ocaml package manager
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
