@@ -80,14 +80,14 @@ alias tl="tmux list-sessions"
 
 # Initialize key map
 cfgkey()  {
-	setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
-	xmodmap <(print 'keycode 135 = Hyper_R
-	add Mod3 = Hyper_R')
-}
-
-# Binds CapsLock -> Control in a vconsole
-vcfgkey() {
-    sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+	if [[ -n "$DISPLAY" ]]; then
+		setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
+		xmodmap <(print 'keycode 135 = Hyper_R
+		add Mod3 = Hyper_R')
+	else
+		# Binds CapsLock -> Control in a vconsole
+		sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+	fi
 }
 
 alias keycfg=cfgkey
