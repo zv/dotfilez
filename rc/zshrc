@@ -425,7 +425,6 @@ setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
-unsetopt WARN_NESTED_VAR    # Warn when a local variable sets a global denested variable
 setopt NULL_GLOB            # Delete patterns without match from argument list
 setopt BRACE_CCL            # Allow brace character class list expansion.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
@@ -441,7 +440,7 @@ setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobb
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
-setopt C_BASES              # Output hex numbers in 0xFF instead of 16#FF
+unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
 # ── Shell Emulation ────────────────────────────────────────
@@ -455,6 +454,7 @@ setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming 
 setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
 setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
 setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
+setopt HIST_REDUCE_BLANKS        # Remove extraneous blanks from history entries
 setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
@@ -480,8 +480,8 @@ unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use
 unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
 setopt SHORT_LOOPS          # Allow short loops.
 unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
-# setopt HASH_CMDS            # Note the location of a command before it's executed
-# setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
+setopt HASH_CMDS            # Note the location of a command before it's executed
+setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
 
 # ── Modules and Completions ────────────────────────────────
 # Load and initialize the completion system ignoring insecure directories with a
@@ -510,9 +510,9 @@ setopt MENU_COMPLETE       # Do not autoselect the first completion entry.
 # not really a completion option
 unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 
-setopt AUTO_PARAM_KEYS     # Params should complete unusual symbols correctly.
-unsetopt REC_EXACT # Don' override completions for current perfect matches.
-setopt LIST_TYPES # "Show the type of each file for possible completions"
+setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
+unsetopt REC_EXACT          # Don' override completions for current perfect matches.
+setopt LIST_TYPES           # "Show the type of each file for possible completions"
 
 # zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.
