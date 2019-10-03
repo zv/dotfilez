@@ -8,9 +8,9 @@ unsetopt ALL_EXPORT       # Absolutely do not automatically export defined param
 setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
 setopt LONG_LIST_JOBS     # List jobs in the long format by default.
 setopt NOTIFY             # Report status of background jobs immediately.
-unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
-unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
-unsetopt HUP              # Don't kill jobs on shell exit.
+setopt BG_NICE            # run all background jobs at a lower priority.
+unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
+setopt HUP                # kill jobs on shell exit.
 
 # ── Prompting ──────────────────────────────────────────────
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
