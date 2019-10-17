@@ -244,7 +244,6 @@
                                ("ofel" . "~/Development/")
                                ("ofzd" . "~/dotfilez/")
                                ("ofod" . ,org-directory)
-                               ("ofoz" . ,zv//org-personal)
                                ("ofon" . ,org-default-notes-file)
                                ("ofzb" . ,zv//blog-path)
                                ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
