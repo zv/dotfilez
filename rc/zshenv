@@ -31,7 +31,6 @@ path=(
 	/usr/local/bin
 	/usr/local/sbin
 	$path
-	$HOME/.cargo/bin
 	$HOME/.local/bin
 )
 
