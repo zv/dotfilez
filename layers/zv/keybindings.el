@@ -14,11 +14,20 @@
   (while key
     (let ((bound-key (lookup-key spacemacs-default-map (kbd key))))
       (if (and (symbolp bound-key) (fboundp bound-key))
+
           (message (concat "Leader key " key " already set"))
         (spacemacs/set-leader-keys key def))
       (setq key (pop bindings) def (pop bindings)))))
 
 (zv/set-available-leader "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
+(zv/set-available-leader "oopa" #'(lambda ()
+                                    (interactive)
+                                    (print "Automatic publishing enabled")
+                                    (add-hook 'after-save-hook 'zv/auto-publish)))
+(zv/set-available-leader "oopr" #'(lambda ()
+                                    (interactive)
+                                    (print "Automatic publishing disabled")
+                                    (remove-hook 'after-save-hook 'zv/auto-publish)))
 
 ;; Forward/Backward mice keys
 (global-set-key (kbd "<mouse-8>") 'switch-to-prev-buffer)
@@ -26,6 +35,10 @@
 
 ;; tab/window split manipulation]
 (define-key evil-normal-state-map "Q" 'evil-quit)
+
+(define-key (current-global-map) [up] 'scroll-down-command)
+(define-key (current-global-map) [down] 'scroll-up-command)
+
 
 ;; Check for 'next-buffer-key && 'prev-buffer-key
 
