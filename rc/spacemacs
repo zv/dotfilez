@@ -571,6 +571,7 @@ before packages are loaded."
                                  ("ofzb" . ,zv//blog-path)
                                  ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
 
+  (spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
   (spacemacs/set-leader-keys "jk" 'avy-goto-char))
 
 (defun dotspacemacs/emacs-custom-settings ()

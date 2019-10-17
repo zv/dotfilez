@@ -190,7 +190,6 @@
         calendar-mode
         racket-describe-mode))
 
-
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
   "0" 'evil-digit-argument-or-evil-beginning-of-line
@@ -236,3 +235,11 @@
     ;; Set our custom keybindings
     (spacemacs/set-leader-keys-for-major-mode 'python-mode
       "mv" 'search-parents-for-venv)))
+
+(evil-define-key '(normal insert) 'quick-calculate-mode-map
+  (kbd "M-r") 'calc-radix
+  (kbd "M-k") 'zv/calculate-line
+  (kbd "C-;") 'helm-calcul-expression)
+
+(evil-define-key 'visual quick-calculate-mode-map
+  (kbd "M-k") 'zv/calculate-region)

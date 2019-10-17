@@ -5,3 +5,7 @@
   "zv contribution layer base directory.")
 
 (defvar zv-whitelist '() "List of helm buffers in which to show dots.")
+
+(define-minor-mode quick-calculate-mode
+  "Local minor mode for quickly evaluating mathematical expressions inline"
+  :keymap '())

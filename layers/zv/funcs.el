@@ -57,22 +57,13 @@ used as the prefix command."
   (interactive)
   (scroll-down-line 1))
 
-;; Monkeypatch some spacemacs internal window positioning
-(defun spacemacs/shrink-window-horizontally (delta)
-  "Wrap `spacemacs/shrink-window-horizontally'."
-  (interactive "p") (shrink-window 10 t))
+(defun zv/calculate-region (point mark)
+  (interactive "r")
+  (message (calc-eval (buffer-substring point mark))))
 
-(defun spacemacs/shrink-window (delta)
-  "Wrap `spacemacs/shrink-window'."
-  (interactive "p") (shrink-window 5))
-
-(defun spacemacs/enlarge-window (delta)
-  "Wrap `spacemacs/enlarge-window'."
-  (interactive "p") (enlarge-window 5))
-
-(defun spacemacs/enlarge-window-horizontally (delta)
-  "Wrap `spacemacs/enlarge-window-horizontally'."
-  (interactive "p") (enlarge-window 10 t))
+(defun zv/calculate-line ()
+  (interactive)
+  (message (calc-eval (buffer-substring (line-beginning-position) (line-end-position)))))
 
 
 ;; Org Mode
@@ -197,4 +188,3 @@ FUN function callback"
 
 ;; (remove-hook 'after-save-hook 'auto-publish)
 (add-hook 'after-save-hook 'zv/auto-publish)
-
