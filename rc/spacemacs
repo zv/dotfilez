@@ -557,6 +557,8 @@ before packages are loaded."
   (spacemacs/declare-prefix "o" "custom")
   (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
 
+  (define-key evil-insert-state-map
+    (kbd "C-y") 'yank)
   ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
   (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
   (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
