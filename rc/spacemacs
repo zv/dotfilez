@@ -526,6 +526,7 @@ before packages are loaded."
                 ;; Evil should move across more than one line
                 evil-cross-lines t
                 evil-escape-delay 0.2
+                evil-complete-next-func 'hippie-expand
 
                 ;; Time in seconds to hide the flycheck position tip after
                 flycheck-pos-tip-timeout 10
