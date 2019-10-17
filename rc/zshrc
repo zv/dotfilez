@@ -338,8 +338,8 @@ function workcfg {
 
 # dnf
 if (( $+commands[dnf] )); then
-	alias dnfs="dnf search"                       # search package
-	alias dnfp="dnf info"                         # show package info
+	alias dnfs="dnf search -C"                    # search package
+	alias dnfp="dnf info -C"                      # show package info
 	alias dnfl="dnf list"                         # list packages
 	alias dnfcu="dnf check-update"                # check updates
 	alias dnfh="sudo dnf history"                 # get dnf history
@@ -349,7 +349,28 @@ if (( $+commands[dnf] )); then
 	alias dnfgr="sudo dnf groupremove"            # remove pagage group
 	alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
 	alias dnfc="sudo dnf clean all"               # clean cachefi
+	alias dnfwhy="sudo dnf whatprovides"          # why is this package installed
 fi
+
+############################################################
+# Show the contents of a file in a particular package
+#   dnf_extractat bash-5.0 /usr/share/licenses/bash/COPYING
+############################################################
+dnf_extractat() {
+    pkg="${1?Must supply package name}"
+    file="${2?Must supply file path}"
+    tmpdir="$(mktemp -d)"
+    mkdir -p "$tmpdir"
+    (
+        cd "$tmpdir" || exit 3
+        pkgname=$(dnf download --downloadonly "$pkg" --destdir="$tmpdir" \
+                      | tee >(grep -o '[^[:space:]]*.rpm') 1>&2)
+        rpm2cpio "$pkgname" | cpio -icvd "*$file"
+        cat "${file:1}"
+    )
+    rm -r "$tmpdir"
+}
+
 
 # Git
 alias g='git'
