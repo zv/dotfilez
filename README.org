@@ -127,6 +127,13 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Linux  
 *** Fedora
+**** =command-not-found=
+     ~PackageKit-command-not-found~ considerably slows the shell when you accidentally type a command.
+     
+     I uninstall it:
+     #+begin_src sh
+sudo dnf remove PackageKit-command-not-found
+     #+end_src
 **** Groups
      #+begin_src sh
 sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
