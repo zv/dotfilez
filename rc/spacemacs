@@ -214,7 +214,7 @@ user code in there besides modifying the variable values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 14
                                :weight medium
                                :width normal
                                :powerline-scale 1.0)
@@ -447,24 +447,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq XDG_CONFIG_HOME (file-name-as-directory (or (getenv "XDG_CONFIG_HOME") "~/.config/"))
-        XDG_CACHE_HOME  (file-name-as-directory (or (getenv "XDG_CACHE_HOME") "~/.cache/"))
-        next-buffer-key (kbd "H-j")
-        prev-buffer-key (kbd "H-k"))
-
-  ;; Add erlang & tern to our execution path
-  ;; (setq exec-path (append exec-path
-  ;;                         '("/usr/local/lib/erlang/bin"
-  ;;                           "~/n/lib/node_modules/tern"
-  ;;                           "~/n/bin")
-
-  ;; org mode
-  (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
-                exec-path-from-shell-check-startup-files nil
-                evil-escape-delay 0.2
-                git-enable-github-support t
-                ;; Dont show entire (long) line
-                truncate-lines t))
+  (defconst XDG_CONFIG_HOME (file-name-as-directory (or (getenv "XDG_CONFIG_HOME") "~/.config/")))
+  (defconst XDG_CACHE_HOME  (file-name-as-directory (or (getenv "XDG_CACHE_HOME") "~/.cache/"))))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -508,45 +492,44 @@ before packages are loaded."
       (unless (file-exists-p (concat undo-basedir dir))
         (make-directory (concat undo-basedir dir)))))
 
-  (require 'org-protocol)
-  (setq-default magit-repo-dirs '("~/Development/")
-                ;; Powerline default separator
-                powerline-default-separator nil
-                ;; Use Gtags to generate
-                projectile-tags-command "gtags %s"
+  (setq-default abbrev-mode t
+
+                c-basic-offset  4
+                c-default-style "k&r"
+                c-electric-mode t
+
+                create-lockfiles nil ; Dont create .#FILES
+
                 ;; Evil should move across more than one line
+                evil-complete-next-func 'hippie-expand
                 evil-cross-lines t
                 evil-escape-delay 0.2
-                evil-complete-next-func 'hippie-expand
 
                 ;; Time in seconds to hide the flycheck position tip after
                 flycheck-pos-tip-timeout 10
 
+                helm-ff-file-name-history-use-recentf t
                 helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
                 helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-                helm-ff-file-name-history-use-recentf t
-
-                c-electric-mode t
-                c-basic-offset  4
-                c-default-style "k&r"
 
                 js2-basic-offset                 2
-                js2-strict-missing-semi-warning  nil
-                js2-include-node-externs         t
                 js2-include-browser-externs      t
+                js2-include-node-externs         t
+                js2-strict-missing-semi-warning  nil
 
-                create-lockfiles nil ; Dont create .#FILES
+                magit-repo-dirs '("~/Development/")
+
+                ;; Powerline default separator
+                powerline-default-separator nil
+
+                ;; Use Gtags to generate
+                projectile-tags-command "gtags %s"
 
                 ;; Dont show entire (long) line
                 truncate-lines t
 
-                org-directory "~/Documents"
-                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
-
-                ;; abbrev-mode
-                abbrev-mode t)
-
-  (setq x86-lookup-pdf "/home/zv/Documents/IA64-Vol2.pdf")
+                ;; Location of Intel's documentation for easy lookup.
+                x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
 
   ;; spacemacs
   (spacemacs/declare-prefix "o" "custom")

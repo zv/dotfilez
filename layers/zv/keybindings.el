@@ -239,11 +239,3 @@
 
 (evil-define-key 'visual quick-calculate-mode-map
   (kbd "M-k") 'zv/calculate-region)
-
-(zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
-                               ("ofel" . "~/Development/")
-                               ("ofzd" . "~/dotfilez/")
-                               ("ofod" . ,org-directory)
-                               ("ofon" . ,org-default-notes-file)
-                               ("ofzb" . ,zv//blog-path)
-                               ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
