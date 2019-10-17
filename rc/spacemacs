@@ -84,7 +84,7 @@ This function should only modify configuration layer settings."
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '(org-pomodoro org-projectile spray pug-mode eyebrowse)
+   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode helm-xref evil-goggles golden-ratio fancy-battery)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
@@ -460,11 +460,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 exec-path-from-shell-check-startup-files nil
                 evil-escape-delay 0.2
                 git-enable-github-support t
-                org-directory (expand-file-name "~/Documents/")
                 ;; My personal org folders
-                org-default-notes-file (concat org-directory "notes.org.gpg")
-                ;; Undo tree file directory
-                zv//org-personal (concat org-directory "zv.org")
+                org-directory "~/Documents"
+                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
+                zv//org-personal (expand-file-name "zv.org.gpg" org-directory)
+                zv//blog-path (expand-file-name "~/Development/zv.github.com/")
                 ;; Dont show entire (long) line
                 truncate-lines t))
 
@@ -526,6 +526,7 @@ before packages are loaded."
                 ;; Evil should move across more than one line
                 evil-cross-lines t
                 evil-escape-delay 0.2
+                evil-complete-next-func 'hippie-expand
 
                 ;; Time in seconds to hide the flycheck position tip after
                 flycheck-pos-tip-timeout 10
@@ -538,20 +539,20 @@ before packages are loaded."
                 c-basic-offset  4
                 c-default-style "k&r"
 
+                js2-basic-offset                 2
+                js2-strict-missing-semi-warning  nil
+                js2-include-node-externs         t
+                js2-include-browser-externs      t
+
                 create-lockfiles nil ; Dont create .#FILES
 
                 ;; Dont show entire (long) line
                 truncate-lines t
 
-                ;; My personal org folders
-                magit-repo-dirs '("~/Development/")
-                org-directory "~/Documents"
-                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
-                zv//org-personal (expand-file-name "zv.org.gpg" org-directory)
-                zv//blog-path (expand-file-name "~/Development/zv.github.com/")
-
                 ;; abbrev-mode
                 abbrev-mode t)
+
+  (setq x86-lookup-pdf "/home/zv/Documents/IA64-Vol2.pdf")
 
   ;; spacemacs
   (spacemacs/declare-prefix "o" "custom")
@@ -563,15 +564,6 @@ before packages are loaded."
 
   ;; path keybinding
   (spacemacs/declare-prefix "of" "custom-files")
-  (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
-                                 ("ofel" . "~/Development/")
-                                 ("ofzd" . "~/dotfilez/")
-                                 ("ofod" . ,org-directory)
-                                 ("ofoz" . ,zv//org-personal)
-                                 ("ofon" . ,org-default-notes-file)
-                                 ("ofzb" . ,zv//blog-path)
-                                 ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
-
   (spacemacs/set-leader-keys "jk" 'avy-goto-char))
 
 (defun dotspacemacs/emacs-custom-settings ()
