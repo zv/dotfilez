@@ -745,11 +745,14 @@ bindkey -M vicmd "?" vi-history-search-forward
 bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
-bindkey -M viins '\ep' insert-last-word
+bindkey -M viins -s '\ep' "!!- "
+bindkey -M viins '\e^p' insert-last-word
 
 # EZKeys
 bindkey -s '\eu' "..\n"
-bindkey -s '\es' "git status\n"
+bindkey -s '\es' "$HOME/"
+bindkey -s '\e^p' "$HOME/Development/"
+
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' find-history-backwards # up-line-or-search
