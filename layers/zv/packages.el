@@ -186,19 +186,18 @@
 
        ;; Files
        org-capture-templates
-       `(("a" "Appointment" entry (file+headline ,zv//org-personal "Appointments") "* APPT %^{Description} %^g\n %?\n Added: %U")
-         ("b" "Book/Article" entry (file+headline ,zv//org-personal "Read") "** READ  %?")
+       `(("a" "Appointment" entry (file+headline ,org-default-notes-file "Agenda" "Appointments") "* APPT %^{Description} %^g\n %?\n Added: %U")
+         ("b" "Book/Article" entry (file+headline ,org-default-notes-file "Agenda" "Read") "** READ  %?")
          ("q" "Quotes" plain (file ,(concat org-directory "/quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE")
          ;; Intentions don't have an active timestamp associated with them, but are marked as TODO items.
-         ("i" "Intentions" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %U\n")
+         ("i" "Intentions" entry (file+headline ,org-default-notes-file "Tasks") "* TODO %?\nCaptured On: %U\n")
          ;; Tasks are things that I *need* to get done. They have a clock associated with them and an active timestamp. They appear in the Agenda.
-         ("t" "Tasks" entry (file+headline ,zv//org-personal "Tasks") "* TODO %?\nCaptured On: %T\n" :clock-in t :clock-resume t)
+         ("t" "Tasks" entry (file+headline ,org-default-notes-file "Tasks") "* TODO %?\nCaptured On: %T\n" :clock-in t :clock-resume t)
          ;; Refile target
          ("r" "Refile" entry (file+olp ,org-default-notes-file "Inbox" "Refile") "* %?\nCaptured On: %U\n")
          ;; Org Protocol
          ("L" "Protocol Link" entry (file+olp ,org-default-notes-file "Inbox" "Bookmarks") "* %?[[%:link][%:description]] \nCaptured On: %U\n")
          ("P" "Protocol" entry (file+olp ,org-default-notes-file "Inbox" "Selection") "* %?[[%:link][%:description]] \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE \nCaptured On: %U\n")
-         ("M" "Protocol" entry (file+olp ,org-default-notes-file "Inbox" "Selection") "* %?[[%:link][%:description]] \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE \nCaptured On: %U\n")
          ("T" "Thunderbird" entry (file+olp ,org-default-notes-file "Inbox" "Thunderbird") "* %? %:link\n#+BEGIN_QUOTE\n%:description\n#+END_QUOTE \nCaptured On: %U\n"))
 
        ;; ORG MODE PUBLISHING
@@ -232,6 +231,4 @@
                                     (js . t)
                                     (shell . t)
                                     (ditaa . t)
-                                    (C . t)
-                                    ))
-      )))
+                                    (C . t))))))
