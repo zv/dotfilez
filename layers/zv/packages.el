@@ -1,24 +1,25 @@
 (defvar zv-packages '(magit
                       (org :location built-in)
-                      ; edts
+                      ;; (eshell :location built-in)
+                      ;; edts
                       flycheck
-                      erlang
-                      eshell
-                      js2-mode
-                      cc-mode
+                      ;; treemacs-evil
+                      cpp
                       (z3-mode :location (recipe
                                           :fetcher github
                                           :repo "zv/z3-mode"))))
 
 (defvar zv-excluded-packages '())
 
-(defun zv/post-init-cc-mode ()
-  (add-hook 'c++-mode-hook
-            (lambda () (progn
-                         (setq company-clang-arguments '("-std=c++14")
-                               flycheck-clang-language-standard "c++14"
-                               flycheck-gcc-language-standard "c++14"
-                               disaster-cxxflags "-std=c++14 -O1 -g3")))))
+
+(defun zv/init-cpp ()
+  (use-package cc-mode
+    :hook ((c++-mode . (lambda ()
+                         (setq-local flycheck-clang-language-standard "c++14")
+                         (setq-local flycheck-gcc-language-standard "c++14")
+                         (setq-local company-clang-arguments '("-std=c++14")))))
+    :config
+    (setq disaster-cxxflags "-std=c++14 -O1 -g3")))
 
 (defun zv/post-init-flycheck ()
   ;; Place 'python-pylint prior to 'python-flake8 in the list of flycheckers.
@@ -27,16 +28,6 @@
     :config (let* ((flakeless (delete 'python-flake8 flycheck-checkers))
                    (tail (member 'python-pylint flakeless)))
               (setcdr tail (cons 'python-flake8 (cdr tail))))))
-
-(defun zv/post-init-c++-mode ()
-  (use-package c++
-    :defer t
-    :config
-    (progn
-      (setq flycheck-clang-language-standard "c++14")
-      (setq flycheck-gcc-language-standard "c++14")
-      (setq flycheck-clang-pedantic-errors nil)
-      (setq flycheck-gcc-pedantic-errors nil))))
 
 (defun zv/init-z3-mode ()
   (use-package z3-mode))
@@ -64,8 +55,7 @@
     :config
     (progn
       (setq-default
-       edts-man-root "/usr/local/lib/erlang")
-      )))
+       edts-man-root "/usr/local/lib/erlang"))))
 
 (defun zv/init-bbdb ()
   (use-package bbdb
@@ -92,35 +82,13 @@
       (defalias 'gd 'magit-diff-unstaged)
       (defalias 'gds 'magit-diff-staged))))
 
-(defun zv/post-init-js2-mode ()
-  (with-eval-after-load 'js2-mode
-    (progn
-      (setq js2-basic-offset                 2
-            js2-strict-missing-semi-warning  nil
-            js2-include-node-externs         t
-            js2-include-browser-externs      t)
-      (spacemacs/set-leader-keys-for-major-mode 'js2-mode
-        "or" 'react-mode))))
-
-
-(defun zv/post-init-nasm-mode ()
-  (use-package nasm-mode
-    :defer t
+(defun zv/post-init-treemacs-evil ()
+  (use-package treemacs-evil
+    :after treemacs
     :config
     (progn
-      ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
-      (local-unset-key (vector asm-comment-char))
-      ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-      (setq-local tab-always-indent (default-value 'tab-always-indent))))
-  ;; assembly programming hooks
-  (defun zv/asm-mode-hook ()
-    ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
-    (local-unset-key (vector asm-comment-char))
-    ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-    (setq tab-always-indent (default-value 'tab-always-indent)))
-  (add-hook 'asm-mode-hook #'zv/asm-mode-hook)
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode)))
-
+      (evil-define-key 'treemacs treemacs-mode-map (kbd "h") #'treemacs-collapse-parent-node)
+      (evil-define-key 'treemacs treemacs-mode-map (kbd "l") #'treemacs-RET-action))))
 
 
 (defun zv/post-init-org ()

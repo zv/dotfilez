@@ -12,6 +12,7 @@ Flags:
   -l <TAG>         - Iterate through data/destination, linking all files matching tag (links all if 'all' is provided as tag)
   -u <TAG>         - Iterate through data/destination, removing all which matchtag (unlinks all if 'all' is provided as tag)
   -p <TAG>         - Install all packages with TAG (installs all if 'all' is tag)
+  -X               - Drop into select menu for running a variety of important setup tasks.
 EOF
 }
 
@@ -80,13 +81,50 @@ function install_package_tags() {
     echo dnf install -y "${pkgs[*]}"
 }
 
-while getopts "l:u:p:h" o; do
-    case "${o}" in
-        l) link_tags "${OPTARG}" ;;
-        u) unlink_tags "${OPTARG}" ;;
-        p) install_package_tags "${OPTARG}" ;;
-        h) usage ;;
-        *) usage ;;
-    esac
+function select_setup() {
+
+  function select_enable_fstrim() { 
+    sudo systemctl enable fstrim.timer 
+  }
+  function select_chsh() { 
+    sudo lchsh -i zv 
+  }
+
+  local -a items=( "enable_fstrim" "chsh" )
+  select ts in "$items"; do
+    "select_$ts"
+  done
+  # TODO
+  # install packages
+  # configure env (setup keys, shell, yubikey)
+  # cryptographic setup
+  ## unpack gpg
+  ### configure yubikey
+  ### disable gnome ssh-agent && enable gnupg agent
+  ### udev rules
+  ## setup ssh keys
+  ## install certificates
+  # configure gnome stuff
+  ## gnome-terminal (dconf)
+  # restore thunderbird
+  ## restore feeds
+  ### gpg-agent
+  ### systemd unit files
+  # configure emacs
+  # configure {javascript,haskell,ocaml,rust,erlang/elixir}
+  # setup dropbox
+  # pcsc-tools pcsc-lite-ccid:q
+  # auditing  ausearch -c bitlbee --raw | audit2allow -M bitlbeepol
+}
+
+while getopts "l:u:p:hX" o; do
+  case "${o}" in
+    l) link_tags "${OPTARG}" ;;
+    u) unlink_tags "${OPTARG}" ;;
+    p) install_package_tags "${OPTARG}" ;;
+    X) select_setup ;;
+    h) usage ;;
+    *) usage ;;
+  esac
 done
 shift $((OPTIND-1))

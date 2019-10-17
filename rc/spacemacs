@@ -40,10 +40,9 @@ This function should only modify configuration layer settings."
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
      cscope
-     (erlang :variables
-             erlang-root-dir "/usr/local/lib/erlang"
-             erlang-man-root-dir "/usr/local/lib/erlang/man")
-     elixir
+     ;; (erlang :variables
+     ;;         erlang-root-dir "/usr/local/lib/erlang"
+     ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
      emacs-lisp
      (git
       :variables magit-log-arguments ())
@@ -51,13 +50,13 @@ This function should only modify configuration layer settings."
      graphviz
      helm
      html
+     ibuffer
      javascript
      neotree
      node
      markdown
      org
      python
-     racket
      react
      restclient
      (rust :variables
@@ -78,6 +77,7 @@ This function should only modify configuration layer settings."
      zv)
 
    dotspacemacs-additional-packages '(
+                                      yara-mode
                                       ;; edts
                                       ;; (reason-mode
                                       ;;  :location (recipe
@@ -87,7 +87,7 @@ This function should only modify configuration layer settings."
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '(org-pomodoro org-projectile spray pug-mode eyebrowse)
+   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode helm-xref evil-goggles golden-ratio fancy-battery)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
@@ -463,11 +463,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 exec-path-from-shell-check-startup-files nil
                 evil-escape-delay 0.2
                 git-enable-github-support t
-                org-directory (expand-file-name "~/Documents/")
-                ;; My personal org folders
-                org-default-notes-file (concat org-directory "notes.org")
-                ;; Undo tree file directory
-                zv//org-personal (concat org-directory "zv.org")
                 ;; Dont show entire (long) line
                 truncate-lines t))
 
@@ -488,10 +483,10 @@ before packages are loaded."
   ;; `spacemacs-cache-directory' is another enticing option.
   (let ((undo-basedir (file-name-as-directory XDG_CACHE_HOME)))
     (setq
-     backup-by-copying t      ; Copy the file, don't rename
+     backup-by-copying nil    ; Copy the file, don't rename
      vc-make-backup-files nil ; Don't bother making backups for files in VC
      version-control t        ; use versioned backups
-     make-backup-files nil    ; Disable backups
+     make-backup-files nil    ; Don't copy
 
      vc-follow-symlinks t
      backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
@@ -535,19 +530,23 @@ before packages are loaded."
                 c-basic-offset  4
                 c-default-style "k&r"
 
+                js2-basic-offset                 2
+                js2-strict-missing-semi-warning  nil
+                js2-include-node-externs         t
+                js2-include-browser-externs      t
+
                 create-lockfiles nil ; Dont create .#FILES
 
                 ;; Dont show entire (long) line
                 truncate-lines t
 
-                ;; My personal org folders
                 org-directory "~/Documents"
-                org-default-notes-file (expand-file-name "notes.org" org-directory)
-                zv//org-personal (expand-file-name "zv.org" org-directory)
-                zv//blog-path (expand-file-name "~/Development/zv.github.com/")
+                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
 
                 ;; abbrev-mode
                 abbrev-mode t)
+
+  (setq x86-lookup-pdf "/home/zv/Documents/IA64-Vol2.pdf")
 
   ;; spacemacs
   (spacemacs/declare-prefix "o" "custom")
@@ -561,15 +560,6 @@ before packages are loaded."
 
   ;; path keybinding
   (spacemacs/declare-prefix "of" "custom-files")
-  (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
-                                 ("ofel" . "~/Development/")
-                                 ("ofzd" . "~/dotfilez/")
-                                 ("ofod" . ,org-directory)
-                                 ("ofoz" . ,zv//org-personal)
-                                 ("ofon" . ,org-default-notes-file)
-                                 ("ofzb" . ,zv//blog-path)
-                                 ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
-
   (spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
   (spacemacs/set-leader-keys "jk" 'avy-goto-char))
 
@@ -606,26 +596,43 @@ This function is called at the very end of Spacemacs initialization."
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
-    (solarized-color-blend it "#fdf6e3" 0.25)
+    (solarized-color-blend it "#002b36" 0.25)
     (quote
      ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
- '(highlight-symbol-foreground-color "#586e75")
+ '(highlight-symbol-foreground-color "#93a1a1")
  '(highlight-tail-colors
    (quote
-    (("#eee8d5" . 0)
-     ("#B4C342" . 20)
-     ("#69CABF" . 30)
-     ("#69B7F0" . 50)
-     ("#DEB542" . 60)
-     ("#F2804F" . 70)
-     ("#F771AC" . 85)
-     ("#eee8d5" . 100))))
+    (("#073642" . 0)
+     ("#546E00" . 20)
+     ("#00736F" . 30)
+     ("#00629D" . 50)
+     ("#7B6000" . 60)
+     ("#8B2C02" . 70)
+     ("#93115C" . 85)
+     ("#073642" . 100))))
  '(hl-bg-colors
    (quote
-    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
+    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
  '(hl-fg-colors
    (quote
-    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
+    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#4f97d7")
+     ("OKAY" . "#4f97d7")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#86dc2f")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX" . "#dc752f")
+     ("XXXX" . "#dc752f"))))
  '(ibuffer-saved-filter-groups nil)
  '(ibuffer-saved-filters
    (quote
@@ -667,11 +674,14 @@ This function is called at the very end of Spacemacs initialization."
    (quote
     (emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode)))
  '(paradox-github-token t)
+ '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
  '(ring-bell-function (quote ignore))
  '(send-mail-function (quote smtpmail-send-it))
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
- '(term-default-bg-color "#fdf6e3")
- '(term-default-fg-color "#657b83")
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
+ '(sp-escape-quotes-after-insert nil)
+ '(tab-width 2)
+ '(term-default-bg-color "#002b36")
+ '(term-default-fg-color "#839496")
  '(typescript-indent-level 2)
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
@@ -698,11 +708,11 @@ This function is called at the very end of Spacemacs initialization."
  '(vc-annotate-very-old-color nil)
  '(weechat-color-list
    (quote
-    (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
+    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
  '(xterm-color-names
-   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
+   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
  '(xterm-color-names-bright
-   ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
+   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

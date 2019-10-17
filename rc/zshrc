@@ -8,20 +8,20 @@ unsetopt ALL_EXPORT       # Absolutely do not automatically export defined param
 setopt AUTO_RESUME        # Attempt to resume existing job before creating a new process.
 setopt LONG_LIST_JOBS     # List jobs in the long format by default.
 setopt NOTIFY             # Report status of background jobs immediately.
-unsetopt BG_NICE          # Don't run all background jobs at a lower priority.
-unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
-unsetopt HUP              # Don't kill jobs on shell exit.
+setopt BG_NICE            # run all background jobs at a lower priority.
+unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
+setopt HUP                # kill jobs on shell exit.
 
 # ── Prompting ──────────────────────────────────────────────
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
-typeset baseprompt='>>'
+local baseprompt='>>'
 # If we're in a dumb terminal then dont play fancy pants with our prompt
 if [[ $TERM == 'dumb' ]]; then
 	# Ensure we don't set preexec && precmd
 	unsetopt ZLE
 	unsetopt PROMPT_CR
 	unsetopt PROMPT_SUBST
-	PS1='$ '
+	# PS1='$ '
 	return
 elif [[ $TERM == 'eterm-color' ]]; then
 	# unsetopt zle
@@ -63,6 +63,9 @@ export VISUAL='vim'
 #   export PAGER='less'
 #   export SYSTEMD_PAGER='less'
 
+# Expanded `time' output
+export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
+
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Define general aliases.
 alias pr="print -l"
@@ -80,14 +83,14 @@ alias tl="tmux list-sessions"
 
 # Initialize key map
 cfgkey()  {
-	setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
-	xmodmap <(print 'keycode 135 = Hyper_R
-	add Mod3 = Hyper_R')
-}
-
-# Binds CapsLock -> Control in a vconsole
-vcfgkey() {
-    sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+	if [[ -n "$DISPLAY" ]]; then
+		setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
+		xmodmap <(print 'keycode 135 = Hyper_R
+		add Mod3 = Hyper_R')
+	else
+		# Binds CapsLock -> Control in a vconsole
+		sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+	fi
 }
 
 alias keycfg=cfgkey
@@ -96,6 +99,9 @@ alias xmm="xmodmap $HOME/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+
+alias veactivate="source venv/bin/activate"
+alias ipy="ipython3"
 
 man() {
 	local args=$@
@@ -211,10 +217,39 @@ rmlast() {
 calc () { gdb -n -quiet -batch -ex="p $*" }
 alias calc="noglob calc"
 
+ecalc() {
+	emacs '-nw' '-Q' --eval="(progn
+	  (when (display-graphic-p)
+	    (tool-bar-mode -1)
+	    (scroll-bar-mode -1))
+	  (menu-bar-mode -1)
+
+	  (setq
+	     select-enable-primary t
+	     help-window-select t)
+
+	  (cua-mode +1)
+	  (when cua-mode
+	     (defun calc-mode? ()
+	        (eq major-mode (quote calc-mode)))
+
+	     (define-advice cua-paste (:before-while (arg))
+	       (and (calc-mode?) (calc-yank arg))))
+
+	  (full-calc)
+
+	  (define-key calc-mode-map [?q]
+	    (quote save-buffers-kill-terminal))
+
+	  (define-advice calc-full-help (:after nil)
+	    (switch-to-buffer-other-window \"*Help*\")
+	    (message \"Press q to go back to calc\")))"
+}
+
 # print the color spectrum
 spectrum_ls() {
-	string="${@-Test}"
-	if [[ $1 == "block" ]]
+	string="${@:-block}"
+	if [[ "$string" = "block" ]]
 	then
 		string="███████████████████████████████"
 	fi
@@ -324,16 +359,16 @@ function workxrandr() {
 	local base_monitor="eDP-1"
 	local side_monitor=$(xrandr | awk "! /$base_monitor/ && /\s(connected)/ { print \$1 }" | tr -d '\n')
 	if [[ "$1" =~ "right" ]]; then
-		xrandr --output "$side_monitor" --right-of "$base_monitor" --auto
+		xrandr --output "$side_monitor" --primary --right-of "$base_monitor" --auto
 	else
-		xrandr --output "$side_monitor" --left-of "$base_monitor" --auto
+		xrandr --output "$side_monitor" --primary --left-of "$base_monitor" --auto
 	fi
 }
 
 # Set myself up for work
 function workcfg {
-	keycfg
 	workxrandr $1
+	keycfg
 }
 
 # dnf
@@ -381,6 +416,7 @@ alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gcm='git checkout master'
 alias ga='git add'
+alias gfa='git fetch --all'
 
 alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
 
@@ -414,7 +450,6 @@ setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
-unsetopt WARN_NESTED_VAR    # Warn when a local variable sets a global denested variable
 setopt NULL_GLOB            # Delete patterns without match from argument list
 setopt BRACE_CCL            # Allow brace character class list expansion.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
@@ -430,7 +465,7 @@ setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobb
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
-setopt C_BASES              # Output hex numbers in 0xFF instead of 16#FF
+unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
 # ── Shell Emulation ────────────────────────────────────────
@@ -444,6 +479,7 @@ setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming 
 setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
 setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
 setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
+setopt HIST_REDUCE_BLANKS        # Remove extraneous blanks from history entries
 setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
@@ -469,8 +505,8 @@ unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use
 unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
 setopt SHORT_LOOPS          # Allow short loops.
 unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
-# setopt HASH_CMDS            # Note the location of a command before it's executed
-# setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
+setopt HASH_CMDS            # Note the location of a command before it's executed
+setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
 
 # ── Modules and Completions ────────────────────────────────
 # Load and initialize the completion system ignoring insecure directories with a
@@ -499,9 +535,9 @@ setopt MENU_COMPLETE       # Do not autoselect the first completion entry.
 # not really a completion option
 unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 
-setopt AUTO_PARAM_KEYS     # Params should complete unusual symbols correctly.
-unsetopt REC_EXACT # Don' override completions for current perfect matches.
-setopt LIST_TYPES # "Show the type of each file for possible completions"
+setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
+unsetopt REC_EXACT          # Don' override completions for current perfect matches.
+setopt LIST_TYPES           # "Show the type of each file for possible completions"
 
 # zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.
@@ -734,10 +770,14 @@ bindkey -M vicmd "?" vi-history-search-forward
 bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
+bindkey -M viins -s '\ep' "!!- "
+bindkey -M viins '\e^p' insert-last-word
 
 # EZKeys
 bindkey -s '\eu' "..\n"
-bindkey -s '\es' "git status\n"
+bindkey -s '\es' "$HOME/"
+bindkey -s '\e^p' "$HOME/Development/"
+
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' find-history-backwards # up-line-or-search
@@ -770,18 +810,11 @@ if [[ -x "$(whence -p gpg-connect-agent)" && -d "$HOME/.gnupg" ]]; then
 fi
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Run our external modules
-if [[ -e ~/.zsh/modules ]]; then
-	for sz (~/.zsh/modules/*.zsh) source $sz
-fi
-
 # Configure Ocaml package manager
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
 # cdpath=($cdpath)
 # export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
-# export RUST_SRC_PATH=/usr/local/src/rust/src
 
 # The next line updates PATH for the Google Cloud SDK.
 # [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
@@ -792,13 +825,11 @@ fi
 # Rustup
 [[ -e ~/.cargo/env ]] && source ~/.cargo/env
 
-# Rust
-export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
-
 # Node
-
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
 #     export PATH="$HOME/.rbenv/bin:$PATH"
 #     eval "$(rbenv init -)"
 # fi
 # [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

@@ -43,9 +43,6 @@ fi
 # Load our completion functions
 fpath=(
 	$HOME/.zsh/completion
-	$HOME/.zsh/completion/rust-completion
-	$HOME/.zsh/functions
-	$HOME/.zsh/zsh-completions/src
 	$fpath
 )
 
@@ -63,3 +60,11 @@ fi
 
 # virtualenvwrapper
 export WORKON_HOME="$HOME/.local/environments"
+
+# Rust
+if (( $+commands[rustc] )); then
+    export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+fi
+
+# Java
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"

@@ -185,6 +185,3 @@ FUN function callback"
         (if dir
             (if (file-in-directory-p file dir)
                 (org-publish-file (buffer-file-name (buffer-base-buffer)))))))))
-
-;; (remove-hook 'after-save-hook 'auto-publish)
-(add-hook 'after-save-hook 'zv/auto-publish)
