@@ -14,14 +14,14 @@ setopt HUP                # kill jobs on shell exit.
 
 # ── Prompting ──────────────────────────────────────────────
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
-typeset baseprompt='>>'
+local baseprompt='>>'
 # If we're in a dumb terminal then dont play fancy pants with our prompt
 if [[ $TERM == 'dumb' ]]; then
 	# Ensure we don't set preexec && precmd
 	unsetopt ZLE
 	unsetopt PROMPT_CR
 	unsetopt PROMPT_SUBST
-	PS1='$ '
+	# PS1='$ '
 	return
 elif [[ $TERM == 'eterm-color' ]]; then
 	# unsetopt zle
@@ -63,6 +63,9 @@ export VISUAL='vim'
 #   export PAGER='less'
 #   export SYSTEMD_PAGER='less'
 
+# Expanded `time' output
+export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
+
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Define general aliases.
 alias pr="print -l"
@@ -98,6 +101,7 @@ alias xmm="xmodmap $HOME/.xmodmaprc"
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
 alias veactivate="source venv/bin/activate"
+alias ipy="ipython3"
 
 man() {
 	local args=$@
