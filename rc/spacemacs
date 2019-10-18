@@ -492,51 +492,46 @@ before packages are loaded."
       (unless (file-exists-p (concat undo-basedir dir))
         (make-directory (concat undo-basedir dir)))))
 
-  (setq-default abbrev-mode t
+  (setq-default
+   abbrev-mode t
 
-                c-basic-offset  4
-                c-default-style "k&r"
-                c-electric-mode t
+   c-basic-offset  4
+   c-default-style "k&r"
+   c-electric-mode t
 
-                create-lockfiles nil ; Dont create .#FILES
+   create-lockfiles nil ; Dont create .#FILES
 
-                ;; Evil should move across more than one line
-                evil-complete-next-func 'hippie-expand
-                evil-cross-lines t
-                evil-escape-delay 0.2
+   ;; Evil should move across more than one line
+   evil-complete-next-func 'hippie-expand
+   evil-cross-lines t
+   evil-escape-delay 0.2
 
-                ;; Time in seconds to hide the flycheck position tip after
-                flycheck-pos-tip-timeout 10
+   ;; Time in seconds to hide the flycheck position tip after
+   flycheck-pos-tip-timeout 10
 
-                helm-ff-file-name-history-use-recentf t
-                helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-                helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+   helm-ff-file-name-history-use-recentf t
+   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
 
-                js2-basic-offset                 2
-                js2-include-browser-externs      t
-                js2-include-node-externs         t
-                js2-strict-missing-semi-warning  nil
+   js2-basic-offset                 2
+   js2-include-browser-externs      t
+   js2-include-node-externs         t
+   js2-strict-missing-semi-warning  nil
 
-                magit-repo-dirs '("~/Development/")
+   magit-repo-dirs '("~/Development/")
 
-                ;; Powerline default separator
-                powerline-default-separator nil
+   ;; Powerline default separator
+   powerline-default-separator nil
 
-                ;; Use Gtags to generate
-                projectile-tags-command "gtags %s"
+   ;; Use Gtags to generate
+   projectile-tags-command "gtags %s"
 
-                ;; Dont show entire (long) line
-                truncate-lines t
+   ;; Dont show entire (long) line
+   truncate-lines t
 
-                ;; Location of Intel's documentation for easy lookup.
-                x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+   ;; Location of Intel's documentation for easy lookup.
+   x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
 
-  ;; spacemacs
-  (spacemacs/declare-prefix "o" "custom")
-  (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
-
-  (define-key evil-insert-state-map
-    (kbd "C-y") 'yank)
   ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
   (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
   (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
