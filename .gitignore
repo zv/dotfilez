@@ -54,6 +54,9 @@ templates/zv.m4
 
 ghc/
 
+rc/zsh/completion/_cargo
+rc/zsh/completion/_rustup
+
 #━━━━ ssh / gpg ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/gnupg/*
 rc/gnupg/secring.gpg
