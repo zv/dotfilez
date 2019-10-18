@@ -92,21 +92,12 @@
 
 
 (defun zv/post-init-org ()
-  (spacemacs|use-package-add-hook org
-    :pre-config
+  (use-package org
+    :config
     (progn
       (setq-default org-directory "~/Documents"
                     org-default-notes-file (expand-file-name "notes.org" org-directory))
 
-      (zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
-                                     ("ofel" . "~/Development/")
-                                     ("ofzd" . "~/dotfilez/")
-                                     ("ofod" . ,org-directory)
-                                     ("ofon" . ,org-default-notes-file)
-                                     ("ofzb" . ,zv//blog-path)
-                                     ("ofzp" . ,(concat zv//blog-path "org/_posts/")))))
-    :post-config
-    (progn
       (require 'org-protocol)
 
       ;; Use our custom org link insertion code

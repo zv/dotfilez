@@ -542,7 +542,6 @@ before packages are loaded."
   (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
 
   ;; path keybinding
-  (spacemacs/declare-prefix "of" "custom-files")
   (spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
   (spacemacs/set-leader-keys "jk" 'avy-goto-char))
 

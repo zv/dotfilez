@@ -40,7 +40,21 @@
 (define-key (current-global-map) [down] 'scroll-up-command)
 
 
-;; Check for 'next-buffer-key && 'prev-buffer-key
+(spacemacs/declare-prefix "of" "custom-files")
+
+(spacemacs/declare-prefix "ofe" "config" "Configuration files")
+(zv/bind-find-file "ofez" "~/dotfilez/"
+                   "ofed" "~/Development/"
+                   "ofez" zv-configuration-layer-directory)
+
+(spacemacs/declare-prefix "ofo" "org-mode" "Documents and Org-mode files")
+(zv/bind-find-file "ofod" org-directory
+                   "ofon" org-default-notes-file)
+
+(spacemacs/declare-prefix "ofz" "blog" "Blogfolder")
+(zv/bind-find-file "ofzb" zv//blog-path
+                   "ofzp" zv//blog-posts-path)
+
 
                                         ; Hyper Key
 (global-set-key (kbd "H-f") 'evil-window-right)

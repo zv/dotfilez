@@ -9,6 +9,9 @@
 (defconst zv//blog-path (expand-file-name "~/zv.github.com/")
   "Path to the root of the org blog")
 
+(defvar zv//blog-posts-path (expand-file-name "org/_posts/" zv//blog-path)
+  "Path to the location of blog posts")
+
 (define-minor-mode quick-calculate-mode
   "Local minor mode for quickly evaluating mathematical expressions inline"
   :keymap '())
