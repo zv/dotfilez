@@ -30,7 +30,10 @@ This function should only modify configuration layer settings."
    '((auto-completion :variables
                       auto-completion-return-key-behavior 'nothing
                       auto-completion-tab-key-behavior 'complete
+                      auto-completion-enable-sort-by-usage t
                       auto-completion-complete-with-key-sequence nil
+                      auto-completion-enable-snippets-in-popup nil
+                      auto-completion-idle-delay 0.15
                       auto-completion-complete-with-key-sequence-delay 0.1)
      asm
      (c-c++ :variables
@@ -211,7 +214,7 @@ user code in there besides modifying the variable values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 22
+                               :size 24
                                :weight medium
                                :width normal
                                :powerline-scale 1.0)
@@ -444,36 +447,14 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq XDG_CONFIG_HOME (file-name-as-directory (or (getenv "XDG_CONFIG_HOME") "~/.config/"))
-        XDG_CACHE_HOME  (file-name-as-directory (or (getenv "XDG_CACHE_HOME") "~/.cache/"))
-        next-buffer-key (kbd "H-j")
-        prev-buffer-key (kbd "H-k"))
-
-  ;; Add erlang & tern to our execution path
-  ;; (setq exec-path (append exec-path
-  ;;                         '("/usr/local/lib/erlang/bin"
-  ;;                           "~/n/lib/node_modules/tern"
-  ;;                           "~/n/bin")
-
-  ;; org mode
-  (setq-default zv//blog-path (expand-file-name "~/zv.github.com/")
-                exec-path-from-shell-check-startup-files nil
-                evil-escape-delay 0.2
-                git-enable-github-support t
-                ;; My personal org folders
-                org-directory "~/Documents"
-                org-default-notes-file (expand-file-name "notes.org.gpg" org-directory)
-                zv//org-personal (expand-file-name "zv.org.gpg" org-directory)
-                zv//blog-path (expand-file-name "~/Development/zv.github.com/")
-                ;; Dont show entire (long) line
-                truncate-lines t))
+  (defconst XDG_CONFIG_HOME (file-name-as-directory (or (getenv "XDG_CONFIG_HOME") "~/.config/")))
+  (defconst XDG_CACHE_HOME  (file-name-as-directory (or (getenv "XDG_CACHE_HOME") "~/.cache/"))))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -481,12 +462,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (add-hook 'erlang-mode-hook
-            (lambda ()
-              (setq mode-name "Erlang")
-              ;; when starting an Erlang shell in Emacs, with a custom node name
-              (setq inferior-erlang-machine-options '("-sname" "zv"))))
-
   ;; Setup the directory where we're going to store backup, autosave & undo-tree
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
@@ -517,53 +492,52 @@ before packages are loaded."
       (unless (file-exists-p (concat undo-basedir dir))
         (make-directory (concat undo-basedir dir)))))
 
-  (require 'org-protocol)
-  (setq-default magit-repo-dirs '("~/Development/")
-                ;; Powerline default separator
-                powerline-default-separator nil
-                ;; Use Gtags to generate
-                projectile-tags-command "gtags %s"
-                ;; Evil should move across more than one line
-                evil-cross-lines t
-                evil-escape-delay 0.2
-                evil-complete-next-func 'hippie-expand
+  (setq-default
+   abbrev-mode t
 
-                ;; Time in seconds to hide the flycheck position tip after
-                flycheck-pos-tip-timeout 10
+   c-basic-offset  4
+   c-default-style "k&r"
+   c-electric-mode t
 
-                helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-                helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-                helm-ff-file-name-history-use-recentf t
+   create-lockfiles nil ; Dont create .#FILES
 
-                c-electric-mode t
-                c-basic-offset  4
-                c-default-style "k&r"
+   ;; Evil should move across more than one line
+   evil-complete-next-func 'hippie-expand
+   evil-cross-lines t
+   evil-escape-delay 0.2
 
-                js2-basic-offset                 2
-                js2-strict-missing-semi-warning  nil
-                js2-include-node-externs         t
-                js2-include-browser-externs      t
+   ;; Time in seconds to hide the flycheck position tip after
+   flycheck-pos-tip-timeout 10
 
-                create-lockfiles nil ; Dont create .#FILES
+   helm-ff-file-name-history-use-recentf t
+   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
 
-                ;; Dont show entire (long) line
-                truncate-lines t
+   js2-basic-offset                 2
+   js2-include-browser-externs      t
+   js2-include-node-externs         t
+   js2-strict-missing-semi-warning  nil
 
-                ;; abbrev-mode
-                abbrev-mode t)
+   magit-repo-dirs '("~/Development/")
 
-  (setq x86-lookup-pdf "/home/zv/Documents/IA64-Vol2.pdf")
+   ;; Powerline default separator
+   powerline-default-separator nil
 
-  ;; spacemacs
-  (spacemacs/declare-prefix "o" "custom")
-  (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
+   ;; Use Gtags to generate
+   projectile-tags-command "gtags %s"
+
+   ;; Dont show entire (long) line
+   truncate-lines t
+
+   ;; Location of Intel's documentation for easy lookup.
+   x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
 
   ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
   (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
   (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
 
   ;; path keybinding
-  (spacemacs/declare-prefix "of" "custom-files")
+  (spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
   (spacemacs/set-leader-keys "jk" 'avy-goto-char))
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -571,7 +545,6 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-;; Custom variables
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -648,7 +621,7 @@ This function is called at the very end of Spacemacs initialization."
         (mode . java-mode)
         (mode . idl-mode)
         (mode . lisp-mode)))))))
- '(js-indent-level 2)
+ '(js-indent-level 4)
  '(json-reformat:indent-width 2)
  '(magit-completing-read-function (quote magit-builtin-completing-read))
  '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
@@ -673,7 +646,7 @@ This function is called at the very end of Spacemacs initialization."
      (org-default-notes-file :maxlevel . 2))))
  '(package-selected-packages
    (quote
-    (yara-mode yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode visual-fill-column winum web-mode web-beautify volatile-highlights vimrc-mode vi-tilde-fringe uuidgen toml-mode toc-org tide typescript-mode tagedit systemd symon string-inflection sql-indent spaceline-all-the-icons spaceline powerline solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racket-mode faceup racer pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pyvenv pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode password-generator paradox spinner overseer org-present org-mime org-download org-bullets open-junk-file ob-elixir neotree nasm-mode nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow magit-popup macrostep lorem-ipsum livid-mode skewer-mode live-py-mode link-hint json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc insert-shebang indent-guide importmagic epc ctable concurrent deferred impatient-mode simple-httpd hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose window-purpose imenu-list helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gtags helm-gitignore request helm-git-grep helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag haml-mode graphviz-dot-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md ggtags geiser fuzzy flycheck-rust flycheck-rtags flycheck-pos-tip pos-tip flycheck-mix flycheck-credo flycheck-bashate flycheck flx-ido flx fish-mode fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit magit transient git-commit with-editor evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emmet-mode elisp-slime-nav editorconfig dumb-jump drupal-mode doom-modeline eldoc-eval shrink-path all-the-icons memoize disaster diff-hl define-word dactyl-mode cython-mode counsel-projectile projectile counsel swiper ivy company-web web-completion-data company-tern dash-functional tern company-statistics company-shell company-rtags rtags company-php ac-php-core xcscope php-mode company-c-headers company-anaconda column-enforce-mode clean-aindent-mode clang-format centered-cursor-mode cargo markdown-mode rust-mode browse-at-remote auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anaconda-mode pythonic f alchemist s company dash elixir-mode pkg-info epl aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core ac-ispell auto-complete popup which-key use-package pcre2el hydra font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async)))
+    (coffee-mode paradox spinner z3-mode yasnippet-snippets yapfify yaml-mode xterm-color x86-lookup ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vimrc-mode vi-tilde-fringe uuidgen use-package toml-mode toc-org tide tagedit systemd symon string-inflection sql-indent spaceline-all-the-icons solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restclient-helm restart-emacs rainbow-delimiters racket-mode racer pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator overseer org-present org-mime org-download org-bullets open-junk-file ob-restclient ob-http ob-elixir neotree nasm-mode nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gtags helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag graphviz-dot-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md ggtags geiser fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-mix flycheck-credo flycheck-bashate flx-ido fish-mode fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word dactyl-mode cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-rtags company-restclient company-c-headers company-anaconda column-enforce-mode clean-aindent-mode clang-format centered-cursor-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(page-break-lines-modes
    (quote
     (emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode)))

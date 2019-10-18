@@ -5,33 +5,13 @@
 ;;
 ;; Author: zv <zephyr.pellerin@gmail.com>
 ;; URL: https://github.com/zv/spacemacs
-;;
-;;; License: GPLv3
 
-;; global bindings
-(defun zv/set-available-leader (key def &rest bindings)
-  "Sets a leader key as long as that key is not already bound"
-  (while key
-    (let ((bound-key (lookup-key spacemacs-default-map (kbd key))))
-      (if (and (symbolp bound-key) (fboundp bound-key))
-
-          (message (concat "Leader key " key " already set"))
-        (spacemacs/set-leader-keys key def))
-      (setq key (pop bindings) def (pop bindings)))))
-
-(zv/set-available-leader "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
-(zv/set-available-leader "oopa" #'(lambda ()
-                                    (interactive)
-                                    (print "Automatic publishing enabled")
-                                    (add-hook 'after-save-hook 'zv/auto-publish)))
-(zv/set-available-leader "oopr" #'(lambda ()
-                                    (interactive)
-                                    (print "Automatic publishing disabled")
-                                    (remove-hook 'after-save-hook 'zv/auto-publish)))
-
 ;; Forward/Backward mice keys
 (global-set-key (kbd "<mouse-8>") 'switch-to-prev-buffer)
 (global-set-key (kbd "<mouse-9>") 'switch-to-next-buffer)
+(global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
+(global-set-key (kbd "<XF86Calculator>") 'calc)
+(global-set-key (kbd "<XF86Mail>") 'gnus)
 
 ;; tab/window split manipulation]
 (define-key evil-normal-state-map "Q" 'evil-quit)
@@ -39,10 +19,39 @@
 (define-key (current-global-map) [up] 'scroll-down-command)
 (define-key (current-global-map) [down] 'scroll-up-command)
 
-
-;; Check for 'next-buffer-key && 'prev-buffer-key
 
-                                        ; Hyper Key
+;; Custom leaders
+(spacemacs/declare-prefix "o" "custom")
+(spacemacs/declare-prefix "of" "custom-files")
+(spacemacs/declare-prefix "ofe" "config" "Configuration files")
+(zv/bind-find-file        "ofez" "~/dotfilez/"
+                          "ofed" "~/Development/"
+                          "ofez" zv-configuration-layer-directory)
+
+(spacemacs/declare-prefix "ofo" "org-mode" "Documents and Org-mode files")
+(zv/bind-find-file        "ofod" org-directory
+                          "ofon" org-default-notes-file)
+
+(spacemacs/declare-prefix "ofz" "blog" "Blogfolder")
+(zv/bind-find-file        "ofzb" zv//blog-path
+                          "ofzp" zv//blog-posts-path)
+
+(spacemacs/declare-prefix "oo" "org-mode")
+(spacemacs/set-leader-keys "oopa" #'(lambda ()
+                                    (interactive)
+                                    (print "Automatic publishing enabled")
+                                    (add-hook 'after-save-hook 'zv/auto-publish)))
+(spacemacs/set-leader-keys "oopr" #'(lambda ()
+                                    (interactive)
+                                    (print "Automatic publishing disabled")
+                                    (remove-hook 'after-save-hook 'zv/auto-publish)))
+
+(spacemacs/set-leader-keys "oj" 'dumb-jump-go)
+(spacemacs/set-leader-keys "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
+(spacemacs/set-leader-keys "orb" 'regexp-builder)
+
+
+;; evil bindings
 (global-set-key (kbd "H-f") 'evil-window-right)
 (global-set-key (kbd "H-s") 'evil-window-left)
 (global-set-key (kbd "H-e") 'evil-window-up)
@@ -51,33 +60,9 @@
 (global-set-key (kbd "H-k") 'evil-window-next)
 (global-set-key (kbd "H-j") 'evil-window-prev)
 
-;; (global-set-key (kbd "C-H-j") (lambda () (interactive) (rotate-windows 1)))
-;; (global-set-key (kbd "C-H-k") (lambda () (interactive) (rotate-windows -1)))
-(global-set-key (kbd "H-w") (lambda ()
-                              (interactive)
-                              (zv/enlarge-window-by-dominant-dimension -7)))
-(global-set-key (kbd "H-r") (lambda ()
-                              (interactive)
-                              (zv/enlarge-window-by-dominant-dimension 7)))
-(global-set-key (kbd "C-H-<return>") 'zv/tile-split-window)
+(define-key evil-insert-state-map (kbd "C-y") 'yank)
 
-(global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
-
-;; EWW
-(evil-define-key 'motion eww-mode-map
-  "d" 'scroll-up-command
-  "u" 'scroll-down-command
-  "D" 'eww-download)
-
-;; utilities
-(zv/set-available-leader "orb" 'regexp-builder)
-;; applications
-(global-set-key (kbd "<XF86Calculator>") 'calc)
-(global-set-key (kbd "<XF86Mail>") 'gnus)
-
-;; evil state bindings
 (evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
-;; (evil-define-key 'normal evil-surround-mode-map "S" 'evil-substitute)
 
 ;; (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
 (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
@@ -87,8 +72,24 @@
 (define-key evil-insert-state-map (kbd "C-h") 'backward-char)
 (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
 
+(global-set-key (kbd "H-w") (lambda ()
+                              (interactive)
+                              (zv/enlarge-window-by-dominant-dimension -7)))
+(global-set-key (kbd "H-r") (lambda ()
+                              (interactive)
+                              (zv/enlarge-window-by-dominant-dimension 7)))
+
+;; swap "{" with "[" & "}" with "]"
+(dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
+  (dolist (pair '(("[" . "{") ("]" . "}")))
+    (let* ((ka (car pair))
+           (kb (cdr pair))
+           (fa (lookup-key mode ka))
+           (fb (lookup-key mode kb)))
+      (define-key mode ka fb)
+      (define-key mode kb fa))))
+
 
-                                        ; calendar
 (use-package calendar
   :defer t
   :bind (:map calendar-mode-map
@@ -101,7 +102,6 @@
          ("0" . calendar-beginning-of-week)
          ("$" . calendar-end-of-week)))
 
-;; neotree
 (spacemacs|use-package-add-hook neotree
   :post-config
   (progn
@@ -164,16 +164,6 @@
     (define-key helm-ag-map (kbd "<XF86Forward>") 'helm-ag--next-file)
     (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)))
 
-;; swap "{" with "[" & "}" with "]"
-(dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
-  (dolist (pair '(("[" . "{") ("]" . "}")))
-    (let* ((ka (car pair))
-           (kb (cdr pair))
-           (fa (lookup-key mode ka))
-           (fb (lookup-key mode kb)))
-      (define-key mode ka fb)
-      (define-key mode kb fa))))
-
 
 ;; Set emacs as the initial state in a variety of modes
 (dolist (mode '(epa-key-list-mode
@@ -232,12 +222,11 @@
     (spacemacs/set-leader-keys-for-major-mode 'python-mode
       "mv" 'search-parents-for-venv)))
 
+
+(evil-define-key '(normal insert) 'quick-calculate-mode-map
+  (kbd "M-r") 'calc-radix
+  (kbd "M-k") 'zv/calculate-line
+  (kbd "C-;") 'helm-calcul-expression)
 
-(zv//initial-path-keybinding `(("ofez" . ,zv-configuration-layer-directory)
-                               ("ofel" . "~/Development/")
-                               ("ofzd" . "~/dotfilez/")
-                               ("ofod" . ,org-directory)
-                               ("ofoz" . ,zv//org-personal)
-                               ("ofon" . ,org-default-notes-file)
-                               ("ofzb" . ,zv//blog-path)
-                               ("ofzp" . ,(concat zv//blog-path "org/_posts/"))))
+(evil-define-key 'visual quick-calculate-mode-map
+  (kbd "M-k") 'zv/calculate-region)

@@ -57,22 +57,13 @@ used as the prefix command."
   (interactive)
   (scroll-down-line 1))
 
-;; Monkeypatch some spacemacs internal window positioning
-(defun spacemacs/shrink-window-horizontally (delta)
-  "Wrap `spacemacs/shrink-window-horizontally'."
-  (interactive "p") (shrink-window 10 t))
+(defun zv/calculate-region (point mark)
+  (interactive "r")
+  (message (calc-eval (buffer-substring point mark))))
 
-(defun spacemacs/shrink-window (delta)
-  "Wrap `spacemacs/shrink-window'."
-  (interactive "p") (shrink-window 5))
-
-(defun spacemacs/enlarge-window (delta)
-  "Wrap `spacemacs/enlarge-window'."
-  (interactive "p") (enlarge-window 5))
-
-(defun spacemacs/enlarge-window-horizontally (delta)
-  "Wrap `spacemacs/enlarge-window-horizontally'."
-  (interactive "p") (enlarge-window 10 t))
+(defun zv/calculate-line ()
+  (interactive)
+  (message (calc-eval (buffer-substring (line-beginning-position) (line-end-position)))))
 
 
 ;; Org Mode
@@ -154,19 +145,21 @@ FUN function callback"
 
 
 
-(defun zv//initial-path-keybinding (key-file-map)
-  "Create leader keybindings from an alist of the form (KEYS . PATH)"
-  (mapc (lambda (binding)
-          (let* ((path        (cdr binding))
-                 (keybinding  (car binding)))
-            ;; We check if it is an integer because keyseq returns a number if
-            ;; the preceeding keys are also unbound.
-            (evil-leader/set-key keybinding (if (string-match "\/$" path)
-                                                ;; use ido-find-file-in-dir if we're binding a directory
-                                                `(lambda () (interactive) (ido-find-file-in-dir ,path))
-                                              ;; Otherwise we're looking at a file, jump directly to it
-                                              `(lambda () (interactive) (find-file-existing ,path))))))
-        key-file-map))
+(defun zv/bind-find-file (key path &rest bindings)
+  "Create a binding which automatically visits PATH when KEY is pressed."
+  (while key
+    (let ((fname (intern (concat "path//" (file-relative-name path "~/")))))
+      (defalias fname
+        `(lambda ()
+           (interactive)
+           (let ((apath (expand-file-name ,path)))
+             (cond
+              ((file-directory-p apath) (ido-find-file-in-dir apath))
+              ((file-readable-p apath) (find-file-existing apath))
+              (t (user-error "Couldn't open apath %s" apath))))))
+      (spacemacs/set-leader-keys key fname))
+    (setq key (pop bindings)
+          path (pop bindings))))
 
 
 (defun zv/encrypt-secrets ()
