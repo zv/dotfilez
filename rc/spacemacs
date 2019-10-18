@@ -40,6 +40,7 @@ This function should only modify configuration layer settings."
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
      cscope
+     docker
      ;; (erlang :variables
      ;;         erlang-root-dir "/usr/local/lib/erlang"
      ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
@@ -178,9 +179,8 @@ user code in there besides modifying the variable values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '(
-                                ;;(agenda . 10) (todos . 5)
-                                )
+   dotspacemacs-startup-lists '((agenda . 10)
+                                (todos . 10))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive nil
 
@@ -626,9 +626,6 @@ This function is called at the very end of Spacemacs initialization."
  '(magit-completing-read-function (quote magit-builtin-completing-read))
  '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
  '(neo-theme (quote arrow))
- '(org-agenda-files
-   (quote
-    ("/home/zv/Documents/notes.org" "/home/zv/Documents/zv.org")))
  '(org-html-text-markup-alist
    (quote
     ((bold . "<b>%s</b>")
