@@ -195,14 +195,8 @@ vnoremap <leader>er :<C-u>for line in getline("'<", "'>") \| execute line \| end
 nnoremap <silent> <CR> <C-f>
 nnoremap <silent> <Backspace> <C-b>
 
-function ToggleTabs()
-  if &expandtab
-    set noexpandtab
-  else
-    set expandtab
-  endif
-endfunction
-nmap <leader>tt mz:execute ToggleTabs()<CR>'z
+" toggle tab expansion (ToggleTabs)
+nmap <leader>tt :set expandtab!<CR>:set expandtab?<CR>
 
 nnoremap <silent><leader>tn :set number!<CR>
 nnoremap <silent><leader>tr :set number!<CR>:set relativenumber!<CR>
