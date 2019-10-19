@@ -144,19 +144,6 @@
               ("m" . man)))
 
 
-;; Elixir Configuration
-(defun zv/elixir-convert-def-to-block (&optional arg)
-  (interactive "P")
-  (re-search-forward "\\()?\\)\\s-*do\n\\s-*\\(.*\\)\n.*end" nil)
-  (replace-match "\\1, do: \\2"))
-
-(spacemacs|use-package-add-hook alchemist
-  :post-config
-  (progn
-    (spacemacs/declare-prefix-for-mode 'elixir-mode "mk" "quickfixes")
-    (spacemacs/set-leader-keys-for-major-mode 'elixir-mode "kd"
-      'zv/elixir-convert-def-to-block)))
-
 ;; Search
 (spacemacs|use-package-add-hook helm-ag
   :post-config

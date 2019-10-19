@@ -4,28 +4,6 @@
 
 
 
-(defun add-semicolon-to-end-of-line ()
-    "Unsurprisingly, this adds a semicolon to the end of the line"
-    (interactive)
-    (save-excursion (end-of-line) (insert ";")))
-
-(defun org-path (file)
-        "Returns the full path of an org directory file"
-        (expand-file-name (concat org-directory "/" file)))
-
-(defun zv/define-keymap (mode-map keymap)
-  (mapc (lambda (binding)
-          (define-key mode-map (car binding) (cdr binding)))
-        keymap))
-
-(defun zv/declare-prefix-for-mode (mode prefix name)
-  "Declare a prefix PREFIX. MODE is the mode in which this prefix command should
-be added. PREFIX is a string describing a key sequence. NAME is a symbol name
-used as the prefix command."
-  (let ((command (intern (concat spacemacs/prefix-command-string name))))
-    (define-prefix-command command)
-    (evil-leader/set-key-for-mode mode prefix command)))
-
 (defun zv/alter-window-by-dominant-dimension (magnitude)
   "Alter the current window by height if vertically split, or width otherwise"
   (cond ((window-full-width-p) (enlarge-window magnitude))
@@ -51,13 +29,7 @@ used as the prefix command."
         (evil-window-vsplit)
       (evil-window-split))))
 
-(defun zv/join-up ()
-  "hacky way to join parent's lines"
-  (interactive)
-  (save-excursion
-    (progn
-      (previous-line 2)
-      (evil-join (point) (+ 1 (point))))))
+
 
 (defun zv/scroll-up-one-line ()
   (interactive)
@@ -66,6 +38,8 @@ used as the prefix command."
 (defun zv/scroll-down-one-line ()
   (interactive)
   (scroll-down-line 1))
+
+
 
 (defun zv/calculate-region (point mark)
   (interactive "r")
@@ -78,19 +52,6 @@ used as the prefix command."
 
 ;; Org Mode
 ;; --------
-
-(defun clever-insert-item ()
-  "Clever insertion of org item."
-  (if (not (org-in-item-p))
-      (insert "\n")
-    (org-insert-item)))
-
-(defun evil-org-eol-call (fun)
-  "Go to end of line and call provided function.
-FUN function callback"
-  (end-of-line)
-  (funcall fun)
-  (evil-append nil))
 
 ;; Sets an org-mode link's default text to be that of the page's title
 (defun zv/org-insert-link ()
@@ -112,12 +73,6 @@ FUN function callback"
       (search-forward "</title>")
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
-
-
-;; Restart `tern-mode`
-(defun delete-tern-process ()
-  (interactive)
-  (delete-process "Tern"))
 
 
 ;; advice functions for not showing dots
