@@ -51,6 +51,12 @@
 (spacemacs/set-leader-keys "orb" 'regexp-builder)
 
 
+;; Mode-specific leaders
+
+;;; Python
+(spacemacs/set-leader-keys-for-major-mode 'python-mode "ov" 'zv/search-parents-for-venv)
+
+
 ;; evil bindings
 (global-set-key (kbd "H-f") 'evil-window-right)
 (global-set-key (kbd "H-s") 'evil-window-left)
@@ -175,49 +181,19 @@
 
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
-  "0" 'evil-digit-argument-or-evil-beginning-of-line
   (kbd "M-h") 'Info-help   ; "h"
-  ;;"j" 'zv/scroll-up-one-line
-  ;;"k" 'zv/scroll-down-one-line
   "n" 'Info-search-next
   "/" 'Info-search
   "?" 'Info-search-backward
   "U" 'Info-up
-  "D" 'Info-directory
   "u" 'Info-scroll-down
   "d" 'Info-scroll-up
-  "p" 'evil-window-next ; "p"op out of info window
-  "V" 'evil-visual-line
   "\C-u" 'Info-scroll-down
   "\C-d" 'Info-scroll-up
   "\C-t" 'Info-history-back ; "l"
   "\C-o" 'Info-history-back
   "\C-]" 'Info-follow-nearest-node
-  ;; The following are for scroll up / scroll down keys
-  (kbd "<mouse-4>") 'Info-scroll-down
-  (kbd "<mouse-5>") 'Info-scroll-up
-  (kbd "DEL") 'Info-scroll-down)
-
-
-;; Python bindings
-(spacemacs|use-package-add-hook python
-  :post-config
-  (progn
-    ;; searches the current buffer's directory and parents up to "/" for a directory
-    ;; named "venv", activating it if it exists.
-    (defun search-parents-for-venv ()
-      (interactive)
-      (defun venv-search (test-dir)
-        (let ((venv-dir (expand-file-name (concat test-dir "/venv/"))))
-          (cond
-           ((string-equal test-dir "/") f)
-           ((file-directory-p venv-dir) (pyvenv-activate venv-dir))
-           (t (venv-search (file-name-directory (directory-file-name test-dir)))))))
-      (venv-search (directory-file-name buffer-file-name)))
-
-    ;; Set our custom keybindings
-    (spacemacs/set-leader-keys-for-major-mode 'python-mode
-      "mv" 'search-parents-for-venv)))
+  "\C-e" 'Info-edit-mode)
 
 
 (evil-define-key '(normal insert) 'quick-calculate-mode-map

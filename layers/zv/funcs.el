@@ -140,6 +140,20 @@ FUN function callback"
                    'zv/helm-file-completion-source-p)))
 
 
+
+(defun zv/search-parents-for-venv ()
+  "Traverses upwards from buffer, looking to activate a virtualenv"
+  (interactive)
+  (let* ((base-dir (locate-dominating-file buffer-file-name "venv/bin/activate"))
+         (venv-dir (expand-file-name "venv" base-dir)))
+    (if (and (stringp venv-dir)
+             (file-exists-p (expand-file-name "pyvenv.cfg" venv-dir)))
+        (progn
+          (pyvenv-activate venv-dir)
+          (message "Activated %s as virtualenv" venv-dir))
+      (user-error "Couldn't find a suitable venv"))))
+
+
 (defun sort-sexps-by-cadr (reverse beg end)
   "Sort by particular sexp field (in this casse, the cadr)"
   (interactive "P\nr")
