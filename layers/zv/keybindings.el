@@ -72,12 +72,9 @@
 (define-key evil-insert-state-map (kbd "C-h") 'backward-char)
 (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
 
-(global-set-key (kbd "H-w") (lambda ()
-                              (interactive)
-                              (zv/enlarge-window-by-dominant-dimension -7)))
-(global-set-key (kbd "H-r") (lambda ()
-                              (interactive)
-                              (zv/enlarge-window-by-dominant-dimension 7)))
+(global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
+(global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
+
 
 ;; swap "{" with "[" & "}" with "]"
 (dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))

@@ -26,11 +26,21 @@ used as the prefix command."
     (define-prefix-command command)
     (evil-leader/set-key-for-mode mode prefix command)))
 
-(defun zv/enlarge-window-by-dominant-dimension (magnitude)
-  "Enlarge the current window by height if vertically split, or width otherwise"
+(defun zv/alter-window-by-dominant-dimension (magnitude)
+  "Alter the current window by height if vertically split, or width otherwise"
   (cond ((window-full-width-p) (enlarge-window magnitude))
         ((window-full-height-p) (enlarge-window-horizontally magnitude))
         (t (enlarge-window (/ magnitude 2)))))
+
+(defun zv/enlarge-window-by-dominant-dimension (&optional arg)
+  "Enlarge the current window by height if vertically split, or width otherwise"
+  (interactive "P")
+  (zv/alter-window-by-dominant-dimension (if (numberp arg) arg 10)))
+
+(defun zv/shrink-window-by-dominant-dimension (&optional arg)
+  "Shrink the current window by height if vertically split, or width otherwise"
+  (interactive "P")
+  (zv/alter-window-by-dominant-dimension (if (numberp arg) (* -1 arg) -10)))
 
 (defun zv/tile-split-window ()
   "If our current window width / height is greater than 1.68, split vertically"
