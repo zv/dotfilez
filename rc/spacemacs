@@ -28,13 +28,16 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
    '((auto-completion :variables
-                      auto-completion-return-key-behavior 'nothing
-                      auto-completion-tab-key-behavior 'complete
-                      auto-completion-enable-sort-by-usage t
                       auto-completion-complete-with-key-sequence nil
                       auto-completion-enable-snippets-in-popup nil
-                      auto-completion-idle-delay 0.15
-                      auto-completion-complete-with-key-sequence-delay 0.1)
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-front-end 'company
+                      auto-completion-idle-delay 0.08
+                      auto-completion-return-key-behavior nil
+                      auto-completion-tab-key-behavior 'complete
+                      company-tooltip-limit 9
+                      auto-completion-use-company-box nil
+                      company-show-numbers t)
      asm
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
