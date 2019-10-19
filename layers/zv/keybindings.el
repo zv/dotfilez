@@ -37,11 +37,11 @@
                           "ofzp" zv//blog-posts-path)
 
 (spacemacs/declare-prefix "oo" "org-mode")
-(spacemacs/set-leader-keys "oopa" #'(lambda ()
+(spacemacs/set-leader-keys "oopa" `(lambda ()
                                     (interactive)
                                     (print "Automatic publishing enabled")
                                     (add-hook 'after-save-hook 'zv/auto-publish)))
-(spacemacs/set-leader-keys "oopr" #'(lambda ()
+(spacemacs/set-leader-keys "oopr" `(lambda ()
                                     (interactive)
                                     (print "Automatic publishing disabled")
                                     (remove-hook 'after-save-hook 'zv/auto-publish)))
@@ -68,8 +68,6 @@
 
 (define-key evil-insert-state-map (kbd "C-y") 'yank)
 
-(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
-
 ;; (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
 (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
@@ -81,6 +79,7 @@
 (global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
 (global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
 
+(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 
 ;; swap "{" with "[" & "}" with "]"
 (dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
