@@ -99,10 +99,12 @@
 (defun zv/search-parents-for-venv ()
   "Traverses upwards from buffer, looking to activate a virtualenv"
   (interactive)
-  (let* ((base-dir (locate-dominating-file buffer-file-name "venv/bin/activate"))
+  (let* ((base-dir (locate-dominating-file
+                    buffer-file-name
+                    (lambda (file) (file-in-directory-p "pyvenv.cfg" file))))
          (venv-dir (expand-file-name "venv" base-dir)))
     (if (and (stringp venv-dir)
-             (file-exists-p (expand-file-name "pyvenv.cfg" venv-dir)))
+             (file-exists-p (expand-file-name "venv/bin/activate" venv-dir)))
         (progn
           (pyvenv-activate venv-dir)
           (message "Activated %s as virtualenv" venv-dir))
@@ -131,11 +133,11 @@
       (defalias fname
         `(lambda ()
            (interactive)
-           (let ((apath (expand-file-name ,path)))
+           (let (path)
              (cond
-              ((file-directory-p apath) (ido-find-file-in-dir apath))
-              ((file-readable-p apath) (find-file-existing apath))
-              (t (user-error "Couldn't open apath %s" apath))))))
+              ((file-directory-p ,path) (ido-find-file-in-dir ,path))
+              ((file-readable-p ,path) (find-file-existing ,path))
+              (t (user-error "Couldn't open path %s" ,path))))))
       (spacemacs/set-leader-keys key fname))
     (setq key (pop bindings)
           path (pop bindings))))
