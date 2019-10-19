@@ -79,9 +79,8 @@ This function should only modify configuration layer settings."
      (rust :variables
            rust-enable-racer t)
      (shell :variables
-            shell-default-shell 'eshell
-            shell-protect-eshell-prompt t
-            shell-default-term-shell "/usr/bin/zsh")
+            close-window-with-terminal t
+            shell-default-shell 'ansi-term)
      scheme
      (sql :variables
           sql-capitalize-keywords t)

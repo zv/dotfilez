@@ -117,30 +117,29 @@
 (use-package man
   :defer t
   :bind (:map Man-mode-map
-              (" " . scroll-up-command)
-              ("\177" . scroll-down-command)
-              ("}" . Man-next-section)
-              ("{" . Man-previous-section)
-              ("]" . evil-forward-paragraph)
-              ("[" . evil-backward-paragraph)
-              (">" . end-of-buffer)
-              ("<" . beginning-of-buffer)
-              ("." . beginning-of-buffer)
-              ("?" . evil-search-backward)
-              ("/" . evil-search-forward)
-              ("RET" . woman-follow)
+              ;; ("RET" . woman-follow)
+              ("}" . Man-next-manpage)
+              ("{" . Man-previous-manpage)
+              ("]" . Man-next-section)
+              ("[" . Man-previous-section)
+              ("?" . evil-ex-search-backward)
+              ("/" . evil-ex-search-forward)
+              ("n" . evil-ex-search-next)
+              ("N" . evil-ex-search-backward)
 
-              ("n" . evil-search-next)
-              ("p" . evil-search-previous)
-              ("M-n" . Man-next-section)
-              ("M-p" . Man-previous-section)
+              ("w" . evil-forward-word-begin)
+              ("W" . evil-forward-WORD-begin)
 
+              ("b" . evil-backward-word-begin)
+              ("B" . evil-backward-WORD-begin)
+
+              ("h" . evil-backward-char)
+              ("l" . evil-forward-char)
               ("k" . evil-previous-line)
               ("j" . evil-next-line)
 
               ("d" . scroll-up-command)
               ("u" . scroll-down-command)
-              ("q" . Man-kill)
               ("m" . man)))
 
 
