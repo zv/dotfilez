@@ -12,50 +12,7 @@ setopt BG_NICE            # run all background jobs at a lower priority.
 unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
 setopt HUP                # kill jobs on shell exit.
 
-# ── Prompting ──────────────────────────────────────────────
-setopt PROMPT_SUBST # Setup the prompt with pretty colors
-local baseprompt='>>'
-# If we're in a dumb terminal then dont play fancy pants with our prompt
-if [[ $TERM == 'dumb' ]]; then
-	# Ensure we don't set preexec && precmd
-	unsetopt ZLE
-	unsetopt PROMPT_CR
-	unsetopt PROMPT_SUBST
-	# PS1='$ '
-	return
-elif [[ $TERM == 'eterm-color' ]]; then
-	# unsetopt zle
-	unsetopt prompt_cr
-	unsetopt prompt_subst
-	PROMPT="[%y] %2~ $baseprompt "
-	return
-else
-	export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
-	# shows a slightly different prompt for vicmd vs other ZLE command modes to let
-	# you know what you are dealing with.
-	autoload -Uz vcs_info
-	base_vcs_style='%c%b%u%f'
-	zstyle ':vcs_info:*' enable git hg # svn # cvs fossil bzr
-	zstyle ':vcs_info:*' check-for-changes true
-	zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
-	zstyle ':vcs_info:*' stagedstr '%F{028}'
-	zstyle ':vcs_info:*' unstagedstr '*'
-	zstyle ':vcs_info:*' formats " [$base_vcs_style]"
-	zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
-	precmd () { vcs_info }
-	zle_vim_prompt_notifier() {
-		[[ "$KEYMAP" == vicmd ]] &&
-			print "%F{red}$baseprompt%f" ||
-			print "$baseprompt"
-	}
-	PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} `zle_vim_prompt_notifier` '
-fi
-
-
-# ── Environment Variables ──────────────────────────────────
-# Editors
-export VISUAL='vim'
-
+# ── Utility Control Variables ──────────────────────────────
 # Set the default Less options.
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
 # Remove -X and -F (exit if the content fits on one screen) to enable it.
@@ -121,11 +78,11 @@ man() {
 
 # Use vim as a pager for man
 manvi() {
-	  local args=$@
-    (
-        export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' -c 'nnoremap <silent> d <C-d>' -c 'nnoremap <silent> u <C-u>' -\""
-        $(whence -a -p man) ${=args}
-    )
+	local args=$@
+	(
+		export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' -c 'nnoremap <silent> d <C-d>' -c 'nnoremap <silent> u <C-u>' -\""
+		$(whence -a -p man) ${=args}
+	)
 }
 
 # Moves the last created file to $2
@@ -508,6 +465,34 @@ unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 setopt HASH_CMDS            # Note the location of a command before it's executed
 setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
 
+# ── Prompting ──────────────────────────────────────────────
+setopt PROMPT_SUBST # Setup the prompt with pretty colors
+# If we're in a dumb terminal then dont play fancy pants with our prompt
+if [[ $TERM == 'dumb' ]]; then
+	# Ensure we don't set preexec && precmd
+	unsetopt ZLE
+	unsetopt PROMPT_CR
+	unsetopt PROMPT_SUBST
+	return
+elif [[ $TERM == 'eterm-color' ]]; then
+	# unsetopt zle
+	unsetopt prompt_cr
+	unsetopt prompt_subst
+	PROMPT="[%y] %2~ $baseprompt "
+	return
+fi
+
+export VISUAL='vim' # Set default keyboard bindings to `viins'
+export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
+
+# shows a slightly different prompt for vicmd vs other ZLE command modes to let
+# you know what you are dealing with.
+autoload -Uz vcs_info
+precmd () { vcs_info }
+
+local -A _keymap_fg_indicator=([vicmd]=red [viopp]=yellow)
+PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}>>%f '
+
 # ── Modules and Completions ────────────────────────────────
 # Load and initialize the completion system ignoring insecure directories with a
 # cache time of 20 hours, so it should almost always regenerate the first time a
@@ -515,9 +500,9 @@ setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing i
 autoload -Uz compinit
 _comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-20))
 if (( $#_comp_files )); then
-  compinit -i -C
+	compinit -i -C
 else
-  compinit -i
+	compinit -i
 fi
 unset _comp_files
 
@@ -548,6 +533,16 @@ zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
 zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 setopt CASE_GLOB
 ## zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# Version control info (vcs_info)
+local base_vcs_style='%c%b%u%f'
+zstyle ':vcs_info:*' enable git hg # svn # cvs fossil bzr
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
+zstyle ':vcs_info:*' stagedstr '%F{028}'
+zstyle ':vcs_info:*' unstagedstr '*'
+zstyle ':vcs_info:*' formats " [$base_vcs_style]"
+zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select

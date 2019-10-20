@@ -4,33 +4,21 @@
 
 
 
-(defun add-semicolon-to-end-of-line ()
-    "Unsurprisingly, this adds a semicolon to the end of the line"
-    (interactive)
-    (save-excursion (end-of-line) (insert ";")))
-
-(defun org-path (file)
-        "Returns the full path of an org directory file"
-        (expand-file-name (concat org-directory "/" file)))
-
-(defun zv/define-keymap (mode-map keymap)
-  (mapc (lambda (binding)
-          (define-key mode-map (car binding) (cdr binding)))
-        keymap))
-
-(defun zv/declare-prefix-for-mode (mode prefix name)
-  "Declare a prefix PREFIX. MODE is the mode in which this prefix command should
-be added. PREFIX is a string describing a key sequence. NAME is a symbol name
-used as the prefix command."
-  (let ((command (intern (concat spacemacs/prefix-command-string name))))
-    (define-prefix-command command)
-    (evil-leader/set-key-for-mode mode prefix command)))
-
-(defun zv/enlarge-window-by-dominant-dimension (magnitude)
-  "Enlarge the current window by height if vertically split, or width otherwise"
+(defun zv/alter-window-by-dominant-dimension (magnitude)
+  "Alter the current window by height if vertically split, or width otherwise"
   (cond ((window-full-width-p) (enlarge-window magnitude))
         ((window-full-height-p) (enlarge-window-horizontally magnitude))
         (t (enlarge-window (/ magnitude 2)))))
+
+(defun zv/enlarge-window-by-dominant-dimension (&optional arg)
+  "Enlarge the current window by height if vertically split, or width otherwise"
+  (interactive "P")
+  (zv/alter-window-by-dominant-dimension (if (numberp arg) arg 10)))
+
+(defun zv/shrink-window-by-dominant-dimension (&optional arg)
+  "Shrink the current window by height if vertically split, or width otherwise"
+  (interactive "P")
+  (zv/alter-window-by-dominant-dimension (if (numberp arg) (* -1 arg) -10)))
 
 (defun zv/tile-split-window ()
   "If our current window width / height is greater than 1.68, split vertically"
@@ -41,13 +29,7 @@ used as the prefix command."
         (evil-window-vsplit)
       (evil-window-split))))
 
-(defun zv/join-up ()
-  "hacky way to join parent's lines"
-  (interactive)
-  (save-excursion
-    (progn
-      (previous-line 2)
-      (evil-join (point) (+ 1 (point))))))
+
 
 (defun zv/scroll-up-one-line ()
   (interactive)
@@ -56,6 +38,8 @@ used as the prefix command."
 (defun zv/scroll-down-one-line ()
   (interactive)
   (scroll-down-line 1))
+
+
 
 (defun zv/calculate-region (point mark)
   (interactive "r")
@@ -68,19 +52,6 @@ used as the prefix command."
 
 ;; Org Mode
 ;; --------
-
-(defun clever-insert-item ()
-  "Clever insertion of org item."
-  (if (not (org-in-item-p))
-      (insert "\n")
-    (org-insert-item)))
-
-(defun evil-org-eol-call (fun)
-  "Go to end of line and call provided function.
-FUN function callback"
-  (end-of-line)
-  (funcall fun)
-  (evil-append nil))
 
 ;; Sets an org-mode link's default text to be that of the page's title
 (defun zv/org-insert-link ()
@@ -104,12 +75,6 @@ FUN function callback"
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
 
 
-;; Restart `tern-mode`
-(defun delete-tern-process ()
-  (interactive)
-  (delete-process "Tern"))
-
-
 ;; advice functions for not showing dots
 (defun zv/whitelistedp ()
   (member (with-helm-buffer (buffer-name)) zv-whitelist))
@@ -128,6 +93,22 @@ FUN function callback"
       (apply fcn args)
     (advice-remove 'helm-file-completion-source-p
                    'zv/helm-file-completion-source-p)))
+
+
+
+(defun zv/search-parents-for-venv ()
+  "Traverses upwards from buffer, looking to activate a virtualenv"
+  (interactive)
+  (let* ((base-dir (locate-dominating-file
+                    buffer-file-name
+                    (lambda (file) (file-in-directory-p "pyvenv.cfg" file))))
+         (venv-dir (expand-file-name "venv" base-dir)))
+    (if (and (stringp venv-dir)
+             (file-exists-p (expand-file-name "venv/bin/activate" venv-dir)))
+        (progn
+          (pyvenv-activate venv-dir)
+          (message "Activated %s as virtualenv" venv-dir))
+      (user-error "Couldn't find a suitable venv"))))
 
 
 (defun sort-sexps-by-cadr (reverse beg end)
@@ -152,11 +133,11 @@ FUN function callback"
       (defalias fname
         `(lambda ()
            (interactive)
-           (let ((apath (expand-file-name ,path)))
+           (let (path)
              (cond
-              ((file-directory-p apath) (ido-find-file-in-dir apath))
-              ((file-readable-p apath) (find-file-existing apath))
-              (t (user-error "Couldn't open apath %s" apath))))))
+              ((file-directory-p ,path) (ido-find-file-in-dir ,path))
+              ((file-readable-p ,path) (find-file-existing ,path))
+              (t (user-error "Couldn't open path %s" ,path))))))
       (spacemacs/set-leader-keys key fname))
     (setq key (pop bindings)
           path (pop bindings))))

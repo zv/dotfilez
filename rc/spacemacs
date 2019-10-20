@@ -28,56 +28,75 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '("~/dotfilez/layers/")
    dotspacemacs-configuration-layers
    '((auto-completion :variables
-                      auto-completion-return-key-behavior 'nothing
-                      auto-completion-tab-key-behavior 'complete
-                      auto-completion-enable-sort-by-usage t
                       auto-completion-complete-with-key-sequence nil
                       auto-completion-enable-snippets-in-popup nil
-                      auto-completion-idle-delay 0.15
-                      auto-completion-complete-with-key-sequence-delay 0.1)
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-front-end 'company
+                      auto-completion-idle-delay 0.08
+                      auto-completion-return-key-behavior nil
+                      auto-completion-tab-key-behavior 'complete
+                      company-tooltip-limit 9
+                      auto-completion-use-company-box nil
+                      company-show-numbers t)
      asm
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
      cscope
+     docker
      ;; (erlang :variables
      ;;         erlang-root-dir "/usr/local/lib/erlang"
      ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
      emacs-lisp
-     (git
-      :variables magit-log-arguments ())
+     (git :variables
+          magit-log-arguments ())
      gtags
      graphviz
      helm
      html
-     ibuffer
-     javascript
+     (ibuffer :variables
+              ibuffer-group-buffers-by 'projects)
+     (javascript :variables
+                 ;; alternative: 'skewer
+                 javascript-repl 'nodejs)
      neotree
      node
      markdown
      org
-     python
+     (python :variables
+             ;; alternative: 'lsp
+             python-backend 'anaconda
+             ;; alternative: 'yapf
+             python-fill-column 100
+             python-format-on-save t
+             python-formatter 'yapf
+             python-sort-imports-on-save t
+             ;; alternative: 'nose
+             python-test-runner '(pytest))
      react
      restclient
      (rust :variables
            rust-enable-racer t)
-     (shell :variables shell-default-shell 'eshell
-            shell-protect-eshell-prompt t
-            shell-default-term-shell "/usr/bin/zsh")
+     (shell :variables
+            close-window-with-terminal t
+            shell-default-term-shell "/usr/bin/zsh"
+            shell-default-shell 'ansi-term)
      scheme
-     sql
+     (sql :variables
+          sql-capitalize-keywords t)
      shell-scripts
      syntax-checking
      systemd
-     typescript
-     vimscript
+     (typescript :variables
+                 ;; Until lsp is stable, use tide
+                 typescript-backend 'tide)
+     ;; vimscript
      version-control
      windows-scripts
      yaml
      zv)
 
-   dotspacemacs-additional-packages '(
-                                      yara-mode
+   dotspacemacs-additional-packages '(fish-mode
                                       ;; edts
                                       ;; (reason-mode
                                       ;;  :location (recipe
@@ -178,9 +197,8 @@ user code in there besides modifying the variable values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '(
-                                ;;(agenda . 10) (todos . 5)
-                                )
+   dotspacemacs-startup-lists '((agenda . 10)
+                                (todos . 10))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive nil
 
@@ -500,6 +518,7 @@ before packages are loaded."
    c-electric-mode t
 
    create-lockfiles nil ; Dont create .#FILES
+   css-indent-offset 2
 
    ;; Evil should move across more than one line
    evil-complete-next-func 'hippie-expand
@@ -513,7 +532,8 @@ before packages are loaded."
    helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
    helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
 
-   js2-basic-offset                 2
+   js-indent-level                  2
+   js2-basic-offset                 js-indent-level
    js2-include-browser-externs      t
    js2-include-node-externs         t
    js2-strict-missing-semi-warning  nil
@@ -528,6 +548,15 @@ before packages are loaded."
 
    ;; Dont show entire (long) line
    truncate-lines t
+
+   web-mode-markup-indent-offset  js2-basic-offset
+   web-mode-css-indent-offset     css-indent-offset
+   web-mode-code-indent-offset    js2-basic-offset
+   web-mode-attr-indent-offset    js2-basic-offset
+
+   web-mode-style-padding         css-indent-offset
+   web-mode-script-padding        css-indent-offset
+   web-mode-block-padding         css-indent-offset
 
    ;; Location of Intel's documentation for easy lookup.
    x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")

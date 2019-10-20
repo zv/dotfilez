@@ -51,6 +51,12 @@
 (spacemacs/set-leader-keys "orb" 'regexp-builder)
 
 
+;; Mode-specific leaders
+
+;;; Python
+(spacemacs/set-leader-keys-for-major-mode 'python-mode "ov" 'zv/search-parents-for-venv)
+
+
 ;; evil bindings
 (global-set-key (kbd "H-f") 'evil-window-right)
 (global-set-key (kbd "H-s") 'evil-window-left)
@@ -62,8 +68,6 @@
 
 (define-key evil-insert-state-map (kbd "C-y") 'yank)
 
-(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
-
 ;; (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
 (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
 (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
@@ -72,12 +76,10 @@
 (define-key evil-insert-state-map (kbd "C-h") 'backward-char)
 (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
 
-(global-set-key (kbd "H-w") (lambda ()
-                              (interactive)
-                              (zv/enlarge-window-by-dominant-dimension -7)))
-(global-set-key (kbd "H-r") (lambda ()
-                              (interactive)
-                              (zv/enlarge-window-by-dominant-dimension 7)))
+(global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
+(global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
+
+(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 
 ;; swap "{" with "[" & "}" with "]"
 (dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
@@ -115,45 +117,31 @@
 (use-package man
   :defer t
   :bind (:map Man-mode-map
-              (" " . scroll-up-command)
-              ("\177" . scroll-down-command)
-              ("}" . Man-next-section)
-              ("{" . Man-previous-section)
-              ("]" . evil-forward-paragraph)
-              ("[" . evil-backward-paragraph)
-              (">" . end-of-buffer)
-              ("<" . beginning-of-buffer)
-              ("." . beginning-of-buffer)
-              ("?" . evil-search-backward)
-              ("/" . evil-search-forward)
-              ("RET" . woman-follow)
+              ;; ("RET" . woman-follow)
+              ("}" . Man-next-manpage)
+              ("{" . Man-previous-manpage)
+              ("]" . Man-next-section)
+              ("[" . Man-previous-section)
+              ("?" . evil-ex-search-backward)
+              ("/" . evil-ex-search-forward)
+              ("n" . evil-ex-search-next)
+              ("N" . evil-ex-search-backward)
 
-              ("n" . evil-search-next)
-              ("p" . evil-search-previous)
-              ("M-n" . Man-next-section)
-              ("M-p" . Man-previous-section)
+              ("w" . evil-forward-word-begin)
+              ("W" . evil-forward-WORD-begin)
 
+              ("b" . evil-backward-word-begin)
+              ("B" . evil-backward-WORD-begin)
+
+              ("h" . evil-backward-char)
+              ("l" . evil-forward-char)
               ("k" . evil-previous-line)
               ("j" . evil-next-line)
 
               ("d" . scroll-up-command)
               ("u" . scroll-down-command)
-              ("q" . Man-kill)
               ("m" . man)))
 
-
-;; Elixir Configuration
-(defun zv/elixir-convert-def-to-block (&optional arg)
-  (interactive "P")
-  (re-search-forward "\\()?\\)\\s-*do\n\\s-*\\(.*\\)\n.*end" nil)
-  (replace-match "\\1, do: \\2"))
-
-(spacemacs|use-package-add-hook alchemist
-  :post-config
-  (progn
-    (spacemacs/declare-prefix-for-mode 'elixir-mode "mk" "quickfixes")
-    (spacemacs/set-leader-keys-for-major-mode 'elixir-mode "kd"
-      'zv/elixir-convert-def-to-block)))
 
 ;; Search
 (spacemacs|use-package-add-hook helm-ag
@@ -178,49 +166,19 @@
 
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
-  "0" 'evil-digit-argument-or-evil-beginning-of-line
   (kbd "M-h") 'Info-help   ; "h"
-  ;;"j" 'zv/scroll-up-one-line
-  ;;"k" 'zv/scroll-down-one-line
   "n" 'Info-search-next
   "/" 'Info-search
   "?" 'Info-search-backward
   "U" 'Info-up
-  "D" 'Info-directory
   "u" 'Info-scroll-down
   "d" 'Info-scroll-up
-  "p" 'evil-window-next ; "p"op out of info window
-  "V" 'evil-visual-line
   "\C-u" 'Info-scroll-down
   "\C-d" 'Info-scroll-up
   "\C-t" 'Info-history-back ; "l"
   "\C-o" 'Info-history-back
   "\C-]" 'Info-follow-nearest-node
-  ;; The following are for scroll up / scroll down keys
-  (kbd "<mouse-4>") 'Info-scroll-down
-  (kbd "<mouse-5>") 'Info-scroll-up
-  (kbd "DEL") 'Info-scroll-down)
-
-
-;; Python bindings
-(spacemacs|use-package-add-hook python
-  :post-config
-  (progn
-    ;; searches the current buffer's directory and parents up to "/" for a directory
-    ;; named "venv", activating it if it exists.
-    (defun search-parents-for-venv ()
-      (interactive)
-      (defun venv-search (test-dir)
-        (let ((venv-dir (expand-file-name (concat test-dir "/venv/"))))
-          (cond
-           ((string-equal test-dir "/") f)
-           ((file-directory-p venv-dir) (pyvenv-activate venv-dir))
-           (t (venv-search (file-name-directory (directory-file-name test-dir)))))))
-      (venv-search (directory-file-name buffer-file-name)))
-
-    ;; Set our custom keybindings
-    (spacemacs/set-leader-keys-for-major-mode 'python-mode
-      "mv" 'search-parents-for-venv)))
+  "\C-e" 'Info-edit-mode)
 
 
 (evil-define-key '(normal insert) 'quick-calculate-mode-map

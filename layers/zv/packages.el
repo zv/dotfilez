@@ -1,4 +1,5 @@
-(defvar zv-packages '(magit
+(defvar zv-packages '(company
+                      magit
                       (org :location built-in)
                       ;; (eshell :location built-in)
                       ;; edts
@@ -89,6 +90,17 @@
     (progn
       (evil-define-key 'treemacs treemacs-mode-map (kbd "h") #'treemacs-collapse-parent-node)
       (evil-define-key 'treemacs treemacs-mode-map (kbd "l") #'treemacs-RET-action))))
+
+(defun zv/post-init-company ()
+  (use-package company
+    :defer t
+    :config
+    ;; Allow the use of numbers 0..9 to select completion entries
+    (when company-show-numbers
+      (dolist (x (number-sequence 1 company-tooltip-limit))
+        (define-key company-active-map (format "%d" x)
+          `(lambda () (interactive) (company-complete-number ,x)))))))
+
 
 
 (defun zv/post-init-org ()

@@ -43,6 +43,8 @@ fi
 # Load our completion functions
 fpath=(
 	$HOME/.zsh/completion
+	$HOME/.zsh/zsh-completions/src
+	$HOME/.zsh/functions/
 	$fpath
 )
 

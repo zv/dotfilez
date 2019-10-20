@@ -4,6 +4,17 @@ DATADIR="$BASEDIR/data"
 
 set -euo pipefail
 
+fatal() {
+  local errno="$1";
+  shift
+  printf "FATAL: %s\n" "$*" 1>&2
+  exit "$errno"
+}
+
+msg() {
+  printf "%s\n" "$@"
+}
+
 usage() {
     cat << EOF
 Usage: ./$0
@@ -89,10 +100,33 @@ function select_setup() {
   function select_chsh() { 
     sudo lchsh -i zv 
   }
+  function select_vim_surround() {
+    local base_url="https://raw.githubusercontent.com/tpope/vim-surround/fab8621670f71637e9960003af28365129b1dfd0"
+    local dest="$HOME/.vim"
+    local -A checksums=(
+      [plugin/surround.vim]="0528119d1cc8627f9c0623ccc8b219d44a50f003d7e6ab6b73aa4de7"
+      [doc/surround.txt]="a5c957fcd16a8673b64985f7febf92a2a396955f4b69d0e9c32340b1"
+    )
 
-  local -a items=( "enable_fstrim" "chsh" )
-  select ts in "$items"; do
-    "select_$ts"
+    msg "Cloning surround.vim"
+    for file in "${!checksums[@]}"; do
+      local np="$dest/$file"
+      local cksum="${checksums[$file]}"
+      curl -s "$base_url/$file" > "$np"
+      if ! echo "$cksum $np" | sha224sum -c -; then
+        fatal 15 "Checksum of $np did not match $cksum"
+      fi
+    done
+
+    msg "Successfully cloned surround.vim to $dest"
+  }
+
+  local items=("enable_fstrim" "chsh" "vim_surround" "whatever")
+  select ts in "${items[@]}"; do
+    case $ts in
+      [qQ] | quit | exit | "" | " ") break ;;
+      *) "select_$ts";
+    esac
   done
   # TODO
   # install packages

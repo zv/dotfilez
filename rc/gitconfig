@@ -257,6 +257,8 @@
 	#
 	pr = pull --rebase
 
+	pro = !"git pull --rebase origin $(git symbolic-ref HEAD)"
+
 	# rebase - forward-port local commits to the updated upstream head.
 	rb = rebase
 
