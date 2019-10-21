@@ -37,18 +37,26 @@
                           "ofzp" zv//blog-posts-path)
 
 (spacemacs/declare-prefix "oo" "org-mode")
-(spacemacs/set-leader-keys "oopa" `(lambda ()
+(spacemacs/set-leader-keys "oopa" #'(lambda ()
                                     (interactive)
                                     (print "Automatic publishing enabled")
                                     (add-hook 'after-save-hook 'zv/auto-publish)))
-(spacemacs/set-leader-keys "oopr" `(lambda ()
+(spacemacs/set-leader-keys "oopr" #'(lambda ()
                                     (interactive)
                                     (print "Automatic publishing disabled")
                                     (remove-hook 'after-save-hook 'zv/auto-publish)))
+(spacemacs/declare-prefix "oe" "extensions")
+(spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
+(spacemacs/set-leader-keys "oeb" 'regexp-builder)
 
 (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
 (spacemacs/set-leader-keys "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
-(spacemacs/set-leader-keys "orb" 'regexp-builder)
+
+(spacemacs/declare-prefix "od" "documentation")
+(spacemacs/set-leader-keys "odm" 'helm-man-woman)
+(spacemacs/set-leader-keys "dm" 'man)
+
+(spacemacs/set-leader-keys "jk" 'avy-goto-char)
 
 
 ;; Mode-specific leaders
@@ -83,13 +91,11 @@
 
 ;; swap "{" with "[" & "}" with "]"
 (dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
-  (dolist (pair '(("[" . "{") ("]" . "}")))
-    (let* ((ka (car pair))
-           (kb (cdr pair))
-           (fa (lookup-key mode ka))
-           (fb (lookup-key mode kb)))
-      (define-key mode ka fb)
-      (define-key mode kb fa))))
+  (pcase-dolist (`(,ka . ,kb) '(("[" . "{") ("]" . "}")))
+    (let ((funa (lookup-key mode ka))
+          (funb (lookup-key mode kb)))
+      (define-key mode ka funb)
+      (define-key mode kb funa))))
 
 
 (use-package calendar
@@ -103,16 +109,6 @@
          ("}" . calendar-backward-month)
          ("0" . calendar-beginning-of-week)
          ("$" . calendar-end-of-week)))
-
-(spacemacs|use-package-add-hook neotree
-  :post-config
-  (progn
-    (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-    (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
-
-(evil-define-key 'motion speedbar-file-key-map
-  "l" 'speedbar-expand-line
-  "h" 'speedbar-contract-line)
 
 (use-package man
   :defer t

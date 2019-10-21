@@ -1,6 +1,7 @@
 (defvar zv-packages '(company
                       magit
                       (org :location built-in)
+                      neotree
                       ;; (eshell :location built-in)
                       ;; edts
                       flycheck
@@ -40,7 +41,6 @@
       (spacemacs/declare-prefix-for-mode 'scheme-mode "mh" "help/show")
       (spacemacs/declare-prefix-for-mode 'scheme-mode "ms" "repl")
       (spacemacs/declare-prefix-for-mode 'scheme-mode "mg" "goto")
-
       (spacemacs/set-leader-keys-for-major-mode 'erlang-mode
         "hs" 'erlang-show-syntactic-information
         "si" 'erlang-shell-display
@@ -90,6 +90,15 @@
     (progn
       (evil-define-key 'treemacs treemacs-mode-map (kbd "h") #'treemacs-collapse-parent-node)
       (evil-define-key 'treemacs treemacs-mode-map (kbd "l") #'treemacs-RET-action))))
+
+
+(defun zv/post-init-neotree ()
+  (use-package neotree
+    :config
+    (setq neo-theme 'arrow
+          neo-hidden-regexp-list '("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$"))
+    (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
+    (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
 
 (defun zv/post-init-company ()
   (use-package company
