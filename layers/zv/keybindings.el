@@ -110,43 +110,32 @@
          ("0" . calendar-beginning-of-week)
          ("$" . calendar-end-of-week)))
 
+
+; Man & WoMan
 (use-package man
   :defer t
   :bind (:map Man-mode-map
-              ;; ("RET" . woman-follow)
               ("}" . Man-next-manpage)
-              ("{" . Man-previous-manpage)
-              ("]" . Man-next-section)
-              ("[" . Man-previous-section)
-              ("?" . evil-ex-search-backward)
-              ("/" . evil-ex-search-forward)
-              ("n" . evil-ex-search-next)
-              ("N" . evil-ex-search-backward)
+              ("{" . Man-previous-manpage))
+  :config
+  (set-keymap-parent Man-mode-map zv/manpage-map))
 
-              ("w" . evil-forward-word-begin)
-              ("W" . evil-forward-WORD-begin)
-
-              ("b" . evil-backward-word-begin)
-              ("B" . evil-backward-WORD-begin)
-
-              ("h" . evil-backward-char)
-              ("l" . evil-forward-char)
-              ("k" . evil-previous-line)
-              ("j" . evil-next-line)
-
-              ("d" . scroll-up-command)
-              ("u" . scroll-down-command)
-              ("m" . man)))
+(use-package woman
+  :defer t
+  :bind (:map woman-mode-map
+              ("}" . WoMan-next-manpage)
+              ("{" . WoMan-previous-manpage)
+              ("m" . woman)))
 
 
 ;; Search
-(spacemacs|use-package-add-hook helm-ag
-  :post-config
-  (progn
-    (define-key helm-ag-map (kbd "<M-down>") 'helm-ag--next-file)
-    (define-key helm-ag-map (kbd "<M-up>") 'helm-ag--previous-file)
-    (define-key helm-ag-map (kbd "<XF86Forward>") 'helm-ag--next-file)
-    (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)))
+(use-package helm-ag
+  :defer t
+  :bind (:map helm-ag-map
+              ("<M-down>"      . helm-ag--next-file)
+              ("<M-up>"        . helm-ag--previous-file)
+              ("<XF86Forward>" . helm-ag--next-file)
+              ("<XF86Back>"    . helm-ag--previous-file)))
 
 
 ;; Set emacs as the initial state in a variety of modes
