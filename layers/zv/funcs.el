@@ -99,16 +99,13 @@
 (defun zv/search-parents-for-venv ()
   "Traverses upwards from buffer, looking to activate a virtualenv"
   (interactive)
-  (let* ((base-dir (locate-dominating-file
-                    buffer-file-name
-                    (lambda (file) (file-in-directory-p "pyvenv.cfg" file))))
-         (venv-dir (expand-file-name "venv" base-dir)))
-    (if (and (stringp venv-dir)
-             (file-exists-p (expand-file-name "venv/bin/activate" venv-dir)))
-        (progn
-          (pyvenv-activate venv-dir)
-          (message "Activated %s as virtualenv" venv-dir))
-      (user-error "Couldn't find a suitable venv"))))
+  (when-let* ((base-dir (locate-dominating-file
+                       buffer-file-name
+                       (lambda (dir) (file-expand-wildcards (concat dir "/*/bin/activate") t))))
+            (venv-dir (expand-file-name "venv" base-dir))
+            (version (s-match "version =.*" (f-read (expand-file-name "pyvenv.cfg" venv-dir)))))
+        (pyvenv-activate venv-dir)
+        (message "Found venv [`%s'] at %s packaged with python %s." pyvenv-virtual-env-name venv-dir version)))
 
 
 (defun sort-sexps-by-cadr (reverse beg end)
