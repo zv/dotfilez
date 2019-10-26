@@ -168,6 +168,9 @@
                 racket-describe-mode))
   (evil-set-initial-state mode 'emacs))
 
+;; Ensure that view mode's keybindings are respected
+(add-hook 'view-mode-hook 'evil-motion-state)
+
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
   (kbd "M-h") 'Info-help   ; "h"
