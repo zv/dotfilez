@@ -14,4 +14,9 @@
 
 (define-minor-mode quick-calculate-mode
   "Local minor mode for quickly evaluating mathematical expressions inline"
-  :keymap '())
+  :lighter "QCalc"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "M-r") 'calc-radix)
+            (define-key map (kbd "M-k") 'zv/calculate-expression)
+            (define-key map (kbd "C-;") 'helm-calcul-expression)
+            map))

@@ -1,14 +1,13 @@
 (defvar zv-packages '(company
                       magit
                       (org :location built-in)
+                      neotree
                       ;; (eshell :location built-in)
                       ;; edts
                       flycheck
                       ;; treemacs-evil
                       cpp
-                      (z3-mode :location (recipe
-                                          :fetcher github
-                                          :repo "zv/z3-mode"))))
+                      z3-mode))
 
 (defvar zv-excluded-packages '())
 
@@ -40,7 +39,6 @@
       (spacemacs/declare-prefix-for-mode 'scheme-mode "mh" "help/show")
       (spacemacs/declare-prefix-for-mode 'scheme-mode "ms" "repl")
       (spacemacs/declare-prefix-for-mode 'scheme-mode "mg" "goto")
-
       (spacemacs/set-leader-keys-for-major-mode 'erlang-mode
         "hs" 'erlang-show-syntactic-information
         "si" 'erlang-shell-display
@@ -91,6 +89,15 @@
       (evil-define-key 'treemacs treemacs-mode-map (kbd "h") #'treemacs-collapse-parent-node)
       (evil-define-key 'treemacs treemacs-mode-map (kbd "l") #'treemacs-RET-action))))
 
+
+(defun zv/post-init-neotree ()
+  (use-package neotree
+    :config
+    (setq neo-theme 'arrow
+          neo-hidden-regexp-list '("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$"))
+    (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
+    (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
+
 (defun zv/post-init-company ()
   (use-package company
     :defer t
@@ -111,10 +118,6 @@
                     org-default-notes-file (expand-file-name "notes.org" org-directory))
 
       (require 'org-protocol)
-
-      ;; Use our custom org link insertion code
-      (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
-
       (setq-default
        ;; Do not dim blocked tasks
        org-agenda-dim-blocked-tasks nil

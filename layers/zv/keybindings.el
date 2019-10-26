@@ -45,10 +45,18 @@
                                     (interactive)
                                     (print "Automatic publishing disabled")
                                     (remove-hook 'after-save-hook 'zv/auto-publish)))
+(spacemacs/declare-prefix "oe" "extensions")
+(spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
+(spacemacs/set-leader-keys "oeb" 'regexp-builder)
 
 (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
 (spacemacs/set-leader-keys "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
-(spacemacs/set-leader-keys "orb" 'regexp-builder)
+
+(spacemacs/declare-prefix "od" "documentation")
+(spacemacs/set-leader-keys "odm" 'helm-man-woman)
+(spacemacs/set-leader-keys "dm" 'man)
+
+(spacemacs/set-leader-keys "jk" 'avy-goto-char)
 
 
 ;; Mode-specific leaders
@@ -79,17 +87,15 @@
 (global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
 (global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
 
-(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
+;;(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 
 ;; swap "{" with "[" & "}" with "]"
 (dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
-  (dolist (pair '(("[" . "{") ("]" . "}")))
-    (let* ((ka (car pair))
-           (kb (cdr pair))
-           (fa (lookup-key mode ka))
-           (fb (lookup-key mode kb)))
-      (define-key mode ka fb)
-      (define-key mode kb fa))))
+  (pcase-dolist (`(,ka . ,kb) '(("[" . "{") ("]" . "}")))
+    (let ((funa (lookup-key mode ka))
+          (funb (lookup-key mode kb)))
+      (define-key mode ka funb)
+      (define-key mode kb funa))))
 
 
 (use-package calendar
@@ -104,53 +110,51 @@
          ("0" . calendar-beginning-of-week)
          ("$" . calendar-end-of-week)))
 
-(spacemacs|use-package-add-hook neotree
-  :post-config
-  (progn
-    (define-key neotree-mode-map "I" 'neotree-hidden-file-toggle)
-    (define-key evil-normal-state-map (kbd "C-\\") 'neotree-find)))
-
-(evil-define-key 'motion speedbar-file-key-map
-  "l" 'speedbar-expand-line
-  "h" 'speedbar-contract-line)
+
+; Man & WoMan
+(use-package woman
+  :bind (:map woman-mode-map
+              ("}" . WoMan-next-manpage)
+              ("{" . WoMan-previous-manpage)))
 
 (use-package man
-  :defer t
+  :init
+  (setq evil-lookup-func #'(lambda () (man (Man-default-man-entry))))
   :bind (:map Man-mode-map
-              ;; ("RET" . woman-follow)
               ("}" . Man-next-manpage)
               ("{" . Man-previous-manpage)
-              ("]" . Man-next-section)
-              ("[" . Man-previous-section)
-              ("?" . evil-ex-search-backward)
-              ("/" . evil-ex-search-forward)
-              ("n" . evil-ex-search-next)
-              ("N" . evil-ex-search-backward)
-
-              ("w" . evil-forward-word-begin)
-              ("W" . evil-forward-WORD-begin)
-
-              ("b" . evil-backward-word-begin)
-              ("B" . evil-backward-WORD-begin)
-
-              ("h" . evil-backward-char)
-              ("l" . evil-forward-char)
-              ("k" . evil-previous-line)
-              ("j" . evil-next-line)
-
-              ("d" . scroll-up-command)
               ("u" . scroll-down-command)
-              ("m" . man)))
+              ("]" . 'Man-next-section)
+              ("[" . 'Man-previous-section)
+              ("g" . 'Man-goto-section)
+              ("r" . 'Man-follow-manual-reference)
+              ("s" . 'Man-goto-see-also-section)
+              ("?" . 'evil-ex-search-backward)
+              ("/" . 'evil-ex-search-forward)
+              ("n" . 'evil-ex-search-next)
+              ("N" . 'evil-ex-search-backward)
+              ("w" . 'evil-forward-word-begin)
+              ("W" . 'evil-forward-WORD-begin)
+              ("b" . 'evil-backward-word-begin)
+              ("B" . 'evil-backward-WORD-begin)
+              ("h" . 'evil-backward-char)
+              ("l" . 'evil-forward-char)
+              ("k" . 'evil-previous-line)
+              ("j" . 'evil-next-line)
+              ("d" . 'scroll-up-command)
+              ("u" . 'scroll-down-command)
+              ("Q" . 'Man-kill)
+              ("q" . 'quit-window)))
 
 
 ;; Search
-(spacemacs|use-package-add-hook helm-ag
-  :post-config
-  (progn
-    (define-key helm-ag-map (kbd "<M-down>") 'helm-ag--next-file)
-    (define-key helm-ag-map (kbd "<M-up>") 'helm-ag--previous-file)
-    (define-key helm-ag-map (kbd "<XF86Forward>") 'helm-ag--next-file)
-    (define-key helm-ag-map (kbd "<XF86Back>") 'helm-ag--previous-file)))
+(use-package helm-ag
+  :defer t
+  :bind (:map helm-ag-map
+              ("<M-down>"      . helm-ag--next-file)
+              ("<M-up>"        . helm-ag--previous-file)
+              ("<XF86Forward>" . helm-ag--next-file)
+              ("<XF86Back>"    . helm-ag--previous-file)))
 
 
 ;; Set emacs as the initial state in a variety of modes
@@ -163,6 +167,9 @@
                 calendar-mode
                 racket-describe-mode))
   (evil-set-initial-state mode 'emacs))
+
+;; Ensure that view mode's keybindings are respected
+(add-hook 'view-mode-hook 'evil-motion-state)
 
 ;; Info Mode
 (evil-add-hjkl-bindings Info-mode-map 'emacs
@@ -179,12 +186,3 @@
   "\C-o" 'Info-history-back
   "\C-]" 'Info-follow-nearest-node
   "\C-e" 'Info-edit-mode)
-
-
-(evil-define-key '(normal insert) 'quick-calculate-mode-map
-  (kbd "M-r") 'calc-radix
-  (kbd "M-k") 'zv/calculate-line
-  (kbd "C-;") 'helm-calcul-expression)
-
-(evil-define-key 'visual quick-calculate-mode-map
-  (kbd "M-k") 'zv/calculate-region)

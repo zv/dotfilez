@@ -38,11 +38,12 @@ This function should only modify configuration layer settings."
                       company-tooltip-limit 9
                       auto-completion-use-company-box nil
                       company-show-numbers t)
-     asm
+     (asm :variables
+          ;; Location of Intel's documentation for easy lookup.
+          x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
-     cscope
      docker
      ;; (erlang :variables
      ;;         erlang-root-dir "/usr/local/lib/erlang"
@@ -50,31 +51,33 @@ This function should only modify configuration layer settings."
      emacs-lisp
      (git :variables
           magit-log-arguments ())
-     gtags
      graphviz
      helm
      html
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      (javascript :variables
+                 javascript-backend 'lsp
                  ;; alternative: 'skewer
                  javascript-repl 'nodejs)
+     (lsp :variables
+          lsp-doc-enable t)
      neotree
-     node
+     ;; node
      markdown
      org
      (python :variables
-             ;; alternative: 'lsp
-             python-backend 'anaconda
+             ;; alternative: 'anaconda
+             python-backend 'lsp
              ;; alternative: 'yapf
-             python-fill-column 100
+             python-fill-column 119
              python-format-on-save t
-             python-formatter 'yapf
-             python-sort-imports-on-save t
+             python-formatter 'lsp
+             python-lsp-server 'pyls
+             python-sort-imports-on-save nil
              ;; alternative: 'nose
-             python-test-runner '(pytest))
+             python-test-runner 'pytest)
      react
-     restclient
      (rust :variables
            rust-enable-racer t)
      (shell :variables
@@ -107,7 +110,13 @@ This function should only modify configuration layer settings."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode helm-xref evil-goggles golden-ratio fancy-battery)
-   dotspacemacs-delete-orphan-packages t
+   ;; Defines the behaviour of Spacemacs when installing packages.
+   ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
+   ;; `used-only' installs only explicitly used packages and deletes any unused
+   ;; packages as well as their unused dependencies. `used-but-keep-unused'
+   ;; installs only the used packages but won't delete unused ones. `all'
+   ;; installs *all* packages supported by Spacemacs and never uninstalls them.
+   ;; (default is `used-only')
    dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
@@ -121,10 +130,10 @@ user code in there besides modifying the variable values."
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
 
-   ;; File path pointing to emacs 27.1 executable compiled with support
-   ;; for the portable dumper (this is currently the branch pdumper).
-   ;; (default "emacs-27.0.50")
-   dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+   ;; Name of executable file pointing to emacs 27+. This executable must be
+   ;; in your PATH.
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
 
    ;; Name of the Spacemacs dump file. This is the file will be created by the
    ;; portable dumper in the cache directory under dumps sub-directory.
@@ -159,7 +168,7 @@ user code in there besides modifying the variable values."
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
    ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives nil
+   dotspacemacs-verify-spacelpa-archives t
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -201,6 +210,11 @@ user code in there besides modifying the variable values."
                                 (todos . 10))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive nil
+
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode nil
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
@@ -285,7 +299,7 @@ user code in there besides modifying the variable values."
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
-   dotspacemacs-large-file-size 1
+   dotspacemacs-large-file-size 5
 
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
@@ -321,7 +335,7 @@ user code in there besides modifying the variable values."
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar nil
+   dotspacemacs-loading-progress-bar t
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -335,6 +349,11 @@ user code in there besides modifying the variable values."
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
+
+   ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
+   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
+   ;; borderless fullscreen. (default nil)
+   dotspacemacs-undecorated-at-startup nil
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -375,7 +394,15 @@ user code in there besides modifying the variable values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative
+   dotspacemacs-line-numbers '(:relative t
+                                         :disabled-for-modes Info-mode
+                                         dired-mode
+                                         doc-view-mode
+                                         markdown-mode
+                                         org-mode
+                                         pdf-view-mode
+                                         text-mode
+                                         :size-limit-kb 2000)
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -386,7 +413,7 @@ user code in there besides modifying the variable values."
    dotspacemacs-smartparens-strict-mode nil
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis nil
 
@@ -432,7 +459,7 @@ user code in there besides modifying the variable values."
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "[%a] %I@%S"
+   dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -447,7 +474,12 @@ user code in there besides modifying the variable values."
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
-   dotspacemacs-zone-out-when-idle nil))
+   dotspacemacs-zone-out-when-idle nil
+
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs t))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -483,35 +515,52 @@ before packages are loaded."
   ;; Setup the directory where we're going to store backup, autosave & undo-tree
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
-  (let ((undo-basedir (file-name-as-directory XDG_CACHE_HOME)))
-    (setq
-     backup-by-copying nil    ; Copy the file, don't rename
-     vc-make-backup-files nil ; Don't bother making backups for files in VC
-     version-control t        ; use versioned backups
-     make-backup-files nil    ; Don't copy
+  ;; now create the associated directories
+  (if-let* ((undo-basedir spacemacs-cache-directory)
+            (zv-fetch-savedir (lambda (name)
+                                (if-let* ((path (file-name-as-directory
+                                                 (expand-file-name name undo-basedir)))
+                                          ((file-directory-p path))
+                                          ((message "Using %s for %s" path name)))
+                                    path
+                                  ;; This means we couldn't find the path, ask the user to create a directory
+                                  (when (y-or-n-p (format "Create new directory %s?" path))
+                                    (make-directory path)
+                                    (message "Created %s directory" name)
+                                    path))))
+            (auto-save-dir (funcall zv-fetch-savedir "emacs-autosave"))
+            (undo-tree-dir (funcall zv-fetch-savedir "emacs-undo-tree"))
+            (backups-dir (funcall zv-fetch-savedir "emacs-backups"))
+            (discard-dir temporary-file-directory))
+      (setq-default
+       backup-by-copying t    ; Copy the file, don't rename
+       make-backup-files nil   ; Don't copy
+       backup-directory-alist `(("\\`/tmp/.+" . ,discard-dir)
+                                (".*" . ,backups-dir))
+       vc-make-backup-files nil ; Don't bother making backups for files in VC
+       vc-follow-symlinks t
+       version-control t        ; use versioned backups
 
-     vc-follow-symlinks t
-     backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
+       auto-save-default t      ; auto-save every buffer that visits a file
+       auto-save-timeout 10     ; number of seconds idle time before auto-save
+       auto-save-interval 80   ; number of keystrokes between auto-saves
 
-     auto-save-default t      ; auto-save every buffer that visits a file
-     auto-save-timeout 30     ; number of seconds idle time before auto-save (default: 30)
-     auto-save-interval 300   ; number of keystrokes between auto-saves
-     auto-save-file-name-transforms  `((".*" ,(concat undo-basedir "autosave") t))
+       auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-dir t)
+                                         ("\\`/.+/.+"  ,auto-save-dir t))
 
-     undo-tree-visualizer-diff t
-     undo-tree-visualizer-timestamps t
-     undo-tree-auto-save-history t ; Automatically save our undo history.
-     undo-tree-history-directory-alist `((".*gpg" . "/tmp/")
-                                         (".*asc" . "/tmp/")
-                                         ("." . ,(concat undo-basedir "undo"))))
-
-    ;; now create the associated directories
-    (dolist (dir '("undo" "autosave" "backup"))
-      (unless (file-exists-p (concat undo-basedir dir))
-        (make-directory (concat undo-basedir dir)))))
+       ;; undo-tree-auto-save-history t ; Automatically save our undo history.
+       undo-limit           80000000
+       undo-strong-limit  1200000000
+       undo-tree-enable-undo-in-region  nil
+       undo-tree-auto-save-history      t
+       undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-dir)
+                                           (".+asc\\'" . ,discard-dir)
+                                           ("\\`/tmp/.+" . ,discard-dir)
+                                           (".+" . ,undo-tree-dir)))
+    (error "Undo directory creation failed."))
 
   (setq-default
-   abbrev-mode t
+   abbrev-mode nil
 
    c-basic-offset  4
    c-default-style "k&r"
@@ -528,6 +577,10 @@ before packages are loaded."
    ;; Time in seconds to hide the flycheck position tip after
    flycheck-pos-tip-timeout 10
 
+   global-eldoc-mode t
+
+   geiser-default-implementation 'guile
+
    helm-ff-file-name-history-use-recentf t
    helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
    helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
@@ -540,14 +593,15 @@ before packages are loaded."
 
    magit-repo-dirs '("~/Development/")
 
-   ;; Powerline default separator
-   powerline-default-separator nil
-
    ;; Use Gtags to generate
    projectile-tags-command "gtags %s"
 
+   tab-width 2
+
    ;; Dont show entire (long) line
    truncate-lines t
+
+   typescript-indent-level js-indent-level
 
    web-mode-markup-indent-offset  js2-basic-offset
    web-mode-css-indent-offset     css-indent-offset
@@ -556,18 +610,7 @@ before packages are loaded."
 
    web-mode-style-padding         css-indent-offset
    web-mode-script-padding        css-indent-offset
-   web-mode-block-padding         css-indent-offset
-
-   ;; Location of Intel's documentation for easy lookup.
-   x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
-
-  ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
-  (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
-  (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp)
-
-  ;; path keybinding
-  (spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
-  (spacemacs/set-leader-keys "jk" 'avy-goto-char))
+   web-mode-block-padding         css-indent-offset))
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -587,18 +630,25 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-inhibit-face-list nil)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
  '(company-selection-wrap-around t)
+ '(compilation-message-face (quote default))
  '(confirm-nonexistent-file-or-buffer nil)
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#657b83")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
  '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
  '(evil-want-Y-yank-to-eol nil)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
- '(geiser-default-implementation (quote guile))
- '(global-eldoc-mode t)
+ '(fci-rule-color "#eee8d5")
  '(gud-gdb-command-name "gdb -i=mi -nh")
  '(gud-tooltip-mode t)
  '(helm-ff-transformer-show-only-basename t)
+ '(helm-man-or-woman-function (quote Man-getpage-in-background))
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -622,6 +672,7 @@ This function is called at the very end of Spacemacs initialization."
  '(hl-fg-colors
    (quote
     ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(hl-paren-colors (quote ("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900")))
  '(hl-todo-keyword-faces
    (quote
     (("TODO" . "#dc752f")
@@ -650,8 +701,6 @@ This function is called at the very end of Spacemacs initialization."
         (mode . java-mode)
         (mode . idl-mode)
         (mode . lisp-mode)))))))
- '(js-indent-level 4)
- '(json-reformat:indent-width 2)
  '(magit-completing-read-function (quote magit-builtin-completing-read))
  '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
  '(neo-theme (quote arrow))
@@ -681,14 +730,14 @@ This function is called at the very end of Spacemacs initialization."
     (emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode)))
  '(paradox-github-token t)
  '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
+ '(pos-tip-background-color "#eee8d5")
+ '(pos-tip-foreground-color "#586e75")
  '(ring-bell-function (quote ignore))
  '(send-mail-function (quote smtpmail-send-it))
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(sp-escape-quotes-after-insert nil)
- '(tab-width 2)
  '(term-default-bg-color "#002b36")
  '(term-default-fg-color "#839496")
- '(typescript-indent-level 2)
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map
