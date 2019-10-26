@@ -59,22 +59,26 @@ This function should only modify configuration layer settings."
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      (javascript :variables
+                 javascript-backend 'lsp
                  ;; alternative: 'skewer
                  javascript-repl 'nodejs)
+     (lsp :variables
+          lsp-doc-enable t)
      neotree
      ;; node
      markdown
      org
      (python :variables
-             ;; alternative: 'lsp
-             python-backend 'anaconda
+             ;; alternative: 'anaconda
+             python-backend 'lsp
              ;; alternative: 'yapf
-             python-fill-column 100
+             python-fill-column 119
              python-format-on-save t
-             python-formatter 'yapf
-             python-sort-imports-on-save t
+             python-formatter 'lsp
+             python-lsp-server 'pyls
+             python-sort-imports-on-save nil
              ;; alternative: 'nose
-             python-test-runner '(pytest))
+             python-test-runner 'pytest)
      polyswarm
      react
      (rust :variables
@@ -466,7 +470,7 @@ user code in there besides modifying the variable values."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs t))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
