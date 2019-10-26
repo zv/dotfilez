@@ -112,20 +112,39 @@
 
 
 ; Man & WoMan
-(use-package man
-  :defer t
-  :bind (:map Man-mode-map
-              ("}" . Man-next-manpage)
-              ("{" . Man-previous-manpage))
-  :config
-  (set-keymap-parent Man-mode-map zv/manpage-map))
-
 (use-package woman
-  :defer t
   :bind (:map woman-mode-map
               ("}" . WoMan-next-manpage)
-              ("{" . WoMan-previous-manpage)
-              ("m" . woman)))
+              ("{" . WoMan-previous-manpage)))
+
+(use-package man
+  :init
+  (setq evil-lookup-func #'(lambda () (man (Man-default-man-entry))))
+  :bind (:map Man-mode-map
+              ("}" . Man-next-manpage)
+              ("{" . Man-previous-manpage)
+              ("u" . scroll-down-command)
+              ("]" . 'Man-next-section)
+              ("[" . 'Man-previous-section)
+              ("g" . 'Man-goto-section)
+              ("r" . 'Man-follow-manual-reference)
+              ("s" . 'Man-goto-see-also-section)
+              ("?" . 'evil-ex-search-backward)
+              ("/" . 'evil-ex-search-forward)
+              ("n" . 'evil-ex-search-next)
+              ("N" . 'evil-ex-search-backward)
+              ("w" . 'evil-forward-word-begin)
+              ("W" . 'evil-forward-WORD-begin)
+              ("b" . 'evil-backward-word-begin)
+              ("B" . 'evil-backward-WORD-begin)
+              ("h" . 'evil-backward-char)
+              ("l" . 'evil-forward-char)
+              ("k" . 'evil-previous-line)
+              ("j" . 'evil-next-line)
+              ("d" . 'scroll-up-command)
+              ("u" . 'scroll-down-command)
+              ("Q" . 'Man-kill)
+              ("q" . 'quit-window)))
 
 
 ;; Search
