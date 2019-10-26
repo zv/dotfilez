@@ -520,7 +520,7 @@ before packages are loaded."
             (discard-dir temporary-file-directory))
       (setq-default
        backup-by-copying t    ; Copy the file, don't rename
-       make-backup-files t    ; Don't copy
+       make-backup-files nil   ; Don't copy
        backup-directory-alist `(("\\`/tmp/.+" . ,discard-dir)
                                 (".*" . ,backups-dir))
        vc-make-backup-files nil ; Don't bother making backups for files in VC
