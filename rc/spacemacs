@@ -52,7 +52,6 @@ This function should only modify configuration layer settings."
      emacs-lisp
      (git :variables
           magit-log-arguments ())
-     gtags
      graphviz
      helm
      html
