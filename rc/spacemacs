@@ -582,11 +582,7 @@ before packages are loaded."
 
    web-mode-style-padding         css-indent-offset
    web-mode-script-padding        css-indent-offset
-   web-mode-block-padding         css-indent-offset)
-
-  ;; Various spacemacs functions filter out 'useless' buffers, make sure these are included
-  (push "\\*Messages\\*" spacemacs-useful-buffers-regexp)
-  (push ".+REPL\s-?\\*" spacemacs-useful-buffers-regexp))
+   web-mode-block-padding         css-indent-offset))
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
