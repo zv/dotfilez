@@ -7,9 +7,7 @@
                       flycheck
                       ;; treemacs-evil
                       cpp
-                      (z3-mode :location (recipe
-                                          :fetcher github
-                                          :repo "zv/z3-mode"))))
+                      z3-mode))
 
 (defvar zv-excluded-packages '())
 
@@ -120,10 +118,6 @@
                     org-default-notes-file (expand-file-name "notes.org" org-directory))
 
       (require 'org-protocol)
-
-      ;; Use our custom org link insertion code
-      (define-key org-mode-map "\C-c\C-l" 'zv/org-insert-link)
-
       (setq-default
        ;; Do not dim blocked tasks
        org-agenda-dim-blocked-tasks nil

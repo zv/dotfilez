@@ -1,9 +1,3 @@
-;; Empty the definition of some spacemacs init methods
-(defun spacemacs/goto-link-line ())
-(defun spacemacs//insert-banner ())
-
-
-
 (defun zv/alter-window-by-dominant-dimension (magnitude)
   "Alter the current window by height if vertically split, or width otherwise"
   (cond ((window-full-width-p) (enlarge-window magnitude))
@@ -30,69 +24,17 @@
       (evil-window-split))))
 
 
-
-(defun zv/scroll-up-one-line ()
-  (interactive)
-  (scroll-up-line 1))
-
-(defun zv/scroll-down-one-line ()
-  (interactive)
-  (scroll-down-line 1))
-
-
-
-(defun zv/calculate-region (point mark)
+(defun zv/calculate-expression (beginning end)
+  "Return the result of evaluating the current expression, if there is one"
   (interactive "r")
-  (message (calc-eval (buffer-substring point mark))))
-
-(defun zv/calculate-line ()
-  (interactive)
-  (message (calc-eval (buffer-substring (line-beginning-position) (line-end-position)))))
-
-
-;; Org Mode
-;; --------
-
-;; Sets an org-mode link's default text to be that of the page's title
-(defun zv/org-insert-link ()
-  "Insert org link where default description is set to html title."
-  (interactive)
-  (let* ((url (read-string "URL: "))
-         (title (zv//get-html-title-from-url url)))
-    (if title
-        (org-insert-link nil url title)
-      (org-insert-link))))
-
-(defun zv//get-html-title-from-url (url)
-  "Return content in <title> tag."
-  (let (x1 x2 (download-buffer (url-retrieve-synchronously url)))
-    (save-excursion
-      (set-buffer download-buffer)
-      (beginning-of-buffer)
-      (setq x1 (search-forward "<title>"))
-      (search-forward "</title>")
-      (setq x2 (search-backward "<"))
-      (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
-
-
-;; advice functions for not showing dots
-(defun zv/whitelistedp ()
-  (member (with-helm-buffer (buffer-name)) zv-whitelist))
-
-(defun zv/helm-ff-filter-candidate-one-by-one (fcn file)
-  (when (or (zv/whitelistedp)
-            (not (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)))
-    (funcall fcn file)))
-
-(defun zv/helm-file-completion-source-p (&rest args) t)
-
-(defun zv/helm-find-files-up-one-level (fcn &rest args)
-  (prog2
-      (advice-add 'helm-file-completion-source-p
-                  :around 'zv/helm-file-completion-source-p)
-      (apply fcn args)
-    (advice-remove 'helm-file-completion-source-p
-                   'zv/helm-file-completion-source-p)))
+  (message "Result: %s"
+           (kill-new
+            (calc-eval
+             ;; evaluate the expression inside the region selected.
+             (if (use-region-p)
+                 (buffer-substring-no-properties beginning end)
+               ;; if nothing's selected, use the line
+               (thing-at-point 'line t))))))
 
 
 
@@ -106,20 +48,6 @@
             (version (s-match "version =.*" (f-read (expand-file-name "pyvenv.cfg" venv-dir)))))
         (pyvenv-activate venv-dir)
         (message "Found venv [`%s'] at %s packaged with python %s." pyvenv-virtual-env-name venv-dir version)))
-
-
-(defun sort-sexps-by-cadr (reverse beg end)
-  "Sort by particular sexp field (in this casse, the cadr)"
-  (interactive "P\nr")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region beg end)
-      (goto-char (point-min))
-      (sort-subr nil
-                 'end-of-defun
-                 #'(lambda () nil)
-                 #'(lambda () (forward-symbol 1) nil)
-                 #'(lambda () (forward-symbol 1) nil)))))
 
 
 

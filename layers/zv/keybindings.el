@@ -87,7 +87,7 @@
 (global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
 (global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
 
-(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
+;;(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
 
 ;; swap "{" with "[" & "}" with "]"
 (dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
@@ -183,12 +183,3 @@
   "\C-o" 'Info-history-back
   "\C-]" 'Info-follow-nearest-node
   "\C-e" 'Info-edit-mode)
-
-
-(evil-define-key '(normal insert) 'quick-calculate-mode-map
-  (kbd "M-r") 'calc-radix
-  (kbd "M-k") 'zv/calculate-line
-  (kbd "C-;") 'helm-calcul-expression)
-
-(evil-define-key 'visual quick-calculate-mode-map
-  (kbd "M-k") 'zv/calculate-region)
