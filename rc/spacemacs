@@ -185,9 +185,6 @@ user code in there besides modifying the variable values."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
-   ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading t
-
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -506,30 +503,49 @@ before packages are loaded."
   ;; Setup the directory where we're going to store backup, autosave & undo-tree
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
-  (let ((undo-basedir (file-name-as-directory XDG_CACHE_HOME)))
-    (setq
-     backup-by-copying nil    ; Copy the file, don't rename
-     vc-make-backup-files nil ; Don't bother making backups for files in VC
-     version-control t        ; use versioned backups
-     make-backup-files nil    ; Don't copy
+  ;; now create the associated directories
+  (if-let* ((undo-basedir spacemacs-cache-directory)
+            (zv-fetch-savedir (lambda (name)
+                                (if-let* ((path (file-name-as-directory
+                                                 (expand-file-name name undo-basedir)))
+                                          ((file-directory-p path))
+                                          ((message "Using %s for %s" path name)))
+                                    path
+                                  ;; This means we couldn't find the path, ask the user to create a directory
+                                  (when (y-or-n-p (format "Create new directory %s?" path))
+                                    (make-directory path)
+                                    (message "Created %s directory" name)
+                                    path))))
+            (auto-save-dir (funcall zv-fetch-savedir "emacs-autosave"))
+            (undo-tree-dir (funcall zv-fetch-savedir "emacs-undo-tree"))
+            (backups-dir (funcall zv-fetch-savedir "emacs-backups"))
+            (discard-dir temporary-file-directory))
+      (setq-default
+       backup-by-copying t    ; Copy the file, don't rename
+       make-backup-files t    ; Don't copy
+       backup-directory-alist `(("\\`/tmp/.+" . ,discard-dir)
+                                (".*" . ,backups-dir))
+       vc-make-backup-files nil ; Don't bother making backups for files in VC
+       vc-follow-symlinks t
+       version-control t        ; use versioned backups
 
-     vc-follow-symlinks t
-     backup-directory-alist `((".*" . ,(concat undo-basedir "backup")))
+       auto-save-default t      ; auto-save every buffer that visits a file
+       auto-save-timeout 10     ; number of seconds idle time before auto-save
+       auto-save-interval 80   ; number of keystrokes between auto-saves
 
-     auto-save-default t      ; auto-save every buffer that visits a file
-     auto-save-timeout 60     ; number of seconds idle time before auto-save (default: 30)
-     auto-save-interval 600   ; number of keystrokes between auto-saves
-     auto-save-file-name-transforms  `((".*" ,(concat undo-basedir "autosave") t))
+       auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-dir t)
+                                         ("\\`/.+/.+"  ,auto-save-dir t))
 
-     ;; undo-tree-auto-save-history t ; Automatically save our undo history.
-     undo-tree-history-directory-alist `((".*gpg" . "/tmp/")
-                                         (".*asc" . "/tmp/")
-                                         ("." . ,(concat undo-basedir "undo"))))
-
-    ;; now create the associated directories
-    (dolist (dir '("undo" "autosave" "backup"))
-      (unless (file-exists-p (concat undo-basedir dir))
-        (make-directory (concat undo-basedir dir)))))
+       ;; undo-tree-auto-save-history t ; Automatically save our undo history.
+       undo-limit           80000000
+       undo-strong-limit  1200000000
+       undo-tree-enable-undo-in-region  nil
+       undo-tree-auto-save-history      t
+       undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-dir)
+                                           (".+asc\\'" . ,discard-dir)
+                                           ("\\`/tmp/.+" . ,discard-dir)
+                                           (".+" . ,undo-tree-dir)))
+    (error "Undo directory creation failed."))
 
   (setq-default
    abbrev-mode nil
