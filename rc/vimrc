@@ -6,121 +6,141 @@ if has('syntax') && !exists('g:syntax_on')
 	syntax enable
 endif
 
-" ------------ General Config ------------ {{{
-set autoread			" Reload files changed outside vim
-set backspace=indent,eol,start	" Allow backspace in insert mode
-set background=light		" a bright terminal
-set browsedir=buffer		" Open Dialog should default to current buffer
-set directory-=.		" No .swp/swo etc. in `cwd`
-set encoding=utf-8		" Yes, really
-set gcr=a:blinkon0		" Disable cursor blink
-set hidden			" Hidden Buffers
-set history=1000		" Store lots of :cmdline history
-set lazyredraw			" Lazy is as lazy does!
-set laststatus=2		" show recent status info
-set nolist			" show trailing whitespace
-set nrformats-=octal
-set number			" Line numbers are good:
-set pastetoggle=<F2>		" when in insert mode, press <F2> to go to paste mode
-set relativenumber		" Relative line numbers
-set ruler			" but where you are is better
-set selection=old		" Stop that annoying thing where vim selects the next line
-set shortmess=aIoO		" Show short messages, no intro.
-set showcmd			" Show incomplete cmds down the bottom
-set showmode			" Show current mode down the bottom
-set spelllang=en_us		" check my spelling
-set synmaxcol=511		" dont apply syntax coloring after the 512th column
-set ttimeout
-set ttimeoutlen=100
-set visualbell			" No sounds
-set switchbuf=useopen		" reveal already opened files from the
-" quickfix window instead of opening new
-" buffers
 
-" set our font to terminus
-if has('gui_running')
-	set guifont=Source\ Code\ Pro\ 14
-	set guioptions-=T
-	set guioptions-=m
-endif
+" ---------------- General Config ---------------- {{{
+set autochdir                   " set the working directory to always be the currently opened file
+set autoread                    " Reload files changed outside vim
+set backspace=indent,eol,start  " Allow backspace in insert mode
+set browsedir=buffer            " Open Dialog should default to current buffer
+set directory-=.                " No .swp/swo etc. in `cwd`
+set encoding=utf-8              " Yes, really
+set gcr=a:blinkon0              " Disable cursor blink
+set hidden                      " Hidden Buffers
+set history=10000               " Store lots of :cmdline history
+set laststatus=2                " show recent status info
+set lazyredraw                  " Lazy is as lazy does!
+set nolist                      " show trailing whitespace
+set nrformats-=octal            " don't use octal in Ctrl-A & Ctrl-X
+set number                      " Line numbers are good:
+set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode
+set relativenumber              " Relative line numbers
+set ruler                       " but where you are is better
+set scrolloff=3                 " How many lines should remain in scroll
+set selection=old               " Stop that annoying thing where vim selects the next line
+set shortmess=aIoO              " Show short messages, no intro.
+set showcmd                     " Show incomplete cmds down the bottom
+set showmode                    " Show current mode down the bottom
+set sidescroll=1                " Characters to 'sidescroll' by
+set sidescrolloff=15            " How many chars should remain in sidescrol
+set spelllang=en_us             " check my spelling
+set switchbuf=useopen           " reveal already opened files from the
+set synmaxcol=511               " dont apply syntax coloring after the 512th column
+set ttimeout                    " key combinations may timeout
+set ttimeoutlen=50              " key combo timeout
+set visualbell                  " no sounds
 
-" Allow color schemes to do bright colors without forcing bold.
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-	set t_Co=16
-endif
-
-colorscheme default
 "}}}
+" -------------------- Folds --------------------- {{{
+set foldenable		" enable fold by default
+set foldmethod=marker   " fold based on indent
+set foldnestmax=3	" deepest fold is 3 levels
 
-" ------------ Search Settings ------------ {{{
-"
-set incsearch		"Find the next match as we type the search
-set hlsearch		"Hilight searches by default
-set viminfo='100,f1  	"Save up to 100 marks, enable capital marks
-set smartcase		"Smart Case Search
-set ignorecase		"Ignore Case
 "}}}
+" ------------------ Completion ------------------ {{{
+" dont try to fetch includes
+set complete-=.,w,b,u,t
+set completeopt=menu,longest,menuone
+set pumheight=10
+set wildmenu  " Display candidate supplement.
+set wildignorecase
+set wildmode=longest,list,full
+set wildoptions=tagfile   " Can supplement a tag in a command-line.
 
+"}}}
+" --------------- Search Settings ---------------- {{{
+set incsearch           "Find the next match as we type the search
+set hlsearch            "Hilight searches by default
+set viminfo='100,f1     "Save up to 100 marks, enable capital marks
+set smartcase           "Smart Case Search
+set ignorecase          "Ignore Case
+set wildignore=.git/*,*/tmp/*,*.so,*.swp,*.zip,*.class,tags,*.jpg,
+               \*.ttf,*.TTF,*.png,*/target/*,*.tar.gz,
+               \.git,.svn,.hg,.DS_Store,*.svg,*.egg
+"}}}
+" ---------------- Indentation ------------------- {{{
+set autoindent       " copy previous line's indent
+set preserveindent   " preserve indent structure
+set copyindent       " newline copies existing line structure
+set list
+set nowrap           " Don't wrap lines
+set linebreak        " Wrap lines at convenient points
+set backspace=2
+set listchars=tab:»·,trail:·
+set fillchars=vert:│,fold:·
+set smarttab            " tab inserts tab when already tabbed!
+set expandtab           " insert tabs as spaces
+set smartindent         " indent intelligently
+set tabstop=4           " number of spaces a tab counts for
+set shiftwidth=4        " number of spaces to use for each step of (auto)indent
+set softtabstop=4       " number of spaces a tab counts for in edit operations.
+
+"}}}
 " ------------ Swap & Persistent Undo ------------ {{{
 set undofile
 set backup
 set noswapfile
 
-if has('win32') || has('win64')
-	let s:appdata=$LOCALAPPDATA . '/vim/'
-elseif has('win32unix') " cygwin's vim
-	let s:appdata="/tmp/vim"
-else
-	if empty($XDG_CACHE_HOME)
-		let s:appdata="/tmp/vim"
+function! s:create_backup_dirs() abort
+	if has('win32') || has('win64')
+		let l:appdata=fnamemodify($LOCALAPPDATA, ':p:h') . '/vim'
+	elseif has('win32unix') " cygwin's vim
+		let l:appdata="/tmp/vim"
 	else
-		let s:appdata=$XDG_CACHE_HOME . '/vim/'
+		if empty($XDG_CACHE_HOME)
+			let l:appdata="/tmp/vim"
+		else
+			let l:appdata=fnamemodify($XDG_CACHE_HOME, ':p:h') . '/vim'
+		endif
 	endif
+
+	let l:appdata=simplify(l:appdata)
+	let &backupdir=l:appdata . '/vim_backup/'
+	let &directory=l:appdata . '/vim_swap/'
+	let &undodir=l:appdata . '/vim_undo/'
+	let &backupskip=join([&backupskip, &backupdir], ',')
+
+	" Create those folders if they don't exist
+	for l:d in [&undodir, &backupdir, &directory]
+		if !isdirectory(l:d)
+			let l:result = confirm("Create " . l:d . " ?", "&Yes\n&No\n&Cancel", 1)
+			if result == 1
+				call mkdir(l:d, "p")
+				echom "Created " . l:d
+			elseif result == 2
+				echom "Did not create " . l:d
+			else " handle both cancel and interrupt
+				quit
+			endif
+		endif
+	endfor
+endfunction
+
+if has('gui_running')
+	autocmd GUIEnter * call s:create_backup_dirs()
+else
+	call s:create_backup_dirs()
 endif
 
-let s:appdata=simplify(s:appdata)
-let &backupdir=(s:appdata . 'backup')
-let &directory=(s:appdata . 'swap')
-let &undodir=(s:appdata . 'undo')
-let &backupskip=(&backupskip . ',' . &backupdir)
-
-" Create those folders if they don't exist
-for s:vddir in [&undodir, &backupdir, &directory]
-	let s:d = simplify(s:vddir)
-	if !isdirectory(s:d)
-		echom "Creating directory: " . (s:d)
-		call mkdir(s:d, "p")
-	endif
-endfor
 "}}}
-"
-
-" ------------  Ctags  ------------ {{{
+" -------------------  Ctags  -------------------- {{{
 if has('path_extra')
 	setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
 "}}}
-
-" ------------ Indentation ------------ {{{
-set autoindent		" copy previous line's indent
-set preserveindent 	" preserve indent structure
-set copyindent		" newline copies existing line structure
-set list
-set nowrap		" Don't wrap lines
-set linebreak		" Wrap lines at convenient points
-
-
-" set cindent		" start c lang indent mode
-set listchars=tab:»·,trail:·
-set expandtab		" insert tabs as spaces
-set smartindent		" intdent intelligently
-set smarttab		" tab inserts tab when already tabbed!
-
-set tabstop=2 shiftwidth=2 softtabstop=2	" actual tabs occupy 8 characters
-"}}}
-
-" ------------ Keybindings ------------ {{{
+" ----------------- Keybindings ------------------ {{{
 let mapleader=" "
+
+inoremap fd <ESC>
 
 " manipulate windows spacemacs-style
 nnoremap <silent> <leader>wh <C-w>h
@@ -132,22 +152,19 @@ nnoremap <silent> <leader>wL <C-w>L
 nnoremap <silent> <leader>wK <C-w>K
 nnoremap <silent> <leader>wJ <C-w>J
 
-function! DoMaximize()
-  let view = winheight(0) / str2float(&lines)
-  if (view < 0.80)
-    normal! _
-    normal! |
-  else
-    normal =
-  endif
-endfunction
+" Configure search
+if executable("rg")
+	set grepprg=rg\ --no-heading\ --vimgrep
+	set grepformat=%f:%l:%c:%m
+endif
 
-nnoremap <silent> <leader>wm :call DoMaximize()<CR>
+command -nargs=+ -complete=file -bar WindowGrep silent! grep! <args>|cwindow|redraw!
+nnoremap <leader>/ :WindowGrep<SPACE>
+nnoremap <leader>* :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " Create window splits easier.
 nnoremap <silent> <leader>wv <C-w>v
 nnoremap <silent> <leader>ws <C-w>s
-
 " basic spacemacs compatibility bindings
 nnoremap <silent> <leader>sc :nohlsearch<CR>
 nnoremap <silent> <leader>fs :w<CR>
@@ -156,93 +173,98 @@ nnoremap <leader>ad :cd %:p:h<cr>:Explore<cr>
 nnoremap <silent> <leader>bb :buffers<CR>
 nnoremap <silent> Q :q<CR>
 nnoremap <silent> <leader>fed :e ~/.vimrc<CR>
+
+function! CreateScratchBuffer()
+	new
+	setfiletype text
+	setlocal encoding=utf-8
+	setlocal buftype=nofile
+	setlocal bufhidden=hide
+	setlocal noswapfile
+	file scratch
+endfunction
+nnoremap <silent> <leader>bs :call CreateScratchBuffer()<CR>
+nnoremap <silent> <leader>bc :bunload<CR>
+nnoremap <silent> <leader>bx :bdelete<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
 nnoremap <silent> <leader>bn :bnext<CR>
+nnoremap <silent> <leader>bb :buffers<CR>
+nnoremap <silent> <leader>bl :tabedit %<CR>
+nnoremap <silent> <leader>bw :set modifiable!<CR>
+
+nnoremap <silent> <leader>lD :tabonly<CR>
+nnoremap <silent> <leader>ld :tabclose<CR>
+nnoremap <silent> <leader>ll :tabnew<CR>
 nnoremap <silent> <leader>tn :tabnext<CR>
 nnoremap <silent> <leader>tp :tabprev<CR>
+
 nnoremap <leader>ff :e<SPACE>
-nnoremap <leader>tw :set nolist!<CR>
-nnoremap <leader>tl :set nowrap!<CR>
-nnoremap <leader>ll :tabnew<CR>
-nnoremap <leader>ln :tabnext<CR>
-nnoremap <leader>lp :tabprev<CR>
-
-" map [ => { and ] => }
-augroup bracket_remap
-	autocmd BufReadPost * :silent! unmap <buffer> []
-	autocmd BufReadPost * :silent! unmap <buffer> ["
-	autocmd BufReadPost * :silent! unmap <buffer> [[
-	autocmd BufReadPost * :silent! unmap <buffer> ]]
-	autocmd BufReadPost * :silent! unmap <buffer> ]"
-	autocmd BufReadPost * :silent! unmap <buffer> ][
-augroup end
-
-nnoremap ] }
-vnoremap ] }
-nnoremap [ {
-vnoremap [ {
-nnoremap d[ d{
-nnoremap d] d}
+nnoremap <leader>fr :browse oldfiles<CR>
 
 nnoremap <leader>sp :set paste!<CR>
 
 nnoremap <silent> <leader>xdw :%s/\s\+$//e<CR>
 
 " Execute all VimL code highlighted.
-vnoremap <leader>er :<C-u>for line in getline("'<", "'>") \| execute line \| endfor<CR>
+au! FileType vim vnoremap <leader>er :@*<CR>
 
 " page manipulations
 nnoremap <silent> <CR> <C-f>
 nnoremap <silent> <Backspace> <C-b>
 
-" toggle tab expansion (ToggleTabs)
-nmap <leader>tt :set expandtab!<CR>:set expandtab?<CR>
-
+nnoremap <silent><leader>tw :set nolist!<CR>
+nmap <expr> <silent> <leader>tt ( &expandtab == 0 ? ":set\ expandtab\<CR>" : ":set\ noexpandtab\<CR>" )
 nnoremap <silent><leader>tn :set number!<CR>
 nnoremap <silent><leader>tr :set number!<CR>:set relativenumber!<CR>
 nnoremap <silent><leader>tl :set wrap!<CR>
 
-"}}}
+augroup swap_bracket_mapping
+	autocmd!
+	autocmd FileType * onoremap <silent><nowait><buffer> [ {
+	autocmd FileType * snoremap <silent><nowait><buffer> [ {
+	autocmd FileType * vnoremap <silent><nowait><buffer> [ {
+	autocmd FileType * nnoremap <silent><nowait><buffer> [ {
 
-" ------------ netrw config ------------ {{{
-let g:netrw_banner=0 	" disable banner
+	autocmd FileType * onoremap <silent><nowait><buffer> ] }
+	autocmd FileType * snoremap <silent><nowait><buffer> ] }
+	autocmd FileType * vnoremap <silent><nowait><buffer> ] }
+	autocmd FileType * nnoremap <silent><nowait><buffer> ] }
+augroup END
+
+" Map popup-menu keys to use C-k, C-j & C-l
+inoremap <expr> <C-j> pumvisible() ? '<Down>' : '<C-j>'
+inoremap <expr> <C-k> pumvisible() ? '<Up>' : '<C-k>'
+inoremap <expr> <C-l> pumvisible() ? '<CR>' : '<C-l>'
+
+
+"}}}
+" ----------------- NetRw Config ----------------- {{{
+let g:netrw_banner=0	" disable banner
 let g:netrw_liststyle=3 " tree-style listing
+let g:netrw_keepdir=1 "  change the current directory
 let g:netrw_preview=1	" preview a document w/ 'p'
 let g:netrw_winsize=25  " percentage for new win
-" let g:netrw_altv=1	" open to right
-"
-" let g:netrw_browse_split = 4
-"
-" augroup ProjectDrawer
-"   autocmd!
-"   autocmd VimEnter * :Vexplore
-" augroup END
-" "}}}
+" }}}
+" -------------------- Colors -------------------- {{{
 
-" ------------ Folds ------------ {{{
-set foldenable		" dont fold by default
-set foldmethod=marker   " fold based on indent
-set foldnestmax=3	" deepest fold is 3 levels
-"}}}
+" set our font to terminus
+if has('gui_running')
+	if !has('win32') || !has('win64')
+		set guifont=Source\ Code\ Pro\ 10
+	endif
+	set guioptions+=P
+	for opt in split('dmMgtTrRlLb', '\Z')
+		exec 'set guioptions-=' . opt
+	endfor
+	set showtabline=0      " Hide tabline
+endif
 
-" ------------ Completion ------------ {{{
-" dont try to fetch includes
-set complete-=i
-set completeopt=longest,menuone
-set pumheight=35
+" Allow color schemes to do bright colors without forcing bold.
+if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
+	set t_Co=16
+endif
 
-" Display candidate supplement.
-set wildmenu
-set wildmode=longest,list,full
-
-" Can supplement a tag in a command-line.
-set wildoptions=tagfile
-"}}}
-
-" ------------ Scrolling ------------ {{{
-set scrolloff=3		"Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
-set sidescroll=1
-"}}}
+colorscheme desert
+" }}}
 
 " vim:set ft=vim noet sw=8 ts=8 sts=0:
