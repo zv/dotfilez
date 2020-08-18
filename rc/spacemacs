@@ -490,7 +490,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
+dump."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -498,105 +499,94 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
   ;; Setup the directory where we're going to store backup, autosave & undo-tree
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
   ;; now create the associated directories
-  (if-let* ((undo-basedir spacemacs-cache-directory)
-            (zv-fetch-savedir (lambda (name)
-                                (if-let* ((path (file-name-as-directory
-                                                 (expand-file-name name undo-basedir)))
-                                          ((file-directory-p path))
-                                          ((message "Using %s for %s" path name)))
-                                    path
-                                  ;; This means we couldn't find the path, ask the user to create a directory
-                                  (when (y-or-n-p (format "Create new directory %s?" path))
-                                    (make-directory path)
-                                    (message "Created %s directory" name)
-                                    path))))
-            (auto-save-dir (funcall zv-fetch-savedir "emacs-autosave"))
-            (undo-tree-dir (funcall zv-fetch-savedir "emacs-undo-tree"))
-            (backups-dir (funcall zv-fetch-savedir "emacs-backups"))
-            (discard-dir temporary-file-directory))
-      (setq-default
-       backup-by-copying t    ; Copy the file, don't rename
-       make-backup-files nil   ; Don't copy
-       backup-directory-alist `(("\\`/tmp/.+" . ,discard-dir)
-                                (".*" . ,backups-dir))
-       vc-make-backup-files nil ; Don't bother making backups for files in VC
-       vc-follow-symlinks t
-       version-control t        ; use versioned backups
+  (let* ((undo-base-dir (file-name-as-directory (expand-file-name ".emacs/" temporary-file-directory)))
+         (save-dirs (seq-map
+                     (lambda (f) (file-name-as-directory (expand-file-name f undo-base-dir)))
+                     '("autosave/" "undo/" "backups/" "discard/")))
+         (missing (seq-remove #'file-directory-p save-dirs)))
+    (when (= (length missing) ;; don't set any options if we haven't created all the directories
+             (map-y-or-n-p "Create %s?" (lambda (path) (progn (make-directory path t) path)) missing))
+      (seq-let (auto-save-directory undo-tree-directory backups-directory discard-directory) save-dirs
+        (setq-default backup-by-copying t    ; Copy the file, don't rename
+                      make-backup-files nil  ; Don't copy
+                      backup-directory-alist `(("\\`/tmp/.+" . ,discard-directory)
+                                               (".*" . ,backups-directory))
+                      vc-make-backup-files nil ; Don't bother making backups for files in VC
+                      vc-follow-symlinks t
+                      version-control t        ; use versioned backups
+                      auto-save-default t     ; auto-save every buffer that visits a file
+                      auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
+                      auto-save-interval 400   ; number of keystrokes between auto-saves
+                      auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-directory t)
+                                                        ;; always auto-save TRAMP files to dist
+                                                        (".*"  ,auto-save-directory t))
+                      undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
+                      undo-tree-enable-undo-in-region  nil
+                      undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-directory)
+                                                          (".+asc\\'" . ,discard-directory)
+                                                          ("\\`/tmp/.+" . ,discard-directory)
+                                                          (".*" . ,undo-tree-directory))))))
 
-       auto-save-default t      ; auto-save every buffer that visits a file
-       auto-save-timeout 10     ; number of seconds idle time before auto-save
-       auto-save-interval 80   ; number of keystrokes between auto-saves
+  (add-to-list 'auto-mode-alist '("\\.nse\\'" . lua-mode))
+  (setq-default abbrev-mode nil
 
-       auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-dir t)
-                                         ("\\`/.+/.+"  ,auto-save-dir t))
+                c-basic-offset  4
+                c-default-style "k&r"
+                c-electric-mode t
 
-       ;; undo-tree-auto-save-history t ; Automatically save our undo history.
-       undo-limit           80000000
-       undo-strong-limit  1200000000
-       undo-tree-enable-undo-in-region  nil
-       undo-tree-auto-save-history      t
-       undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-dir)
-                                           (".+asc\\'" . ,discard-dir)
-                                           ("\\`/tmp/.+" . ,discard-dir)
-                                           (".+" . ,undo-tree-dir)))
-    (error "Undo directory creation failed."))
+                create-lockfiles nil ; Dont create .#FILES
+                css-indent-offset 2
 
-  (setq-default
-   abbrev-mode nil
+                ;; Evil should move across more than one line
+                evil-complete-next-func 'hippie-expand
+                evil-cross-lines t
+                evil-escape-delay 0.2
 
-   c-basic-offset  4
-   c-default-style "k&r"
-   c-electric-mode t
+                ;; Time in seconds to hide the flycheck position tip after
+                flycheck-pos-tip-timeout 10
 
-   create-lockfiles nil ; Dont create .#FILES
-   css-indent-offset 2
+                global-eldoc-mode t
 
-   ;; Evil should move across more than one line
-   evil-complete-next-func 'hippie-expand
-   evil-cross-lines t
-   evil-escape-delay 0.2
+                geiser-default-implementation 'guile
 
-   ;; Time in seconds to hide the flycheck position tip after
-   flycheck-pos-tip-timeout 10
+                helm-ff-file-name-history-use-recentf t
+                helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+                helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
 
-   global-eldoc-mode t
+                js-indent-level                  2
+                js2-basic-offset                 js-indent-level
+                js2-include-browser-externs      t
+                js2-include-node-externs         t
+                js2-strict-missing-semi-warning  nil
 
-   geiser-default-implementation 'guile
+                kill-ring-max 256
 
-   helm-ff-file-name-history-use-recentf t
-   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+                magit-repo-dirs '("~/Development/")
 
-   js-indent-level                  2
-   js2-basic-offset                 js-indent-level
-   js2-include-browser-externs      t
-   js2-include-node-externs         t
-   js2-strict-missing-semi-warning  nil
+                ;; Use Gtags to generate
+                projectile-tags-command "gtags %s"
 
-   magit-repo-dirs '("~/Development/")
+                tab-width 2
 
-   ;; Use Gtags to generate
-   projectile-tags-command "gtags %s"
+                ;; Dont show entire (long) line
+                truncate-lines t
 
-   tab-width 2
+                typescript-indent-level js-indent-level
 
-   ;; Dont show entire (long) line
-   truncate-lines t
+                web-mode-markup-indent-offset  js2-basic-offset
+                web-mode-css-indent-offset     css-indent-offset
+                web-mode-code-indent-offset    js2-basic-offset
+                web-mode-attr-indent-offset    js2-basic-offset
 
-   typescript-indent-level js-indent-level
+                web-mode-style-padding         css-indent-offset
+                web-mode-script-padding        css-indent-offset
+                web-mode-block-padding         css-indent-offset))
 
-   web-mode-markup-indent-offset  js2-basic-offset
-   web-mode-css-indent-offset     css-indent-offset
-   web-mode-code-indent-offset    js2-basic-offset
-   web-mode-attr-indent-offset    js2-basic-offset
-
-   web-mode-style-padding         css-indent-offset
-   web-mode-script-padding        css-indent-offset
-   web-mode-block-padding         css-indent-offset))
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -608,154 +598,47 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ac-ispell-requires 4 t)
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
- '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
+   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
  '(company-selection-wrap-around t)
- '(compilation-message-face (quote default))
  '(confirm-nonexistent-file-or-buffer nil)
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#657b83")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
  '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
  '(evil-want-Y-yank-to-eol nil)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
- '(fci-rule-color "#eee8d5")
  '(gud-gdb-command-name "gdb -i=mi -nh")
- '(gud-tooltip-mode t)
- '(helm-ff-transformer-show-only-basename t)
- '(helm-man-or-woman-function (quote Man-getpage-in-background))
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#002b36" 0.25)
-    (quote
-     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
- '(highlight-symbol-foreground-color "#93a1a1")
- '(highlight-tail-colors
-   (quote
-    (("#073642" . 0)
-     ("#546E00" . 20)
-     ("#00736F" . 30)
-     ("#00629D" . 50)
-     ("#7B6000" . 60)
-     ("#8B2C02" . 70)
-     ("#93115C" . 85)
-     ("#073642" . 100))))
- '(hl-bg-colors
-   (quote
-    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
- '(hl-fg-colors
-   (quote
-    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
- '(hl-paren-colors (quote ("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900")))
+ '(helm-man-or-woman-function 'Man-getpage-in-background)
  '(hl-todo-keyword-faces
-   (quote
-    (("TODO" . "#dc752f")
+   '(("TODO" . "#dc752f")
      ("NEXT" . "#dc752f")
      ("THEM" . "#2d9574")
-     ("PROG" . "#4f97d7")
-     ("OKAY" . "#4f97d7")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
      ("DONT" . "#f2241f")
      ("FAIL" . "#f2241f")
-     ("DONE" . "#86dc2f")
+     ("DONE" . "#42ae2c")
      ("NOTE" . "#b1951d")
      ("KLUDGE" . "#b1951d")
      ("HACK" . "#b1951d")
      ("TEMP" . "#b1951d")
      ("FIXME" . "#dc752f")
-     ("XXX" . "#dc752f")
-     ("XXXX" . "#dc752f"))))
- '(ibuffer-saved-filter-groups nil)
- '(ibuffer-saved-filters
-   (quote
-    (("programming"
-      ((or
-        (mode . emacs-lisp-mode)
-        (mode . cperl-mode)
-        (mode . c-mode)
-        (mode . java-mode)
-        (mode . idl-mode)
-        (mode . lisp-mode)))))))
- '(magit-completing-read-function (quote magit-builtin-completing-read))
- '(nrepl-message-colors
-   (quote
-    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
- '(org-html-text-markup-alist
-   (quote
-    ((bold . "<b>%s</b>")
-     (code . "<code>%s</code>")
-     (italic . "<i>%s</i>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<span class=\"verbatim\">%s</span>"))))
- '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f")))
  '(org-refile-targets
-   (quote
-    ((org-agenda-files :maxlevel . 1)
-     (org-default-notes-file :maxlevel . 2))))
+   '((org-agenda-files :maxlevel . 1)
+     (org-default-notes-file :maxlevel . 2)))
  '(package-selected-packages
-   (quote
-    (coffee-mode paradox spinner z3-mode yasnippet-snippets yapfify yaml-mode xterm-color x86-lookup ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vimrc-mode vi-tilde-fringe uuidgen use-package toml-mode toc-org tide tagedit systemd symon string-inflection sql-indent spaceline-all-the-icons solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restclient-helm restart-emacs rainbow-delimiters racket-mode racer pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator overseer org-present org-mime org-download org-bullets open-junk-file ob-restclient ob-http ob-elixir neotree nasm-mode nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gtags helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag graphviz-dot-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md ggtags geiser fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-mix flycheck-credo flycheck-bashate flx-ido fish-mode fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word dactyl-mode cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-rtags company-restclient company-c-headers company-anaconda column-enforce-mode clean-aindent-mode clang-format centered-cursor-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell)))
+   '(yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toml-mode toc-org tide terminal-here tagedit systemd symon symbol-overlay string-inflection sqlup-mode sql-indent spaceline-all-the-icons solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racer pytest pyenv-mode py-isort prettier-js powershell posframe popwin pippel pipenv pip-requirements pcre2el password-generator paradox overseer org-projectile org-present org-mime org-download org-cliplink org-bullets open-junk-file nodejs-repl nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-section magit-gitflow macrostep lsp-ui lsp-python-ms lorem-ipsum livid-mode live-py-mode link-hint json-navigator js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode ibuffer-projectile hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gh-md fuzzy font-lock+ flycheck-ycmd flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-package flycheck-elsa flycheck-bashate flx-ido fish-mode eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode dockerfile-mode docker disaster diminish devdocs define-word dap-mode cython-mode cpp-auto-include company-ycmd company-web company-statistics company-shell company-rtags company-c-headers company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode ccls cargo browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
  '(page-break-lines-modes
-   (quote
-    (emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode)))
+   '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
  '(paradox-github-token t)
- '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
- '(pos-tip-background-color "#eee8d5")
- '(pos-tip-foreground-color "#586e75")
- '(ring-bell-function (quote ignore))
- '(send-mail-function (quote smtpmail-send-it))
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
- '(sp-escape-quotes-after-insert nil)
- '(term-default-bg-color "#002b36")
- '(term-default-fg-color "#839496")
- '(vc-annotate-background nil)
- '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#dc322f")
-     (40 . "#c8805d801780")
-     (60 . "#bec073400bc0")
-     (80 . "#b58900")
-     (100 . "#a5008e550000")
-     (120 . "#9d0091000000")
-     (140 . "#950093aa0000")
-     (160 . "#8d0096550000")
-     (180 . "#859900")
-     (200 . "#66aa9baa32aa")
-     (220 . "#57809d004c00")
-     (240 . "#48559e556555")
-     (260 . "#392a9faa7eaa")
-     (280 . "#2aa198")
-     (300 . "#28669833af33")
-     (320 . "#279993ccbacc")
-     (340 . "#26cc8f66c666")
-     (360 . "#268bd2"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (quote
-    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
- '(xterm-color-names
-   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
- '(xterm-color-names-bright
-   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
+ '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
+ '(ring-bell-function 'ignore))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(helm-ff-file-extension ((t nil))))
 )
