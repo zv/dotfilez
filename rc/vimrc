@@ -8,7 +8,7 @@ endif
 
 
 " ---------------- General Config ---------------- {{{
-set autochdir                   " set the working directory to always be the currently opened file
+" set autochdir                   " set the working directory to always be the currently opened file
 set autoread                    " Reload files changed outside vim
 set backspace=indent,eol,start  " Allow backspace in insert mode
 set browsedir=buffer            " Open Dialog should default to current buffer
@@ -22,7 +22,7 @@ set lazyredraw                  " Lazy is as lazy does!
 set nolist                      " show trailing whitespace
 set nrformats-=octal            " don't use octal in Ctrl-A & Ctrl-X
 set number                      " Line numbers are good:
-set pastetoggle=<F2>            " when in insert mode, press <F2> to go to paste mode
+set pastetoggle=<SPACE>tp       " when in insert mode, press <F2> to go to paste mode
 set relativenumber              " Relative line numbers
 set ruler                       " but where you are is better
 set scrolloff=3                 " How many lines should remain in scroll
@@ -63,9 +63,7 @@ set hlsearch            "Hilight searches by default
 set viminfo='100,f1     "Save up to 100 marks, enable capital marks
 set smartcase           "Smart Case Search
 set ignorecase          "Ignore Case
-set wildignore=.git/*,*/tmp/*,*.so,*.swp,*.zip,*.class,tags,*.jpg,
-               \*.ttf,*.TTF,*.png,*/target/*,*.tar.gz,
-               \.git,.svn,.hg,.DS_Store,*.svg,*.egg
+set wildignore=*.so,*.swp,*.zip,*.class,*.jpg,*.ttf,*.TTF,*.png,*.tar.gz
 "}}}
 " ---------------- Indentation ------------------- {{{
 set autoindent       " copy previous line's indent
@@ -90,27 +88,23 @@ set undofile
 set backup
 set noswapfile
 
-function! s:create_backup_dirs() abort
+function! s:get_appdata() abort
 	if has('win32') || has('win64')
-		let l:appdata=fnamemodify($LOCALAPPDATA, ':p:h') . '/vim'
-	elseif has('win32unix') " cygwin's vim
-		let l:appdata="/tmp/vim"
+		return simplify(printf("%s\\%s", fnamemodify(get(environ(), "LOCALAPPDATA", $APPDATA), ':p:h'), "vim"))
 	else
-		if empty($XDG_CACHE_HOME)
-			let l:appdata="/tmp/vim"
-		else
-			let l:appdata=fnamemodify($XDG_CACHE_HOME, ':p:h') . '/vim'
-		endif
+		return simplify(printf("%s/%s", fnamemodify(get(environ(), "XDG_CACHE_HOME", "~/.cache"), ':p:h'), "vim"))
 	endif
+endfunction
 
-	let l:appdata=simplify(l:appdata)
-	let &backupdir=l:appdata . '/vim_backup/'
-	let &directory=l:appdata . '/vim_swap/'
-	let &undodir=l:appdata . '/vim_undo/'
+function! s:create_backup_dirs() abort
+	let l:appdata = s:get_appdata()
+	let &backupdir=l:appdata . '/backup'
+	" let &directory=l:appdata . '/vim_swap'
+	let &undodir=l:appdata . '/undo'
 	let &backupskip=join([&backupskip, &backupdir], ',')
 
 	" Create those folders if they don't exist
-	for l:d in [&undodir, &backupdir, &directory]
+	for l:d in [&undodir]
 		if !isdirectory(l:d)
 			let l:result = confirm("Create " . l:d . " ?", "&Yes\n&No\n&Cancel", 1)
 			if result == 1
@@ -195,8 +189,8 @@ nnoremap <silent> <leader>bw :set modifiable!<CR>
 nnoremap <silent> <leader>lD :tabonly<CR>
 nnoremap <silent> <leader>ld :tabclose<CR>
 nnoremap <silent> <leader>ll :tabnew<CR>
-nnoremap <silent> <leader>tn :tabnext<CR>
-nnoremap <silent> <leader>tp :tabprev<CR>
+nnoremap <silent> <leader>ln :tabnext<CR>
+nnoremap <silent> <leader>lp :tabprev<CR>
 
 nnoremap <leader>ff :e<SPACE>
 nnoremap <leader>fr :browse oldfiles<CR>
@@ -252,11 +246,10 @@ if has('gui_running')
 	if !has('win32') || !has('win64')
 		set guifont=Source\ Code\ Pro\ 10
 	endif
-	set guioptions+=P
-	for opt in split('dmMgtTrRlLb', '\Z')
+	set guioptions+=Ped
+	for opt in split('mMgtTrRlLb', '\Z')
 		exec 'set guioptions-=' . opt
 	endfor
-	set showtabline=0      " Hide tabline
 endif
 
 " Allow color schemes to do bright colors without forcing bold.
