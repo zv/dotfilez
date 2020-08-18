@@ -105,9 +105,8 @@
     ;; Allow the use of numbers 0..9 to select completion entries
     (when company-show-numbers
       (dolist (x (number-sequence 1 company-tooltip-limit))
-        (define-key company-active-map (format "%d" x)
+        (define-key company-active-map (format "C-%d" x)
           `(lambda () (interactive) (company-complete-number ,x)))))))
-
 
 
 (defun zv/post-init-org ()
