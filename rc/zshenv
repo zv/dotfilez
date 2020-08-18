@@ -23,8 +23,6 @@ export EDITOR='vim'
 # Environment
 export GREP_COLORS="37;45"
 
-# Ensure path arrays do not contain duplicates.
-typeset -gU fpath mailpath path cdpath
 
 # Paths
 path=(
@@ -45,7 +43,7 @@ fi
 fpath=(
 	$HOME/.zsh/completion
 	$HOME/.zsh/zsh-completions/src
-	$HOME/.zsh/functions/
+	$HOME/.zsh/functions
 	$fpath
 )
 

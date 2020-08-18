@@ -736,19 +736,20 @@ bindkey -M vicmd "?" vi-history-search-forward
 bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
-bindkey -M viins -s '\ep' "!!- "
-bindkey -M viins '\e^p' insert-last-word
+
+autoload smart-insert-last-word
+zle -N smart-insert-last-word
+# bind alt-p to cycle through the last argument of the previous line
+bindkey -M viins '\ep' smart-insert-last-word
 
 # EZKeys
-bindkey -s '\eu' "..\n"
-bindkey -s '\es' "$HOME/"
-bindkey -s '\e^p' "$HOME/Development/"
-
+# bindkey -s '\eu' "..\n"
+# bindkey -s '\es' "$HOME/"
+# bindkey -s '\e^p' "$HOME/Development/"
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' find-history-backwards # up-line-or-search
 bindkey '^[[B' find-history-forwards  # down-line-or-search
-bindkey ' ' magic-space    # also do history expansion on space
 bindkey '^[[Z' reverse-menu-complete
 
 # Make the delete key work instead of outputting a ~
@@ -759,9 +760,6 @@ bindkey "\e[3~" delete-char
 
 # Alt-Backspace deletes a word
 bindkey -M viins "\e^?" backward-delete-word
-
-# Insert the last argument
-bindkey -M viins "\e0" insert-last-word
 
 bindkey ' ' magic-space # [Space] - do history expansion
 
