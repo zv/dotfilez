@@ -20,7 +20,7 @@ This function should only modify configuration layer settings."
    ;; installation feature and you have to explicitly list a layer in the
    ;; variable `dotspacemacs-configuration-layers' to install it.
    ;; (default 'unused)
-   dotspacemacs-enable-lazy-installation 'unused
+   dotspacemacs-enable-lazy-installation nil
 
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
@@ -32,74 +32,90 @@ This function should only modify configuration layer settings."
                       auto-completion-enable-snippets-in-popup nil
                       auto-completion-enable-sort-by-usage t
                       auto-completion-front-end 'company
-                      auto-completion-idle-delay 0.08
                       auto-completion-return-key-behavior nil
                       auto-completion-tab-key-behavior 'complete
-                      company-tooltip-limit 9
+                      company-tooltip-limit 8
                       auto-completion-use-company-box nil
                       company-show-numbers t)
-     (asm :variables
-          ;; Location of Intel's documentation for easy lookup.
-          x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+     ;; (asm :variables
+     ;;      ;; Location of Intel's documentation for easy lookup.
+     ;;      x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+     prettier
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
+     ;; dap
+     ;; debug
      docker
-     ;; (erlang :variables
-     ;;         erlang-root-dir "/usr/local/lib/erlang"
-     ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
      emacs-lisp
      (git :variables
-          magit-log-arguments ())
-     graphviz
-     helm
-     html
+          magit-log-arguments '()
+          magit-repository-directories '(("~/Development/" . 2)))
+     (html :variables web-fmt-tool 'prettier)
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      (javascript :variables
                  javascript-backend 'lsp
-                 ;; alternative: 'skewer
-                 javascript-repl 'nodejs)
-     (lsp :variables
-          lsp-doc-enable t)
-     neotree
-     ;; node
-     markdown
+                 javascript-repl 'skewer
+                 javascript-fmt-tool 'prettier
+                 ;; js2-mode-show-strict-warnings nil
+                 ;; js2-mode-show-parse-errors nil
+                 )
      org
+     (json :variables json-backend 'lsp)
+     (lsp :variables
+          ; alternative 'full or nil (auto)
+          ;; lsp-document-sync-method 'incremental
+          ;; lsp-navigation 'both
+          lsp-navigation 'both
+          lsp-ui-doc-enable nil
+          lsp-ui-sideline-ignore-duplicate t)
+     lua
+     helpful
+     ;; (neotree :variables neo-theme 'arrow)
+     markdown
      (python :variables
-             ;; alternative: 'anaconda
+             python-auto-set-local-pyenv-version nil
+             python-auto-set-local-pyvenv-virtualenv nil
+             python-formatter 'yapf
+             python-fill-column 101
+             python-format-on-save nil
              python-backend 'lsp
-             ;; alternative: 'yapf
-             python-fill-column 119
-             python-format-on-save t
-             python-formatter 'lsp
-             python-lsp-server 'pyls
-             python-sort-imports-on-save nil
-             ;; alternative: 'nose
+             python-lsp-server 'mspyls
+             python-lsp-git-root "/home/zv/extern/python-language-server"
+             python-pipenv-activate nil
+             python-shell-interpreter "ipython3"
+             python-shell-interpreter-args "--simple-prompt -i"
              python-test-runner 'pytest)
      polyswarm
      react
+     (treemacs :variables
+               treemacs-use-follow-mode t
+               treemacs-use-collapsed-directories 3)
      (rust :variables
-           rust-enable-racer t)
+           rust-backend 'lsp)
      (shell :variables
             close-window-with-terminal t
             shell-default-shell 'ansi-term)
-     scheme
+     ;; scheme
      (sql :variables
           sql-capitalize-keywords t)
      shell-scripts
      syntax-checking
-     systemd
+     ;; systemd
      (typescript :variables
-                 ;; Until lsp is stable, use tide
+                 ;; ;; Until lsp is stable, use tide
+                 ;; typescript-backend 'tide
                  typescript-backend 'tide)
      ;; vimscript
+     helm
      version-control
      windows-scripts
      yaml
      zv)
 
-   dotspacemacs-additional-packages '(fish-mode
+   dotspacemacs-additional-packages '(
+                                      solarized-theme
                                       ;; edts
                                       ;; (reason-mode
                                       ;;  :location (recipe
@@ -109,14 +125,23 @@ This function should only modify configuration layer settings."
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode helm-xref evil-goggles golden-ratio fancy-battery)
+   dotspacemacs-excluded-packages '(org-pomodoro
+                                    spray
+                                    pug-mode
+                                    ;; helm-xref
+                                    evil-goggles
+                                    golden-ratio
+                                    fancy-battery)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
-  "Initialization function. This function is called at the very startup of
-Spacemacs initialization before layers configuration. You should not put any
-user code in there besides modifying the variable values."
+  "Initialization:
+This function is called at the very beginning of Spacemacs startup,
+before layer configuration.
+It should only modify the values of Spacemacs settings."
+  ;; This setq-default sexp is an exhaustive list of all the supported
+  ;; spacemacs settings.
   (setq-default
    ;; If non-nil then enable support for the portable dumper. You'll need
    ;; to compile Emacs 27 from source following the instructions in file
@@ -133,9 +158,9 @@ user code in there besides modifying the variable values."
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-   ;; (default spacemacs.pdmp)
-   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default spacemacs-27.1.pdmp)
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -154,6 +179,13 @@ user code in there besides modifying the variable values."
    ;; performance issues due to garbage collection operations.
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
+
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 2 (* 1024 1024))
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
@@ -183,6 +215,11 @@ user code in there besides modifying the variable values."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version t
+
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -197,10 +234,17 @@ user code in there besides modifying the variable values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((agenda . 10)
-                                (todos . 10))
-   ;; True if the home buffer should respond to resize events.
-   dotspacemacs-startup-buffer-responsive nil
+   ;; dotspacemacs-startup-lists '((agenda . 10)
+   ;;                              (todos . 10))
+   dotspacemacs-startup-lists nil
+
+   ;; True if the home buffer should respond to resize events. (default t)
+   dotspacemacs-startup-buffer-responsive t
+
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
@@ -212,9 +256,10 @@ user code in there besides modifying the variable values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
-                         leuven
-                         solarized-dark)
+   dotspacemacs-themes '(
+                         spacemacs-light
+                         spacemacs-dark
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -229,10 +274,9 @@ user code in there besides modifying the variable values."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
-   ;; quickly tweak the mode-line size to make separators look not too crappy.
+   ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 14
                                :weight medium
                                :width normal
                                :powerline-scale 1.0)
@@ -365,13 +409,17 @@ user code in there besides modifying the variable values."
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling nil
+   dotspacemacs-smooth-scrolling t
 
    ;; Control line numbers activation.
-   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but lines are only visual lines are counted. For example, folded lines
+   ;; will not be counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
+   ;;   :visual nil
    ;;   :disabled-for-modes dired-mode
    ;;                       doc-view-mode
    ;;                       markdown-mode
@@ -379,6 +427,7 @@ user code in there besides modifying the variable values."
    ;;                       pdf-view-mode
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers '(:relative t
                                          :disabled-for-modes Info-mode
@@ -458,6 +507,22 @@ user code in there besides modifying the variable values."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
+   ;; If non nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
+   ;; If non-nil activate `snoopy-mode' which shifts your number row
+   ;; to match the set of signs given in `dotspacemacs-snoopy-keyrow'
+   ;; in programming modes (insert-mode only). (default nil)
+   dotspacemacs-use-snoopy-mode nil
+
+   ;; Text of shifted values from your
+   ;; keyboard's number row. (default '!@#$%^&*()')
+   dotspacemacs-snoopy-keyrow "!@#$%^&*()"
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -465,7 +530,7 @@ user code in there besides modifying the variable values."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs t))
+   dotspacemacs-pretty-docs nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
