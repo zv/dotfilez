@@ -1,10 +1,125 @@
+-- Prevent noisy loading of psqlrc file
+\set QUIET yes
+
+\set PROMPT1 '\n%[%033[1;31m%]➤ %[%033[2;37m%]%`\! date "+%F %I:%M %p %Z"`%[%033[0m%] %[%033[1;36m%]%n%[%033[34m%]@%[%033[1;36m%]%M:%>%[%033[1;33m%]/%/ %[%033[1;31m%]%x %[%033[K%]%[%033[0m%]\n%[%033[1;33m%]%R%#%[%033[0m%] '
+\set PROMPT2 '%[%033[1;33m%]%R%#%[%033[0m%] '
+
+-- Settings --------------------------------------------------------------------
+
+-- border: number of borders and lines for the tables
 \pset border 2
+
+-- columns: target width for wrapped format
+\pset columns 0
+
+-- expanded: extended display
+-- Values: auto, on, off
+\x off
+
+-- fieldsep: field separator for unaligned output format.
+\pset fieldsep '|'
+
+-- fieldsep_zero: set field separator to a zero byte.
+--\pset fieldsep_zero 
+
+-- format: output format.
+-- Values: unaligned, aligned, wrapped, html, asciidoc, latex, latex-longtable, troff-ms
+\pset format aligned
+
+-- linestyle: border drawing style.
+-- Values: ascii, old-ascii, unicode
 \pset linestyle unicode
-\pset null NULL
 
+-- null: value of null
+\pset null '[NULL]'
+
+-- pager: use of a pager program.
+-- Values: on, off, always, name_of_pager. Without value, will toggle.
+\pset pager on
+
+-- pager_min_lines: is set to greater number than page height, pager will
+-- not be called. 
+\pset pager_min_lines 120
+
+-- unicode_border_linestyle: border drawing style for unicode style.
+-- Values: single, double.
+\pset unicode_border_linestyle single
+
+-- unicode_column_linestyle: column drawing style for unicode style.
+-- Values: single, double.
+\pset unicode_column_linestyle single
+
+-- unicode_header_linestyle: header drawing style for unicode style.
+-- Values: single, double.
+\pset unicode_header_linestyle single
+
+-- Special variables -----------------------------------------------------------
+
+-- AUTOCOMMIT: whether or not to automatically commit commands upon completion.
+\set AUTOCOMMIT on
+
+-- COMP_KEYWORD_CASE: choosing the letter cas for SQL keywords.
+-- Values: lower,upper,preserve-lower,preserve-upper
+\set COMP_KEYWORD_CASE preserve-upper
+
+-- FETCH_COUNT: display results in groups of that many rows.
+-- \set FETCH_COUNT 1000
+
+-- HISTCONTROL: what to do with empty or duplicate lines in the history.
+-- Values: ignorespace, ignoredups, ignoreboth, none
+\set HISTCONTROL ignoredups
+
+-- paste: allow pasting of values to avoid stupid indenting
+\set paste
+
+-- HISTFILE: file used to store history list
 \set HISTFILE ~/.psql_history- :DBNAME
-\set HISTSIZE 20000 
 
-/*
-set PROMPT1 '%[%033[1m%]%n@%/>>%[%033[0m%]% %[%033[1;31m%]%x%[%033[0m%]%'
-*/
+-- HISTSIZE: maximum number of commands to store in history.
+\set HISTSIZE 16383 
+
+-- ON_ERROR_STOP: stop processing immediately after an error.
+\set ON_ERROR_STOP on
+
+-- SHOW_CONTEXT: display context fields in messages from the server.
+-- Values: never, errors, always
+\set SHOW_CONTEXT errors
+
+-- SINGLELINE: newline terminates an SQL command
+\set SINGLELINE off
+
+-- SINGLESTEP: single step mode: to debug scripts
+\set SINGLESTEP off
+
+-- VERBOSITY: for error reports
+\set VERBOSITY default
+
+-- timing: print the time each query took
+\timing
+
+-- Aliases ---------------------------------------------------------------------
+
+\set sp             'SHOW search_path;'
+\set clear          '\\! clear;'
+\set ll             '\\! ls -lrt;'
+\set eav 'EXPLAIN ANALYZE VERBOSE'
+
+-- number of connected backends
+\set backends 'SELECT datname, numbackends FROM pg_catalog.pg_stat_database;'
+
+-- running queries
+\set queries        'SELECT current_timestamp - query_start as runtime,pid,datname,usename,query from pg_stat_activity where query != \'<IDLE>\' order by 1 desc; '
+
+-- activity
+\set activity       'SELECT datname, pid, usename, application_name, client_addr, client_hostname, client_port, query, state FROM pg_stat_activity;'
+
+-- time of last autovacuum
+\set last_vacuum    'SELECT schemaname, relname, last_vacuum, last_autovacuum, last_analyze, last_autoanalyze, pg_size_pretty(pg_total_relation_size(\'"\' || schemaname || \'"."\' || relname || \'"\')) AS size FROM pg_stat_all_tables ORDER BY pg_total_relation_size(\'"\' || schemaname || \'"."\' || relname || \'"\') DESC;'
+
+-- outstanding locks
+\set locks          'SELECT bl.pid     AS blocked_pid, a.usename  AS blocked_user, kl.pid     AS blocking_pid, ka.usename AS blocking_user, a.query    AS blocked_statement FROM pg_catalog.pg_locks bl JOIN pg_catalog.pg_stat_activity a  ON bl.pid = a.pid JOIN pg_catalog.pg_locks kl         ON bl.transactionid = kl.transactionid AND bl.pid != kl.pid JOIN pg_catalog.pg_stat_activity ka ON kl.pid = ka.pid WHERE NOT bl.granted;'
+
+-- uptime
+\set uptime         'SELECT now() - pg_postmaster_start_time() AS uptime;'
+
+\unset QUIET
