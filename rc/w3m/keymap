@@ -142,7 +142,6 @@ keymap r NULL
 keymap s NULL
 keymap t NULL
 keymap u NULL
-keymap v NULL
 keymap w NULL
 keymap y NULL
 keymap z NULL
@@ -236,7 +235,7 @@ keymap N SEARCH_PREV
 
 ########## bookmarks ##########
 keymap a ADD_BOOKMARK
-keymap :b VIEW_BOOKMARK
+keymap v VIEW_BOOKMARK
 
 ########## tab ##########
 keymap x CLOSE_TAB

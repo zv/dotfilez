@@ -20,7 +20,7 @@ This function should only modify configuration layer settings."
    ;; installation feature and you have to explicitly list a layer in the
    ;; variable `dotspacemacs-configuration-layers' to install it.
    ;; (default 'unused)
-   dotspacemacs-enable-lazy-installation 'unused
+   dotspacemacs-enable-lazy-installation nil
 
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
@@ -32,74 +32,89 @@ This function should only modify configuration layer settings."
                       auto-completion-enable-snippets-in-popup nil
                       auto-completion-enable-sort-by-usage t
                       auto-completion-front-end 'company
-                      auto-completion-idle-delay 0.08
                       auto-completion-return-key-behavior nil
                       auto-completion-tab-key-behavior 'complete
-                      company-tooltip-limit 9
+                      company-tooltip-limit 8
                       auto-completion-use-company-box nil
                       company-show-numbers t)
-     (asm :variables
-          ;; Location of Intel's documentation for easy lookup.
-          x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+     ;; (asm :variables
+     ;;      ;; Location of Intel's documentation for easy lookup.
+     ;;      x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+     prettier
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
+     ;; dap
+     ;; debug
      docker
-     ;; (erlang :variables
-     ;;         erlang-root-dir "/usr/local/lib/erlang"
-     ;;         erlang-man-root-dir "/usr/local/lib/erlang/man")
      emacs-lisp
      (git :variables
-          magit-log-arguments ())
-     graphviz
-     helm
-     html
+          magit-log-arguments '()
+          magit-repository-directories '(("~/Development/" . 2)))
+     (html :variables web-fmt-tool 'prettier)
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      (javascript :variables
                  javascript-backend 'lsp
-                 ;; alternative: 'skewer
-                 javascript-repl 'nodejs)
-     (lsp :variables
-          lsp-doc-enable t)
-     neotree
-     ;; node
-     markdown
+                 javascript-repl 'skewer
+                 javascript-fmt-tool 'prettier
+                 ;; js2-mode-show-strict-warnings nil
+                 ;; js2-mode-show-parse-errors nil
+                 )
      org
+     (json :variables json-backend 'lsp)
+     (lsp :variables
+          ; alternative 'full or nil (auto)
+          ;; lsp-document-sync-method 'incremental
+          ;; lsp-navigation 'both
+          lsp-navigation 'both
+          lsp-ui-doc-enable nil
+          lsp-ui-sideline-ignore-duplicate t)
+     lua
+     helpful
+     ;; (neotree :variables neo-theme 'arrow)
+     markdown
      (python :variables
-             ;; alternative: 'anaconda
+             python-auto-set-local-pyenv-version nil
+             python-auto-set-local-pyvenv-virtualenv nil
+             python-formatter 'yapf
+             python-fill-column 101
+             python-format-on-save nil
              python-backend 'lsp
-             ;; alternative: 'yapf
-             python-fill-column 119
-             python-format-on-save t
-             python-formatter 'lsp
-             python-lsp-server 'pyls
-             python-sort-imports-on-save nil
-             ;; alternative: 'nose
+             python-lsp-server 'mspyls
+             python-lsp-git-root "/home/zv/extern/python-language-server"
+             python-pipenv-activate nil
+             python-shell-interpreter "ipython3"
+             python-shell-interpreter-args "--simple-prompt -i"
              python-test-runner 'pytest)
      react
+     (treemacs :variables
+               treemacs-use-follow-mode t
+               treemacs-use-collapsed-directories 3)
      (rust :variables
-           rust-enable-racer t)
+           rust-backend 'lsp)
      (shell :variables
             close-window-with-terminal t
-            shell-default-term-shell "/usr/bin/zsh"
             shell-default-shell 'ansi-term)
-     scheme
+     ;; scheme
      (sql :variables
           sql-capitalize-keywords t)
      shell-scripts
      syntax-checking
-     systemd
+     ;; systemd
      (typescript :variables
-                 ;; Until lsp is stable, use tide
+                 ;; ;; Until lsp is stable, use tide
+                 ;; typescript-backend 'tide
                  typescript-backend 'tide)
      ;; vimscript
+     helm
      version-control
      windows-scripts
      yaml
      zv)
 
-   dotspacemacs-additional-packages '(fish-mode
+   dotspacemacs-additional-packages '(
+                                      solarized-theme
                                       ;; edts
                                       ;; (reason-mode
                                       ;;  :location (recipe
@@ -109,26 +124,29 @@ This function should only modify configuration layer settings."
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '(org-pomodoro spray pug-mode helm-xref evil-goggles golden-ratio fancy-battery)
-   ;; Defines the behaviour of Spacemacs when installing packages.
-   ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
-   ;; `used-only' installs only explicitly used packages and deletes any unused
-   ;; packages as well as their unused dependencies. `used-but-keep-unused'
-   ;; installs only the used packages but won't delete unused ones. `all'
-   ;; installs *all* packages supported by Spacemacs and never uninstalls them.
-   ;; (default is `used-only')
+   dotspacemacs-excluded-packages '(org-pomodoro
+                                    spray
+                                    pug-mode
+                                    ;; helm-xref
+                                    evil-goggles
+                                    golden-ratio
+                                    fancy-battery)
+   dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
-  "Initialization function. This function is called at the very startup of
-Spacemacs initialization before layers configuration. You should not put any
-user code in there besides modifying the variable values."
+  "Initialization:
+This function is called at the very beginning of Spacemacs startup,
+before layer configuration.
+It should only modify the values of Spacemacs settings."
+  ;; This setq-default sexp is an exhaustive list of all the supported
+  ;; spacemacs settings.
   (setq-default
    ;; If non-nil then enable support for the portable dumper. You'll need
    ;; to compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
    ;; (default nil)
-   dotspacemacs-enable-emacs-pdumper nil
+   dotspacemacs-enable-emacs-pdumper t
 
    ;; Name of executable file pointing to emacs 27+. This executable must be
    ;; in your PATH.
@@ -139,9 +157,9 @@ user code in there besides modifying the variable values."
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-   ;; (default spacemacs.pdmp)
-   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default spacemacs-27.1.pdmp)
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -161,13 +179,20 @@ user code in there besides modifying the variable values."
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
 
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 2 (* 1024 1024))
+
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
    ;; latest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
-   ;; (default nil)
+   ;; (default t)
    dotspacemacs-verify-spacelpa-archives t
 
    ;; If non-nil then spacemacs will check for updates at startup
@@ -189,8 +214,10 @@ user code in there besides modifying the variable values."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
-   ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading t
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version t
 
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -206,15 +233,17 @@ user code in there besides modifying the variable values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((agenda . 10)
-                                (todos . 10))
-   ;; True if the home buffer should respond to resize events.
-   dotspacemacs-startup-buffer-responsive nil
+   ;; dotspacemacs-startup-lists '((agenda . 10)
+   ;;                              (todos . 10))
+   dotspacemacs-startup-lists nil
+
+   ;; True if the home buffer should respond to resize events. (default t)
+   dotspacemacs-startup-buffer-responsive t
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
    ;; (default `text-mode')
-   dotspacemacs-new-empty-buffer-major-mode nil
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
@@ -226,9 +255,10 @@ user code in there besides modifying the variable values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
-                         leuven
-                         solarized-dark)
+   dotspacemacs-themes '(
+                         spacemacs-light
+                         spacemacs-dark
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -243,8 +273,7 @@ user code in there besides modifying the variable values."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
-   ;; quickly tweak the mode-line size to make separators look not too crappy.
+   ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 14
                                :weight medium
@@ -379,13 +408,17 @@ user code in there besides modifying the variable values."
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling nil
+   dotspacemacs-smooth-scrolling t
 
    ;; Control line numbers activation.
-   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but lines are only visual lines are counted. For example, folded lines
+   ;; will not be counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
+   ;;   :visual nil
    ;;   :disabled-for-modes dired-mode
    ;;                       doc-view-mode
    ;;                       markdown-mode
@@ -393,6 +426,7 @@ user code in there besides modifying the variable values."
    ;;                       pdf-view-mode
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers '(:relative t
                                          :disabled-for-modes Info-mode
@@ -472,6 +506,22 @@ user code in there besides modifying the variable values."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
+   ;; If non nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
+   ;; If non-nil activate `snoopy-mode' which shifts your number row
+   ;; to match the set of signs given in `dotspacemacs-snoopy-keyrow'
+   ;; in programming modes (insert-mode only). (default nil)
+   dotspacemacs-use-snoopy-mode nil
+
+   ;; Text of shifted values from your
+   ;; keyboard's number row. (default '!@#$%^&*()')
+   dotspacemacs-snoopy-keyrow "!@#$%^&*()"
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -479,7 +529,7 @@ user code in there besides modifying the variable values."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs t))
+   dotspacemacs-pretty-docs nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -504,7 +554,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
+dump."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -512,105 +563,94 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
   ;; Setup the directory where we're going to store backup, autosave & undo-tree
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
   ;; now create the associated directories
-  (if-let* ((undo-basedir spacemacs-cache-directory)
-            (zv-fetch-savedir (lambda (name)
-                                (if-let* ((path (file-name-as-directory
-                                                 (expand-file-name name undo-basedir)))
-                                          ((file-directory-p path))
-                                          ((message "Using %s for %s" path name)))
-                                    path
-                                  ;; This means we couldn't find the path, ask the user to create a directory
-                                  (when (y-or-n-p (format "Create new directory %s?" path))
-                                    (make-directory path)
-                                    (message "Created %s directory" name)
-                                    path))))
-            (auto-save-dir (funcall zv-fetch-savedir "emacs-autosave"))
-            (undo-tree-dir (funcall zv-fetch-savedir "emacs-undo-tree"))
-            (backups-dir (funcall zv-fetch-savedir "emacs-backups"))
-            (discard-dir temporary-file-directory))
-      (setq-default
-       backup-by-copying t    ; Copy the file, don't rename
-       make-backup-files nil   ; Don't copy
-       backup-directory-alist `(("\\`/tmp/.+" . ,discard-dir)
-                                (".*" . ,backups-dir))
-       vc-make-backup-files nil ; Don't bother making backups for files in VC
-       vc-follow-symlinks t
-       version-control t        ; use versioned backups
+  (let* ((undo-base-dir (file-name-as-directory (expand-file-name ".emacs/" temporary-file-directory)))
+         (save-dirs (seq-map
+                     (lambda (f) (file-name-as-directory (expand-file-name f undo-base-dir)))
+                     '("autosave/" "undo/" "backups/" "discard/")))
+         (missing (seq-remove #'file-directory-p save-dirs)))
+    (when (= (length missing) ;; don't set any options if we haven't created all the directories
+             (map-y-or-n-p "Create %s?" (lambda (path) (progn (make-directory path t) path)) missing))
+      (seq-let (auto-save-directory undo-tree-directory backups-directory discard-directory) save-dirs
+        (setq-default backup-by-copying t    ; Copy the file, don't rename
+                      make-backup-files nil  ; Don't copy
+                      backup-directory-alist `(("\\`/tmp/.+" . ,discard-directory)
+                                               (".*" . ,backups-directory))
+                      vc-make-backup-files nil ; Don't bother making backups for files in VC
+                      vc-follow-symlinks t
+                      version-control t        ; use versioned backups
+                      auto-save-default t     ; auto-save every buffer that visits a file
+                      auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
+                      auto-save-interval 400   ; number of keystrokes between auto-saves
+                      auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-directory t)
+                                                        ;; always auto-save TRAMP files to dist
+                                                        (".*"  ,auto-save-directory t))
+                      undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
+                      undo-tree-enable-undo-in-region  nil
+                      undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-directory)
+                                                          (".+asc\\'" . ,discard-directory)
+                                                          ("\\`/tmp/.+" . ,discard-directory)
+                                                          (".*" . ,undo-tree-directory))))))
 
-       auto-save-default t      ; auto-save every buffer that visits a file
-       auto-save-timeout 10     ; number of seconds idle time before auto-save
-       auto-save-interval 80   ; number of keystrokes between auto-saves
+  (add-to-list 'auto-mode-alist '("\\.nse\\'" . lua-mode))
+  (setq-default abbrev-mode nil
 
-       auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-dir t)
-                                         ("\\`/.+/.+"  ,auto-save-dir t))
+                c-basic-offset  4
+                c-default-style "k&r"
+                c-electric-mode t
 
-       ;; undo-tree-auto-save-history t ; Automatically save our undo history.
-       undo-limit           80000000
-       undo-strong-limit  1200000000
-       undo-tree-enable-undo-in-region  nil
-       undo-tree-auto-save-history      t
-       undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-dir)
-                                           (".+asc\\'" . ,discard-dir)
-                                           ("\\`/tmp/.+" . ,discard-dir)
-                                           (".+" . ,undo-tree-dir)))
-    (error "Undo directory creation failed."))
+                create-lockfiles nil ; Dont create .#FILES
+                css-indent-offset 2
 
-  (setq-default
-   abbrev-mode nil
+                ;; Evil should move across more than one line
+                evil-complete-next-func 'hippie-expand
+                evil-cross-lines t
+                evil-escape-delay 0.2
 
-   c-basic-offset  4
-   c-default-style "k&r"
-   c-electric-mode t
+                ;; Time in seconds to hide the flycheck position tip after
+                flycheck-pos-tip-timeout 10
 
-   create-lockfiles nil ; Dont create .#FILES
-   css-indent-offset 2
+                global-eldoc-mode t
 
-   ;; Evil should move across more than one line
-   evil-complete-next-func 'hippie-expand
-   evil-cross-lines t
-   evil-escape-delay 0.2
+                geiser-default-implementation 'guile
 
-   ;; Time in seconds to hide the flycheck position tip after
-   flycheck-pos-tip-timeout 10
+                helm-ff-file-name-history-use-recentf t
+                helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+                helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
 
-   global-eldoc-mode t
+                js-indent-level                  2
+                js2-basic-offset                 js-indent-level
+                js2-include-browser-externs      t
+                js2-include-node-externs         t
+                js2-strict-missing-semi-warning  nil
 
-   geiser-default-implementation 'guile
+                kill-ring-max 256
 
-   helm-ff-file-name-history-use-recentf t
-   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+                magit-repo-dirs '("~/Development/")
 
-   js-indent-level                  2
-   js2-basic-offset                 js-indent-level
-   js2-include-browser-externs      t
-   js2-include-node-externs         t
-   js2-strict-missing-semi-warning  nil
+                ;; Use Gtags to generate
+                projectile-tags-command "gtags %s"
 
-   magit-repo-dirs '("~/Development/")
+                tab-width 2
 
-   ;; Use Gtags to generate
-   projectile-tags-command "gtags %s"
+                ;; Dont show entire (long) line
+                truncate-lines t
 
-   tab-width 2
+                typescript-indent-level js-indent-level
 
-   ;; Dont show entire (long) line
-   truncate-lines t
+                web-mode-markup-indent-offset  js2-basic-offset
+                web-mode-css-indent-offset     css-indent-offset
+                web-mode-code-indent-offset    js2-basic-offset
+                web-mode-attr-indent-offset    js2-basic-offset
 
-   typescript-indent-level js-indent-level
+                web-mode-style-padding         css-indent-offset
+                web-mode-script-padding        css-indent-offset
+                web-mode-block-padding         css-indent-offset))
 
-   web-mode-markup-indent-offset  js2-basic-offset
-   web-mode-css-indent-offset     css-indent-offset
-   web-mode-code-indent-offset    js2-basic-offset
-   web-mode-attr-indent-offset    js2-basic-offset
-
-   web-mode-style-padding         css-indent-offset
-   web-mode-script-padding        css-indent-offset
-   web-mode-block-padding         css-indent-offset))
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -622,156 +662,47 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ac-ispell-requires 4 t)
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
- '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
+   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
  '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
  '(company-selection-wrap-around t)
- '(compilation-message-face (quote default))
  '(confirm-nonexistent-file-or-buffer nil)
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#657b83")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
  '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
  '(evil-want-Y-yank-to-eol nil)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
- '(fci-rule-color "#eee8d5")
  '(gud-gdb-command-name "gdb -i=mi -nh")
- '(gud-tooltip-mode t)
- '(helm-ff-transformer-show-only-basename t)
- '(helm-man-or-woman-function (quote Man-getpage-in-background))
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#002b36" 0.25)
-    (quote
-     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
- '(highlight-symbol-foreground-color "#93a1a1")
- '(highlight-tail-colors
-   (quote
-    (("#073642" . 0)
-     ("#546E00" . 20)
-     ("#00736F" . 30)
-     ("#00629D" . 50)
-     ("#7B6000" . 60)
-     ("#8B2C02" . 70)
-     ("#93115C" . 85)
-     ("#073642" . 100))))
- '(hl-bg-colors
-   (quote
-    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
- '(hl-fg-colors
-   (quote
-    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
- '(hl-paren-colors (quote ("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900")))
+ '(helm-man-or-woman-function 'Man-getpage-in-background)
  '(hl-todo-keyword-faces
-   (quote
-    (("TODO" . "#dc752f")
+   '(("TODO" . "#dc752f")
      ("NEXT" . "#dc752f")
      ("THEM" . "#2d9574")
-     ("PROG" . "#4f97d7")
-     ("OKAY" . "#4f97d7")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
      ("DONT" . "#f2241f")
      ("FAIL" . "#f2241f")
-     ("DONE" . "#86dc2f")
+     ("DONE" . "#42ae2c")
      ("NOTE" . "#b1951d")
      ("KLUDGE" . "#b1951d")
      ("HACK" . "#b1951d")
      ("TEMP" . "#b1951d")
      ("FIXME" . "#dc752f")
-     ("XXX" . "#dc752f")
-     ("XXXX" . "#dc752f"))))
- '(ibuffer-saved-filter-groups nil)
- '(ibuffer-saved-filters
-   (quote
-    (("programming"
-      ((or
-        (mode . emacs-lisp-mode)
-        (mode . cperl-mode)
-        (mode . c-mode)
-        (mode . java-mode)
-        (mode . idl-mode)
-        (mode . lisp-mode)))))))
- '(magit-completing-read-function (quote magit-builtin-completing-read))
- '(neo-hidden-regexp-list (quote ("\\.o$" "^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
- '(neo-theme (quote arrow))
- '(org-agenda-files
-   (quote
-    ("/home/zv/Documents/notes.org" "/home/zv/Documents/zv.org")))
- '(org-html-text-markup-alist
-   (quote
-    ((bold . "<b>%s</b>")
-     (code . "<code>%s</code>")
-     (italic . "<i>%s</i>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<span class=\"verbatim\">%s</span>"))))
- '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f")))
  '(org-refile-targets
-   (quote
-    ((org-agenda-files :maxlevel . 1)
-     (org-default-notes-file :maxlevel . 2))))
+   '((org-agenda-files :maxlevel . 1)
+     (org-default-notes-file :maxlevel . 2)))
  '(package-selected-packages
-   (quote
-    (coffee-mode paradox spinner z3-mode yasnippet-snippets yapfify yaml-mode xterm-color x86-lookup ws-butler writeroom-mode winum which-key web-mode web-beautify volatile-highlights vimrc-mode vi-tilde-fringe uuidgen use-package toml-mode toc-org tide tagedit systemd symon string-inflection sql-indent spaceline-all-the-icons solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restclient-helm restart-emacs rainbow-delimiters racket-mode racer pytest pyenv-mode py-isort prettier-js powershell popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator overseer org-present org-mime org-download org-bullets open-junk-file ob-restclient ob-http ob-elixir neotree nasm-mode nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode link-hint json-navigator json-mode js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-mode-manager helm-make helm-gtags helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-cscope helm-company helm-c-yasnippet helm-ag graphviz-dot-mode google-translate google-c-style golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md ggtags geiser fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-mix flycheck-credo flycheck-bashate flx-ido fish-mode fill-column-indicator fancy-battery expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode doom-modeline disaster diminish diff-hl define-word dactyl-mode cython-mode counsel-projectile company-web company-tern company-statistics company-shell company-rtags company-restclient company-c-headers company-anaconda column-enforce-mode clean-aindent-mode clang-format centered-cursor-mode cargo browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell)))
+   '(yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toml-mode toc-org tide terminal-here tagedit systemd symon symbol-overlay string-inflection sqlup-mode sql-indent spaceline-all-the-icons solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racer pytest pyenv-mode py-isort prettier-js powershell posframe popwin pippel pipenv pip-requirements pcre2el password-generator paradox overseer org-projectile org-present org-mime org-download org-cliplink org-bullets open-junk-file nodejs-repl nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-section magit-gitflow macrostep lsp-ui lsp-python-ms lorem-ipsum livid-mode live-py-mode link-hint json-navigator js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode ibuffer-projectile hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gh-md fuzzy font-lock+ flycheck-ycmd flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-package flycheck-elsa flycheck-bashate flx-ido fish-mode eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode dockerfile-mode docker disaster diminish devdocs define-word dap-mode cython-mode cpp-auto-include company-ycmd company-web company-statistics company-shell company-rtags company-c-headers company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode ccls cargo browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
  '(page-break-lines-modes
-   (quote
-    (emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode)))
+   '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
  '(paradox-github-token t)
- '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
- '(pos-tip-background-color "#eee8d5")
- '(pos-tip-foreground-color "#586e75")
- '(ring-bell-function (quote ignore))
- '(send-mail-function (quote smtpmail-send-it))
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
- '(sp-escape-quotes-after-insert nil)
- '(term-default-bg-color "#002b36")
- '(term-default-fg-color "#839496")
- '(vc-annotate-background nil)
- '(vc-annotate-background-mode nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#dc322f")
-     (40 . "#c8805d801780")
-     (60 . "#bec073400bc0")
-     (80 . "#b58900")
-     (100 . "#a5008e550000")
-     (120 . "#9d0091000000")
-     (140 . "#950093aa0000")
-     (160 . "#8d0096550000")
-     (180 . "#859900")
-     (200 . "#66aa9baa32aa")
-     (220 . "#57809d004c00")
-     (240 . "#48559e556555")
-     (260 . "#392a9faa7eaa")
-     (280 . "#2aa198")
-     (300 . "#28669833af33")
-     (320 . "#279993ccbacc")
-     (340 . "#26cc8f66c666")
-     (360 . "#268bd2"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (quote
-    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
- '(xterm-color-names
-   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
- '(xterm-color-names-bright
-   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
+ '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
+ '(ring-bell-function 'ignore))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(helm-ff-file-extension ((t nil))))
 )

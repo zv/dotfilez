@@ -47,6 +47,7 @@
             (venv-dir (expand-file-name "venv" base-dir))
             (version (s-match "version =.*" (f-read (expand-file-name "pyvenv.cfg" venv-dir)))))
         (pyvenv-activate venv-dir)
+        (setq importmagic-python-interpreter (concat venv-dir "/bin/python"))
         (message "Found venv [`%s'] at %s packaged with python %s." pyvenv-virtual-env-name venv-dir version)))
 
 

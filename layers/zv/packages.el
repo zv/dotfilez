@@ -1,13 +1,7 @@
 (defvar zv-packages '(company
-                      magit
                       (org :location built-in)
                       neotree
-                      ;; (eshell :location built-in)
-                      ;; edts
-                      flycheck
-                      ;; treemacs-evil
-                      cpp
-                      z3-mode))
+                      cpp))
 
 (defvar zv-excluded-packages '())
 
@@ -20,17 +14,6 @@
                          (setq-local company-clang-arguments '("-std=c++14")))))
     :config
     (setq disaster-cxxflags "-std=c++14 -O1 -g3")))
-
-(defun zv/post-init-flycheck ()
-  ;; Place 'python-pylint prior to 'python-flake8 in the list of flycheckers.
-  (use-package flycheck
-    :defer t
-    :config (let* ((flakeless (delete 'python-flake8 flycheck-checkers))
-                   (tail (member 'python-pylint flakeless)))
-              (setcdr tail (cons 'python-flake8 (cdr tail))))))
-
-(defun zv/init-z3-mode ()
-  (use-package z3-mode))
 
 (defun zv/post-init-erlang ()
   (use-package erlang
@@ -63,14 +46,6 @@
     :config (setq bbdb-expand-mail-aliases t
                   bbdb-complete-name-full-completion t
                   bbdb-file (concat user-emacs-directory "/bbdb.gpg"))))
-
-(defun zv/post-init-magit ()
-  (with-eval-after-load 'magit
-    (progn
-      (evil-leader/set-key-for-mode 'magit-status-mode
-        "mf" 'magit-key-mode-popup-gitflow)
-      (define-key magit-mode-map "@" 'magit-branch-pull-request))))
-
 
 (defun zv/post-init-eshell ()
   (with-eval-after-load 'eshell
@@ -105,9 +80,8 @@
     ;; Allow the use of numbers 0..9 to select completion entries
     (when company-show-numbers
       (dolist (x (number-sequence 1 company-tooltip-limit))
-        (define-key company-active-map (format "%d" x)
+        (define-key company-active-map (format "C-%d" x)
           `(lambda () (interactive) (company-complete-number ,x)))))))
-
 
 
 (defun zv/post-init-org ()
@@ -180,7 +154,7 @@
        org-capture-templates
        `(("a" "Appointment" entry (file+headline ,org-default-notes-file "Agenda" "Appointments") "* APPT %^{Description} %^g\n %?\n Added: %U")
          ("b" "Book/Article" entry (file+headline ,org-default-notes-file "Agenda" "Read") "** READ  %?")
-         ("q" "Quotes" plain (file ,(concat org-directory "/quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE")
+         ("Q" "Quotes" plain (file ,(concat org-directory "/quotes.org")) "#+BEGIN_QUOTE\n%?\n#+END_QUOTE")
          ;; Intentions don't have an active timestamp associated with them, but are marked as TODO items.
          ("i" "Intentions" entry (file+headline ,org-default-notes-file "Tasks") "* TODO %?\nCaptured On: %U\n")
          ;; Tasks are things that I *need* to get done. They have a clock associated with them and an active timestamp. They appear in the Agenda.

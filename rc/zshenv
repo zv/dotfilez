@@ -1,28 +1,43 @@
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
+# Build
+export AR=ar
+
 # Language
 if [[ -z "$LANG" ]]; then
 	export LANG='en_US.utf8'
 fi
-export LC_CTYPE="$LANG"
+export LC_CTYPE=$LANG
+
+# 10 years I've been listenining to this list prompt and today I am fucking done!
+export LISTPROMPT=''
 
 # XDG vars
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache/}"
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config/}"
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache/"}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:="$HOME/.config/"}
 
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE="true"
 
 export EDITOR='vim'
 
+# Environment
+export GREP_COLORS="37;45"
+
+
 # Paths
 path=(
 	/usr/local/bin
 	/usr/local/sbin
-  $path
+	$path
+	$HOME/.cargo/bin
 	$HOME/.local/bin
-	/usr/local/go/bin
-	/usr/local/node/bin
 )
+
+# Remove all empty directories from the path
+# for np ($path) if [[ ! -d $np ]] path=(${path#$np})
+if [[ -d /usr/local/cuda/lib64 ]]; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+fi
 
 # Load our completion functions
 fpath=(
@@ -32,14 +47,8 @@ fpath=(
 	$fpath
 )
 
-# Remove all empty directories from the path
-# for np ($path) if [[ ! -d $np ]] path=(${path#$np})
-if [[ -d /usr/local/cuda/lib64 ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
-fi
-
-# Remove all duplicates in path scalars
-typeset -gU fpath mailpath path cdpath manpath
+# Ensure path arrays do not contain duplicates.
+typeset -gU fpath mailpath path cdpath
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
@@ -52,6 +61,9 @@ export TMPPREFIX="${TMPDIR%/}/zsh"
 if [[ "$OSTYPE" == linux-gnu ]]; then
 	export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
 fi
+
+# virtualenvwrapper
+export WORKON_HOME="$HOME/.local/environments"
 
 # Rust
 if (( $+commands[rustc] )); then

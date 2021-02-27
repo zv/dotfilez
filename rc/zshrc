@@ -24,6 +24,8 @@ setopt HUP                # kill jobs on shell exit.
 export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
 
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+_exists() { (( $+commands[$1] )) }
+
 # Define general aliases.
 alias pr="print -l"
 
@@ -32,14 +34,19 @@ alias e="emacsclient -t"
 alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
-alias jkl="jekyll serve -D"
+alias external-ip="curl ipinfo.io/ip"
+_exists jekyll && alias jkl="jekyll serve -D"
 
 # Tmux
-alias ta="tmux attach-session -t"
-alias tl="tmux list-sessions"
+if _exists tmux; then
+    alias ta="tmux attach-session -t"
+    alias tl="tmux list-sessions"
+fi
 
+# ipython
+_exists ipython3 && alias ipy='ipython3'
 # Initialize key map
-cfgkey()  {
+keycfg()  {
 	if [[ -n "$DISPLAY" ]]; then
 		setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
 		xmodmap <(print 'keycode 135 = Hyper_R
@@ -50,15 +57,23 @@ cfgkey()  {
 	fi
 }
 
-alias keycfg=cfgkey
 alias gpg=gpg2
+alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias xmm="xmodmap $HOME/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
-alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
-alias veactivate="source venv/bin/activate"
-alias ipy="ipython3"
+alias veactivate="source venv/bin/activate && rehash"
+
+if _exists rg; then
+    rage() {
+        vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(rg "$@" | cut -d: -f1 | sort -u)
+    }
+elif _exists grep; then
+    rage() {
+        vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(grep "$@" | cut -d: -f1 | sort -u)
+    }
+fi
 
 man() {
 	local args=$@
@@ -93,77 +108,6 @@ mvlast() {
 
 mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 
-# compile and run
-crun() {
-	local lopts
-	local copts
-	local custom_compiler
-	local dump_asm
-	local verbose
-	local usage
-	local debug
-	local use_gcc
-	local match
-	local mbegin
-	local mend
-	zparseopts -E -D -- -gcc::=use_gcc \
-		c:=custom_compiler \
-		o+:=copts \
-		Wl+:=lopts \
-		-dump::=dump_asm \
-		v::=verbose \
-		h::=usage \
-		g::=debug
-
-	if [[ -n $usage ]]; then
-		cat <<- EOF
-		usage: crun [options]... <filename>
-
-		--clang     (default) use clang for C & C++ files
-		--gcc       use GCC for C & C++ files
-		--dump      dump assembly of program
-		-o          supply an option (e.g -o -Wall)
-		-v          verbose
-		-g          debug
-
-		Compiles and runs a C, C++ or x86 Assembly file.
-		EOF
-	return 126
-	fi
-
-	# select unique entries of `copts` and then slice copts[2..] (copts[1]
-	# contains the flag, e.g "-o")
-	local file=${@[-1]}
-	local options=${${(u)copts}[2,-1]}
-	local exepath="$(mktemp)"
-
-	if [[ $file =~ \.(cc|cpp|cxx)$ ]]; then
-		local compiler="clang++"
-		$compiler -std=c++1z -g -Wall -Weffc++ ${=options} $file -o $exepath
-	elif [[ $file =~ \.c$ ]]; then
-		local compiler="clang"
-		[[ -n $use_gcc ]] && ccompiler="gcc"
-		$compiler -g -Wall ${=options} $file -o $exepath
-	elif [[ $file =~ \.(s|asm)$ ]]; then
-		local objpath="$(mktemp)"
-		nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
-	else
-		echo "no filetype detected"
-		return 126
-	fi  || return $?
-
-	if [[ -n $dump_asm ]]; then
-		objdump -S -M intel -d $exepath
-	else
-		[[ -n $verbose ]] && echo "exepath: $exepath"
-		if [[ -n $debug ]]; then
-			gdb --args "$exepath" "$@"
-		else
-			"$exepath" "$@" & fg
-		fi
-	fi
-}
-
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
 rmlast() {
@@ -171,37 +115,16 @@ rmlast() {
 }
 
 # calculator
-calc () { gdb -n -quiet -batch -ex="p $*" }
-alias calc="noglob calc"
-
-ecalc() {
-	emacs '-nw' '-Q' --eval="(progn
-	  (when (display-graphic-p)
-	    (tool-bar-mode -1)
-	    (scroll-bar-mode -1))
-	  (menu-bar-mode -1)
-
-	  (setq
-	     select-enable-primary t
-	     help-window-select t)
-
-	  (cua-mode +1)
-	  (when cua-mode
-	     (defun calc-mode? ()
-	        (eq major-mode (quote calc-mode)))
-
-	     (define-advice cua-paste (:before-while (arg))
-	       (and (calc-mode?) (calc-yank arg))))
-
-	  (full-calc)
-
-	  (define-key calc-mode-map [?q]
-	    (quote save-buffers-kill-terminal))
-
-	  (define-advice calc-full-help (:after nil)
-	    (switch-to-buffer-other-window \"*Help*\")
-	    (message \"Press q to go back to calc\")))"
+_zcalc() {
+    local PS4="; "
+    if [[ "$*" =~ "^[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
+        { set -x; rax2 $* }
+    else
+        local expr="$(print $* | perl -wple '1 while s/([a-z]+) (.*)$/$1($2)/g')"
+        { set -x; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
+    fi
 }
+alias calc='noglob _zcalc'
 
 # print the color spectrum
 spectrum_ls() {
@@ -217,9 +140,9 @@ spectrum_ls() {
 
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
+pps="/home/zv/Development/"
 
 pointer_speed() {
-	(( !$+commands[xinput] )) && return;
 	local speed=$1
 	local output=$(xinput list  | awk '
 	BEGIN { min=99999; max=0; idl=3; }
@@ -249,53 +172,31 @@ pointer_speed() {
 
 # pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
 pronounce_number() {
-	integer number=$1
-	let length=${#number}
-
-	local -A numeric_names=(2   "Hundred"
-	3   "Thousand"
-	6   "Million"
-	9   "Billion"
-	12  "Trillion"
-	15  "Quadrillion"
-	18  "Quintillion"
-	21  "Sextillion"
-	24  "Septillion"
-	27  "Octillion"
-	30  "Nonillion"
-	33  "Decillion"
-	36  "Undecillion"
-	39  "Duodecillion"
-	42  "Tredecillion"
-	45  "Quattuordecillion"
-	48  "Quindecillion"
-	51  "Sexdecillion"
-	54  "Septendecillion"
-	57  "Octodecillion"
-	60  "Novemdecillion"
-	63  "Vigintillion"
-	303 "Centillion")
-
-	local result
-	local significand # our current exponent (hundreds, thousands, etc.)
-	for i in {1..$((length - 1))}; do
-		significand+=${number[i]};
-		local number_name=${numeric_names[$((length - i))]}
-		# if $number_name, insert our significand + radix name
-			if [[ $number_name ]] {
-				# but don't include "0" billions or "000 millions"
-				if [[ ${significand:#0*} ]] {
-					result+="${significand} ${number_name} "
-				}
-			# Reset our significander
-			significand=""
-		}
+	local -A scale=(
+		 2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
+		12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
+		24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
+		36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
+		48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
+		60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
+	local number="${1##-}" # remove '-' at start of number
+	if ! (( $number )); then;
+		print "Usage: pronounce_number POSITIVE_NUMBER"
+		return 2
+	fi
+	local -a cs=()
+	local -i i k
+	# loop through the position/name pairs, extracting
+	# characters between it and the previous pair used
+	for i in ${(Onk)scale}; do
+		local -i place="${number[-k, -i-1]}"
+		(( place )) && cs+=("$place ${scale[$i]}")
+		k=$i
 	done
 
-	local tens=${number[-2, -1]##0#}
-	[[ $tens ]] && result+="and ${tens}"
-
-	echo $result
+	# now just print the remainder (if one exists)
+	local rem=" and $(($number[-k, -1]))"
+	printf "%s%s\n" "${(j:, :)cs}" "${rem% and 0}"
 }
 
 
@@ -303,92 +204,57 @@ alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias w3m="noglob w3m"
-alias ptpython="ptpython3 --vi"
+# alias ptpython="ptpython3 --vi"
 
-# workxrandr - sets up multi-display desktop wtih xrandr (like the one I have at work)
-#
-# Args:
-#   $1 - "left" or "right", indicating which side of the base monitor to put the
-#   new side monitor.
-function workxrandr() {
-	# exclude the primary monitor & disconnected monitors from the list of
-	# available side-monitors.
-	local base_monitor="eDP-1"
-	local side_monitor=$(xrandr | awk "! /$base_monitor/ && /\s(connected)/ { print \$1 }" | tr -d '\n')
-	if [[ "$1" =~ "right" ]]; then
-		xrandr --output "$side_monitor" --primary --right-of "$base_monitor" --auto
-	else
-		xrandr --output "$side_monitor" --primary --left-of "$base_monitor" --auto
-	fi
-}
-
-# Set myself up for work
-function workcfg {
-	workxrandr $1
-	keycfg
-}
-
-# dnf
-if (( $+commands[dnf] )); then
-	alias dnfs="dnf search -C"                    # search package
-	alias dnfp="dnf info -C"                      # show package info
-	alias dnfl="dnf list"                         # list packages
-	alias dnfcu="dnf check-update"                # check updates
-	alias dnfh="sudo dnf history"                 # get dnf history
-	alias dnfu="sudo dnf upgrade"                 # upgrade packages
-	alias dnfi="sudo dnf install"                 # install package
-	alias dnfr="sudo dnf remove"                  # remove package
-	alias dnfgr="sudo dnf groupremove"            # remove pagage group
-	alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
-	alias dnfc="sudo dnf clean all"               # clean cachefi
-	alias dnfwhy="sudo dnf whatprovides"          # why is this package installed
+if _exists dnf; then
+    alias dnfs="dnf search"                       # search package
+    alias dnfp="dnf info"                         # show package info
+    alias dnfl="dnf list"                         # list packages
+    alias dnfcu="dnf check-update"                # check updates
+    alias dnfh="sudo dnf history"                 # get dnf history
+    alias dnfu="sudo dnf upgrade"                 # upgrade packages
+    alias dnfi="sudo dnf install"                 # install package
+    alias dnfr="sudo dnf remove"                  # remove package
+    alias dnfgr="sudo dnf groupremove"            # remove pagage group
+    alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
+    alias dnfc="sudo dnf clean all"               # clean cachefi
 fi
 
-############################################################
-# Show the contents of a file in a particular package
-#   dnf_extractat bash-5.0 /usr/share/licenses/bash/COPYING
-############################################################
-dnf_extractat() {
-    pkg="${1?Must supply package name}"
-    file="${2?Must supply file path}"
-    tmpdir="$(mktemp -d)"
-    mkdir -p "$tmpdir"
-    (
-        cd "$tmpdir" || exit 3
-        pkgname=$(dnf download --downloadonly "$pkg" --destdir="$tmpdir" \
-                      | tee >(grep -o '[^[:space:]]*.rpm') 1>&2)
-        rpm2cpio "$pkgname" | cpio -icvd "*$file"
-        cat "${file:1}"
-    )
-    rm -r "$tmpdir"
-}
 
+if _exists git; then
+    # Git
+    alias g='git'
+    alias gst='git status'
+    alias gl='git pull'
+    alias gc='git commit -v'
+    alias gca='git commit -v -a'
+    alias gco='git checkout'
+    alias gcm='git checkout master'
+    alias ga='git add'
+    alias gfa='git fetch --all'
 
-# Git
-alias g='git'
-alias gst='git status'
-alias gl='git pull'
-alias gc='git commit -v'
-alias gca='git commit -v -a'
-alias gco='git checkout'
-alias gcm='git checkout master'
-alias ga='git add'
-alias gfa='git fetch --all'
+    gpro() {
+    local full_branch="$(git symbolic-ref HEAD)"
+    local branch="${full_branch##ref/heads/}"
+    git pull --rebase origin "$branch"
+    }
 
-alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
+    alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
 
-# Lists all files that have been ignored with git update-index
-alias git-ignorelog='git ls-files -v | grep "^h"'
+    # Lists all files that have been ignored with git update-index
+    alias git-ignorelog='git ls-files -v | grep "^h"'
+
+    # Displays some git related author statistics
+    function authorstats {
+        gitauth="$1";
+        git log --author="$gitauth" --pretty=tformat: --numstat | \
+            gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
+        echo ''
+    }
+fi
 
 alias aws="MANPAGER='more' aws"
-
-# Displays some git related author statistics
-function authorstats {
-	gitauth="$1";
-	git log --author="$gitauth" --pretty=tformat: --numstat | \
-	gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
-	echo ''
-}
+alias genp="python3 <(gpg2 -d ~/extern/genp.asc)"
 
 # Format a series of hex into a C-like hex string
 # e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80
@@ -402,11 +268,12 @@ for cmd (ack cd cp ebuild gcc gist grep heroku
 	git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
 
 
+
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
-setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+unsetopt GLOB_DOTS          # Glob files beginning with dot (`.`)
 setopt NULL_GLOB            # Delete patterns without match from argument list
 setopt BRACE_CCL            # Allow brace character class list expansion.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
@@ -422,6 +289,12 @@ setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobb
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
+if [[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]]; then
+    # Suppress the undeclared global variable warning raised inside IDEA
+    typeset -g VARIABLE NAME
+fi
+setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+
 unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
@@ -514,7 +387,7 @@ setopt PATH_DIRS           # Perform path search even on command names with slas
 setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
 # overridden by MENU_COMPLETE
 # setopt AUTO_MENU           # Show completion menu on a succesive tab press.
-setopt MENU_COMPLETE       # Do not autoselect the first completion entry.
+setopt MENU_COMPLETE       # Autoselect the first completion entry.
 
 # Experimental
 # not really a completion option
@@ -537,7 +410,7 @@ setopt CASE_GLOB
 # Version control info (vcs_info)
 local base_vcs_style='%c%b%u%f'
 zstyle ':vcs_info:*' enable git hg # svn # cvs fossil bzr
-zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' check-for-staged-changes true
 zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
 zstyle ':vcs_info:*' stagedstr '%F{028}'
 zstyle ':vcs_info:*' unstagedstr '*'
@@ -765,19 +638,20 @@ bindkey -M vicmd "?" vi-history-search-forward
 bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
-bindkey -M viins -s '\ep' "!!- "
-bindkey -M viins '\e^p' insert-last-word
+
+autoload smart-insert-last-word
+zle -N smart-insert-last-word
+# bind alt-p to cycle through the last argument of the previous line
+bindkey -M viins '\ep' smart-insert-last-word
 
 # EZKeys
-bindkey -s '\eu' "..\n"
-bindkey -s '\es' "$HOME/"
-bindkey -s '\e^p' "$HOME/Development/"
-
+# bindkey -s '\eu' "..\n"
+# bindkey -s '\es' "$HOME/"
+# bindkey -s '\e^p' "$HOME/Development/"
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' find-history-backwards # up-line-or-search
 bindkey '^[[B' find-history-forwards  # down-line-or-search
-bindkey ' ' magic-space    # also do history expansion on space
 bindkey '^[[Z' reverse-menu-complete
 
 # Make the delete key work instead of outputting a ~
@@ -788,9 +662,6 @@ bindkey "\e[3~" delete-char
 
 # Alt-Backspace deletes a word
 bindkey -M viins "\e^?" backward-delete-word
-
-# Insert the last argument
-bindkey -M viins "\e0" insert-last-word
 
 bindkey ' ' magic-space # [Space] - do history expansion
 
@@ -828,3 +699,6 @@ fi
 # [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/usr/local/node/node-v10.16.3-linux-x64/bin:$PATH"
+# export PATH="/usr/local/node/node-v12.10.0-linux-x64/bin:$PATH"
+_exists aws && autoload zsetup_aws

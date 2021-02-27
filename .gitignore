@@ -48,6 +48,7 @@ gnome-keyring.tar.gpg
 # !emacs.d/private/zv/*
 # emacs.d
 
+*/__pycache__/*
 # our macro definitions
 templates/zv.m4
 *npm-debug.log
