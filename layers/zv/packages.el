@@ -118,6 +118,15 @@
                     org-default-notes-file (expand-file-name "notes.org" org-directory))
 
       (require 'org-protocol)
+
+      (require 's)
+      (defun build-frontmatter (ss backend info)
+        (let ((title (org-no-properties (car (plist-get (org-export-get-environment) :title))))
+              (tags (format "%s" (string-join
+                                  (append '("tags:" "post")
+                                          (mapcar 'org-no-properties org-file-tags)) "\n  - "))))
+          (s-format ss 'aget `(("title" . ,title) ("tagslist" . ,tags)))))
+
       (setq-default
        ;; Do not dim blocked tasks
        org-agenda-dim-blocked-tasks nil
@@ -188,8 +197,9 @@
                                     :base-directory ,(concat zv//blog-path "org/")
                                     :base-extension "org"
                                     :publishing-directory ,zv//blog-path
-                                    :publishing-function org-html-publish-to-html
+                                    :publishing-function (org-html-publish-to-html)
                                     :html-container "section"
+                                    :exclude "_\w+.org"
                                     :recursive t
                                     :section-numbers nil
                                     :with-toc nil
@@ -197,6 +207,8 @@
                                     :headline-levels 4
                                     :html-html5-fancy t
                                     :body-only t))
+
+       org-export-filter-export-block-functions '(build-frontmatter)
 
        ;; Targets include this file and any file contributing to the agenda - up to 6 levels deep
        org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
