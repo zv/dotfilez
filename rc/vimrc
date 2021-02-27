@@ -212,19 +212,6 @@ nnoremap <silent><leader>tn :set number!<CR>
 nnoremap <silent><leader>tr :set number!<CR>:set relativenumber!<CR>
 nnoremap <silent><leader>tl :set wrap!<CR>
 
-augroup swap_bracket_mapping
-	autocmd!
-	autocmd FileType * onoremap <silent><nowait><buffer> [ {
-	autocmd FileType * snoremap <silent><nowait><buffer> [ {
-	autocmd FileType * vnoremap <silent><nowait><buffer> [ {
-	autocmd FileType * nnoremap <silent><nowait><buffer> [ {
-
-	autocmd FileType * onoremap <silent><nowait><buffer> ] }
-	autocmd FileType * snoremap <silent><nowait><buffer> ] }
-	autocmd FileType * vnoremap <silent><nowait><buffer> ] }
-	autocmd FileType * nnoremap <silent><nowait><buffer> ] }
-augroup END
-
 " Map popup-menu keys to use C-k, C-j & C-l
 inoremap <expr> <C-j> pumvisible() ? '<Down>' : '<C-j>'
 inoremap <expr> <C-k> pumvisible() ? '<Up>' : '<C-k>'
