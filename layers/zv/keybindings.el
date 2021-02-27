@@ -133,6 +133,8 @@
               ("/" . 'evil-ex-search-forward)
               ("n" . 'evil-ex-search-next)
               ("N" . 'evil-ex-search-backward)
+              ("V" . 'evil-visual-line)
+              ("v" . 'evil-visual-char)
               ("w" . 'evil-forward-word-begin)
               ("W" . 'evil-forward-WORD-begin)
               ("b" . 'evil-backward-word-begin)
