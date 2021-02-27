@@ -34,6 +34,7 @@ alias e="emacsclient -t"
 alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
+alias external-ip="curl ipinfo.io/ip"
 _exists jekyll && alias jkl="jekyll serve -D"
 
 # Tmux
@@ -45,7 +46,7 @@ fi
 # ipython
 _exists ipython3 && alias ipy='ipython3'
 # Initialize key map
-cfgkey()  {
+keycfg()  {
 	if [[ -n "$DISPLAY" ]]; then
 		setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
 		xmodmap <(print 'keycode 135 = Hyper_R
@@ -56,14 +57,13 @@ cfgkey()  {
 	fi
 }
 
-alias keycfg=cfgkey
 alias gpg=gpg2
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias xmm="xmodmap $HOME/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
 
-alias veactivate="source venv/bin/activate"
+alias veactivate="source venv/bin/activate && rehash"
 
 if _exists rg; then
     rage() {
@@ -108,77 +108,6 @@ mvlast() {
 
 mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 
-# compile and run
-crun() {
-	local lopts
-	local copts
-	local custom_compiler
-	local dump_asm
-	local verbose
-	local usage
-	local debug
-	local use_gcc
-	local match
-	local mbegin
-	local mend
-	zparseopts -E -D -- -gcc::=use_gcc \
-		c:=custom_compiler \
-		o+:=copts \
-		Wl+:=lopts \
-		-dump::=dump_asm \
-		v::=verbose \
-		h::=usage \
-		g::=debug
-
-	if [[ -n $usage ]]; then
-		cat <<- EOF
-		usage: crun [options]... <filename>
-
-		--clang     (default) use clang for C & C++ files
-		--gcc       use GCC for C & C++ files
-		--dump      dump assembly of program
-		-o          supply an option (e.g -o -Wall)
-		-v          verbose
-		-g          debug
-
-		Compiles and runs a C, C++ or x86 Assembly file.
-		EOF
-	return 126
-	fi
-
-	# select unique entries of `copts` and then slice copts[2..] (copts[1]
-	# contains the flag, e.g "-o")
-	local file=${@[-1]}
-	local options=${${(u)copts}[2,-1]}
-	local exepath="$(mktemp)"
-
-	if [[ $file =~ \.(cc|cpp|cxx)$ ]]; then
-		local compiler="clang++"
-		$compiler -std=c++1z -g -Wall -Weffc++ ${=options} $file -o $exepath
-	elif [[ $file =~ \.c$ ]]; then
-		local compiler="clang"
-		[[ -n $use_gcc ]] && ccompiler="gcc"
-		$compiler -g -Wall ${=options} $file -o $exepath
-	elif [[ $file =~ \.(s|asm)$ ]]; then
-		local objpath="$(mktemp)"
-		nasm -felf64 $file -o $objpath && ld $objpath -o $exepath
-	else
-		echo "no filetype detected"
-		return 126
-	fi  || return $?
-
-	if [[ -n $dump_asm ]]; then
-		objdump -S -M intel -d $exepath
-	else
-		[[ -n $verbose ]] && echo "exepath: $exepath"
-		if [[ -n $debug ]]; then
-			gdb --args "$exepath" "$@"
-		else
-			"$exepath" "$@" & fg
-		fi
-	fi
-}
-
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
 rmlast() {
@@ -186,45 +115,13 @@ rmlast() {
 }
 
 # calculator
-# calc() { gdb -n -quiet -batch -ex="p $*" }
-
-ecalc() {
-	emacs '-nw' '-Q' --eval="(progn
-	  (when (display-graphic-p)
-	    (tool-bar-mode -1)
-	    (scroll-bar-mode -1))
-	  (menu-bar-mode -1)
-
-	  (setq
-	     select-enable-primary t
-	     help-window-select t)
-
-	  (cua-mode +1)
-	  (when cua-mode
-	     (defun calc-mode? ()
-	        (eq major-mode (quote calc-mode)))
-
-	     (define-advice cua-paste (:before-while (arg))
-	       (and (calc-mode?) (calc-yank arg))))
-
-	  (full-calc)
-
-	  (define-key calc-mode-map [?q]
-	    (quote save-buffers-kill-terminal))
-
-	  (define-advice calc-full-help (:after nil)
-	    (switch-to-buffer-other-window \"*Help*\")
-	    (message \"Press q to go back to calc\")))"
-}
-
 _zcalc() {
-    local opts="$*"
-    if [[ "$opts" =~ "^[oO]?[0-9a-fA-Fx.]+[oO]?$" ]]; then
-        rax2 "$opts"
+    local PS4="; "
+    if [[ "$*" =~ "^[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
+        { set -x; rax2 $* }
     else
-        local expr=$(echo "$opts" | perl -wpl -e '1 while s/([a-z]+) (.*)$/$1($2)/g')
-        echo "$expr"
-        emacsclient -e "(calc-eval \"$expr\")" | perl -wpl -e 's/^"|"$//g'
+        local expr="$(print $* | perl -wple '1 while s/([a-z]+) (.*)$/$1($2)/g')"
+        { set -x; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
     fi
 }
 alias calc='noglob _zcalc'
