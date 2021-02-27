@@ -87,16 +87,6 @@
 (global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
 (global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
 
-;;(evil-define-key 'normal evil-surround-mode-map "s" 'evil-surround-region)
-
-;; swap "{" with "[" & "}" with "]"
-(dolist (mode (list evil-normal-state-map evil-motion-state-map evil-visual-state-map))
-  (pcase-dolist (`(,ka . ,kb) '(("[" . "{") ("]" . "}")))
-    (let ((funa (lookup-key mode ka))
-          (funb (lookup-key mode kb)))
-      (define-key mode ka funb)
-      (define-key mode kb funa))))
-
 
 (use-package calendar
   :defer t
