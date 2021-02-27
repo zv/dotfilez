@@ -143,7 +143,7 @@ sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
     org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions. 
    
     :PROPERTIES:
-    :header-args:  :tangle "$HOME/.local/share/applications/org-protocol.desktop"
+    :header-args:  :noweb yes :exports none :mkdirp no :tangle "$HOME/.local/share/applications/org-protocol.desktop"
     :END:
     #+begin_src desktop
  [Desktop Entry]
@@ -169,7 +169,7 @@ sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
 **** =libvirt=   
      =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
      :PROPERTIES:
-     :header-args: :tangle "/etc/polkit-1/rules.d/80-libvirt.rules"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/polkit-1/rules.d/80-libvirt.rules"
      :END:
      #+begin_src 
   polkit.addRule(function(action, subject) {
@@ -185,7 +185,7 @@ sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
 **** yubikey
      add Yubikey access
      :PROPERTIES:
-     :header-args: :tangle "/etc/udev/rules.d/70-u2f.rules"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/udev/rules.d/70-u2f.rules"
      :END:
      #+begin_src 
  # Yubico YubiKey
@@ -194,7 +194,7 @@ sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
 
 **** wireshark usbmon
      :PROPERTIES:
-     :header-args: :tangle "/etc/udev/rules.d/rules.d/90-wireshark-usbmon.rules"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/udev/rules.d/rules.d/90-wireshark-usbmon.rules"
      :END:
      #+begin_src 
  SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
@@ -204,7 +204,7 @@ sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
      The =util-linux= package provides =fstrim.service= and =fstrim.timer= systemd unit files. Enabling the timer will activate the service weekly. The service executes =fstrim(8)= on all mounted filesystems on devices that support the discard operation.
 ***** Service
        :PROPERTIES:
-       :header-args: :tangle "/usr/lib/systemd/system/fstrim.service"
+       :header-args: :noweb yes :exports none :mkdirp no :tangle "/usr/lib/systemd/system/fstrim.service"
        :END:
   #+begin_src 
 [Unit]
@@ -219,7 +219,7 @@ WantedBy=multi-user.target
   #+end_src
 ***** Timer
        :PROPERTIES:
-       :header-args: :tangle "/usr/lib/systemd/system/fstrim.timer"
+       :header-args: :noweb yes :exports none :mkdirp no :tangle "/usr/lib/systemd/system/fstrim.timer"
        :END:
   #+begin_src 
   [Unit]
@@ -237,7 +237,7 @@ WantedBy=multi-user.target
 **** =coredump=
      I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
      :PROPERTIES:
-     :header-args: :tangle "/etc/systemd/coredump.conf"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/systemd/coredump.conf"
      :END:
 #+begin_src 
 Compress=yes
@@ -246,7 +246,7 @@ MaxUse=1G
 #+end_src
 **** =journald=
      :PROPERTIES:
-     :header-args: :tangle "/etc/systemd/journald.conf"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/systemd/journald.conf"
      :END:
 #+begin_src 
 Compress=yes
@@ -255,7 +255,7 @@ SystemMaxUse=512M
 *** =dnf=
      dnf is fedora's package manager. I mostly like how it's configured except I dislike receiving kernels through it.
      :PROPERTIES:
-     :header-args: :tangle "/etc/dnf/dnf.conf"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/dnf/dnf.conf"
      :END:
 #+begin_src 
 [main]
@@ -273,7 +273,7 @@ exclude=kernel*
 *** gnome-terminal
     I prefer a smaller padding on my gnome terminal.
      :PROPERTIES:
-     :header-args: :tangle "/home/zv/.config/gtk-3.0/gtk.css"
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/home/zv/.config/gtk-3.0/gtk.css"
      :END:
      #+begin_example
 vte-terminal {
@@ -297,7 +297,7 @@ gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
 ***** =NetworkManager.conf=
       You must ensure NetworkManager globally enables local resolver =dnsmasq=
       :PROPERTIES:
-      :header-args: :tangle "/etc/NetworkManager/NetworkManager.conf"
+      :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/NetworkManager/NetworkManager.conf"
       :END:
      #+begin_example
      [main]
@@ -307,14 +307,21 @@ gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
 ***** =dnsmasq.conf=
       This will tack on these servers to the list recieved by DHCP.
       :PROPERTIES:
-      :header-args: :tangle "/etc/NetworkManager/dnsmasq.d/server.conf"
+      :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/NetworkManager/dnsmasq.d/server.conf"
       :END:
      #+begin_example
      server=8.8.8.8
      server=1.1.1.1
      #+end_example
 
-*****
+*** Thunderbird
+     :PROPERTIES:
+     :header-args: :noweb yes :exports none :mkdirp no :tangle "/home/zv/.thunderbird/ufdmg71x.default/prefs.js"
+     :END:
+     #+begin_example
+user_pref("mailnews.nav_crosses_folders", 0);
+     #+end_example
+
 
 * Backup
 ** Thunderbird
