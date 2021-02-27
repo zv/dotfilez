@@ -377,7 +377,6 @@ setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 unsetopt GLOB_DOTS          # Glob files beginning with dot (`.`)
-setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
 setopt NULL_GLOB            # Delete patterns without match from argument list
 setopt BRACE_CCL            # Allow brace character class list expansion.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
@@ -393,6 +392,12 @@ setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobb
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
+if [[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]]; then
+    # Suppress the undeclared global variable warning raised inside IDEA
+    typeset -g VARIABLE NAME
+fi
+setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+
 unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 

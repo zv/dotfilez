@@ -47,6 +47,9 @@ fpath=(
 	$fpath
 )
 
+# Ensure path arrays do not contain duplicates.
+typeset -gU fpath mailpath path cdpath
+
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
 	export TMPDIR="/tmp/$LOGNAME"
