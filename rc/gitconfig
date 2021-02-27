@@ -356,7 +356,7 @@
 	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 
 	# Search git history for text
-	grep-all = !"git grep $@ $(git rev-list --all)"
+	grep-all = !"git rev-list --all | xargs git grep --color=auto -a $@"
 
 	# Search git history for a filename
     locate-all = "!git log --all --full-history -- **/$@"
