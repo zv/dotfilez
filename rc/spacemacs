@@ -569,33 +569,31 @@ before packages are loaded."
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
   ;; now create the associated directories
-  (let* ((undo-base-dir (file-name-as-directory (expand-file-name ".emacs/" temporary-file-directory)))
-         (save-dirs (seq-map
-                     (lambda (f) (file-name-as-directory (expand-file-name f undo-base-dir)))
-                     '("autosave/" "undo/" "backups/" "discard/")))
-         (missing (seq-remove #'file-directory-p save-dirs)))
-    (when (= (length missing) ;; don't set any options if we haven't created all the directories
-             (map-y-or-n-p "Create %s?" (lambda (path) (progn (make-directory path t) path)) missing))
-      (seq-let (auto-save-directory undo-tree-directory backups-directory discard-directory) save-dirs
-        (setq-default backup-by-copying t    ; Copy the file, don't rename
-                      make-backup-files nil  ; Don't copy
-                      backup-directory-alist `(("\\`/tmp/.+" . ,discard-directory)
-                                               (".*" . ,backups-directory))
-                      vc-make-backup-files nil ; Don't bother making backups for files in VC
-                      vc-follow-symlinks t
-                      version-control t        ; use versioned backups
-                      auto-save-default t     ; auto-save every buffer that visits a file
-                      auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
-                      auto-save-interval 400   ; number of keystrokes between auto-saves
-                      auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-directory t)
-                                                        ;; always auto-save TRAMP files to dist
-                                                        (".*"  ,auto-save-directory t))
-                      undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
-                      undo-tree-enable-undo-in-region  nil
-                      undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-directory)
-                                                          (".+asc\\'" . ,discard-directory)
-                                                          ("\\`/tmp/.+" . ,discard-directory)
-                                                          (".*" . ,undo-tree-directory))))))
+  (defconst emacs-temporary-dir (expand-file-name (format "emacs-%d" (user-uid)) temporary-file-directory))
+
+  (unless (file-directory-p emacs-temporary-dir)
+    (and (y-or-n-p (format "Create emacs-temporary-dir in %s?" emacs-temporary-dir))
+         (make-directory emacs-temporary-dir t)))
+
+  (setq-default backup-by-copying t    ; Copy the file, don't rename
+                make-backup-files nil  ; Don't copy
+                backup-directory-alist `(("\\`/tmp/.+" . ,emacs-temporary-dir)
+                                         (".*" . ,emacs-temporary-dir))
+                vc-make-backup-files nil ; Don't bother making backups for files in VC
+                vc-follow-symlinks t
+                version-control t        ; use versioned backups
+                auto-save-default t     ; auto-save every buffer that visits a file
+                auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
+                auto-save-interval 400   ; number of keystrokes between auto-saves
+                auto-save-file-name-transforms  `(("\\`/tmp/.+" ,emacs-temporary-dir t)
+                                                  ;; always auto-save TRAMP files to dist
+                                                  (".*"  ,emacs-temporary-dir t))
+                undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
+                undo-tree-enable-undo-in-region  nil
+                undo-tree-history-directory-alist `((".+gpg\\'" . ,emacs-temporary-dir)
+                                                    (".+asc\\'" . ,emacs-temporary-dir)
+                                                    ("\\`/tmp/.+" . ,emacs-temporary-dir)
+                                                    (".*" . ,emacs-temporary-dir)))
 
   (add-to-list 'auto-mode-alist '("\\.nse\\'" . lua-mode))
   (setq-default abbrev-mode nil
