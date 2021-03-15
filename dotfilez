@@ -32,6 +32,15 @@ function set_secure_permissions() {
     chmod -f go-rwx ${gs[@]} > /dev/null 2>&1
 }
 
+function export_ownertrust() {
+    gpg --export-ownertrust > otrust.lst
+}
+
+function import_ownertrust() {
+    gpg --import-options restore --import rc/gnupg/pubring.gpg
+    gpg --import-ownertrust otrust.lst
+}
+
 function match_tag() {
     taglist="$1"
     tag="$2"
