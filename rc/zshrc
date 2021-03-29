@@ -254,7 +254,7 @@ if _exists git; then
 fi
 
 alias aws="MANPAGER='more' aws"
-alias genp="python3 <(gpg2 -d ~/extern/genp.asc)"
+alias genp=" command genp"
 
 # Format a series of hex into a C-like hex string
 # e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80

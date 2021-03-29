@@ -1,6 +1,7 @@
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
 # Build
 export AR=ar
+export TZ='America/Los_Angeles'
 
 # Language
 if [[ -z "$LANG" ]]; then
@@ -29,8 +30,8 @@ path=(
 	/usr/local/bin
 	/usr/local/sbin
 	$path
-	$HOME/.cargo/bin
 	$HOME/.local/bin
+	/home/zv/extern/pycharm-2019.3/bin
 )
 
 # Remove all empty directories from the path

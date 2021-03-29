@@ -92,7 +92,7 @@ function! s:get_appdata() abort
 	if has('win32') || has('win64')
 		return simplify(printf("%s\\%s", fnamemodify(get(environ(), "LOCALAPPDATA", $APPDATA), ':p:h'), "vim"))
 	else
-		return simplify(printf("%s/%s", fnamemodify(get(environ(), "XDG_CACHE_HOME", "~/.cache"), ':p:h'), "vim"))
+		return simplify(printf("%s/%s", fnamemodify(get(environ(), "XDG_CACHE_HOME", "/var/tmp"), ':p:h'), "vim"))
 	endif
 endfunction
 
