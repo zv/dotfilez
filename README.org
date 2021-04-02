@@ -12,6 +12,7 @@
   Dotfilez is an attempt to keep a configuration framework for my personal use
   online. You are welcome to modify it if you think it could be useful to you
   too.
+  
 * Public Keys
 ** GPG
    #+BEGIN_EXAMPLE
@@ -125,220 +126,398 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 * Workstation Setup
 
-** Linux  
-*** Fedora
-**** Groups
-     #+begin_src sh
-sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
-     #+end_src
+** Packages
 
-*** org-protocol
-    org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions. 
-   
-    :PROPERTIES:
-    :header-args:  :tangle "$HOME/.local/share/applications/org-protocol.desktop"
-    :END:
-    #+begin_src desktop
- [Desktop Entry]
- Name=org-protocol
- Exec=emacsclient %u
- Type=Application
- Terminal=false
- Categories=System;
- MimeType=x-scheme-handler/org-protocol;
- EOF
-    #+end_src
+*** Base
+    #+BEGIN_SRC sh :results output :noweb no
+      dnf list tmux vim-enhanced zsh
+    #+END_SRC
 
-    Afterwards, you must update the desktop database to ensure the =org-protocol=
-    handler is installed.
+*** Development
+    #+BEGIN_SRC sh :results output :noweb no
+      dnf list autoconf automake binutils bison clang cmake ctags flex \
+          gcc gcc-c++ gdb git graphviz libtool make nasm openssl patch \
+          pkgconf readline socat strace
+    #+END_SRC
 
-    #+begin_example
-    update-desktop-database ~/.local/share/applications/
-    #+end_example
+**** Python
+     #+BEGIN_SRC sh :results output :noweb no
+       dnf list python3 python3-devel python3-ipython \
+           python3-epc python3-flake8 python3-importmagic python3-isort python3-mypy python3-yapf
+     #+END_SRC
 
-*** polkit
-    polkit is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes: It is a framework for centralizing the decision making process with respect to granting access to privileged operations for unprivileged applications.
-   
-**** =libvirt=   
-     =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
-     :PROPERTIES:
-     :header-args: :tangle "/etc/polkit-1/rules.d/80-libvirt.rules"
-     :END:
-     #+begin_src 
-  polkit.addRule(function(action, subject) {
-    if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
-      return polkit.Result.YES;
-    }
-  });
-     #+end_src
+*** Desktop
+    #+BEGIN_SRC sh :results output :noweb no
+      dnf list adobe-source-code-pro-fonts avahi-tools bpftool bpftrace curl \
+          dotnet elfutils emacs global global-ctags gnupg2 java-latest-openjdk jq \
+          kernel-devel ltrace mtr nmap perf postgresql qemu ripgrep systemtap \
+          valgrind weechat wget wine wireshark xsel z3
+    #+END_SRC
 
-*** =udev=
-    =udev= is a device manager for the Linux kernel. As the successor of =devfsd= and =hotplug=, =udev= primarily manages device nodes in the =/dev= directory. At the same time, =udev= also handles all user space events raised while hardware devices are added into the system or removed from it, including firmware loading as required by certain devices.
-   
-**** yubikey
-     add Yubikey access
-     :PROPERTIES:
-     :header-args: :tangle "/etc/udev/rules.d/70-u2f.rules"
-     :END:
-     #+begin_src 
- # Yubico YubiKey
- ATTRS{idVendor}=="1050", ATTR{manufacturer}=="Yubico", TAG+="uaccess"
-     #+end_src
+**** Yubikey
+     #+BEGIN_SRC sh :results output :noweb no
+       dnf list gnupg2 gnupg2-smime pcsc-lite pcsc-tools ykclient ykpers yubikey-personalization-gui
+     #+END_SRC
 
-**** wireshark usbmon
-     :PROPERTIES:
-     :header-args: :tangle "/etc/udev/rules.d/rules.d/90-wireshark-usbmon.rules"
-     :END:
-     #+begin_src 
- SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
-     #+end_src
-*** systemd
-**** =fstrim=
-     The =util-linux= package provides =fstrim.service= and =fstrim.timer= systemd unit files. Enabling the timer will activate the service weekly. The service executes =fstrim(8)= on all mounted filesystems on devices that support the discard operation.
-***** Service
-       :PROPERTIES:
-       :header-args: :tangle "/usr/lib/systemd/system/fstrim.service"
-       :END:
-  #+begin_src 
-[Unit]
-Description=Discard unused blocks
+**** Remove "Install Package To Provide"
+     Fedora contains a package to prompt the user if a missing command is typed into the shell, which this snippet disables.
+     
+     #+BEGIN_SRC sh :results output
+       sudo dnf remove PackageKit-command-not-found
+     #+END_SRC
 
-[Service]
-Type=oneshot
-ExecStart=/sbin/fstrim -a
 
-[Install]
-WantedBy=multi-user.target
-  #+end_src
-***** Timer
-       :PROPERTIES:
-       :header-args: :tangle "/usr/lib/systemd/system/fstrim.timer"
-       :END:
-  #+begin_src 
-  [Unit]
-  Description=Discard unused blocks once a week
-  Documentation=man:fstrim
+** Link rc files
+   #+NAME: link_all.sh
+   #+BEGIN_SRC sh :var filename=(buffer-file-name) :results output
+     #!/bin/sh
+     ROOTDIR="$(dirname "$(readlink -f "${filename:-0}")")"
 
-  [Timer]
-  OnCalendar=weekly
-  AccuracySec=1h
-  Persistent=true
+     set -euo pipefail
 
-  [Install]
-  WantedBy=multi-user.target
-  #+end_src
-**** =coredump=
-     I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
-     :PROPERTIES:
-     :header-args: :tangle "/etc/systemd/coredump.conf"
-     :END:
-#+begin_src 
-Compress=yes
-JournalSizeMax=520M
-MaxUse=1G
-#+end_src
-**** =journald=
-     :PROPERTIES:
-     :header-args: :tangle "/etc/systemd/journald.conf"
-     :END:
-#+begin_src 
-Compress=yes
-SystemMaxUse=512M
-#+end_src
-*** =dnf=
-     dnf is fedora's package manager. I mostly like how it's configured except I dislike receiving kernels through it.
-     :PROPERTIES:
-     :header-args: :tangle "/etc/dnf/dnf.conf"
-     :END:
-#+begin_src 
-[main]
-gpgcheck=1
-installonly_limit=3
-clean_requirements_on_remove=True
-exclude=kernel*
-#+end_src
-*** vkeys
-    Use capslock as control in a virtual console
-    #+begin_example
-    sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
-    #+end_example
+     symlink_at() {
+         local src="$1"
+         local dst="$2"
 
-*** gnome-terminal
-    I prefer a smaller padding on my gnome terminal.
-     :PROPERTIES:
-     :header-args: :tangle "/home/zv/.config/gtk-3.0/gtk.css"
-     :END:
-     #+begin_example
-vte-terminal {
-  padding: 5px
-}
-     #+end_example
+         if [[ -e "$dst" ]]; then
+             printf "%s already exists\n" "$dst"
+         elif [[ -d "$src" ]]; then
+             ( set -x; ln -s -t "$dst" "$src" )
+         elif [[ -f "$src" ]]; then
+             ( set -x; ln -Ts "$src" "$dst" )
+         else
+             printf "%s is not a directory or file\n" "$src"
+         fi
+     }
 
-     You can also remove the ridiculously huge headerbar in Gnome 3.32+
-#+begin_src sh
-gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
-#+end_src
+     link_all() {
+         if command -v "$1" 2>&1 > /dev/null; then
+             shift
 
-*** gnome-flashback copr
-    You can find COPR produced by a Redhat employee here: https://copr.fedorainfracloud.org/coprs/yselkowitz/gnome-flashback/
+             while (( $# )); do
+                 symlink_at "$1" "${HOME}/.$(basename "$1")"
+                 shift
+             done
+         else
+             printf "command '%s' not found\n" "$1"
+         fi
+     }
 
-*** NetworkManager
-    NetworkManager is a program for providing detection and configuration for systems to automatically connect to network.
+     link_all dig "$ROOTDIR/rc/digrc"
+     link_all emacs "$ROOTDIR/rc/spacemacs" "$ROOTDIR/emacs.d" "$ROOTDIR/rc/gnus.el" "$ROOTDIR/rc/newsrc"
+     link_all erl "$ROOTDIR/rc/erlang"
+     link_all gdb "$ROOTDIR/rc/gdbinit"
+     link_all git "$ROOTDIR/rc/gitignore" "$ROOTDIR/rc/gitconfig"
+     link_all gpg "$ROOTDIR/rc/gnupg"
+     link_all iex "$ROOTDIR/rc/iex"
+     link_all node "$ROOTDIR/rc/npmrc" "$ROOTDIR/rc/babelrc"
+     link_all psql "$ROOTDIR/rc/psqlrc"
+     link_all rg "$ROOTDIR/rc/ripgreprc"
+     link_all ruby "$ROOTDIR/rc/pryrc" "$ROOTDIR/rc/gemrc"
+     link_all screen "$ROOTDIR/rc/screenrc"
+     link_all screen "$ROOTDIR/rc/screenrc"
+     link_all tmux "$ROOTDIR/rc/tmux.conf"
+     link_all top "$ROOTDIR/rc/toprc"
+     link_all vim "$ROOTDIR/rc/vim" "$ROOTDIR/rc/vimrc"
+     link_all weechat "$ROOTDIR/rc/weechat"
+     link_all wget "$ROOTDIR/rc/wgetrc"
+     link_all zsh "$ROOTDIR/rc/zsh" "$ROOTDIR/rc/zshenv" "$ROOTDIR/rc/zshrc"
+     link_all Xorg "$ROOTDIR/rc/Xsession" "$ROOTDIR/rc/Xdefaults"
 
-    I use a local resolver (=dnsmasq=) instead of those provided by DHCP.
-**** Enable =dnsmasq=
-***** =NetworkManager.conf=
-      You must ensure NetworkManager globally enables local resolver =dnsmasq=
-      :PROPERTIES:
-      :header-args: :tangle "/etc/NetworkManager/NetworkManager.conf"
-      :END:
-     #+begin_example
-     [main]
-     dns=dnsmasq
-     #+end_example
+     symlink_at "$ROOTDIR/rc/ssh" "$HOME/.ssh"
+     symlink_at "$ROOTDIR/rc/editrc" "$HOME/.editrc"
+     symlink_at "$ROOTDIR/rc/inputrc" "$HOME/.inputrc"
+   #+END_SRC
 
-***** =dnsmasq.conf=
-      This will tack on these servers to the list recieved by DHCP.
-      :PROPERTIES:
-      :header-args: :tangle "/etc/NetworkManager/dnsmasq.d/server.conf"
-      :END:
-     #+begin_example
-     server=8.8.8.8
-     server=1.1.1.1
-     #+end_example
+*** Default shell
+    #+BEGIN_SRC sh :results output
+      sudo usermod  --shell "$(which zsh)" "$(whoami)"
+    #+END_SRC
 
-*****
+*** Gnome Keybindings
+    #+BEGIN_SRC sh :results output
+      gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
+    #+END_SRC
+
+** org-protocol
+   org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions.
+
+   #+BEGIN_SRC conf :tangle "~/.local/share/applications/org-protocol.desktop" :noweb no
+     [Desktop Entry]
+     Name=org-protocol
+     Exec=emacsclient %u
+     Type=Application
+     Terminal=false
+     Categories=System;
+     MimeType=x-scheme-handler/org-protocol;
+   #+END_SRC
+
+   Afterwards, you must update the desktop database to ensure the =org-protocol=
+   handler is installed.
+
+   #+BEGIN_SRC sh :results silent
+     update-desktop-database ~/.local/share/applications/
+   #+END_SRC
+
+** polkit
+   polkit is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes: It is a framework for centralizing the decision making process with respect to granting access to privileged operations for unprivileged applications.
+
+*** =libvirt=
+    =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
+    #+name: 80-libvirt.rules
+    #+BEGIN_SRC javascript :tangle "/sudo::/etc/polkit-1/rules.d/80-libvirt.rules" :noweb no
+      polkit.addRule(function(action, subject) {
+        if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
+      });
+    #+END_SRC
+
+** Python
+
+*** IPython Config
+    Rewrites the default =ipython_config.py= with my preferred defaults
+
+    #+NAME: rewrite_ipython_config.awk
+    #+BEGIN_SRC awk :results output
+      #!/usr/bin/awk -f
+
+      BEGIN {
+          if (ARGC == 1) {
+              ARGV[ARGC] = ENVIRON["HOME"] "/.ipython/profile_default/ipython_config.py"
+              ARGC = ARGC + 1
+          }
+      }
+
+      function set_value(new) {
+          if ($2 == "=" && NF == 3) {
+              sub("^#", "", $1)  # uncomment line
+              printf "%s = %s\n", $1, new
+              next
+          }
+      }
+
+      $1 ~ /#c.TerminalIPythonApp.display_banner/ { set_value("False") }
+      $1 ~ /#c.TerminalInteractiveShell.editing_mode/ { set_value("'vi'") }
+      $1 ~ /#c.TerminalInteractiveShell.extra_open_editor_shortcuts/ { set_value("False") }
+      $1 ~ /#c.InteractiveShell.autoindent/ { set_value("True") }
+      $1 ~ /#c.InteractiveShell.autoawait/ { set_value("True") }
+
+      { print }
+    #+END_SRC
+
+** =udev=
+   =udev= is a device manager for the Linux kernel. As the successor of
+   =devfsd= and =hotplug=, =udev= primarily manages device nodes in the =/dev=
+   directory. At the same time, =udev= also handles all user space events
+   raised while hardware devices are added into the system or removed from it,
+   including firmware loading as required by certain devices.
+
+*** Yubikey
+    Add Yubikey access
+
+    #+name: 70-u2f.rules
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/70-u2f.rules" :noweb yes
+      # Yubico YubiKey
+
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0113|0114|0115|0116|0120|0200|0402|0403|0406|0407|0410", TAG+="uaccess"
+    #+END_SRC
+
+*** Wireshark (=usbmon=)
+
+    #+name: 90-wireshark-usbmon.rules
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/90-wireshark-usbmon.rules" :noweb no
+      # Wireshark
+
+      SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
+    #+END_SRC
+
+** systemd
+    
+*** GnuPG
+**** Socket-activated =dirmngr=
+     #+BEGIN_SRC sh :results output
+       systemctl --user enable dirmngr.socket
+     #+END_SRC
+
+**** Socket-activated =gpg-agent= with SSH support 
+     #+BEGIN_SRC sh :results output
+       systemctl --user enable gpg-agent.socket gpg-agent-ssh.socket
+     #+END_SRC
+     
+*** =coredump=
+    I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
+    #+name: coredump.conf
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/systemd/coredump.conf" :noweb no
+      # See coredump.conf(5) for details.
+
+      [Coredump]
+      #Storage=external
+      Compress=yes
+      #ProcessSizeMax=2G
+      #ExternalSizeMax=2G
+      JournalSizeMax=767M
+      MaxUse=1G
+      #KeepFree=
+    #+END_SRC
+
+** gnome-terminal
+   I prefer a smaller padding on my gnome terminal.
+
+   #+name: gtk.css
+   #+BEGIN_SRC css :tangle "~/.config/gtk-3.0/gtk.css" :noweb no
+     VteTerminal,
+     TerminalScreen,
+     vte-terminal {
+       /* XXX: Don't attempt to change this to padding: 5px 0 5px 5px */
+       padding-bottom: 0px;
+       padding-top: 5px;
+       padding-left: 5px;
+       padding-right: 5px;
+     }
+
+     /* shrink headerbars */
+     headerbar {
+       min-height: 0px;
+       padding-left: 0px; /* same as childrens vertical margins for nicer proportions */
+       padding-right: 0px;
+     }
+
+     headerbar entry,
+     headerbar spinbutton,
+     headerbar button,
+     headerbar separator {
+       margin-top: 0px; /* same as headerbar side padding for nicer proportions */
+       margin-bottom: 0px;
+     }
+
+     /* shrink ssd titlebars */
+     .default-decoration {
+       min-height: 0; /* let the entry and button drive the titlebar size */
+       padding: 0px;
+     }
+
+     .default-decoration .titlebutton {
+       min-height: 0px; /* tweak these two props to reduce button size */
+       min-width: 0px;
+     }
+
+     window.ssd headerbar.titlebar,
+     window.ssd headerbar.titlebar button.titlebutton
+     {
+       padding-top: 0px;
+       padding-bottom: 0px;
+       min-height: 0;
+     }
+   #+END_SRC
+
+   You can also remove the ridiculously huge headerbar in Gnome 3.32+
+
+   #+BEGIN_SRC sh :results silent
+     gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
+   #+END_SRC
+
+** NetworkManager
+   NetworkManager is a program for providing detection and configuration for systems to automatically connect to network.
+
+   I use a local resolver (=dnsmasq=) instead of those provided by DHCP.
+
+*** Enable =dnsmasq=
+**** =NetworkManager.conf=
+     You must ensure NetworkManager globally enables local resolver =dnsmasq=
+     #+NAME: NetworkManager.conf
+     #+BEGIN_SRC conf
+       [main]
+       dns=dnsmasq
+     #+END_SRC
+
+**** =dnsmasq.conf=
+     This will tack on these servers to the list recieved by DHCP.
+     #+NAME: server.conf
+     #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/dnsmasq.d/server.conf" :noweb no
+       server=2606:4700:4700::1111
+       server=1.1.1.1
+       server=2001:4860:4860::8888
+       server=8.8.8.8
+     #+END_SRC
 
 * Backup
 ** Thunderbird
    Thunderbird provides an excellent RSS reader and I keep a list of the feeds which I consume in =thunderbird/zv-feeds.opml=.
-** =dconf=
-   dconf is a low-level configuration system. Its main purpose is to provide a backend to GSettings on platforms that don't already have configuration storage systems.
+   
+** Gnome Keybindings
+*** Backup
 
-*** gnome-terminal
-    #+begin_src shell
-      dconf dump /org/gnome/terminal/ > gnome_terminal_settings_backup.txt
-    #+end_src
+    #+NAME: keybindings
+    #+BEGIN_SRC sh :results file :file-ext sh :output-dir backup
+      local schema
+      local key
+      local value
+      schema="org.gnome.desktop.wm.keybindings"
+      for key in $(gsettings list-keys "$schema"); do
+          value="$(gsettings get "$schema" "$key")"
 
-** keyring
-   Gnome Keyring (accessible through Seahorse) stores it's keys in =~/.local/share/keyrings=. Anytime I'm backing keys up, I encrypt it first.
-#+begin_src 
-KEYRING_PATH="$HOME/.local/share/keyrings"
-tar --create -C $KEYRING_PATH(:h) --wildcards -O $KEYRING_PATH(:t) \
-        | gpg --encrypt -r zv@nxvr.org -o gnome-keyring.tar.gpg
-#+end_src
-*** restore
-    #+begin_src 
-   # Use gpg not gnome ssh-agent
-    if [[ $(gconftool-2 --get /apps/gnome-keyring/daemon-components/ssh) != "false" ]]; then
-        gconftool-2 --type bool --set /apps/gnome-keyring/daemon-components/ssh false
-    fi
-    gpg2 -d gnome-keyring.tar.gpg > gnome-keyring.tar
-    tar xvf gnome-keyring.tar
-    mv keyrings ~/.local/share/keyrings
-    #+end_src
+          if [[ "$?" -eq 0 && ! -z "$value" ]]; then
+              printf "gsettings set %s %s %s\n" "$schema" "$key" "$value"
+          fi
+      done
+    #+END_SRC
 
-** My files and folder
-   #+begin_src sh
-tar -a -c -v -f /run/media/zv/02A9-16E4/backup.tar.gz ~/Development ~/Backup ~/Books ~/Documents ~/dotfilez ~/zv.github.io
-   #+end_src
+*** Restore
+
+    #+BEGIN_SRC sh :results output
+      gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
+    #+END_SRC
+
+** =gnome-terminal=
+    
+*** Backup
+    #+NAME: gnome-terminal-themes
+    #+BEGIN_SRC sh :results file :file-ext dconf :output-dir backup
+      dconf dump /org/gnome/terminal/
+    #+END_SRC
+
+    #+RESULTS: gnome-terminal-themes
+    [[file:backup/gnome-terminal-themes.dconf]]
+
+** GnuPG
+*** Backup
+    #+BEGIN_SRC sh :results output :var destination="backup"
+      cp ~/.gnupg/pubring.gpg "$destination" && echo "Copied pubring.gpg to $destination"
+    #+END_SRC
+
+    #+RESULTS:
+    : Copied pubring.gpg to backup
+
+    #+NAME: owner_trust
+    #+BEGIN_SRC sh :results file :file-ext lst :output-dir backup
+      gpg --export-ownertrust
+    #+END_SRC
+
+    #+RESULTS: owner_trust
+    [[file:backup/owner_trust.lst]]
+
+*** Restore
+    #+BEGIN_SRC sh :results output
+      gpg --import-options restore --import backup/pubring.gpg
+      gpg --import-ownertrust owner_trust.lst
+    #+END_SRC
+
+** rsync
+   #+NAME: rsync-include.lst
+   #+BEGIN_EXAMPLE
+~/.aws/*
+~/.bash_history
+~/.kube
+~/.local/share/keyrings
+~/.bash_history
+~/.zsh_history
+~/Backup
+~/Books
+~/Development/dotfilez
+~/Development/zv.github.io
+~/zv.github.io
+~/Documents
+~/Music
+~/Pictures
+   #+END_EXAMPLE
