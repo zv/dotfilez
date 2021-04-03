@@ -43,8 +43,6 @@ if _exists tmux; then
     alias tl="tmux list-sessions"
 fi
 
-# ipython
-_exists ipython3 && alias ipy='ipython3'
 # Initialize key map
 keycfg()  {
 	if [[ -n "$DISPLAY" ]]; then
@@ -63,7 +61,7 @@ alias xmm="xmodmap $HOME/.xmodmaprc"
 
 # Bullshit workaround to unlock my yubikey
 
-alias veactivate="source venv/bin/activate && rehash"
+alias veactivate="source .venv/bin/activate && rehash"
 
 if _exists rg; then
     rage() {
@@ -204,7 +202,6 @@ alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias w3m="noglob w3m"
-# alias ptpython="ptpython3 --vi"
 
 if _exists dnf; then
     alias dnfs="dnf search"                       # search package
