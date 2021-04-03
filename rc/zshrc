@@ -47,6 +47,7 @@ fi
 keycfg()  {
 	if [[ -n "$DISPLAY" ]]; then
 		setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
+		gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
 		xmodmap <(print 'keycode 135 = Hyper_R
 		add Mod3 = Hyper_R')
 	else
