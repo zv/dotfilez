@@ -21,11 +21,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    #+END_EXAMPLE
 
 ** GnuPG Key
-   #+BEGIN_SRC sh :results file replace :file zv.gpg.pub
+   #+NAME: GPG Key
+   #+BEGIN_SRC sh :results file :file zv.gpg.pub :exports both
      gpg --export --armor 9358C8BDAAD9A62BB08B9660F6F2D0445DC172F8
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: GPG Key
    [[file:zv.gpg.pub]]
 
 * Workstation Setup
