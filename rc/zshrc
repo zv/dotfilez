@@ -364,7 +364,7 @@ autoload -Uz vcs_info
 precmd () { vcs_info }
 
 local -A _keymap_fg_indicator=([vicmd]=red [viopp]=yellow)
-PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}>>%f '
+PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}$%f '
 
 # ── Modules and Completions ────────────────────────────────
 # Load and initialize the completion system ignoring insecure directories with a
