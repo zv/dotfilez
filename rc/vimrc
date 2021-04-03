@@ -2,6 +2,7 @@ set nocompatible
 if has('autocmd')
 	filetype plugin indent on
 endif
+
 if has('syntax') && !exists('g:syntax_on')
 	syntax enable
 endif
@@ -104,7 +105,7 @@ function! s:create_backup_dirs() abort
 	let &backupskip=join([&backupskip, &backupdir], ',')
 
 	" Create those folders if they don't exist
-	for l:d in [&undodir]
+	for l:d in [&backupdir, &undodir]
 		if !isdirectory(l:d)
 			let l:result = confirm("Create " . l:d . " ?", "&Yes\n&No\n&Cancel", 1)
 			if result == 1
