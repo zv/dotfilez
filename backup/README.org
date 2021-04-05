@@ -1,4 +1,37 @@
 * Backup
+** Checklist
+   - [-] Bookmarks
+     - [ ] Firefox
+     - [ ] Thunderbird
+     - [X] Chrome
+   - [ ] GNOME Keyring
+   - [ ] Thunderbird
+   - [ ] GPG
+     - [ ] Export public key ring (=pubring.gpg=)
+     - [ ] Export owner-trust list (=owner_trust.lst=)
+   - [ ] Credentials
+     - [ ] netrc (~$HOME/.netrc~)
+     - [ ] authinfo (~$HOME/.authinfo~)
+     - [ ] Kubernetes (~$HOME/.kube/config~)
+     - [ ] AWS (~$HOME/.aws/{config,credentials}~)
+   - [ ] Code
+     - [ ] Push all branches with changes not pushed to ~master~
+     - [ ] Backup any without remotes
+   - [ ] Virtual Machines
+   - [ ] SSH
+     - [ ] Check for system-specific private keys in ~$HOME/.ssh/id_*~
+   - [ ] History
+     - [ ] ~$HOME/.zsh_history~
+     - [ ] ~$HOME/.psql_history-*~
+     - [ ] ~$HOME/.bash_history-*~
+     - [ ] ~$HOME/.ipython/profile_default/history.sqlite*~
+   - [ ] Documents
+     - [ ] ~$HOME/Documents~
+     - [ ] ~$HOME/Books~
+     - [ ] ~$HOME/Pictures~
+     - [ ] ~$HOME/Music~
+
+
 ** Home
    :PROPERTIES:
    :header-args: :dir home
