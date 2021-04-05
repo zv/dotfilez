@@ -61,6 +61,33 @@
          "Pictures"
    #+END_SRC
 
+** Development
+*** Prepare
+    #+BEGIN_SRC sh :results output
+      for dir in $HOME/Development/*/; do
+          (
+              cd "$dir"
+              if test -d ".git"; then
+                  if git remote get-url origin 2>&1 >/dev/null; then
+                      git master-cleanse
+                      git remote prune origin
+                      if git branch --no-merged origin/master >/dev/null; then
+                          printf "%s has unmerged branches\n" "$dir"
+                          git repacker 2>&1 >/dev/null
+                      else
+                          printf "%s is fully merged, may be deleted\n" "$dir"
+                      fi
+                  else
+                      printf "%s has no 'origin' remote\n" "$dir"
+
+                  fi
+              else
+                  printf "%s is not a git repository\n" "$dir"
+              fi
+          )
+      done
+    #+END_SRC
+
 ** Thunderbird
    :PROPERTIES:
    :header-args: :dir thunderbird

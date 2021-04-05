@@ -393,7 +393,6 @@
 	### LOG ALIASES ###
 
 	log-graph = log --all --graph --decorate
-	log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
 	log-timeline = log --format='%h %an %ar - %s'
 	log-local = log --oneline origin..HEAD
 	log-timeline = log --date=local --format='%h %an %ar - %s'
@@ -590,10 +589,10 @@
 	master-cleanse = !git master-cleanse-local; git master-cleanse-remote
 
 	# Delete all local branches that have been merged into the local master branch.
-	master-cleanse-local = "!git checkout master && git branch --merged | xargs git branch -d"
+  master-cleanse-local = "!git branch --merged master | grep  -v '\\*\\|master' | xargs -r -n 1 git branch -d"
 
 	# Delete all remote branches that have been merged into the remote master branch.
-	master-cleanse-remote = !"git branch -r --merged origin/master | sed 's# *origin/##' | grep -v '^master$' xargs -I% git push origin :% 2>&1 | grep --colour=never 'deleted'"
+  master-cleanse-remote = !"git checkout master && git branch -r --merged | grep -v master | sed 's/origin\\///' | xargs -n 1 git push --delete origin"
 
 	# Publish the current branch by pushing it to the remote "origin",
 	# and setting the current branch to track the upstream branch.
@@ -654,16 +653,6 @@
 	# us from a window that has very large objects such as binary blobs.
 	#
 	repacker = !git repack -a -d -f --depth=300 --window=300 --window-memory=1g
-
-	# Do everything we can to optimize the repository.
-	#
-	# This command takes a long time to run, perhaps even overnight.
-	#
-	# Currently, this command simply calls `git pruner` and `git repacker`.
-	# There's a step that may be unnecessarying, calling `git prune-pack`.
-	#
-	optimize = !git pruner; git repacker; git prune-packed
-
 
 	### ADVANCED ALIASES ###
 
