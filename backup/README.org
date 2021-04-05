@@ -1,0 +1,121 @@
+* Backup
+** Thunderbird
+   :PROPERTIES:
+   :header-args:sh: :var THUNDERBIRD_PROFILE="~/.thunderbird/zv.default"
+   :header-args:sh: :var THUNDERBIRD_PROFILE_ARCHIVE="backup/zv.default.tar.xz"
+   :END:
+
+*** Profile
+    #+BEGIN_SRC sh
+      if test -d "$THUNDERBIRD_PROFILE"; then
+          printf "Backing up %s\n" "$THUNDERBIRD_PROFILE"
+          XZ_OPT=-9 tar --create \
+                -C ~/.thunderbird \
+                -J zv.default \
+                --exclude='*/Mail' \
+                --exclude='*/ImapMail' \
+                --exclude='*/logs' \
+                --exclude='*/News/news.gwene.org/*.msf' \
+                --exclude='*/calendar-data' \
+                --exclude='*/crashes' \
+                --exclude='*/minidumps' \
+                --exclude='*/saved-telemetry-pings' \
+                --exclude='*/global-messages-db.sqlite' \
+                --exclude='*/datareporting' \
+                --exclude='*/liberatorCache' \
+                --exclude='*/places.sqlite' \
+                --exclude='*/places.sqlite-wal' \
+                --exclude='*/places.sqlite.old' \
+                --exclude='*/panacea.dat' \
+                --exclude='*/cookies.sqlite-wal' \
+                --exclude='*/storage.sdb' \
+                --exclude='*/*.log' \
+                else
+          printf "No thunderbird profile found at %s\n" "$THUNDERBIRD_PROFILE"
+      fi
+    #+END_SRC
+
+**** Restore
+     #+BEGIN_SRC sh
+       tar --extract --file "$THUNDERBIRD_PROFILE_ARCHIVE" --directory "$HOME/.thunderbird"
+     #+END_SRC
+
+** Gnome
+   :PROPERTIES:
+   :header-args: :dir gnome
+   :END:
+
+*** Keybindings
+**** Backup
+     #+NAME: keybindings.sh
+     #+BEGIN_SRC sh :results file :file keybindings.sh
+       local schema
+       local key
+       local value
+       schema="org.gnome.desktop.wm.keybindings"
+       for key in $(gsettings list-keys "$schema"); do
+           value="$(gsettings get "$schema" "$key")"
+
+           if [[ "$?" -eq 0 && ! -z "$value" ]]; then
+               printf "gsettings set %s %s %s\n" "$schema" "$key" "$value"
+           fi
+       done
+     #+END_SRC
+
+**** Restore
+
+     #+BEGIN_SRC sh :results output
+       gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
+     #+END_SRC
+
+*** =gnome-terminal=
+**** Backup
+     #+NAME: gnome-terminal-themes.dconf
+     #+BEGIN_SRC sh :results file :file gnome-terminal-themes.dconf
+       dconf dump /org/gnome/terminal/
+     #+END_SRC
+
+**** Restore
+     #+BEGIN_SRC sh
+       dconf load gnome-terminal-themes.dconf
+     #+END_SRC
+
+** GnuPG
+   :PROPERTIES:
+   :header-args: :dir gnupg
+   :END:
+
+*** Backup
+    #+NAME: owner_trust.lst
+    #+BEGIN_SRC sh :results file :file owner_trust.lst
+      gpg --export-ownertrust
+    #+END_SRC
+
+    #+BEGIN_SRC sh :results silent
+    cp ~/.gnupg/pubring.gpg pubring.gpg
+    #+END_SRC
+
+*** Restore
+    #+BEGIN_SRC sh :results output
+      gpg --import-options restore --import pubring.gpg
+      gpg --import-ownertrust owner_trust.lst
+    #+END_SRC
+
+** rsync
+   #+NAME: rsync-include.lst
+   #+BEGIN_EXAMPLE
+~/.aws/*
+~/.bash_history
+~/.kube
+~/.local/share/keyrings
+~/.bash_history
+~/.zsh_history
+~/Backup
+~/Books
+~/Development/dotfilez
+~/Development/zv.github.io
+~/zv.github.io
+~/Documents
+~/Music
+~/Pictures
+   #+END_EXAMPLE
