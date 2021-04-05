@@ -1,37 +1,47 @@
 * Backup
+** Home
+   :PROPERTIES:
+   :header-args: :dir home
+   :END:
+
+   #+BEGIN_SRC sh :results output
+     tar --create \
+         --preserve-permissions \
+         --posix \
+         --one-file-system \
+         --auto-compress \
+         --exclude-backups \
+         --exclude-vcs \
+         --exclude-from=".tar_exclude" \
+         --file "home.tar" \
+         --directory="$HOME" \
+         ".aws/config" \
+         ".aws/credentials" \
+         ".kube/config" \
+         ".bash_history" \
+         ".zsh_history" \
+         ".local/share/keyrings" \
+         "Backup" \
+         "Books" \
+         "Documents" \
+         "Music" \
+         "Pictures"
+   #+END_SRC
+
 ** Thunderbird
    :PROPERTIES:
-   :header-args:sh: :var THUNDERBIRD_PROFILE="~/.thunderbird/zv.default"
-   :header-args:sh: :var THUNDERBIRD_PROFILE_ARCHIVE="backup/zv.default.tar.xz"
+   :header-args: :dir thunderbird
    :END:
 
 *** Profile
     #+BEGIN_SRC sh
-      if test -d "$THUNDERBIRD_PROFILE"; then
-          printf "Backing up %s\n" "$THUNDERBIRD_PROFILE"
-          XZ_OPT=-9 tar --create \
-                -C ~/.thunderbird \
-                -J zv.default \
-                --exclude='*/Mail' \
-                --exclude='*/ImapMail' \
-                --exclude='*/logs' \
-                --exclude='*/News/news.gwene.org/*.msf' \
-                --exclude='*/calendar-data' \
-                --exclude='*/crashes' \
-                --exclude='*/minidumps' \
-                --exclude='*/saved-telemetry-pings' \
-                --exclude='*/global-messages-db.sqlite' \
-                --exclude='*/datareporting' \
-                --exclude='*/liberatorCache' \
-                --exclude='*/places.sqlite' \
-                --exclude='*/places.sqlite-wal' \
-                --exclude='*/places.sqlite.old' \
-                --exclude='*/panacea.dat' \
-                --exclude='*/cookies.sqlite-wal' \
-                --exclude='*/storage.sdb' \
-                --exclude='*/*.log' \
-                else
-          printf "No thunderbird profile found at %s\n" "$THUNDERBIRD_PROFILE"
+      if test -d "$HOME/.thunderbird/"; then
+          tar --create \
+              -C "$HOME/.thunderbird/" \
+              --exclude-from=".tar_exclude" \
+              --file "thunderbird.tar"
+      else
+          printf "No thunderbird profile found at %s\n" "$HOME/.thunderbird/"
       fi
     #+END_SRC
 
@@ -92,7 +102,7 @@
     #+END_SRC
 
     #+BEGIN_SRC sh :results silent
-    cp ~/.gnupg/pubring.gpg pubring.gpg
+      cp ~/.gnupg/pubring.gpg pubring.gpg
     #+END_SRC
 
 *** Restore
@@ -100,22 +110,3 @@
       gpg --import-options restore --import pubring.gpg
       gpg --import-ownertrust owner_trust.lst
     #+END_SRC
-
-** rsync
-   #+NAME: rsync-include.lst
-   #+BEGIN_EXAMPLE
-~/.aws/*
-~/.bash_history
-~/.kube
-~/.local/share/keyrings
-~/.bash_history
-~/.zsh_history
-~/Backup
-~/Books
-~/Development/dotfilez
-~/Development/zv.github.io
-~/zv.github.io
-~/Documents
-~/Music
-~/Pictures
-   #+END_EXAMPLE
