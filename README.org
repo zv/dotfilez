@@ -1,3 +1,6 @@
+#+PROPERTY: header-args:      :noweb no
+#+PROPERTY: header-args:sh:   :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name)))
+
 * dotfilez
   #+CAPTION: the_setup
   #+NAME:   setup.png
@@ -34,25 +37,25 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 ** Packages
 
 *** Base
-    #+BEGIN_SRC sh :results output :noweb no
+    #+BEGIN_SRC sh :results output
       dnf list tmux vim-enhanced zsh
     #+END_SRC
 
 *** Development
-    #+BEGIN_SRC sh :results output :noweb no
+    #+BEGIN_SRC sh :results output
       dnf list autoconf automake binutils bison clang cmake ctags flex \
           gcc gcc-c++ gdb git graphviz libtool make nasm openssl patch \
           pkgconf readline socat strace
     #+END_SRC
 
 **** Python
-     #+BEGIN_SRC sh :results output :noweb no
+     #+BEGIN_SRC sh :results output
        dnf list python3 python3-devel python3-ipython \
            python3-epc python3-flake8 python3-importmagic python3-isort python3-mypy python3-yapf
      #+END_SRC
 
 *** Desktop
-    #+BEGIN_SRC sh :results output :noweb no
+    #+BEGIN_SRC sh :results output
       dnf list adobe-source-code-pro-fonts avahi-tools bpftool bpftrace curl \
           dotnet elfutils emacs global global-ctags gnupg2 java-latest-openjdk jq \
           kernel-devel ltrace mtr nmap perf postgresql qemu ripgrep systemtap \
@@ -60,7 +63,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+END_SRC
 
 **** Yubikey
-     #+BEGIN_SRC sh :results output :noweb no
+     #+BEGIN_SRC sh :results output
        dnf list gnupg2 gnupg2-smime pcsc-lite pcsc-tools ykclient ykpers yubikey-personalization-gui
      #+END_SRC
 
@@ -74,9 +77,9 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Link rc files
    #+NAME: link_all.sh
-   #+BEGIN_SRC sh :var filename=(buffer-file-name) :results output
+   #+BEGIN_SRC sh :results output
      #!/bin/sh
-     ROOTDIR="$(dirname "$(readlink -f "${filename:-0}")")"
+     DOTFILEZ="${DOTFILEZ:-0}"
 
      set -euo pipefail
 
@@ -108,30 +111,30 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
          fi
      }
 
-     link_all dig "$ROOTDIR/rc/digrc"
-     link_all emacs "$ROOTDIR/rc/spacemacs" "$ROOTDIR/emacs.d" "$ROOTDIR/rc/gnus.el" "$ROOTDIR/rc/newsrc"
-     link_all erl "$ROOTDIR/rc/erlang"
-     link_all gdb "$ROOTDIR/rc/gdbinit"
-     link_all git "$ROOTDIR/rc/gitignore" "$ROOTDIR/rc/gitconfig"
-     link_all gpg "$ROOTDIR/rc/gnupg"
-     link_all iex "$ROOTDIR/rc/iex"
-     link_all node "$ROOTDIR/rc/npmrc" "$ROOTDIR/rc/babelrc"
-     link_all psql "$ROOTDIR/rc/psqlrc"
-     link_all rg "$ROOTDIR/rc/ripgreprc"
-     link_all ruby "$ROOTDIR/rc/pryrc" "$ROOTDIR/rc/gemrc"
-     link_all screen "$ROOTDIR/rc/screenrc"
-     link_all screen "$ROOTDIR/rc/screenrc"
-     link_all tmux "$ROOTDIR/rc/tmux.conf"
-     link_all top "$ROOTDIR/rc/toprc"
-     link_all vim "$ROOTDIR/rc/vim" "$ROOTDIR/rc/vimrc"
-     link_all weechat "$ROOTDIR/rc/weechat"
-     link_all wget "$ROOTDIR/rc/wgetrc"
-     link_all zsh "$ROOTDIR/rc/zsh" "$ROOTDIR/rc/zshenv" "$ROOTDIR/rc/zshrc"
-     link_all Xorg "$ROOTDIR/rc/Xsession" "$ROOTDIR/rc/Xdefaults"
+     link_all dig "$DOTFILEZ/rc/digrc"
+     link_all emacs "$DOTFILEZ/rc/spacemacs" "$DOTFILEZ/emacs.d" "$DOTFILEZ/rc/gnus.el" "$DOTFILEZ/rc/newsrc"
+     link_all erl "$DOTFILEZ/rc/erlang"
+     link_all gdb "$DOTFILEZ/rc/gdbinit"
+     link_all git "$DOTFILEZ/rc/gitignore" "$DOTFILEZ/rc/gitconfig"
+     link_all gpg "$DOTFILEZ/rc/gnupg"
+     link_all iex "$DOTFILEZ/rc/iex"
+     link_all node "$DOTFILEZ/rc/npmrc" "$DOTFILEZ/rc/babelrc"
+     link_all psql "$DOTFILEZ/rc/psqlrc"
+     link_all rg "$DOTFILEZ/rc/ripgreprc"
+     link_all ruby "$DOTFILEZ/rc/pryrc" "$DOTFILEZ/rc/gemrc"
+     link_all screen "$DOTFILEZ/rc/screenrc"
+     link_all screen "$DOTFILEZ/rc/screenrc"
+     link_all tmux "$DOTFILEZ/rc/tmux.conf"
+     link_all top "$DOTFILEZ/rc/toprc"
+     link_all vim "$DOTFILEZ/rc/vim" "$DOTFILEZ/rc/vimrc"
+     link_all weechat "$DOTFILEZ/rc/weechat"
+     link_all wget "$DOTFILEZ/rc/wgetrc"
+     link_all zsh "$DOTFILEZ/rc/zsh" "$DOTFILEZ/rc/zshenv" "$DOTFILEZ/rc/zshrc"
+     link_all Xorg "$DOTFILEZ/rc/Xsession" "$DOTFILEZ/rc/Xdefaults"
 
-     symlink_at "$ROOTDIR/rc/ssh" "$HOME/.ssh"
-     symlink_at "$ROOTDIR/rc/editrc" "$HOME/.editrc"
-     symlink_at "$ROOTDIR/rc/inputrc" "$HOME/.inputrc"
+     symlink_at "$DOTFILEZ/rc/ssh" "$HOME/.ssh"
+     symlink_at "$DOTFILEZ/rc/editrc" "$HOME/.editrc"
+     symlink_at "$DOTFILEZ/rc/inputrc" "$HOME/.inputrc"
    #+END_SRC
 
 *** Default shell
@@ -147,7 +150,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 ** org-protocol
    org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions.
 
-   #+BEGIN_SRC conf :tangle "~/.local/share/applications/org-protocol.desktop" :noweb no
+   #+BEGIN_SRC conf :tangle "~/.local/share/applications/org-protocol.desktop"
      [Desktop Entry]
      Name=org-protocol
      Exec=emacsclient %u
@@ -157,12 +160,13 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      MimeType=x-scheme-handler/org-protocol;
    #+END_SRC
 
-   Afterwards, you must update the desktop database to ensure the =org-protocol=
-   handler is installed.
+*** Install
+    You must run =update-desktop-database= after adding a ~.desktop~ file.
 
-   #+BEGIN_SRC sh :results silent
-     update-desktop-database ~/.local/share/applications/
-   #+END_SRC
+    #+BEGIN_SRC sh :results silent
+      update-desktop-database "$HOME/.local/share/applications/"
+    #+END_SRC
+
 
 ** polkit
    polkit is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes: It is a framework for centralizing the decision making process with respect to granting access to privileged operations for unprivileged applications.
@@ -170,7 +174,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** =libvirt=
     =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
     #+name: 80-libvirt.rules
-    #+BEGIN_SRC javascript :tangle "/sudo::/etc/polkit-1/rules.d/80-libvirt.rules" :noweb no
+    #+BEGIN_SRC javascript :tangle "/sudo::/etc/polkit-1/rules.d/80-libvirt.rules"
       polkit.addRule(function(action, subject) {
         if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
           return polkit.Result.YES;
@@ -180,11 +184,10 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Python
 
-*** IPython Config
-    Rewrites the default =ipython_config.py= with my preferred defaults
+*** =IPython= config
+    Rewrites the default ~$HOME/.ipython/profile_default/ipython_config.py~ with my preferred defaults
 
-    #+NAME: rewrite_ipython_config.awk
-    #+BEGIN_SRC awk :results output
+    #+BEGIN_SRC awk :results file :file "~/.ipython/profile_default/ipython_config.py" :exports both
       #!/usr/bin/awk -f
 
       BEGIN {
@@ -231,7 +234,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** Wireshark (=usbmon=)
 
     #+name: 90-wireshark-usbmon.rules
-    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/90-wireshark-usbmon.rules" :noweb no
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/90-wireshark-usbmon.rules"
       # Wireshark
 
       SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
@@ -253,7 +256,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** =coredump=
     I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
     #+name: coredump.conf
-    #+BEGIN_SRC conf :tangle "/sudo::/etc/systemd/coredump.conf" :noweb no
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/systemd/coredump.conf"
       # See coredump.conf(5) for details.
 
       [Coredump]
@@ -270,7 +273,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    I prefer a smaller padding on my gnome terminal.
 
    #+name: gtk.css
-   #+BEGIN_SRC css :tangle "~/.config/gtk-3.0/gtk.css" :noweb no
+   #+BEGIN_SRC css :tangle "~/.config/gtk-3.0/gtk.css"
      VteTerminal,
      TerminalScreen,
      vte-terminal {
@@ -330,8 +333,9 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** Enable =dnsmasq=
 **** =NetworkManager.conf=
      You must ensure NetworkManager globally enables local resolver =dnsmasq=
-     #+NAME: NetworkManager.conf
-     #+BEGIN_SRC conf
+
+     #+NAME: 70-use-dnsmasq.conf
+     #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/conf.d/70-use-dnsmasq.conf"
        [main]
        dns=dnsmasq
      #+END_SRC
@@ -339,7 +343,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 **** =dnsmasq.conf=
      This will tack on these servers to the list recieved by DHCP.
      #+NAME: server.conf
-     #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/dnsmasq.d/server.conf" :noweb no
+     #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/dnsmasq.d/server.conf"
        server=2606:4700:4700::1111
        server=1.1.1.1
        server=2001:4860:4860::8888
@@ -348,7 +352,58 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 * Backup
 ** Thunderbird
-   Thunderbird provides an excellent RSS reader and I keep a list of the feeds which I consume in =thunderbird/zv-feeds.opml=.
+   :PROPERTIES:
+   :header-args:sh: :var THUNDERBIRD_PROFILE="~/.thunderbird/zv.default"
+   :header-args:sh: :var THUNDERBIRD_PROFILE_ARCHIVE="backup/zv.default.tar.xz"
+   :END:
+
+*** Profile
+    #+BEGIN_SRC sh
+      if test -d "$THUNDERBIRD_PROFILE"; then
+          printf "Backing up %s\n" "$THUNDERBIRD_PROFILE"
+          XZ_OPT=-9 tar --create \
+                -C ~/.thunderbird \
+                -J zv.default \
+                -O profile.tar \
+                --exclude='*/Mail' \
+                --exclude='*/ImapMail' \
+                --exclude='*/logs' \
+                --exclude='*/News/news.gwene.org/*.msf' \
+                --exclude='*/calendar-data' \
+                --exclude='*/crashes' \
+                --exclude='*/minidumps' \
+                --exclude='*/saved-telemetry-pings' \
+                --exclude='*/global-messages-db.sqlite' \
+                --exclude='*/datareporting' \
+                --exclude='*/liberatorCache' \
+                --exclude='*/places.sqlite' \
+                --exclude='*/places.sqlite-wal' \
+                --exclude='*/places.sqlite.old' \
+                --exclude='*/panacea.dat' \
+                --exclude='*/cookies.sqlite-wal' \
+                --exclude='*/storage.sdb' \
+                --exclude='*/*.log' \
+                else
+          printf "No thunderbird profile found at %s\n" "$THUNDERBIRD_PROFILE"
+      fi
+    #+END_SRC
+
+
+**** Restore
+     #+BEGIN_SRC conf :file "~/.thunderbird/profiles.ini"
+       [General]
+       StartWithLastProfile=1
+
+       [Profile0]
+       Name=default
+       IsRelative=1
+       Path=zv.default
+       Default=1
+     #+END_SRC
+
+     #+BEGIN_SRC sh
+       tar --extract --file "$THUNDERBIRD_PROFILE_ARCHIVE" --directory "$HOME/.thunderbird"
+     #+END_SRC
 
 ** Gnome Keybindings
 *** Backup
