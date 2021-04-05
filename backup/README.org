@@ -61,25 +61,27 @@
          "Pictures"
    #+END_SRC
 
+
 ** Development
 *** Prepare
     #+BEGIN_SRC sh :results output
       for dir in $HOME/Development/*/; do
           (
-              cd "$dir"
-              if test -d ".git"; then
+              if test -d "$dir/.git"; then
+                  cd "$dir"
+
                   if git remote get-url origin 2>&1 >/dev/null; then
                       git master-cleanse
                       git remote prune origin
+                      git repacker
+
                       if git branch --no-merged origin/master >/dev/null; then
                           printf "%s has unmerged branches\n" "$dir"
-                          git repacker 2>&1 >/dev/null
                       else
-                          printf "%s is fully merged, may be deleted\n" "$dir"
+                          printf "%s is fully merged\n" "$dir"
                       fi
                   else
                       printf "%s has no 'origin' remote\n" "$dir"
-
                   fi
               else
                   printf "%s is not a git repository\n" "$dir"
@@ -110,63 +112,52 @@
        tar --extract --file "$THUNDERBIRD_PROFILE_ARCHIVE" --directory "$HOME/.thunderbird"
      #+END_SRC
 
-** Gnome
-   :PROPERTIES:
-   :header-args: :dir gnome
-   :END:
-
-*** Keybindings
-**** Backup
-     #+NAME: keybindings.sh
-     #+BEGIN_SRC sh :results file :file keybindings.sh
-       local schema
-       local key
-       local value
-       schema="org.gnome.desktop.wm.keybindings"
-       for key in $(gsettings list-keys "$schema"); do
-           value="$(gsettings get "$schema" "$key")"
-
-           if [[ "$?" -eq 0 && ! -z "$value" ]]; then
-               printf "gsettings set %s %s %s\n" "$schema" "$key" "$value"
-           fi
-       done
-     #+END_SRC
-
-**** Restore
-
-     #+BEGIN_SRC sh :results output
-       gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
-     #+END_SRC
-
-*** =gnome-terminal=
-**** Backup
-     #+NAME: gnome-terminal-themes.dconf
-     #+BEGIN_SRC sh :results file :file gnome-terminal-themes.dconf
-       dconf dump /org/gnome/terminal/
-     #+END_SRC
-
-**** Restore
-     #+BEGIN_SRC sh
-       dconf load gnome-terminal-themes.dconf
-     #+END_SRC
-
 ** GnuPG
    :PROPERTIES:
    :header-args: :dir gnupg
    :END:
 
-*** Backup
+*** Owner Trust
     #+NAME: owner_trust.lst
-    #+BEGIN_SRC sh :results file :file owner_trust.lst
+    #+BEGIN_SRC sh :results output :exports results
       gpg --export-ownertrust
     #+END_SRC
 
-    #+BEGIN_SRC sh :results silent
-      cp ~/.gnupg/pubring.gpg pubring.gpg
-    #+END_SRC
+    #+RESULTS: owner_trust.lst
+    #+begin_example
+    # List of assigned trustvalues, created Mon 05 Apr 2021 02:08:18 PM PDT
+    # (Use "gpg --import-ownertrust" to restore them)
+    9358C8BDAAD9A62BB08B9660F6F2D0445DC172F8:6:
+    E1E70D6E64BA8D1F74E78285E5001906A3FDE45E:5:
+    E3371C093FEB6AF954D9AA7AF05E232B31FE4222:5:
+    9466BC69D21C3EB6B8271C6EFAA0F9C4E6F74C23:5:
+    F35DA90DA32BE26B5F482F434050B1E4B888F8A9:5:
+    10645351F62D42C389A299A9AACCAC21430AF5E7:2:
+    1222A1BE8EB72C64DC4273C5360E77FEC40F2998:5:
+    28D3BED851FDF3AB57FEF93C233587A47C207910:2:
+    EA55E87FF06C4955B9E99986040D0A3B4ED2E5C7:2:
+    108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE:2:
+    0D99E203DFFE1D2F7D0B48D0DAE717EFE9424541:2:
+    99E4A8F4DECC782FCB1955300A04E2A9F7B13CE1:2:
+    EF45510680FB02326B045AFB32474CF834EC9CBA:2:
+    9B9EB21FF345FA6D451DAEA52E1D830ED7B83025:4:
+    2D835E1D7DAD0F8DA2DC4335C2F66E51DDC797A3:5:
+    F24BD37573361FE30470B2D3CC1885691B29FA62:5:
+    D16F04E928688169B64088D5A84BF48A12CA3765:5:
+    69E77962A25643EA25E1028205C82CF57AD1DA46:2:
+    C7214D308D9C6F98245ECCF02E631D1C7E1F8F93:5:
+    6BE6FF53EC5AA7E21F81B402E18650C1EF268C5F:5:
+    C813BB9E9EFDC2A071AE4ED0B13E298AB47E94C9:5:
+    B3F7B9C95EC1283A34D77BD37B716BFEE79AEEE3:5:
+    DD12BEB4BDB0A79B7D7F364C95A2775913674492:5:
+    2DF553CC450B52D3D487963C70B01D84031D83CA:4:
+    F44E3D4039246B4B00908A4F2D07523C0EFE890C:5:
+    FA4455CADAA9458939DFECA21CBED555BDC04539:5:
+    BD287EC59E613F51FC955214D4CA6BE24F5C2560:2:
+    #+end_example
 
-*** Restore
+    You can import =owner_trust.lst= by doing:
+
     #+BEGIN_SRC sh :results output
-      gpg --import-options restore --import pubring.gpg
       gpg --import-ownertrust owner_trust.lst
     #+END_SRC

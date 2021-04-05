@@ -142,11 +142,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
       sudo usermod  --shell "$(which zsh)" "$(whoami)"
     #+END_SRC
 
-*** Gnome Keybindings
-    #+BEGIN_SRC sh :results output
-      gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
-    #+END_SRC
-
 ** org-protocol
    org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions.
 
@@ -269,61 +264,196 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
       #KeepFree=
     #+END_SRC
 
-** gnome-terminal
-   I prefer a smaller padding on my gnome terminal.
+** Gnome
+*** Settings
+    #+NAME: keybindings.sh
+    #+BEGIN_SRC sh :results output :exports results
+      schema_key() {
+          printf "gsettings set %s %s \"%s\"\n" "$1" "$2" "$(gsettings get "$1" "$2")"
+      }
 
-   #+name: gtk.css
-   #+BEGIN_SRC css :tangle "~/.config/gtk-3.0/gtk.css"
-     VteTerminal,
-     TerminalScreen,
-     vte-terminal {
-       /* XXX: Don't attempt to change this to padding: 5px 0 5px 5px */
-       padding-bottom: 0px;
-       padding-top: 5px;
-       padding-left: 5px;
-       padding-right: 5px;
-     }
+      # Remove obscenely tall headerbar in gnome-terminal
+      schema_key org.gnome.Terminal.Legacy.Settings headerbar
 
-     /* shrink headerbars */
-     headerbar {
-       min-height: 0px;
-       padding-left: 0px; /* same as childrens vertical margins for nicer proportions */
-       padding-right: 0px;
-     }
+      # Swap Caps-lock & alt
+      schema_key org.gnome.desktop.input-sources xkb-options
 
-     headerbar entry,
-     headerbar spinbutton,
-     headerbar button,
-     headerbar separator {
-       margin-top: 0px; /* same as headerbar side padding for nicer proportions */
-       margin-bottom: 0px;
-     }
+      # Dump of Gnome window keybindings
+      local key
+      for key in $(gsettings list-keys org.gnome.desktop.wm.keybindings); do
+          schema_key org.gnome.desktop.wm.keybindings "$key"
+      done
+    #+END_SRC
 
-     /* shrink ssd titlebars */
-     .default-decoration {
-       min-height: 0; /* let the entry and button drive the titlebar size */
-       padding: 0px;
-     }
+    #+RESULTS: keybindings.sh
+    #+begin_example
+    gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
+    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:ralt_rctrl', 'ctrl:rctrl_ralt', 'ctrl:nocaps', 'lv3:ralt_switch']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-group "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings begin-resize "['<Alt>F8']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-7 "['<Super>u']"
+    gsettings set org.gnome.desktop.wm.keybindings begin-move "['<Alt>F7']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-w "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-nw "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-10 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-6 "['<Shift><Super>y']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Control><Shift><Alt>Right']"
+    gsettings set org.gnome.desktop.wm.keybindings always-on-top "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Super>m']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Control><Shift><Alt>Left']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-8 "['<Super>i']"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-panels "['<Control><Alt>Escape']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-11 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings lower "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-7 "['<Shift><Super>u']"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-above "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-panels "['<Control><Alt>Tab']"
+    gsettings set org.gnome.desktop.wm.keybindings minimize "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-windows "['<Super>l', '<Super>h']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-9 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-12 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-on-all-workspaces "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-8 "['<Shift><Super>i']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-n "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings maximize-horizontally "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings set-spew-mark "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings maximize-vertically "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-sw "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-9 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings maximize "['<Super>Up']"
+    gsettings set org.gnome.desktop.wm.keybindings panel-main-menu "['<Alt>F1']"
+    gsettings set org.gnome.desktop.wm.keybindings close "['<Super>c']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-up "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings raise-or-lower "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-e "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-windows-backward "['<Shift><Super>l']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Super>q']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-windows "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings panel-run-dialog "['<Super>semicolon']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-panels-backward "['<Shift><Control><Alt>Tab']"
+    gsettings set org.gnome.desktop.wm.keybindings unmaximize "['<Super>Down', '<Alt>F5']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-2 "['<Super>w']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-applications "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-last "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Shift><Super>q']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-ne "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-3 "['<Super>e']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-s "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings show-desktop "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-center "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Shift><Super>w']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Control><Alt>Left']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Control><Alt>Right']"
+    gsettings set org.gnome.desktop.wm.keybindings raise "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-se "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-10 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-4 "['<Super>r']"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-shaded "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-group-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Shift><Super>e']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-panels-backward "['<Shift><Control><Alt>Escape']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-left "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-11 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-5 "['<Super>t']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Shift><Super>r']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-down "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-6 "['<Super>y']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-12 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-group "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-last "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-group-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-5 "['<Shift><Super>t']"
+    #+end_example
 
-     .default-decoration .titlebutton {
-       min-height: 0px; /* tweak these two props to reduce button size */
-       min-width: 0px;
-     }
+** =gnome-terminal=
 
-     window.ssd headerbar.titlebar,
-     window.ssd headerbar.titlebar button.titlebutton
-     {
-       padding-top: 0px;
-       padding-bottom: 0px;
-       min-height: 0;
-     }
-   #+END_SRC
+*** Themes
+    #+NAME: gnome-terminal-themes.dconf
+    #+BEGIN_SRC sh :results output :exports results
+      # Restore with `dconf load gnome-terminal-themes.dconf`
+      dconf dump /org/gnome/terminal/
+    #+END_SRC
 
-   You can also remove the ridiculously huge headerbar in Gnome 3.32+
+    #+RESULTS: gnome-terminal-themes.dconf
+    #+begin_example
+    [legacy]
+    default-show-menubar=false
+    headerbar=@mb false
 
-   #+BEGIN_SRC sh :results silent
-     gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
-   #+END_SRC
+    [legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+    background-color='rgb(0,43,54)'
+    font='Source Code Pro 14'
+    foreground-color='rgb(131,148,150)'
+    palette=['rgb(7,54,66)', 'rgb(220,50,47)', 'rgb(133,153,0)', 'rgb(181,137,0)', 'rgb(38,139,210)', 'rgb(211,54,130)', 'rgb(42,161,152)', 'rgb(238,232,213)', 'rgb(0,43,54)', 'rgb(203,75,22)', 'rgb(88,110,117)', 'rgb(101,123,131)', 'rgb(131,148,150)', 'rgb(108,113,196)', 'rgb(147,161,161)', 'rgb(253,246,227)']
+    scrollback-lines=100000
+    scrollbar-policy='never'
+    use-system-font=false
+    use-theme-colors=false
+    visible-name='Dark Home'
+    #+end_example
+
+*** =gtk.css=
+    By default, =gnome-terminal= displays an obscenely tall header bar which I like to disable.
+
+    The following CSS file does just that, as well as shrinking the header bar of Gnome applications generally.
+
+    #+name: gtk.css
+    #+BEGIN_SRC css :tangle "~/.config/gtk-3.0/gtk.css"
+      VteTerminal,
+      TerminalScreen,
+      vte-terminal {
+        /* XXX: Don't attempt to change this to padding: 5px 0 5px 5px */
+        padding-bottom: 0px;
+        padding-top: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+
+      /* shrink headerbars */
+      headerbar {
+        min-height: 0px;
+        padding-left: 0px; /* same as childrens vertical margins for nicer proportions */
+        padding-right: 0px;
+      }
+
+      headerbar entry,
+      headerbar spinbutton,
+      headerbar button,
+      headerbar separator {
+        margin-top: 0px; /* same as headerbar side padding for nicer proportions */
+        margin-bottom: 0px;
+      }
+
+      /* shrink ssd titlebars */
+      .default-decoration {
+        min-height: 0; /* let the entry and button drive the titlebar size */
+        padding: 0px;
+      }
+
+      .default-decoration .titlebutton {
+        min-height: 0px; /* tweak these two props to reduce button size */
+        min-width: 0px;
+      }
+
+      window.ssd headerbar.titlebar,
+      window.ssd headerbar.titlebar button.titlebutton
+      {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        min-height: 0;
+      }
+    #+END_SRC
 
 ** NetworkManager
    NetworkManager is a program for providing detection and configuration for systems to automatically connect to network.
@@ -351,5 +481,5 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      #+END_SRC
 
 ** Backup
-    #+NAME: backup
-    [[file:backup/README.org]]
+   #+NAME: backup
+   [[file:backup/README.org]]
