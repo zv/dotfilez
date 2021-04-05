@@ -25,7 +25,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** GnuPG Key
    #+NAME: GPG Key
-   #+BEGIN_SRC sh :results file :file zv.gpg.pub :exports both
+   #+BEGIN_SRC sh :results file :file zv.gpg.pub :exports results
      gpg --export --armor 9358C8BDAAD9A62BB08B9660F6F2D0445DC172F8
    #+END_SRC
 
@@ -77,7 +77,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Link rc files
    #+NAME: link_all.sh
-   #+BEGIN_SRC sh :results output
+   #+BEGIN_SRC sh :results output :exports results
      #!/bin/sh
      DOTFILEZ="${DOTFILEZ:-0}"
 
@@ -138,7 +138,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    #+END_SRC
 
 *** Default shell
-    #+BEGIN_SRC sh :results output
+    #+BEGIN_SRC sh :results output :exports results
       sudo usermod  --shell "$(which zsh)" "$(whoami)"
     #+END_SRC
 
@@ -182,7 +182,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** =IPython= config
     Rewrites the default ~$HOME/.ipython/profile_default/ipython_config.py~ with my preferred defaults
 
-    #+BEGIN_SRC awk :results file :file "~/.ipython/profile_default/ipython_config.py" :exports both
+    #+BEGIN_SRC awk :results file :file "~/.ipython/profile_default/ipython_config.py" :exports code
       #!/usr/bin/awk -f
 
       BEGIN {
@@ -220,7 +220,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     Add Yubikey access
 
     #+name: 70-u2f.rules
-    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/70-u2f.rules" :noweb yes
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/70-u2f.rules"
       # Yubico YubiKey
 
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0113|0114|0115|0116|0120|0200|0402|0403|0406|0407|0410", TAG+="uaccess"
