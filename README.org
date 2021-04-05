@@ -72,74 +72,66 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
      #+BEGIN_SRC sh
        sudo dnf remove -y PackageKit-command-not-found
-       #+END_SRC
+     #+END_SRC
 
 ** Symlink RC Files
-   #+NAME: link_all.sh
+   #+NAME: link_if.sh
    #+BEGIN_SRC sh :exports code
      #!/bin/sh
-     DOTFILEZ="${DOTFILEZ:-0}"
-     set -euo pipefail
+     set -eo posix
 
-     symlink_at() {
-         local src="$(readlink -f "$1")"
-         local dst="$2"
-
-         if [[ -e "$dst" ]]; then
-             printf "%s already exists\n" "$dst"
-         elif [[ -d "$src" ]]; then
-             ( set -x; ln -s -t "$dst" "$src" )
-         elif [[ -f "$src" ]]; then
-             ( set -x; ln -Ts "$src" "$dst" )
-         else
-             printf "%s is not a directory or file\n" "$src"
-         fi
-     }
-
-     link_all() {
-         if command -v "$1" >/dev/null; then
+     link_if() {
+         if command -V "$1" 1>/dev/null; then
              shift
+
              while (( $# )); do
-                 symlink_at "$1" "${HOME}/.$(basename "$1")"
+                 local src="$(realpath -e "$1")"
+                 local dst="${HOME}/.$(basename "$1")"
+                 if test -e "$dst"; then
+                     printf "%s already exists\n" "$dst"
+                 elif test -d "$src"; then
+                     ( set -x; ln -st "$dst" "$src" )
+                 else
+                     ( set -x; ln -sT "$src" "$dst" )
+                 fi
                  shift
              done
-         else
-             printf "command '%s' not found\n" "$1"
          fi
      }
 
      (
          exec 2>&1
-         cd "${DOTFILEZ}" || exit 1
-         link_all dig "rc/digrc"
-         link_all emacs "emacs.d" "rc/spacemacs" "rc/gnus.el" "rc/newsrc"
-         link_all erl "rc/erlang"
-         link_all gdb "rc/gdbinit"
-         link_all git "rc/gitignore" "rc/gitconfig"
-         link_all gpg "rc/gnupg"
-         link_all iex "rc/iex"
-         link_all node "rc/npmrc" "rc/babelrc"
-         link_all psql "rc/psqlrc"
-         link_all rg "rc/ripgreprc"
-         link_all ruby "rc/pryrc" "rc/gemrc"
-         link_all screen "rc/screenrc"
-         link_all screen "rc/screenrc"
-         link_all tmux "rc/tmux.conf"
-         link_all top "rc/toprc"
-         link_all vim "rc/vim" "rc/vimrc"
-         link_all weechat "rc/weechat"
-         link_all wget "rc/wgetrc"
-         link_all zsh "rc/zsh" "rc/zshenv" "rc/zshrc"
-         link_all Xorg "rc/Xsession" "rc/Xdefaults"
-
-         symlink_at "rc/ssh" "$HOME/.ssh"
-         symlink_at "rc/editrc" "$HOME/.editrc"
-         symlink_at "rc/inputrc" "$HOME/.inputrc"
+         cd "${DOTFILEZ:-0}" || exit 1
+         link_if dig 'rc/digrc'
+         link_if emacs 'emacs.d' 'rc/spacemacs' 'rc/gnus.el' 'rc/newsrc'
+         link_if erl 'rc/erlang'
+         link_if gdb 'rc/gdbinit'
+         link_if git 'rc/gitignore' 'rc/gitconfig'
+         link_if gpg 'rc/gnupg'
+         link_if iex 'rc/iex'
+         link_if node 'rc/npmrc' 'rc/babelrc'
+         link_if psql 'rc/psqlrc'
+         link_if rg 'rc/ripgreprc'
+         link_if ruby 'rc/pryrc' 'rc/gemrc'
+         link_if screen 'rc/screenrc'
+         link_if screen 'rc/screenrc'
+         link_if tmux 'rc/tmux.conf'
+         link_if top 'rc/toprc'
+         link_if vim 'rc/vim' 'rc/vimrc'
+         link_if weechat 'rc/weechat'
+         link_if wget 'rc/wgetrc'
+         link_if zsh 'rc/zsh' 'rc/zshenv' 'rc/zshrc'
+         link_if Xorg 'rc/Xsession' 'rc/Xdefaults'
+         link_if -- 'rc/ssh'
+         link_if -- 'rc/editrc'
+         link_if -- 'rc/inputrc'
      )
    #+END_SRC
 
+
 *** Default shell
     #+BEGIN_SRC sh :exports code
+      set -eu
       sudo usermod  --shell "$(which zsh)" "$(whoami)"
     #+END_SRC
 
