@@ -76,10 +76,8 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Symlink RC Files
    #+NAME: link_if.sh
-   #+BEGIN_SRC sh :exports code
+   #+BEGIN_SRC sh :exports code :results verbatim
      #!/bin/sh
-     set -o posix
-
      link_if() {
          if command -V "$1" 1>/dev/null; then
              shift
@@ -100,7 +98,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      }
 
      (
-         exec 2>&1
          if cd "${DOTFILEZ:-0}"; then
              link_if dig 'rc/digrc'
              link_if emacs 'emacs.d' 'rc/spacemacs' 'rc/gnus.el' 'rc/newsrc'
@@ -130,7 +127,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
          fi
      )
    #+END_SRC
-
 
 ** Login Shell
    #+BEGIN_SRC sh :exports code
