@@ -272,31 +272,39 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
     #+NAME: keybindings.sh
     #+BEGIN_SRC sh :exports results
-      schema_key() {
-          printf "gsettings set %s %s \"%s\"\n" "$1" "$2" "$(gsettings get "$1" "$2")"
+      print_gsetting() {
+          printf 'gsettings set %s %s "%s"\n' "$1" "$2" "$(gsettings get "$1" "$2")"
       }
 
-      # Remove obscenely tall headerbar in gnome-terminal
-      schema_key org.gnome.Terminal.Legacy.Settings headerbar
-
       # Swap Caps-lock & alt
-      schema_key org.gnome.desktop.input-sources xkb-options
+      print_gsetting org.gnome.desktop.input-sources xkb-options
 
       # Dump of Gnome window keybindings
-      local key
-      local schema
-      for schema in 'org.gnome.desktop.wm.keybindings' 'org.gnome.mutter.keybindings'; do
-        for key in $(gsettings list-keys "$schema"); do
-            schema_key "$schema" "$key"
-        done
-  done
+      for schema in 'org.gnome.Terminal.Legacy.Settings' 'org.gnome.desktop.wm.keybindings' 'org.gnome.mutter.keybindings'; do
+          for key in $(gsettings list-keys "$schema"); do
+              print_gsetting "$schema" "$key"
+          done
+      done
 
     #+END_SRC
 
     #+RESULTS: keybindings.sh
     #+begin_example
-    gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
     gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:ralt_rctrl', 'ctrl:rctrl_ralt', 'ctrl:nocaps', 'lv3:ralt_switch']"
+    gsettings set org.gnome.Terminal.Legacy.Settings shortcuts-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings unified-menu "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings schema-version "uint32 3"
+    gsettings set org.gnome.Terminal.Legacy.Settings shell-integration-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'window'"
+    gsettings set org.gnome.Terminal.Legacy.Settings tab-position "'top'"
+    gsettings set org.gnome.Terminal.Legacy.Settings new-tab-position "'last'"
+    gsettings set org.gnome.Terminal.Legacy.Settings mnemonics-enabled "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
+    gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings confirm-close "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings tab-policy "'automatic'"
+    gsettings set org.gnome.Terminal.Legacy.Settings theme-variant "'dark'"
     gsettings set org.gnome.desktop.wm.keybindings switch-group "@as []"
     gsettings set org.gnome.desktop.wm.keybindings begin-resize "['<Alt>F8']"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-7 "['<Super>u']"
