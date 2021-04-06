@@ -1,4 +1,4 @@
-#!/usr/bin/zsh -f
+#!/usr/bin/zsh
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
 
 # Build
@@ -77,6 +77,10 @@ export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
 
 # Expanded `time' output
 export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
+
+if (( $+commands[dircolors] )) && test -r ~/.dir_colors; then
+    eval `dircolors -b ~/.dir_colors`
+fi
 
 # ── Utility Control Variables ──────────────────────────────
 # Set the default Less options.

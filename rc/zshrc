@@ -1,4 +1,4 @@
-#!/usr/bin/zsh -f
+#!/usr/bin/zsh
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
 # This is zv's ZSHRC.
 
@@ -18,7 +18,6 @@ _exists() { (( $+commands[$1] )) }
 
 # Define general aliases.
 alias pr="print -l"
-
 alias _='sudo'
 alias e="emacsclient -t"
 alias ec="emacsclient -c"
@@ -32,19 +31,6 @@ if _exists tmux; then
     alias ta="tmux attach-session -t"
     alias tl="tmux list-sessions"
 fi
-
-# Initialize key map
-keycfg()  {
-    if [[ -n "$DISPLAY" ]]; then
-        setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
-        gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
-        xmodmap <(print 'keycode 135 = Hyper_R
-    add Mod3 = Hyper_R')
-    else
-        # Binds CapsLock -> Control in a vconsole
-        sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
-    fi
-}
 
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias veactivate="source .venv/bin/activate && rehash"
@@ -86,11 +72,11 @@ manvi() {
 
 # Moves the last created file to $2
 mvlast() {
-    local last_file=($1/*(.oc[1]))
-    mv $last_file $2 && print $last_file
+    local last_file=("$1"/*(.oc[1]))
+    mv "$last_file" "$2" && print "$last_file"
 }
 
-mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
+mvdlhere() { mvlast ~/Downloads/ "$(pwd)" }
 
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
@@ -108,7 +94,7 @@ _zcalc() {
         { set -x; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
     fi
 }
-alias calc='noglob _zcalc'
+alias calc='nocorrect noglob _zcalc'
 
 # print the color spectrum
 spectrum_ls() {
@@ -124,34 +110,6 @@ spectrum_ls() {
 
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
-
-pointer_speed() {
-    local speed=$1
-    local output=$(xinput list  | awk '
-  BEGIN { min=99999; max=0; idl=3; }
-  match($0, /id=[[:digit:]]+/) {
-    id=strtonum(substr($0, RSTART+idl, RLENGTH-idl));
-  if (id < min)
-    min = id;
-  else
-    max = id
-  }
-  END { print min, max }
-  ')
-    local -a ntuple=(${=output})
-    integer min=$ntuple[1]
-    integer max=$ntuple[2]
-    local SPEED_STR="Accel Speed ("
-    local props=""
-    local i
-    for (( i=$min; i < $max; i+=1 )) {
-            props=$(xinput --list-props $i | grep "$SPEED_STR")
-            if [[ $props ]]; then
-                local prop_id=$(echo $props | sed 's/.*(//' | sed 's/).*//')
-                xinput --set-prop $i $prop_id $speed
-            fi
-        }
-}
 
 # pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
 pronounce_number() {
@@ -507,25 +465,14 @@ zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a
 
 # ls colors
 autoload -U colors && colors;
-
-# The crazier the better!
-if [[ $+commands[dircolors] ]]; then
-    # TODO: move ~/.zsh/LS_COLORS to ~/.dircolors
-    if [[ -r ~/.zsh/LS_COLORS ]]; then
-        eval "$(dircolors -b ~/.zsh/LS_COLORS)"
-        zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-    else
-        eval "$(dircolors -b)"
-    fi
-
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
-    alias diff='diff --color=auto'
-    alias ls='ls --group-directories-first --color=auto'
-    alias grep="$aliases[grep] --color=auto"
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias diff='diff --color=auto'
+alias ls='ls --group-directories-first --color=auto'
+alias grep="$aliases[grep] --color=auto"
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # Enable man completion when using Vim as a manpager
 compdef '_dispatch man man' manvi

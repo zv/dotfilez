@@ -76,7 +76,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Symlink RC Files
    #+NAME: link_if.sh
-   #+BEGIN_SRC sh :exports code :results verbatim
+   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1"
      #!/bin/sh
      link_if() {
          if command -V "$1" 1>/dev/null; then
@@ -118,7 +118,8 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
              link_if weechat 'rc/weechat'
              link_if wget 'rc/wgetrc'
              link_if zsh 'rc/zsh' 'rc/zshenv' 'rc/zshrc'
-             link_if Xorg 'rc/Xsession' 'rc/Xdefaults'
+             link_if dircolors 'rc/dir_colors'
+             link_if Xorg 'rc/Xsession' 'rc/Xresources'
              link_if -- 'rc/ssh'
              link_if -- 'rc/editrc'
              link_if -- 'rc/inputrc'
