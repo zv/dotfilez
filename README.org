@@ -78,7 +78,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    #+NAME: link_if.sh
    #+BEGIN_SRC sh :exports code
      #!/bin/sh
-     set -eo posix
+     set -o posix
 
      link_if() {
          if command -V "$1" 1>/dev/null; then
@@ -101,32 +101,36 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
      (
          exec 2>&1
-         cd "${DOTFILEZ:-0}" || exit 1
-         link_if dig 'rc/digrc'
-         link_if emacs 'emacs.d' 'rc/spacemacs' 'rc/gnus.el' 'rc/newsrc'
-         link_if erl 'rc/erlang'
-         link_if gdb 'rc/gdbinit'
-         link_if git 'rc/gitignore' 'rc/gitconfig'
-         link_if gpg 'rc/gnupg'
-         link_if iex 'rc/iex'
-         link_if node 'rc/npmrc' 'rc/babelrc'
-         link_if psql 'rc/psqlrc'
-         link_if rg 'rc/ripgreprc'
-         link_if ruby 'rc/pryrc' 'rc/gemrc'
-         link_if screen 'rc/screenrc'
-         link_if screen 'rc/screenrc'
-         link_if tmux 'rc/tmux.conf'
-         link_if top 'rc/toprc'
-         link_if vim 'rc/vim' 'rc/vimrc'
-         link_if weechat 'rc/weechat'
-         link_if wget 'rc/wgetrc'
-         link_if zsh 'rc/zsh' 'rc/zshenv' 'rc/zshrc'
-         link_if Xorg 'rc/Xsession' 'rc/Xdefaults'
-         link_if -- 'rc/ssh'
-         link_if -- 'rc/editrc'
-         link_if -- 'rc/inputrc'
+         if cd "${DOTFILEZ:-0}"; then
+             link_if dig 'rc/digrc'
+             link_if emacs 'emacs.d' 'rc/spacemacs' 'rc/gnus.el' 'rc/newsrc'
+             link_if erl 'rc/erlang'
+             link_if gdb 'rc/gdbinit'
+             link_if git 'rc/gitignore' 'rc/gitconfig'
+             link_if gpg 'rc/gnupg'
+             link_if iex 'rc/iex'
+             link_if node 'rc/npmrc' 'rc/babelrc'
+             link_if psql 'rc/psqlrc'
+             link_if rg 'rc/ripgreprc'
+             link_if ruby 'rc/pryrc' 'rc/gemrc'
+             link_if screen 'rc/screenrc'
+             link_if screen 'rc/screenrc'
+             link_if tmux 'rc/tmux.conf'
+             link_if top 'rc/toprc'
+             link_if vim 'rc/vim' 'rc/vimrc'
+             link_if weechat 'rc/weechat'
+             link_if wget 'rc/wgetrc'
+             link_if zsh 'rc/zsh' 'rc/zshenv' 'rc/zshrc'
+             link_if Xorg 'rc/Xsession' 'rc/Xdefaults'
+             link_if -- 'rc/ssh'
+             link_if -- 'rc/editrc'
+             link_if -- 'rc/inputrc'
+         else
+             printf "Could not change working directory to '%s'\n" "${DOTFILEZ:-0}"
+         fi
      )
    #+END_SRC
+
 
 ** Login Shell
    #+BEGIN_SRC sh :exports code
@@ -168,15 +172,15 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 ** =sudo=                                                              :WARN:
    I like =sudo= to use a single timestamp across all of my login session.
 
-    #+NAME: /etc/sudoers.d/70_timestamp_timeout
-    #+BEGIN_SRC conf :tangle "/sudo::/etc/sudoers.d/70_timestamp_timeout"
-      # Number of minutes that can elapse before sudo will ask for a passwd again.
-      # You can create or delete a timestamp with `sudo -v` & `sudo -k` respectively
-      Defaults  timestamp_timeout  = 30
+   #+NAME: /etc/sudoers.d/70_timestamp_timeout
+   #+BEGIN_SRC conf :tangle "/sudo::/etc/sudoers.d/70_timestamp_timeout"
+     # Number of minutes that can elapse before sudo will ask for a passwd again.
+     # You can create or delete a timestamp with `sudo -v` & `sudo -k` respectively
+     Defaults  timestamp_timeout  = 30
 
-      # `global` sets a single time stamp record, regardless of the terminal or parent process ID.
-      Defaults  timestamp_type  = global
-    #+END_SRC
+     # `global` sets a single time stamp record, regardless of the terminal or parent process ID.
+     Defaults  timestamp_type  = global
+   #+END_SRC
 
 ** Python
 
