@@ -26,9 +26,9 @@ backup/*
 #━━━━━━RC FILES━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/zsh/cache
 rc/credentials.sh
-rc/vim/.netrwhist
-rc/vim/backups
-rc/vim/bundle
+rc/vim/*
+!rc/vim/plugin/surround.vim
+!rc/vim/ftplugin/netrw/netrw.vim
 rc/xmonad/xmonad
 rc/xmonad/xmonad-x86_64-linux
 rc/xmonad/xmonad.errors
