@@ -57,12 +57,17 @@ if (( $+commands[dircolors] )); then
 fi
 
 if (( $+commands[vim] )); then
-    export EDITOR=vim
-    export VISUAL=vim
+    export EDITOR="$commands[vim]"
+
+    if (( $+commands[gvim] )); then
+        export VISUAL="$commands[gvim]"
+    else
+        export VISUAL="$commands[vim]"
+    fi
 fi
 
 if (( $+commands[less] )); then
-    export PAGER=less
+    export PAGER="$commands[less]"
 fi
 
 if (( $+commands[rustc] )); then
