@@ -172,12 +172,20 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+END_SRC
 
 ** =sudo=
-   #+NAME: /etc/sudoers.d/70_timestamp_timeout
-   #+BEGIN_SRC conf :tangle "/sudo::/etc/sudoers.d/70_timestamp_timeout"
-     # Number of minutes that can elapse before sudo will ask for a passwd again.
-     # You can create or delete a timestamp with `sudo -v` & `sudo -k` respectively
-     Defaults  timestamp_timeout  = 240
-   #+END_SRC
+   I like =sudo= to use a single timestamp across all of my login session.
+
+*** ~/etc/sudoers.conf~                                                               :WARN:
+    If you'd like to clear the credential cache, run =sudo= using the ~-k~ flag.
+
+    #+NAME: /etc/sudoers.d/70_timestamp_timeout
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/sudoers.d/70_timestamp_timeout"
+      # Number of minutes that can elapse before sudo will ask for a passwd again.
+      # You can create or delete a timestamp with `sudo -v` & `sudo -k` respectively
+      Defaults  timestamp_timeout  = 30
+
+      # `global` sets a single time stamp record, regardless of the terminal or parent process ID.
+      Defaults  timestamp_type  = global
+    #+END_SRC
 
 ** Python
 
