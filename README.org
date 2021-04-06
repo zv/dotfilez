@@ -128,8 +128,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      )
    #+END_SRC
 
-   #+RESULTS: link_if.sh
-
 ** Login Shell
    #+BEGIN_SRC sh :exports code
      set -eu
@@ -255,7 +253,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ***** With forwarding & web-browser access
       #+BEGIN_SRC sh
-        sudo systemctl --user --global enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
+        sudo systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
       #+END_SRC
 
       #+RESULTS:
@@ -533,10 +531,17 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      This will tack on these servers to the list recieved by DHCP.
      #+NAME: server.conf
      #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/dnsmasq.d/server.conf"
-       server=2606:4700:4700::1111
+       # Upstream DNS servers
+       server=2606:4700:4700::1001
+       server=2001:4860:4860::8844
        server=1.1.1.1
-       server=2001:4860:4860::8888
        server=8.8.8.8
+
+       # Increase the cachesize
+       cache-size=1500
+
+       # Don't store in cache the invalid resolutions
+       no-negcache
      #+END_SRC
 
 ** Backup
