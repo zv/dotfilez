@@ -1,11 +1,13 @@
+#!/usr/bin/zsh -f
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
+
 # Build
 export AR=ar
 export TZ='America/Los_Angeles'
 
 # Language
 if [[ -z "$LANG" ]]; then
-	export LANG='en_US.utf8'
+    export LANG='en_US.utf8'
 fi
 export LC_CTYPE=$LANG
 
@@ -24,26 +26,23 @@ export EDITOR='vim'
 # Environment
 export GREP_COLORS="37;45"
 
-
 # Paths
 path=(
-	/usr/local/bin
-	/usr/local/sbin
-	$path
-	$HOME/.local/bin
-	/usr/local/cuda/bin
+    /usr/local/bin
+    /usr/local/sbin
+    $path
+    $HOME/.local/bin
+    /usr/local/cuda/bin
 )
 
-# Remove all empty directories from the path
-# for np ($path) if [[ ! -d $np ]] path=(${path#$np})
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # Load our completion functions
 fpath=(
-	$HOME/.zsh/completion
-	$HOME/.zsh/zsh-completions/src
-	$HOME/.zsh/functions
-	$fpath
+    $HOME/.zsh/completion
+    $HOME/.zsh/zsh-completions/src
+    $HOME/.zsh/functions
+    $fpath
 )
 
 # Ensure path arrays do not contain duplicates.
@@ -51,26 +50,38 @@ typeset -gU fpath mailpath path cdpath
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
-	export TMPDIR="/tmp/$LOGNAME"
-	mkdir -p -m 700 "$TMPDIR"
+    export TMPDIR="/tmp/$LOGNAME"
+    # Disable complaining about `-m` & `-p` used in tandem
+    # shellcheck disable=SC2174
+    mkdir -m 700 -p "$TMPDIR"
 fi
 export TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then
-	export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
+    export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
 fi
 
 # virtualenvwrapper
-export WORKON_HOME="$HOME/.local/environments"
+export WORKON_HOME=~/.local/environments
 
-# Rust
+# rg
+export RIPGREP_CONFIG_PATH=~/.ripgreprc
+
 if (( $+commands[rustc] )); then
     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 fi
 
-# rg
-export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
-
 # Java
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
+
+# Expanded `time' output
+export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
+
+# ── Utility Control Variables ──────────────────────────────
+# Set the default Less options.
+# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
+# Remove -X and -F (exit if the content fits on one screen) to enable it.
+#   export LESS='-F -g -i -M -R -S -w -X -z-4'
+#   export PAGER='less'
+#   export SYSTEMD_PAGER='less'

@@ -1,4 +1,5 @@
-#!/usr/bin/env zsh
+#!/usr/bin/zsh -f
+# -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
 # This is zv's ZSHRC.
 
 # ━━ Initialization ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -11,17 +12,6 @@ setopt NOTIFY             # Report status of background jobs immediately.
 setopt BG_NICE            # run all background jobs at a lower priority.
 unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
 setopt HUP                # kill jobs on shell exit.
-
-# ── Utility Control Variables ──────────────────────────────
-# Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X and -F (exit if the content fits on one screen) to enable it.
-#   export LESS='-F -g -i -M -R -S -w -X -z-4'
-#   export PAGER='less'
-#   export SYSTEMD_PAGER='less'
-
-# Expanded `time' output
-export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
 
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 _exists() { (( $+commands[$1] )) }
@@ -45,23 +35,18 @@ fi
 
 # Initialize key map
 keycfg()  {
-	if [[ -n "$DISPLAY" ]]; then
-		setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
-		gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
-		xmodmap <(print 'keycode 135 = Hyper_R
-		add Mod3 = Hyper_R')
-	else
-		# Binds CapsLock -> Control in a vconsole
-		sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
-	fi
+    if [[ -n "$DISPLAY" ]]; then
+        setxkbmap -layout us -option ctrl:nocaps -option ctrl:ralt_rctrl -option ctrl:rctrl_ralt
+        gsettings set org.gnome.desktop.input-sources xkb-options "['caps:nocaps', 'ctrl:ralt_rctrl', 'ctrl:rctrl_ralt']"
+        xmodmap <(print 'keycode 135 = Hyper_R
+    add Mod3 = Hyper_R')
+    else
+        # Binds CapsLock -> Control in a vconsole
+        sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+    fi
 }
 
-alias gpg=gpg2
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
-alias xmm="xmodmap $HOME/.xmodmaprc"
-
-# Bullshit workaround to unlock my yubikey
-
 alias veactivate="source .venv/bin/activate && rehash"
 
 if _exists rg; then
@@ -75,34 +60,34 @@ elif _exists grep; then
 fi
 
 man() {
-	local args=$@
-	(
-		export LESS_TERMCAP_md=$(print -P "%B")
-		export LESS_TERMCAP_md=$(print -P "%B")
-		export LESS_TERMCAP_md=$(print -P "%B")
-		export LESS_TERMCAP_me=$'\E[0m'
-		export LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}")
-		export LESS_TERMCAP_se=$'\E[0m'
-		export LESS_TERMCAP_us=$(print -P "%U%F{cyan}")
-		export LESS_TERMCAP_ue=$'\E[0m'
-		export GROFF_NO_SGR=1
-		$(whence -a -p man) ${=args}
-	)
+    local args=$@
+    (
+        export LESS_TERMCAP_md=$(print -P "%B")
+        export LESS_TERMCAP_md=$(print -P "%B")
+        export LESS_TERMCAP_md=$(print -P "%B")
+        export LESS_TERMCAP_me=$'\E[0m'
+        export LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}")
+        export LESS_TERMCAP_se=$'\E[0m'
+        export LESS_TERMCAP_us=$(print -P "%U%F{cyan}")
+        export LESS_TERMCAP_ue=$'\E[0m'
+        export GROFF_NO_SGR=1
+        $(whence -a -p man) ${=args}
+    )
 }
 
 # Use vim as a pager for man
 manvi() {
-	local args=$@
-	(
-		export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' -c 'nnoremap <silent> d <C-d>' -c 'nnoremap <silent> u <C-u>' -\""
-		$(whence -a -p man) ${=args}
-	)
+    local args=$@
+    (
+        export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' -c 'nnoremap <silent> d <C-d>' -c 'nnoremap <silent> u <C-u>' -\""
+        $(whence -a -p man) ${=args}
+    )
 }
 
 # Moves the last created file to $2
 mvlast() {
-	local last_file=($1/*(.oc[1]))
-	mv $last_file $2 && print $last_file
+    local last_file=($1/*(.oc[1]))
+    mv $last_file $2 && print $last_file
 }
 
 mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
@@ -110,7 +95,7 @@ mvdlhere() { mvlast "$HOME/Downloads/" $(pwd) }
 # Removes the last created file in the specified directory, defaulting to the
 # current directory.
 rmlast() {
-	[[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
+    [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
 }
 
 # calculator
@@ -127,75 +112,70 @@ alias calc='noglob _zcalc'
 
 # print the color spectrum
 spectrum_ls() {
-	string="${@:-block}"
-	if [[ "$string" = "block" ]]
-	then
-		string="███████████████████████████████"
-	fi
-	for code in {000..255}; do
-		print -P -- "$code: %F{$code}${string}%f"
-	done
+    string="${@:-block}"
+    if [[ "$string" = "block" ]]
+    then
+        string="███████████████████████████████"
+    fi
+    for code in {000..255}; do
+        print -P -- "$code: %F{$code}${string}%f"
+    done
 }
 
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
-pps="/home/zv/Development/"
 
 pointer_speed() {
-	local speed=$1
-	local output=$(xinput list  | awk '
-	BEGIN { min=99999; max=0; idl=3; }
-	match($0, /id=[[:digit:]]+/) {
-		id=strtonum(substr($0, RSTART+idl, RLENGTH-idl));
-	if (id < min)
-		min = id;
-	else
-		max = id
-	}
-	END { print min, max }
-	')
-	local -a ntuple=(${=output})
-	integer min=$ntuple[1]
-	integer max=$ntuple[2]
-	local SPEED_STR="Accel Speed ("
-	local props=""
-	local i
-	for (( i=$min; i < $max; i+=1 )) {
-		props=$(xinput --list-props $i | grep "$SPEED_STR")
-		if [[ $props ]]; then
-			local prop_id=$(echo $props | sed 's/.*(//' | sed 's/).*//')
-			xinput --set-prop $i $prop_id $speed
-		fi
-	}
+    local speed=$1
+    local output=$(xinput list  | awk '
+  BEGIN { min=99999; max=0; idl=3; }
+  match($0, /id=[[:digit:]]+/) {
+    id=strtonum(substr($0, RSTART+idl, RLENGTH-idl));
+  if (id < min)
+    min = id;
+  else
+    max = id
+  }
+  END { print min, max }
+  ')
+    local -a ntuple=(${=output})
+    integer min=$ntuple[1]
+    integer max=$ntuple[2]
+    local SPEED_STR="Accel Speed ("
+    local props=""
+    local i
+    for (( i=$min; i < $max; i+=1 )) {
+            props=$(xinput --list-props $i | grep "$SPEED_STR")
+            if [[ $props ]]; then
+                local prop_id=$(echo $props | sed 's/.*(//' | sed 's/).*//')
+                xinput --set-prop $i $prop_id $speed
+            fi
+        }
 }
 
 # pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
 pronounce_number() {
-	local -A scale=(
-		 2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
-		12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
-		24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
-		36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
-		48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
-		60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
-	local number="${1##-}" # remove '-' at start of number
-	if ! (( $number )); then;
-		print "Usage: pronounce_number POSITIVE_NUMBER"
-		return 2
-	fi
-	local -a cs=()
-	local -i i k
-	# loop through the position/name pairs, extracting
-	# characters between it and the previous pair used
-	for i in ${(Onk)scale}; do
-		local -i place="${number[-k, -i-1]}"
-		(( place )) && cs+=("$place ${scale[$i]}")
-		k=$i
-	done
+    local -A scale=(
+        2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
+        12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
+        24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
+        36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
+        48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
+        60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
+    local number="${1##-}" # remove '-' at start of number
+    local -a cs=()
+    local -i i k
+    # loop through the position/name pairs, extracting
+    # characters between it and the previous pair used
+    for i in ${(Onk)scale}; do
+        local -i place="${number[-k, -i-1]}"
+        (( place )) && cs+=("$place ${scale[$i]}")
+        k=$i
+    done
 
-	# now just print the remainder (if one exists)
-	local rem=" and $(($number[-k, -1]))"
-	printf "%s%s\n" "${(j:, :)cs}" "${rem% and 0}"
+    # now just print the remainder (if one exists)
+    local rem=" and $(($number[-k, -1]))"
+    printf "%s%s\n" "${(j:, :)cs}" "${rem% and 0}"
 }
 
 
@@ -232,9 +212,9 @@ if _exists git; then
     alias gfa='git fetch --all'
 
     gpro() {
-    local full_branch="$(git symbolic-ref HEAD)"
-    local branch="${full_branch##ref/heads/}"
-    git pull --rebase origin "$branch"
+        local full_branch="$(git symbolic-ref HEAD)"
+        local branch="${full_branch##ref/heads/}"
+        git pull --rebase origin "$branch"
     }
 
     alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
@@ -257,15 +237,11 @@ alias genp=" command genp"
 # Format a series of hex into a C-like hex string
 # e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80
 function format_c_hex {
-	echo -e "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
+    echo -e "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
 }
 
-# Disable correction.
-for cmd (ack cd cp ebuild gcc gist grep heroku
-	ln mkdir mv mysql rm nmcli ip ag man w3m
-	git npm ember dnf jekyll docker dnf) alias $cmd="nocorrect $cmd"
-
-
+# Disable correction in `rm`
+alias rm='nocorrect rm'
 
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
@@ -338,19 +314,20 @@ setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing i
 
 # ── Prompting ──────────────────────────────────────────────
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
+
 # If we're in a dumb terminal then dont play fancy pants with our prompt
-if [[ $TERM == 'dumb' ]]; then
-	# Ensure we don't set preexec && precmd
-	unsetopt ZLE
-	unsetopt PROMPT_CR
-	unsetopt PROMPT_SUBST
-	return
-elif [[ $TERM == 'eterm-color' ]]; then
-	# unsetopt zle
-	unsetopt prompt_cr
-	unsetopt prompt_subst
-	PROMPT="[%y] %2~ $baseprompt "
-	return
+if [[ "$TERM" == dumb ]]; then
+    # Ensure we don't set preexec && precmd
+    unsetopt ZLE
+    unsetopt PROMPT_CR
+    unsetopt PROMPT_SUBST
+    return
+elif [[ "$TERM" == eterm-color ]]; then
+    # unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    PROMPT="[%y] %2~ $baseprompt "
+    return
 fi
 
 export VISUAL='vim' # Set default keyboard bindings to `viins'
@@ -371,9 +348,9 @@ PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-de
 autoload -Uz compinit
 _comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-20))
 if (( $#_comp_files )); then
-	compinit -i -C
+    compinit -i -C
 else
-	compinit -i
+    compinit -i
 fi
 unset _comp_files
 
@@ -502,20 +479,20 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<-
 
 # Tmux Pane Completion
 _tmux_pane_words() {
-	local expl
-	local -a w
-	if [[ -z "$TMUX_PANE" ]]; then
-		_message "not running inside tmux!"
-		return 1
-	fi
-	# capture current pane first
-	w=( ${(u)=$(tmux capture-pane -J -p)} )
-	for i in $(tmux list-panes -F '#P'); do
-		# skip current pane (handled above)
-		[[ "$TMUX_PANE" = "$i" ]] && continue
-		w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
-	done
-	_wanted values expl 'words from current tmux pane' compadd -a w
+    local expl
+    local -a w
+    if [[ -z "$TMUX_PANE" ]]; then
+        _message "not running inside tmux!"
+        return 1
+    fi
+    # capture current pane first
+    w=( ${(u)=$(tmux capture-pane -J -p)} )
+    for i in $(tmux list-panes -F '#P'); do
+        # skip current pane (handled above)
+        [[ "$TMUX_PANE" = "$i" ]] && continue
+        w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
+    done
+    _wanted values expl 'words from current tmux pane' compadd -a w
 }
 
 zle -C tmux-pane-words-prefix   complete-word _generic
@@ -533,21 +510,21 @@ autoload -U colors && colors;
 
 # The crazier the better!
 if [[ $+commands[dircolors] ]]; then
-	# TODO: move ~/.zsh/LS_COLORS to ~/.dircolors
-	if [[ -r ~/.zsh/LS_COLORS ]]; then
-		eval "$(dircolors -b ~/.zsh/LS_COLORS)"
-		zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-	else
-		eval "$(dircolors -b)"
-	fi
+    # TODO: move ~/.zsh/LS_COLORS to ~/.dircolors
+    if [[ -r ~/.zsh/LS_COLORS ]]; then
+        eval "$(dircolors -b ~/.zsh/LS_COLORS)"
+        zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+    else
+        eval "$(dircolors -b)"
+    fi
 
-	alias dir='dir --color=auto'
-	alias vdir='vdir --color=auto'
-	alias diff='diff --color=auto'
-	alias ls='ls --group-directories-first --color=auto'
-	alias grep="$aliases[grep] --color=auto"
-	alias fgrep='fgrep --color=auto'
-	alias egrep='egrep --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+    alias diff='diff --color=auto'
+    alias ls='ls --group-directories-first --color=auto'
+    alias grep="$aliases[grep] --color=auto"
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 fi
 
 # Enable man completion when using Vim as a manpager
@@ -559,46 +536,46 @@ setopt NO_BEEP             # Stop the beep insanity
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 
 function zle-line-init zle-keymap-select {
-	zle reset-prompt
+    zle reset-prompt
 }
 
 function find-history-backwards {
-	typeset -g __searching __savecursor
+    typeset -g __searching __savecursor
 
-	if [[ $LBUFFER == *$'\n'* ]]; then
-		zle .up-line-or-history
-		__searching=''
-	elif [[ -n $PREBUFFER ]] && zstyle -t ':zle:up-line-or-beginning-search' edit-buffer
-	then
-		zle .push-line-or-edit
-	else
-		[[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
-		__savecursor=$CURSOR
-		__searching=$WIDGET
-		zle .history-beginning-search-backward
-		zstyle -T ':zle:up-line-or-beginning-search' leave-cursor &&
-		zle .end-of-line
-	fi
+    if [[ $LBUFFER == *$'\n'* ]]; then
+        zle .up-line-or-history
+        __searching=''
+    elif [[ -n $PREBUFFER ]] && zstyle -t ':zle:up-line-or-beginning-search' edit-buffer
+    then
+        zle .push-line-or-edit
+    else
+        [[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
+        __savecursor=$CURSOR
+        __searching=$WIDGET
+        zle .history-beginning-search-backward
+        zstyle -T ':zle:up-line-or-beginning-search' leave-cursor &&
+            zle .end-of-line
+    fi
 }
 
 zle -N find-history-backwards
 
 function find-history-forwards {
-	typeset -g __searching __savecursor
-	if [[ ${+NUMERIC} -eq 0 &&
-		( $LASTWIDGET = $__searching || $RBUFFER != *$'\n'* ) ]]
-	then
-		[[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
-		__searching=$WIDGET
-		__savecursor=$CURSOR
-		if zle .history-beginning-search-forward; then
-		[[ $RBUFFER = *$'\n'* ]] || zstyle -T ':zle:down-line-or-beginning-search' leave-cursor && zle .end-of-line
-		return
-		fi
-	[[ $RBUFFER = *$'\n'* ]] || return
-	fi
-	__searching=''
-	zle .down-line-or-history
+    typeset -g __searching __savecursor
+    if [[ ${+NUMERIC} -eq 0 &&
+              ( $LASTWIDGET = $__searching || $RBUFFER != *$'\n'* ) ]]
+    then
+        [[ $LASTWIDGET = $__searching ]] && CURSOR=$__savecursor
+        __searching=$WIDGET
+        __savecursor=$CURSOR
+        if zle .history-beginning-search-forward; then
+            [[ $RBUFFER = *$'\n'* ]] || zstyle -T ':zle:down-line-or-beginning-search' leave-cursor && zle .end-of-line
+            return
+        fi
+        [[ $RBUFFER = *$'\n'* ]] || return
+    fi
+    __searching=''
+    zle .down-line-or-history
 }
 zle -N find-history-forwards
 
@@ -686,8 +663,11 @@ fi
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-# Rustup
-[[ -e ~/.cargo/env ]] && source ~/.cargo/env
+# Rust
+if [[ -e ~/.cargo/env ]]; then
+    source ~/.cargo/env
+fi
+
 
 # Node
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
@@ -698,5 +678,6 @@ fi
 # virtualenvwrapper
 # [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
-touch "$HOME/.zsh/local.zsh"
-source "$HOME/.zsh/local.zsh"
+if [[ -r ~/.zsh/local.zsh ]]; then
+    source ~/.zsh/local.zsh
+fi
