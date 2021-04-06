@@ -1,3 +1,6 @@
+#+PROPERTY: header-args       :noweb no
+#+PROPERTY: header-args:sh    :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name))) :results replace output
+
 * dotfilez
   #+CAPTION: the_setup
   #+NAME:   setup.png
@@ -12,347 +15,530 @@
   Dotfilez is an attempt to keep a configuration framework for my personal use
   online. You are welcome to modify it if you think it could be useful to you
   too.
+
 * Public Keys
-** GPG
-   #+BEGIN_EXAMPLE
-   -----BEGIN PGP PUBLIC KEY BLOCK-----
-
-   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
-   =MHwq
-   -----END PGP PUBLIC KEY BLOCK-----
-   #+END_EXAMPLE
-
 ** =authorized_keys=
    #+BEGIN_EXAMPLE
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCMbMY01S86OnaP7Q5H9kYHeBUdfTsZkGh1AwQC1VJIwXRHdldRigkFxCLR6QJkFVQt5ntruvXwBre1bDF04UveXLLtcq2P5iGZWgQtuVAsZ1DAENR5N+SMZY6DA/aPjg8tzv7lL09pwFkAxfVDWLEZXtcEuuCaaGbW9GH707MBnvMZn8rWD8MEEEflkrtpbTGxjrsubYqGOB9bL3PTEtrKBAhptaIHIhX7tcHBHoWVCNgt47U+zghg4VaJIj/c+TUY+1CUF/QWqfWl6En2JwLqKe8RhH4SqgWMt6WY5XDXurJHNjtlzSCbwf8jrXfSZq+63WLFxqdINyjqedkLSVhl zv@sigstkflt
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC zv@sigstkflt
    #+END_EXAMPLE
 
+** GnuPG Key
+   #+NAME: GPG Key
+   #+BEGIN_SRC sh :results file :file zv.gpg.pub :exports results
+     gpg --export --armor 9358C8BDAAD9A62BB08B9660F6F2D0445DC172F8
+   #+END_SRC
+
+   #+RESULTS: GPG Key
+   [[file:zv.gpg.pub]]
+
 * Workstation Setup
 
-** Linux  
-*** Fedora
-**** =command-not-found=
-     ~PackageKit-command-not-found~ considerably slows the shell when you accidentally type a command.
-     
-     I uninstall it:
-     #+begin_src sh
-sudo dnf remove PackageKit-command-not-found
-     #+end_src
-**** Groups
-     #+begin_src sh
-sudo dnf install "@Development Tools" "@C Development Tools and Libraries"
-     #+end_src
+** Packages
+   :PROPERTIES:
+   :header-args:sh: :results output replace :exports code
+   :END:
 
-*** org-protocol
-    org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions. 
-   
-    :PROPERTIES:
-    :header-args:  :noweb yes :exports none :mkdirp no :tangle "$HOME/.local/share/applications/org-protocol.desktop"
-    :END:
-    #+begin_src desktop
- [Desktop Entry]
- Name=org-protocol
- Exec=emacsclient %u
- Type=Application
- Terminal=false
- Categories=System;
- MimeType=x-scheme-handler/org-protocol;
- EOF
-    #+end_src
+*** Base
+    #+BEGIN_SRC sh
+      sudo dnf install -y tmux vim-enhanced zsh
+    #+END_SRC
 
-    Afterwards, you must update the desktop database to ensure the =org-protocol=
-    handler is installed.
+*** Development
+    #+BEGIN_SRC sh
+      sudo dnf install -y autoconf automake binutils bison clang cmake ctags flex gcc 'gcc-c++' gdb git graphviz libtool make nasm openssl patch pkgconf readline socat strace
+    #+END_SRC
 
+**** Python
+     #+BEGIN_SRC sh
+       sudo dnf install -y python3 python3-devel python3-ipython python3-epc python3-flake8 python3-importmagic python3-isort python3-mypy python3-yapf
+     #+END_SRC
+
+*** Desktop
+    #+BEGIN_SRC sh
+      sudo dnf install -y adobe-source-code-pro-fonts avahi-tools bpftool bpftrace curl \
+           dotnet elfutils emacs global global-ctags gnupg2 java-latest-openjdk jq \
+           kernel-devel ltrace mtr nmap perf postgresql qemu ripgrep systemtap \
+           valgrind weechat wget wine wireshark xsel z3
+    #+END_SRC
+
+**** Yubikey
+     #+BEGIN_SRC sh
+       sudo dnf install -y gnupg2 gnupg2-smime pcsc-lite pcsc-tools ykclient ykpers yubikey-personalization-gui
+     #+END_SRC
+
+**** Remove "Install Package To Provide"
+     Fedora contains a package to prompt the user if a missing command is typed into the shell, which this snippet disables.
+
+     #+BEGIN_SRC sh
+       sudo dnf remove -y PackageKit-command-not-found
+     #+END_SRC
+
+** Symlink RC Files
+   #+NAME: link_if.sh
+   #+BEGIN_SRC sh :exports code
+     #!/bin/sh
+     set -eo posix
+
+     link_if() {
+         if command -V "$1" 1>/dev/null; then
+             shift
+
+             while (( $# )); do
+                 local src="$(realpath -e "$1")"
+                 local dst="${HOME}/.$(basename "$1")"
+                 if test -e "$dst"; then
+                     printf "%s already exists\n" "$dst"
+                 elif test -d "$src"; then
+                     ( set -x; ln -st "$dst" "$src" )
+                 else
+                     ( set -x; ln -sT "$src" "$dst" )
+                 fi
+                 shift
+             done
+         fi
+     }
+
+     (
+         exec 2>&1
+         cd "${DOTFILEZ:-0}" || exit 1
+         link_if dig 'rc/digrc'
+         link_if emacs 'emacs.d' 'rc/spacemacs' 'rc/gnus.el' 'rc/newsrc'
+         link_if erl 'rc/erlang'
+         link_if gdb 'rc/gdbinit'
+         link_if git 'rc/gitignore' 'rc/gitconfig'
+         link_if gpg 'rc/gnupg'
+         link_if iex 'rc/iex'
+         link_if node 'rc/npmrc' 'rc/babelrc'
+         link_if psql 'rc/psqlrc'
+         link_if rg 'rc/ripgreprc'
+         link_if ruby 'rc/pryrc' 'rc/gemrc'
+         link_if screen 'rc/screenrc'
+         link_if screen 'rc/screenrc'
+         link_if tmux 'rc/tmux.conf'
+         link_if top 'rc/toprc'
+         link_if vim 'rc/vim' 'rc/vimrc'
+         link_if weechat 'rc/weechat'
+         link_if wget 'rc/wgetrc'
+         link_if zsh 'rc/zsh' 'rc/zshenv' 'rc/zshrc'
+         link_if Xorg 'rc/Xsession' 'rc/Xdefaults'
+         link_if -- 'rc/ssh'
+         link_if -- 'rc/editrc'
+         link_if -- 'rc/inputrc'
+     )
+   #+END_SRC
+
+   #+RESULTS: link_if.sh
+
+** Login Shell
+   #+BEGIN_SRC sh :exports code
+     set -eu
+     sudo usermod  --shell "$(which zsh)" "$(whoami)"
+   #+END_SRC
+
+** =org-protocol=
+   [[https://orgmode.org/worg/org-contrib/org-protocol.html][=org-protocol=]] intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions.
+
+   #+BEGIN_SRC conf :tangle "~/.local/share/applications/org-protocol.desktop"
+     [Desktop Entry]
+     Name=org-protocol
+     Exec=emacsclient %u
+     Type=Application
+     Terminal=false
+     Categories=System;
+     MimeType=x-scheme-handler/org-protocol;
+   #+END_SRC
+
+   Afterwards, you must run =update-desktop-database=
+
+   #+BEGIN_SRC sh
+     update-desktop-database "$HOME/.local/share/applications/"
+   #+END_SRC
+
+** =libvirt=
+   =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
+
+   #+NAME: 80-libvirt.rules
+   #+BEGIN_SRC javascript :tangle "/sudo::/etc/polkit-1/rules.d/80-libvirt.rules"
+     polkit.addRule(function(action, subject) {
+       if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
+         return polkit.Result.YES;
+       }
+     });
+   #+END_SRC
+
+** =sudo=                                                              :WARN:
+   I like =sudo= to use a single timestamp across all of my login session.
+
+    #+NAME: /etc/sudoers.d/70_timestamp_timeout
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/sudoers.d/70_timestamp_timeout"
+      # Number of minutes that can elapse before sudo will ask for a passwd again.
+      # You can create or delete a timestamp with `sudo -v` & `sudo -k` respectively
+      Defaults  timestamp_timeout  = 30
+
+      # `global` sets a single time stamp record, regardless of the terminal or parent process ID.
+      Defaults  timestamp_type  = global
+    #+END_SRC
+
+** Python
+
+*** =IPython= config
+    Rewrites the default ~$HOME/.ipython/profile_default/ipython_config.py~ with my preferred defaults
+
+    #+BEGIN_SRC awk :results file :file "~/.ipython/profile_default/ipython_config.py" :exports code
+      #!/usr/bin/awk -f
+
+      BEGIN {
+          if (ARGC == 1) {
+              ARGV[ARGC] = ENVIRON["HOME"] "/.ipython/profile_default/ipython_config.py"
+              ARGC = ARGC + 1
+          }
+      }
+
+      function set_value(new) {
+          if ($2 == "=" && NF == 3) {
+              sub("^#", "", $1)  # uncomment line
+              printf "%s = %s\n", $1, new
+              next
+          }
+      }
+
+      $1 ~ /#c.TerminalIPythonApp.display_banner/ { set_value("False") }
+      $1 ~ /#c.TerminalInteractiveShell.editing_mode/ { set_value("'vi'") }
+      $1 ~ /#c.TerminalInteractiveShell.extra_open_editor_shortcuts/ { set_value("False") }
+      $1 ~ /#c.InteractiveShell.autoindent/ { set_value("True") }
+      $1 ~ /#c.InteractiveShell.autoawait/ { set_value("True") }
+
+      { print }
+    #+END_SRC
+
+** =udev=
+   =udev= is a device manager for the Linux kernel. As the successor of
+   =devfsd= and =hotplug=, =udev= primarily manages device nodes in the =/dev=
+   directory. At the same time, =udev= also handles all user space events
+   raised while hardware devices are added into the system or removed from it,
+   including firmware loading as required by certain devices.
+
+*** Yubikey
+    Add Yubikey access
+
+    #+name: 70-u2f.rules
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/70-u2f.rules"
+      # Yubico YubiKey
+
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0113|0114|0115|0116|0120|0200|0402|0403|0406|0407|0410", TAG+="uaccess"
+    #+END_SRC
+
+*** Wireshark (=usbmon=)
+
+    #+name: 90-wireshark-usbmon.rules
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/90-wireshark-usbmon.rules"
+      # Wireshark
+
+      SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
+    #+END_SRC
+
+** systemd
+
+*** GnuPG
+**** Socket-activated =dirmngr=
+     #+BEGIN_SRC sh
+       systemctl --user --global enable dirmngr.socket
+     #+END_SRC
+
+     #+RESULTS:
+
+**** Socket-activated =gpg-agent= with SSH support
+     #+BEGIN_SRC sh
+       systemctl --user enable gpg-agent.socket gpg-agent-ssh.socket
+     #+END_SRC
+
+***** With forwarding & web-browser access
+      #+BEGIN_SRC sh
+        sudo systemctl --user --global enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
+      #+END_SRC
+
+      #+RESULTS:
+
+*** =coredump=
+    I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
+    #+name: coredump.conf
+    #+BEGIN_SRC conf :tangle "/sudo::/etc/systemd/coredump.conf"
+      # See coredump.conf(5) for details.
+
+      [Coredump]
+      #Storage=external
+      Compress=yes
+      #ProcessSizeMax=2G
+      #ExternalSizeMax=2G
+      JournalSizeMax=767M
+      MaxUse=1G
+      #KeepFree=
+    #+END_SRC
+
+** Gnome
+*** Settings
+
+    #+NAME: keybindings.sh
+    #+BEGIN_SRC sh :exports results
+      print_gsetting() {
+          printf 'gsettings set %s %s "%s"\n' "$1" "$2" "$(gsettings get "$1" "$2")"
+      }
+
+      # Swap Caps-lock & alt
+      print_gsetting org.gnome.desktop.input-sources xkb-options
+
+      # Dump of Gnome window keybindings
+      for schema in 'org.gnome.Terminal.Legacy.Settings' 'org.gnome.desktop.wm.keybindings' 'org.gnome.mutter.keybindings'; do
+          for key in $(gsettings list-keys "$schema"); do
+              print_gsetting "$schema" "$key"
+          done
+      done
+
+    #+END_SRC
+
+    #+RESULTS: keybindings.sh
     #+begin_example
-    update-desktop-database ~/.local/share/applications/
+    gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:ralt_rctrl', 'ctrl:rctrl_ralt', 'ctrl:nocaps', 'lv3:ralt_switch']"
+    gsettings set org.gnome.Terminal.Legacy.Settings shortcuts-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings unified-menu "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings schema-version "uint32 3"
+    gsettings set org.gnome.Terminal.Legacy.Settings shell-integration-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'window'"
+    gsettings set org.gnome.Terminal.Legacy.Settings tab-position "'top'"
+    gsettings set org.gnome.Terminal.Legacy.Settings new-tab-position "'last'"
+    gsettings set org.gnome.Terminal.Legacy.Settings mnemonics-enabled "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
+    gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings confirm-close "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings tab-policy "'automatic'"
+    gsettings set org.gnome.Terminal.Legacy.Settings theme-variant "'dark'"
+    gsettings set org.gnome.desktop.wm.keybindings switch-group "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings begin-resize "['<Alt>F8']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-7 "['<Super>u']"
+    gsettings set org.gnome.desktop.wm.keybindings begin-move "['<Alt>F7']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-w "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-nw "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-10 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-6 "['<Shift><Super>y']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Control><Shift><Alt>Right']"
+    gsettings set org.gnome.desktop.wm.keybindings always-on-top "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Super>m']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Control><Shift><Alt>Left']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-8 "['<Super>i']"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-panels "['<Control><Alt>Escape']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-11 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings lower "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-7 "['<Shift><Super>u']"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-above "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-panels "['<Control><Alt>Tab']"
+    gsettings set org.gnome.desktop.wm.keybindings minimize "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-windows "['<Super>l']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-9 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-12 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-on-all-workspaces "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-input-source "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-8 "['<Shift><Super>i']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-n "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings maximize-horizontally "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings activate-window-menu "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings set-spew-mark "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings maximize-vertically "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-sw "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-9 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings maximize "['<Super>Up']"
+    gsettings set org.gnome.desktop.wm.keybindings panel-main-menu "['<Alt>F1']"
+    gsettings set org.gnome.desktop.wm.keybindings close "['<Super>c']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-up "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings raise-or-lower "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-e "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-windows-backward "['<Super>h']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Super>q']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-windows "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings panel-run-dialog "['<Super>semicolon']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-panels-backward "['<Shift><Control><Alt>Tab']"
+    gsettings set org.gnome.desktop.wm.keybindings unmaximize "['<Super>Down', '<Alt>F5']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-2 "['<Super>w']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-applications "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-last "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Shift><Super>q']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-ne "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-3 "['<Super>e']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-side-s "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings show-desktop "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-center "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Shift><Super>w']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Control><Alt>Left']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Control><Alt>Right']"
+    gsettings set org.gnome.desktop.wm.keybindings raise "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-corner-se "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-10 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-4 "['<Super>r']"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-shaded "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-group-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Shift><Super>e']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-panels-backward "['<Shift><Control><Alt>Escape']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-left "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-11 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-5 "['<Super>t']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Shift><Super>r']"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-down "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-6 "['<Super>y']"
+    gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-12 "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-group "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-last "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings switch-group-backward "@as []"
+    gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-5 "['<Shift><Super>t']"
+    gsettings set org.gnome.mutter.keybindings tab-popup-cancel "@as []"
+    gsettings set org.gnome.mutter.keybindings tab-popup-select "@as []"
+    gsettings set org.gnome.mutter.keybindings toggle-tiled-right "['<Shift><Super>l']"
+    gsettings set org.gnome.mutter.keybindings toggle-tiled-left "['<Shift><Super>h']"
+    gsettings set org.gnome.mutter.keybindings rotate-monitor "['XF86RotateWindows']"
+    gsettings set org.gnome.mutter.keybindings switch-monitor "['<Super>p', 'XF86Display']"
     #+end_example
 
-*** polkit
-    polkit is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes: It is a framework for centralizing the decision making process with respect to granting access to privileged operations for unprivileged applications.
-   
-**** =libvirt=   
-     =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/polkit-1/rules.d/80-libvirt.rules"
-     :END:
-     #+begin_src 
-  polkit.addRule(function(action, subject) {
-    if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
-      return polkit.Result.YES;
-    }
-  });
-     #+end_src
+** =gnome-terminal=
 
-*** =udev=
-    =udev= is a device manager for the Linux kernel. As the successor of =devfsd= and =hotplug=, =udev= primarily manages device nodes in the =/dev= directory. At the same time, =udev= also handles all user space events raised while hardware devices are added into the system or removed from it, including firmware loading as required by certain devices.
-   
-**** yubikey
-     add Yubikey access
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/udev/rules.d/70-u2f.rules"
-     :END:
-     #+begin_src 
- # Yubico YubiKey
- ATTRS{idVendor}=="1050", ATTR{manufacturer}=="Yubico", TAG+="uaccess"
-     #+end_src
+*** Themes
+    This theme is restored by invoking ~dconf load~ with a file containing the
+    contents of the results drawer below (You can automatically generate this
+    file with =org-babel-tangle=)
 
-**** wireshark usbmon
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/udev/rules.d/rules.d/90-wireshark-usbmon.rules"
-     :END:
-     #+begin_src 
- SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
-     #+end_src
-*** systemd
-**** =fstrim=
-     The =util-linux= package provides =fstrim.service= and =fstrim.timer= systemd unit files. Enabling the timer will activate the service weekly. The service executes =fstrim(8)= on all mounted filesystems on devices that support the discard operation.
-***** Service
-       :PROPERTIES:
-       :header-args: :noweb yes :exports none :mkdirp no :tangle "/usr/lib/systemd/system/fstrim.service"
-       :END:
-  #+begin_src 
-[Unit]
-Description=Discard unused blocks
+    #+NAME: gnome-terminal-themes.dconf
+    #+BEGIN_SRC sh :exports results
+      dconf dump /org/gnome/terminal/
+    #+END_SRC
 
-[Service]
-Type=oneshot
-ExecStart=/sbin/fstrim -a
-
-[Install]
-WantedBy=multi-user.target
-  #+end_src
-***** Timer
-       :PROPERTIES:
-       :header-args: :noweb yes :exports none :mkdirp no :tangle "/usr/lib/systemd/system/fstrim.timer"
-       :END:
-  #+begin_src 
-  [Unit]
-  Description=Discard unused blocks once a week
-  Documentation=man:fstrim
-
-  [Timer]
-  OnCalendar=weekly
-  AccuracySec=1h
-  Persistent=true
-
-  [Install]
-  WantedBy=multi-user.target
-  #+end_src
-**** =coredump=
-     I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/systemd/coredump.conf"
-     :END:
-#+begin_src 
-Compress=yes
-JournalSizeMax=520M
-MaxUse=1G
-#+end_src
-**** =journald=
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/systemd/journald.conf"
-     :END:
-#+begin_src 
-Compress=yes
-SystemMaxUse=512M
-#+end_src
-*** =dnf=
-     dnf is fedora's package manager. I mostly like how it's configured except I dislike receiving kernels through it.
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/dnf/dnf.conf"
-     :END:
-#+begin_src 
-[main]
-gpgcheck=1
-installonly_limit=3
-clean_requirements_on_remove=True
-exclude=kernel*
-#+end_src
-*** vkeys
-    Use capslock as control in a virtual console
+    #+RESULTS: gnome-terminal-themes.dconf
     #+begin_example
-    sudo dumpkeys | head -1 | cat - <(echo "keycode 58 = Control") | sudo loadkeys
+    [legacy]
+    confirm-close=true
+    default-show-menubar=false
+    headerbar=@mb false
+    menu-accelerator-enabled=true
+    mnemonics-enabled=false
+    new-tab-position='last'
+    new-terminal-mode='window'
+    schema-version=uint32 3
+    shell-integration-enabled=true
+    shortcuts-enabled=true
+    tab-policy='automatic'
+    tab-position='top'
+    theme-variant='dark'
+    unified-menu=false
+
+    [legacy/profiles:]
+    list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '8bfbb274-dc3d-4666-8048-5317058efebe']
+
+    [legacy/profiles:/:8bfbb274-dc3d-4666-8048-5317058efebe]
+    background-color='rgb(253,246,227)'
+    font='Source Code Pro 14'
+    foreground-color='rgb(101,123,131)'
+    palette=['rgb(7,54,66)', 'rgb(220,50,47)', 'rgb(133,153,0)', 'rgb(181,137,0)', 'rgb(38,139,210)', 'rgb(211,54,130)', 'rgb(42,161,152)', 'rgb(238,232,213)', 'rgb(0,43,54)', 'rgb(203,75,22)', 'rgb(88,110,117)', 'rgb(101,123,131)', 'rgb(131,148,150)', 'rgb(108,113,196)', 'rgb(147,161,161)', 'rgb(253,246,227)']
+    scrollback-lines=100000
+    scrollbar-policy='never'
+    use-system-font=false
+    use-theme-colors=false
+    visible-name='Light'
+
+    [legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+    background-color='rgb(0,43,54)'
+    font='Source Code Pro 14'
+    foreground-color='rgb(131,148,150)'
+    palette=['rgb(7,54,66)', 'rgb(220,50,47)', 'rgb(133,153,0)', 'rgb(181,137,0)', 'rgb(38,139,210)', 'rgb(211,54,130)', 'rgb(42,161,152)', 'rgb(238,232,213)', 'rgb(0,43,54)', 'rgb(203,75,22)', 'rgb(88,110,117)', 'rgb(101,123,131)', 'rgb(131,148,150)', 'rgb(108,113,196)', 'rgb(147,161,161)', 'rgb(253,246,227)']
+    scrollback-lines=100000
+    scrollbar-policy='never'
+    use-system-font=false
+    use-theme-colors=false
+    visible-name='Dark'
     #+end_example
 
-*** gnome-terminal
-    I prefer a smaller padding on my gnome terminal.
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/home/zv/.config/gtk-3.0/gtk.css"
-     :END:
-     #+begin_example
-vte-terminal {
-  padding: 5px
-}
-     #+end_example
+*** =gtk.css=
+    By default, =gnome-terminal= displays an obscenely tall header bar which I like to disable.
 
-     You can also remove the ridiculously huge headerbar in Gnome 3.32+
-#+begin_src sh
-gsettings set org.gnome.Terminal.Legacy.Settings headerbar false
-#+end_src
+    The following CSS file does just that, as well as shrinking the header bar of Gnome applications generally.
 
-*** gnome-flashback copr
-    You can find COPR produced by a Redhat employee here: https://copr.fedorainfracloud.org/coprs/yselkowitz/gnome-flashback/
+    #+name: gtk.css
+    #+BEGIN_SRC css :tangle "~/.config/gtk-3.0/gtk.css"
+      VteTerminal,
+      TerminalScreen,
+      vte-terminal {
+        /* XXX: Don't attempt to change this to padding: 5px 0 5px 5px */
+        padding-bottom: 0px;
+        padding-top: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
 
-*** NetworkManager
-    NetworkManager is a program for providing detection and configuration for systems to automatically connect to network.
+      /* shrink headerbars */
+      headerbar {
+        min-height: 0px;
+        padding-left: 0px; /* same as childrens vertical margins for nicer proportions */
+        padding-right: 0px;
+      }
 
-    I use a local resolver (=dnsmasq=) instead of those provided by DHCP.
-**** Enable =dnsmasq=
-***** =NetworkManager.conf=
-      You must ensure NetworkManager globally enables local resolver =dnsmasq=
-      :PROPERTIES:
-      :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/NetworkManager/NetworkManager.conf"
-      :END:
-     #+begin_example
-     [main]
-     dns=dnsmasq
-     #+end_example
+      headerbar entry,
+      headerbar spinbutton,
+      headerbar button,
+      headerbar separator {
+        margin-top: 0px; /* same as headerbar side padding for nicer proportions */
+        margin-bottom: 0px;
+      }
 
-***** =dnsmasq.conf=
-      This will tack on these servers to the list recieved by DHCP.
-      :PROPERTIES:
-      :header-args: :noweb yes :exports none :mkdirp no :tangle "/etc/NetworkManager/dnsmasq.d/server.conf"
-      :END:
-     #+begin_example
-     server=8.8.8.8
-     server=1.1.1.1
-     #+end_example
+      /* shrink ssd titlebars */
+      .default-decoration {
+        min-height: 0; /* let the entry and button drive the titlebar size */
+        padding: 0px;
+      }
 
-*** Thunderbird
-     :PROPERTIES:
-     :header-args: :noweb yes :exports none :mkdirp no :tangle "/home/zv/.thunderbird/ufdmg71x.default/prefs.js"
-     :END:
-     #+begin_example
-user_pref("mailnews.nav_crosses_folders", 0);
-     #+end_example
+      .default-decoration .titlebutton {
+        min-height: 0px; /* tweak these two props to reduce button size */
+        min-width: 0px;
+      }
 
+      window.ssd headerbar.titlebar,
+      window.ssd headerbar.titlebar button.titlebutton
+      {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        min-height: 0;
+      }
+    #+END_SRC
 
-* Backup
-** Thunderbird
-   Thunderbird provides an excellent RSS reader and I keep a list of the feeds which I consume in =thunderbird/zv-feeds.opml=.
-** =dconf=
-   dconf is a low-level configuration system. Its main purpose is to provide a backend to GSettings on platforms that don't already have configuration storage systems.
+** =NetworkManager=
+   =NetworkManager= is a program for providing detection and configuration for
+   systems to automatically connect to network.
 
-*** gnome-terminal
-    #+begin_src shell
-      dconf dump /org/gnome/terminal/ > gnome_terminal_settings_backup.txt
-    #+end_src
+*** Use local resolver
+**** Set ~main.dns~ to =dnsmasq= in =NetworkManager.conf=
+     You must ensure NetworkManager globally enables local resolver =dnsmasq=
 
-** keyring
-   Gnome Keyring (accessible through Seahorse) stores it's keys in =~/.local/share/keyrings=. Anytime I'm backing keys up, I encrypt it first.
-#+begin_src 
-KEYRING_PATH="$HOME/.local/share/keyrings"
-tar --create -C $KEYRING_PATH(:h) --wildcards -O $KEYRING_PATH(:t) \
-        | gpg --encrypt -r zv@nxvr.org -o gnome-keyring.tar.gpg
-#+end_src
-*** restore
-    #+begin_src 
-   # Use gpg not gnome ssh-agent
-    if [[ $(gconftool-2 --get /apps/gnome-keyring/daemon-components/ssh) != "false" ]]; then
-        gconftool-2 --type bool --set /apps/gnome-keyring/daemon-components/ssh false
-    fi
-    gpg2 -d gnome-keyring.tar.gpg > gnome-keyring.tar
-    tar xvf gnome-keyring.tar
-    mv keyrings ~/.local/share/keyrings
-    #+end_src
+     #+NAME: 70-use-dnsmasq.conf
+     #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/conf.d/70-use-dnsmasq.conf"
+       [main]
+       dns=dnsmasq
+     #+END_SRC
 
-** My files and folder
-   #+begin_src sh
-tar -a -c -v -f /run/media/zv/02A9-16E4/backup.tar.gz ~/Development ~/Backup ~/Books ~/Documents ~/dotfilez ~/zv.github.io
-   #+end_src
+**** Add server configuration to ~/etc/NetworkManager/dnsmasq.d~
+     This will tack on these servers to the list recieved by DHCP.
+     #+NAME: server.conf
+     #+BEGIN_SRC conf :tangle "/sudo::/etc/NetworkManager/dnsmasq.d/server.conf"
+       server=2606:4700:4700::1111
+       server=1.1.1.1
+       server=2001:4860:4860::8888
+       server=8.8.8.8
+     #+END_SRC
+
+** Backup
+   #+NAME: backup
+   [[file:backup/README.org]]

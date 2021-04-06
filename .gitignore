@@ -20,6 +20,10 @@ certificates/GandiStandardSSLCA.crt
 certificates/sks-keyservers.netCA.pem
 
 #━━━━━━RC FILES━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+backup/*
+!backup/README.org
+
+#━━━━━━RC FILES━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/zsh/cache
 rc/credentials.sh
 rc/vim/.netrwhist
@@ -60,15 +64,11 @@ rc/zsh/completion/_rustup
 
 #━━━━ ssh / gpg ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/gnupg/*
-rc/gnupg/secring.gpg
 !rc/gnupg/gpg-agent-wrapper
 !rc/gnupg/gpg.conf
 !rc/gnupg/gpg-agent.conf
 !rc/gnupg/dirmngr.conf
 !rc/gnupg/scdaemon.conf
-!rc/gnupg/pubring.gpg
-!rc/gnupg/trustring.gpg
-!rc/gnupg/*.asc
 rc/ssh/*
 !rc/ssh/config
 !rc/ssh/known_hosts
@@ -78,7 +78,6 @@ rc/ssh/*
 !rc/ssh/yubi.pub
 !rc/ssh/*.gpg
 !rc/ssh/*.asc
-rc/ssh/known_hosts.asc
 rc/ssh/config.asc
 
 #━━━━ w3m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

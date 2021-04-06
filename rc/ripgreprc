@@ -1,0 +1,23 @@
+# Search hidden files and directories.
+--hidden
+
+# Follow symbolic links.
+# --follow
+
+# Don't respect ignore files (.gitignore, .ignore, etc.).
+--no-ignore
+
+# Exclude directories.
+--glob=!{.git,.svn,.tldr,.idea,node_modules,.mypy_cache,__pycache__,vendor,venv,.venv}
+
+# Exclude file types.
+--glob=!*.{lock,gpg,asc}
+
+# Exclude files.
+--glob=!{package-lock.json}
+
+# Don't print lines longer than this limit.
+--max-columns=10000
+
+# Searches case insensitively.
+--smart-case

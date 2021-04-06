@@ -1,6 +1,7 @@
 # -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
 # Build
 export AR=ar
+export TZ='America/Los_Angeles'
 
 # Language
 if [[ -z "$LANG" ]]; then
@@ -29,7 +30,6 @@ path=(
 	/usr/local/bin
 	/usr/local/sbin
 	$path
-	$HOME/.cargo/bin
 	$HOME/.local/bin
 	/usr/local/cuda/bin
 )
@@ -68,6 +68,9 @@ export WORKON_HOME="$HOME/.local/environments"
 if (( $+commands[rustc] )); then
     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 fi
+
+# rg
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 # Java
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"

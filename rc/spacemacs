@@ -37,57 +37,46 @@ This function should only modify configuration layer settings."
                       company-tooltip-limit 8
                       auto-completion-use-company-box nil
                       company-show-numbers t)
-     ;; (asm :variables
-     ;;      ;; Location of Intel's documentation for easy lookup.
-     ;;      x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+     (asm :variables
+          x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
      prettier
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
-     ;; dap
-     ;; debug
      docker
      emacs-lisp
      (git :variables
           magit-log-arguments '()
           magit-repository-directories '(("~/Development/" . 2)))
+     helpful
      (html :variables web-fmt-tool 'prettier)
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      (javascript :variables
                  javascript-backend 'lsp
                  javascript-repl 'skewer
-                 javascript-fmt-tool 'prettier
-                 ;; js2-mode-show-strict-warnings nil
-                 ;; js2-mode-show-parse-errors nil
-                 )
+                 javascript-fmt-tool 'prettier)
      org
      (json :variables json-backend 'lsp)
      (lsp :variables
-          ; alternative 'full or nil (auto)
-          ;; lsp-document-sync-method 'incremental
-          ;; lsp-navigation 'both
           lsp-navigation 'both
           lsp-ui-doc-enable nil
           lsp-ui-sideline-ignore-duplicate t)
      lua
-     helpful
-     ;; (neotree :variables neo-theme 'arrow)
      markdown
      (python :variables
              python-auto-set-local-pyenv-version nil
-             python-auto-set-local-pyvenv-virtualenv nil
+             python-auto-set-local-pyvenv-virtualenv 'on-visit
              python-formatter 'yapf
-             python-fill-column 101
+             python-fill-column 120
              python-format-on-save nil
              python-backend 'lsp
              python-lsp-server 'mspyls
-             python-lsp-git-root "/home/zv/extern/python-language-server"
-             python-pipenv-activate nil
-             python-shell-interpreter "ipython3"
-             python-shell-interpreter-args "--simple-prompt -i"
+             python-lsp-git-root "~/extern/python-language-server"
              python-test-runner 'pytest)
      react
+     erlang
+     elixir
      (treemacs :variables
                treemacs-use-follow-mode t
                treemacs-use-collapsed-directories 3)
@@ -96,38 +85,26 @@ This function should only modify configuration layer settings."
      (shell :variables
             close-window-with-terminal t
             shell-default-shell 'ansi-term)
-     ;; scheme
      (sql :variables
           sql-capitalize-keywords t)
      shell-scripts
      syntax-checking
-     ;; systemd
+     systemd
      (typescript :variables
-                 ;; ;; Until lsp is stable, use tide
-                 ;; typescript-backend 'tide
+                 ;; Until 'lsp is stable, use 'tide
                  typescript-backend 'tide)
-     ;; vimscript
      helm
      version-control
      windows-scripts
      yaml
      zv)
 
-   dotspacemacs-additional-packages '(
-                                      solarized-theme
-                                      ;; edts
-                                      ;; (reason-mode
-                                      ;;  :location (recipe
-                                      ;;             :repo "reasonml-editor/reason-mode"
-                                      ;;             :fetcher github
-                                      ;;             :files ("reason-mode.el" "refmt.el" "reason-indent.el" "reason-interaction.el")))
-                                      )
+   dotspacemacs-additional-packages '()
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '(org-pomodoro
                                     spray
                                     pug-mode
-                                    ;; helm-xref
                                     evil-goggles
                                     golden-ratio
                                     fancy-battery)
@@ -158,7 +135,7 @@ It should only modify the values of Spacemacs settings."
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
    ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
-   ;; (default spacemacs-27.1.pdmp)
+   ;; (default (format "spacemacs-%s.pdmp" emacs-version))
    dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
@@ -188,7 +165,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; latest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. Spacelpa is currently in
+   ;; experimental state please use only for testing purposes.
+   ;; (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -248,6 +227,14 @@ It should only modify the values of Spacemacs settings."
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
 
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
+
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
    dotspacemacs-initial-scratch-message nil
@@ -273,7 +260,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
                                :size 14
                                :weight medium
@@ -299,8 +288,10 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-major-mode-leader-key ","
 
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
+   ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+   ;; C-M-m also should work in terminal mode, but not in GUI mode.
+   dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-return>" "C-M-m")
 
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
@@ -387,12 +378,12 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency nil
+   dotspacemacs-active-transparency 90
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency nil
+   dotspacemacs-inactive-transparency 90
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -438,13 +429,18 @@ It should only modify the values of Spacemacs settings."
                                          text-mode
                                          :size-limit-kb 2000)
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
@@ -492,12 +488,18 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
+
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -513,14 +515,12 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
 
-   ;; If non-nil activate `snoopy-mode' which shifts your number row
-   ;; to match the set of signs given in `dotspacemacs-snoopy-keyrow'
-   ;; in programming modes (insert-mode only). (default nil)
-   dotspacemacs-use-snoopy-mode nil
-
-   ;; Text of shifted values from your
-   ;; keyboard's number row. (default '!@#$%^&*()')
-   dotspacemacs-snoopy-keyrow "!@#$%^&*()"
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -529,7 +529,14 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -538,7 +545,7 @@ default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
   (spacemacs/load-spacemacs-env)
-  ;; Internal shell tools are more accommodating  to bash in Emacs.
+  ;; Internal shell tools are more accommodating to bash in Emacs.
   (setenv "SHELL" "/bin/bash"))
 
 (defun dotspacemacs/user-init ()
@@ -568,33 +575,31 @@ before packages are loaded."
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
   ;; now create the associated directories
-  (let* ((undo-base-dir (file-name-as-directory (expand-file-name ".emacs/" temporary-file-directory)))
-         (save-dirs (seq-map
-                     (lambda (f) (file-name-as-directory (expand-file-name f undo-base-dir)))
-                     '("autosave/" "undo/" "backups/" "discard/")))
-         (missing (seq-remove #'file-directory-p save-dirs)))
-    (when (= (length missing) ;; don't set any options if we haven't created all the directories
-             (map-y-or-n-p "Create %s?" (lambda (path) (progn (make-directory path t) path)) missing))
-      (seq-let (auto-save-directory undo-tree-directory backups-directory discard-directory) save-dirs
-        (setq-default backup-by-copying t    ; Copy the file, don't rename
-                      make-backup-files nil  ; Don't copy
-                      backup-directory-alist `(("\\`/tmp/.+" . ,discard-directory)
-                                               (".*" . ,backups-directory))
-                      vc-make-backup-files nil ; Don't bother making backups for files in VC
-                      vc-follow-symlinks t
-                      version-control t        ; use versioned backups
-                      auto-save-default t     ; auto-save every buffer that visits a file
-                      auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
-                      auto-save-interval 400   ; number of keystrokes between auto-saves
-                      auto-save-file-name-transforms  `(("\\`/tmp/.+" ,discard-directory t)
-                                                        ;; always auto-save TRAMP files to dist
-                                                        (".*"  ,auto-save-directory t))
-                      undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
-                      undo-tree-enable-undo-in-region  nil
-                      undo-tree-history-directory-alist `((".+gpg\\'" . ,discard-directory)
-                                                          (".+asc\\'" . ,discard-directory)
-                                                          ("\\`/tmp/.+" . ,discard-directory)
-                                                          (".*" . ,undo-tree-directory))))))
+  (defconst emacs-temporary-dir (expand-file-name (format "emacs-%d" (user-uid)) temporary-file-directory))
+
+  (unless (file-directory-p emacs-temporary-dir)
+    (and (y-or-n-p (format "Create emacs-temporary-dir in %s?" emacs-temporary-dir))
+         (make-directory emacs-temporary-dir t)))
+
+  (setq-default backup-by-copying t    ; Copy the file, don't rename
+                make-backup-files nil  ; Don't copy
+                backup-directory-alist `(("\\`/tmp/.+" . ,emacs-temporary-dir)
+                                         (".*" . ,emacs-temporary-dir))
+                vc-make-backup-files nil ; Don't bother making backups for files in VC
+                vc-follow-symlinks t
+                version-control t        ; use versioned backups
+                auto-save-default t     ; auto-save every buffer that visits a file
+                auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
+                auto-save-interval 400   ; number of keystrokes between auto-saves
+                auto-save-file-name-transforms  `(("\\`/tmp/.+" ,emacs-temporary-dir t)
+                                                  ;; always auto-save TRAMP files to dist
+                                                  (".*"  ,emacs-temporary-dir t))
+                undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
+                undo-tree-enable-undo-in-region  nil
+                undo-tree-history-directory-alist `((".+gpg\\'" . ,emacs-temporary-dir)
+                                                    (".+asc\\'" . ,emacs-temporary-dir)
+                                                    ("\\`/tmp/.+" . ,emacs-temporary-dir)
+                                                    (".*" . ,emacs-temporary-dir)))
 
   (add-to-list 'auto-mode-alist '("\\.nse\\'" . lua-mode))
   (setq-default abbrev-mode nil
@@ -657,52 +662,50 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
- '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
- '(company-selection-wrap-around t)
- '(confirm-nonexistent-file-or-buffer nil)
- '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
- '(evil-want-Y-yank-to-eol nil)
- '(expand-region-contract-fast-key "V")
- '(expand-region-reset-fast-key "r")
- '(gud-gdb-command-name "gdb -i=mi -nh")
- '(helm-man-or-woman-function 'Man-getpage-in-background)
- '(hl-todo-keyword-faces
-   '(("TODO" . "#dc752f")
-     ("NEXT" . "#dc752f")
-     ("THEM" . "#2d9574")
-     ("PROG" . "#3a81c3")
-     ("OKAY" . "#3a81c3")
-     ("DONT" . "#f2241f")
-     ("FAIL" . "#f2241f")
-     ("DONE" . "#42ae2c")
-     ("NOTE" . "#b1951d")
-     ("KLUDGE" . "#b1951d")
-     ("HACK" . "#b1951d")
-     ("TEMP" . "#b1951d")
-     ("FIXME" . "#dc752f")
-     ("XXX+" . "#dc752f")
-     ("\\?\\?\\?+" . "#dc752f")))
- '(org-refile-targets
-   '((org-agenda-files :maxlevel . 1)
-     (org-default-notes-file :maxlevel . 2)))
- '(package-selected-packages
-   '(yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode winum which-key web-mode web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toml-mode toc-org tide terminal-here tagedit systemd symon symbol-overlay string-inflection sqlup-mode sql-indent spaceline-all-the-icons solarized-theme smeargle slim-mode shell-pop scss-mode sass-mode rjsx-mode restart-emacs rainbow-delimiters racer pytest pyenv-mode py-isort prettier-js powershell posframe popwin pippel pipenv pip-requirements pcre2el password-generator paradox overseer org-projectile org-present org-mime org-download org-cliplink org-bullets open-junk-file nodejs-repl nameless multi-term move-text mmm-mode markdown-toc magit-svn magit-section magit-gitflow macrostep lsp-ui lsp-python-ms lorem-ipsum livid-mode live-py-mode link-hint json-navigator js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode ibuffer-projectile hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gh-md fuzzy font-lock+ flycheck-ycmd flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-package flycheck-elsa flycheck-bashate flx-ido fish-mode eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emr emmet-mode elisp-slime-nav editorconfig dumb-jump dotenv-mode dockerfile-mode docker disaster diminish devdocs define-word dap-mode cython-mode cpp-auto-include company-ycmd company-web company-statistics company-shell company-rtags company-c-headers company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode ccls cargo browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell))
- '(page-break-lines-modes
-   '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
- '(paradox-github-token t)
- '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
- '(ring-bell-function 'ignore))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(helm-ff-file-extension ((t nil))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(ansi-color-names-vector
+     ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
+   '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
+   '(company-selection-wrap-around t)
+   '(confirm-nonexistent-file-or-buffer nil)
+   '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
+   '(evil-want-Y-yank-to-eol nil)
+   '(expand-region-contract-fast-key "V")
+   '(expand-region-reset-fast-key "r")
+   '(gud-gdb-command-name "gdb -i=mi -nh")
+   '(helm-man-or-woman-function 'Man-getpage-in-background)
+   '(hl-todo-keyword-faces
+     '(("TODO" . "#dc752f")
+       ("NEXT" . "#dc752f")
+       ("THEM" . "#2d9574")
+       ("PROG" . "#3a81c3")
+       ("OKAY" . "#3a81c3")
+       ("DONT" . "#f2241f")
+       ("FAIL" . "#f2241f")
+       ("DONE" . "#42ae2c")
+       ("NOTE" . "#b1951d")
+       ("KLUDGE" . "#b1951d")
+       ("HACK" . "#b1951d")
+       ("TEMP" . "#b1951d")
+       ("FIXME" . "#dc752f")
+       ("XXX+" . "#dc752f")
+       ("\\?\\?\\?+" . "#dc752f")))
+   '(org-refile-targets
+     '((org-agenda-files :maxlevel . 1)
+       (org-default-notes-file :maxlevel . 2)))
+   '(page-break-lines-modes
+     '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
+   '(paradox-github-token t)
+   '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
+   '(ring-bell-function 'ignore))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(helm-ff-file-extension ((t nil))))
+  )

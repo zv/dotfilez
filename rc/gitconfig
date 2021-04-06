@@ -359,7 +359,7 @@
 	grep-all = !"git rev-list --all | xargs git grep --color=auto -a $@"
 
 	# Search git history for a filename
-    locate-all = "!git log --all --full-history -- **/$@"
+  locate-all = "!git log --all --pretty=oneline --full-history -- **/$@"
 
 	# Given a merge commit, find the span of commits that exist(ed).
 	# Not so useful in itself, but used by other aliases.
@@ -393,7 +393,6 @@
 	### LOG ALIASES ###
 
 	log-graph = log --all --graph --decorate
-	log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
 	log-timeline = log --format='%h %an %ar - %s'
 	log-local = log --oneline origin..HEAD
 	log-timeline = log --date=local --format='%h %an %ar - %s'
@@ -473,7 +472,6 @@
 	#
 	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count", "file"} {print $1, $2}' | sort -g
 
-
 	### LOOKUP ALIASES ###
 
 	# whois: given a string for an author, try to figure out full name and email:
@@ -487,10 +485,6 @@
 
 	# Show who contributed, in descending order by number of commits
 	whorank = shortlog -sn --no-merges
-
-
-	### WORKFLOW ALIASES ###
-  whorank = shortlog -sn --no-merges
 
 	# Stash aliases
 	save = !git stash save
@@ -595,10 +589,10 @@
 	master-cleanse = !git master-cleanse-local; git master-cleanse-remote
 
 	# Delete all local branches that have been merged into the local master branch.
-	master-cleanse-local = "!git checkout master && git branch --merged | xargs git branch -d"
+  master-cleanse-local = "!git branch --merged master | grep  -v '\\*\\|master' | xargs -r -n 1 git branch -d"
 
 	# Delete all remote branches that have been merged into the remote master branch.
-	master-cleanse-remote = !"git branch -r --merged origin/master | sed 's# *origin/##' | grep -v '^master$' xargs -I% git push origin :% 2>&1 | grep --colour=never 'deleted'"
+  master-cleanse-remote = !"git checkout master && git branch -r --merged | grep -v master | sed 's/origin\\///' | xargs -n 1 git push --delete origin"
 
 	# Publish the current branch by pushing it to the remote "origin",
 	# and setting the current branch to track the upstream branch.
@@ -616,7 +610,6 @@
 	#
 	reincarnate = !"f() { [[ -n $@ ]] && git checkout \"$@\" && git unpublish && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" && git publish; }; f"
 
-
 	### SHELL SCRIPTING ALIASES ###
 
 	# Get the current branch name
@@ -628,7 +621,6 @@
 	# Execute shell scripts. Git always runs scripts in the top directory.
 	# For example "git exec pwd" will always show you the top directory.
 	exec = ! exec
-
 
 	### MAINTENANCE ALIASES ###
 	# repacker: repack a repo the way Linus recommends.
@@ -661,16 +653,6 @@
 	# us from a window that has very large objects such as binary blobs.
 	#
 	repacker = !git repack -a -d -f --depth=300 --window=300 --window-memory=1g
-
-	# Do everything we can to optimize the repository.
-	#
-	# This command takes a long time to run, perhaps even overnight.
-	#
-	# Currently, this command simply calls `git pruner` and `git repacker`.
-	# There's a step that may be unnecessarying, calling `git prune-pack`.
-	#
-	optimize = !git pruner; git repacker; git prune-packed
-
 
 	### ADVANCED ALIASES ###
 
