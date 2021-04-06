@@ -284,9 +284,13 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
       # Dump of Gnome window keybindings
       local key
-      for key in $(gsettings list-keys org.gnome.desktop.wm.keybindings); do
-          schema_key org.gnome.desktop.wm.keybindings "$key"
-      done
+      local schema
+      for schema in 'org.gnome.desktop.wm.keybindings' 'org.gnome.mutter.keybindings'; do
+        for key in $(gsettings list-keys "$schema"); do
+            schema_key "$schema" "$key"
+        done
+  done
+
     #+END_SRC
 
     #+RESULTS: keybindings.sh
@@ -378,6 +382,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-last "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-group-backward "@as []"
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-5 "['<Shift><Super>t']"
+    gsettings set org.gnome.mutter.keybindings tab-popup-cancel "@as []"
+    gsettings set org.gnome.mutter.keybindings tab-popup-select "@as []"
+    gsettings set org.gnome.mutter.keybindings toggle-tiled-right "['<Shift><Super>l']"
+    gsettings set org.gnome.mutter.keybindings toggle-tiled-left "['<Shift><Super>h']"
+    gsettings set org.gnome.mutter.keybindings rotate-monitor "['XF86RotateWindows']"
+    gsettings set org.gnome.mutter.keybindings switch-monitor "['<Super>p', 'XF86Display']"
     #+end_example
 
 ** =gnome-terminal=
