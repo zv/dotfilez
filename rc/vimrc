@@ -85,45 +85,36 @@ set softtabstop=4       " number of spaces a tab counts for in edit operations.
 
 "}}}
 " ------------ Swap & Persistent Undo ------------ {{{
-set undofile
 set backup
+if has('persistent_undo')
+	set undofile
+endif
 set noswapfile
 
-function! s:get_appdata() abort
-	if has('win32') || has('win64')
-		return simplify(printf("%s\\%s", fnamemodify(get(environ(), "LOCALAPPDATA", $APPDATA), ':p:h'), "vim"))
-	else
-		return simplify(printf("%s/%s", fnamemodify(get(environ(), "XDG_CACHE_HOME", "/var/tmp"), ':p:h'), "vim"))
+if has('win32') || has('win64')
+	if empty($LOCALAPPDATA)
+		let $LOCALAPPDATA="$APPDATA\\Local"
 	endif
-endfunction
-
-function! s:create_backup_dirs() abort
-	let l:appdata = s:get_appdata()
-	let &backupdir=l:appdata . '/backup'
-	" let &directory=l:appdata . '/vim_swap'
-	let &undodir=l:appdata . '/undo'
-	let &backupskip=join([&backupskip, &backupdir], ',')
-
-	" Create those folders if they don't exist
-	for l:d in [&backupdir, &undodir]
-		if !isdirectory(l:d)
-			let l:result = confirm("Create " . l:d . " ?", "&Yes\n&No\n&Cancel", 1)
-			if result == 1
-				call mkdir(l:d, "p")
-				echom "Created " . l:d
-			elseif result == 2
-				echom "Did not create " . l:d
-			else " handle both cancel and interrupt
-				quit
-			endif
+	for d in ["swap", "backup", "undo"]
+		if !isdirectory($LOCALAPPDATA . "\\vim\\" . d)
+			call mkdir($LOCALAPPDATA . "\\vim\\" . d, "p")
 		endif
 	endfor
-endfunction
-
-if has('gui_running')
-	autocmd GUIEnter * call s:create_backup_dirs()
+	set directory=$LOCALAPPDATA\\vim\\swap,$TEMP,$TMP,.
+	set backupdir=$LOCALAPPDATA\\vim\\backup,$TEMP,$TMP,.
+	set undodir=$LOCALAPPDATA\\vim\\undo,$TEMP,$TMP,.
 else
-	call s:create_backup_dirs()
+	if empty("$XDG_CACHE_HOME")
+		let $XDG_CACHE_HOME="$HOME/.cache"
+	endif
+	for d in ["swap", "backup", "undo"]
+		if !isdirectory($XDG_CACHE_HOME . "/vim/". d)
+			call mkdir($XDG_CACHE_HOME . "/vim/" . d, "p")
+		endif
+	endfor
+	set directory=$XDG_CACHE_HOME/vim/swap,$HOME,$TMPDIR,.
+	set backupdir=$XDG_CACHE_HOME/vim/backup,$HOME,$TMPDIR,.
+	set undodir=$XDG_CACHE_HOME/vim/undo,$HOME,$TMPDIR,.
 endif
 
 "}}}
