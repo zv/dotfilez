@@ -4,7 +4,7 @@ aws/*
 !aws/*.gpg
 !aws/*.asc
 
-org/*
+org/*                                       # PROTECTED:WARN:
 # Tags
 GPATH
 GRTAGS
@@ -13,7 +13,7 @@ GTAGS
 data/secrets.m4
 
 # certs
-certificates/*
+certificates/*                              # PROTECTED:WARN:
 !certificates/*.gpg
 !certificates/*.asc
 certificates/GandiStandardSSLCA.crt
@@ -61,6 +61,8 @@ ghc/
 
 rc/zsh/completion/_cargo
 rc/zsh/completion/_rustup
+rc/zsh/local.zsh
+rc/zsh/functions/*
 
 #━━━━ ssh / gpg ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/gnupg/*
@@ -79,6 +81,9 @@ rc/ssh/*
 !rc/ssh/*.gpg
 !rc/ssh/*.asc
 rc/ssh/config.asc
+rc/ssh/config                               # PROTECTED:WARN:
+rc/ssh/id_rsa                               # PROTECTED:WARN:
+rc/ssh/id_ed25519                           # PROTECTED:WARN:
 
 #━━━━ w3m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/w3m/w3mtmp*
@@ -93,7 +98,7 @@ rc/weechat
 rc/weechat
 
 rc/irssi/irssi-scripts
-rc/irssi/sasl.auth
+rc/irssi/sasl.auth                          # PROTECTED:WARN:
 rc/irssi/*.crt
 rc/irssi/*.pem
 rc/weechat/logs

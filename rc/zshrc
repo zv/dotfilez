@@ -694,9 +694,9 @@ fi
 #     export PATH="$HOME/.rbenv/bin:$PATH"
 #     eval "$(rbenv init -)"
 # fi
+
+# virtualenvwrapper
 # [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PATH="/usr/local/node/node-v10.16.3-linux-x64/bin:$PATH"
-# export PATH="/usr/local/node/node-v12.10.0-linux-x64/bin:$PATH"
-_exists aws && autoload zsetup_aws
+touch "$HOME/.zsh/local.zsh"
+source "$HOME/.zsh/local.zsh"
