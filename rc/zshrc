@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# -*- mode: shell-script; fill-column: 75; comment-column: 50; -*-
+# -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 # This is zv's ZSHRC.
 
 # ━━ Initialization ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -13,11 +13,14 @@ setopt BG_NICE            # run all background jobs at a lower priority.
 unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
 setopt HUP                # kill jobs on shell exit.
 
+# ── Utility Control Variables ──────────────────────────────
+export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS --window=-4'
+
 # Expanded `time' output
 export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
 
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-_exists() { (( $+commands[$1] )) }
+_exists() { (( $+commands[$1] == 1 )) }
 
 # Define general aliases.
 alias pr="print -l"
@@ -253,11 +256,11 @@ setopt SHARE_HISTORY             # Share history between all sessions.
 setopt HIST_FCNTL_LOCK           # Don't bother with old-school locking. We're on new POSIX here.
 
 # History
-export HISTFILE=$HOME/.zsh_history
+export HISTFILE="$HOME/.zsh_history"
 
 # Lines to store
-export HISTSIZE=$((2**16 - 1))
-export SAVEHIST=$((2**16 - 1))
+export HISTSIZE=65535
+export SAVEHIST=65535
 
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
@@ -291,7 +294,6 @@ elif [[ "$TERM" == eterm-color ]]; then
     return
 fi
 
-export VISUAL='vim' # Set default keyboard bindings to `viins'
 export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
@@ -614,10 +616,14 @@ fi
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
 # Rust
-if [[ -e ~/.cargo/env ]]; then
+if [[ (( $+commands[cargo] )) && -r ~/.cargo/env ]]; then
     source ~/.cargo/env
 fi
 
+# rg
+if (( $+commands[rg] )); then
+    export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+fi
 
 # Node
 # if [[ -e "$HOME/.rbenv/bin" ]]; then
