@@ -301,7 +301,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+RESULTS: keybindings.sh
     #+begin_example
     gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:ralt_rctrl', 'ctrl:rctrl_ralt', 'ctrl:nocaps', 'lv3:ralt_switch']"
-    gsettings set org.gnome.Terminal.Legacy.Settings shortcuts-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings shortcuts-enabled "false"
     gsettings set org.gnome.Terminal.Legacy.Settings unified-menu "false"
     gsettings set org.gnome.Terminal.Legacy.Settings schema-version "uint32 3"
     gsettings set org.gnome.Terminal.Legacy.Settings shell-integration-enabled "true"
@@ -311,7 +311,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     gsettings set org.gnome.Terminal.Legacy.Settings mnemonics-enabled "false"
     gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
     gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar "false"
-    gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled "false"
     gsettings set org.gnome.Terminal.Legacy.Settings confirm-close "true"
     gsettings set org.gnome.Terminal.Legacy.Settings tab-policy "'automatic'"
     gsettings set org.gnome.Terminal.Legacy.Settings theme-variant "'dark'"
@@ -426,13 +426,13 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     confirm-close=true
     default-show-menubar=false
     headerbar=@mb false
-    menu-accelerator-enabled=true
+    menu-accelerator-enabled=false
     mnemonics-enabled=false
     new-tab-position='last'
     new-terminal-mode='window'
     schema-version=uint32 3
     shell-integration-enabled=true
-    shortcuts-enabled=true
+    shortcuts-enabled=false
     tab-policy='automatic'
     tab-position='top'
     theme-variant='dark'
@@ -442,6 +442,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '8bfbb274-dc3d-4666-8048-5317058efebe']
 
     [legacy/profiles:/:8bfbb274-dc3d-4666-8048-5317058efebe]
+    audible-bell=false
     background-color='rgb(253,246,227)'
     font='Source Code Pro 14'
     foreground-color='rgb(101,123,131)'
@@ -453,6 +454,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     visible-name='Light'
 
     [legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+    audible-bell=false
     background-color='rgb(0,43,54)'
     font='Source Code Pro 14'
     foreground-color='rgb(131,148,150)'
