@@ -31,13 +31,12 @@ path=(
 	$path
 	$HOME/.cargo/bin
 	$HOME/.local/bin
+	/usr/local/cuda/bin
 )
 
 # Remove all empty directories from the path
 # for np ($path) if [[ ! -d $np ]] path=(${path#$np})
-if [[ -d /usr/local/cuda/lib64 ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
-fi
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # Load our completion functions
 fpath=(
