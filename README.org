@@ -128,15 +128,14 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      )
    #+END_SRC
 
+** Login Shell
+   #+BEGIN_SRC sh :exports code
+     set -eu
+     sudo usermod  --shell "$(which zsh)" "$(whoami)"
+   #+END_SRC
 
-*** Default shell
-    #+BEGIN_SRC sh :exports code
-      set -eu
-      sudo usermod  --shell "$(which zsh)" "$(whoami)"
-    #+END_SRC
-
-** org-protocol
-   org-protocol intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions.
+** =org-protocol=
+   [[https://orgmode.org/worg/org-contrib/org-protocol.html][=org-protocol=]] intercepts calls from emacsclient to trigger custom actions without external dependencies. Only one protocol has to be configured with your external applications or the operating system, to trigger an arbitrary number of custom actions.
 
    #+BEGIN_SRC conf :tangle "~/.local/share/applications/org-protocol.desktop"
      [Desktop Entry]
@@ -148,28 +147,23 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      MimeType=x-scheme-handler/org-protocol;
    #+END_SRC
 
-*** Install
-    You must run =update-desktop-database= after adding a ~.desktop~ file.
+   Afterwards, you must run =update-desktop-database=
 
-    #+BEGIN_SRC sh
-      update-desktop-database "$HOME/.local/share/applications/"
-    #+END_SRC
+   #+BEGIN_SRC sh
+     update-desktop-database "$HOME/.local/share/applications/"
+   #+END_SRC
 
+** =libvirt=
+   =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
 
-** polkit
-   polkit is an application-level toolkit for defining and handling the policy that allows unprivileged processes to speak to privileged processes: It is a framework for centralizing the decision making process with respect to granting access to privileged operations for unprivileged applications.
-
-*** =libvirt=
-    =libvirt= will complain about user-sessions hitting a root, I allow any user in =wheel= to do so anyway on my workstation.
-
-    #+NAME: 80-libvirt.rules
-    #+BEGIN_SRC javascript :tangle "/sudo::/etc/polkit-1/rules.d/80-libvirt.rules"
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
-          return polkit.Result.YES;
-        }
-      });
-    #+END_SRC
+   #+NAME: 80-libvirt.rules
+   #+BEGIN_SRC javascript :tangle "/sudo::/etc/polkit-1/rules.d/80-libvirt.rules"
+     polkit.addRule(function(action, subject) {
+       if (action.id == "org.libvirt.unix.manage" && subject.local && subject.active && subject.isInGroup("wheel")) {
+         return polkit.Result.YES;
+       }
+     });
+   #+END_SRC
 
 ** =sudo=
    I like =sudo= to use a single timestamp across all of my login session.
