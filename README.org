@@ -165,11 +165,8 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      });
    #+END_SRC
 
-** =sudo=
+** =sudo=                                                              :WARN:
    I like =sudo= to use a single timestamp across all of my login session.
-
-*** ~/etc/sudoers.conf~                                                               :WARN:
-    If you'd like to clear the credential cache, run =sudo= using the ~-k~ flag.
 
     #+NAME: /etc/sudoers.d/70_timestamp_timeout
     #+BEGIN_SRC conf :tangle "/sudo::/etc/sudoers.d/70_timestamp_timeout"
