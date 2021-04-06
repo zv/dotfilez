@@ -234,13 +234,22 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** GnuPG
 **** Socket-activated =dirmngr=
      #+BEGIN_SRC sh
-       systemctl --user enable dirmngr.socket
+       systemctl --user --global enable dirmngr.socket
      #+END_SRC
+
+     #+RESULTS:
 
 **** Socket-activated =gpg-agent= with SSH support
      #+BEGIN_SRC sh
        systemctl --user enable gpg-agent.socket gpg-agent-ssh.socket
      #+END_SRC
+
+***** With forwarding & web-browser access
+      #+BEGIN_SRC sh
+        sudo systemctl --user --global enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
+      #+END_SRC
+
+      #+RESULTS:
 
 *** =coredump=
     I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
@@ -282,7 +291,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
     #+RESULTS: keybindings.sh
     #+begin_example
-    gsettings set org.gnome.Terminal.Legacy.Settings headerbar "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
     gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:ralt_rctrl', 'ctrl:rctrl_ralt', 'ctrl:nocaps', 'lv3:ralt_switch']"
     gsettings set org.gnome.desktop.wm.keybindings switch-group "@as []"
     gsettings set org.gnome.desktop.wm.keybindings begin-resize "['<Alt>F8']"
@@ -305,7 +314,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-panels "['<Control><Alt>Tab']"
     gsettings set org.gnome.desktop.wm.keybindings minimize "@as []"
-    gsettings set org.gnome.desktop.wm.keybindings cycle-windows "['<Super>l', '<Super>h']"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-windows "['<Super>l']"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-9 "@as []"
     gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-12 "@as []"
     gsettings set org.gnome.desktop.wm.keybindings toggle-on-all-workspaces "@as []"
@@ -325,7 +334,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-up "@as []"
     gsettings set org.gnome.desktop.wm.keybindings raise-or-lower "@as []"
     gsettings set org.gnome.desktop.wm.keybindings move-to-side-e "@as []"
-    gsettings set org.gnome.desktop.wm.keybindings cycle-windows-backward "['<Shift><Super>l']"
+    gsettings set org.gnome.desktop.wm.keybindings cycle-windows-backward "['<Super>h']"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Super>q']"
     gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-windows "@as []"
