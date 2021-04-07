@@ -30,50 +30,39 @@ alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
 alias external-ip="curl ipinfo.io/ip"
-_exists jekyll && alias jkl="jekyll serve -D"
 
 # Tmux
-if _exists tmux; then
-    alias ta="tmux attach-session -t"
-    alias tl="tmux list-sessions"
-fi
+alias ta="tmux attach-session -t"
+alias tl="tmux list-sessions"
 
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias veactivate="source .venv/bin/activate && rehash"
 
-if _exists rg; then
-    rage() {
-        vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(rg "$@" | cut -d: -f1 | sort -u)
-    }
-elif _exists grep; then
-    rage() {
-        vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(grep "$@" | cut -d: -f1 | sort -u)
-    }
-fi
+# Open a vim tab for each file matching the pattern specified
+rage() {
+    vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(${commands[rg]-$commands[grep]} "$@" | cut -d: -f1 | sort -u)
+}
 
 man() {
-    local args=$@
-    (
-        export LESS_TERMCAP_md=$(print -P "%B")
-        export LESS_TERMCAP_md=$(print -P "%B")
-        export LESS_TERMCAP_md=$(print -P "%B")
-        export LESS_TERMCAP_me=$'\E[0m'
-        export LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}")
-        export LESS_TERMCAP_se=$'\E[0m'
-        export LESS_TERMCAP_us=$(print -P "%U%F{cyan}")
-        export LESS_TERMCAP_ue=$'\E[0m'
-        export GROFF_NO_SGR=1
-        $(whence -a -p man) ${=args}
-    )
+    LESS_TERMCAP_md=$(print -P "%B") \
+    LESS_TERMCAP_md=$(print -P "%B") \
+    LESS_TERMCAP_md=$(print -P "%B") \
+    LESS_TERMCAP_me=$'\E[0m' \
+    LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}") \
+    LESS_TERMCAP_se=$'\E[0m' \
+    LESS_TERMCAP_us=$(print -P "%U%F{cyan}") \
+    LESS_TERMCAP_ue=$'\E[0m' \
+    GROFF_NO_SGR=1 \
+    command man "$@"
 }
 
 # Use vim as a pager for man
 manvi() {
-    local args=$@
-    (
-        export MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' -c 'nnoremap <silent> d <C-d>' -c 'nnoremap <silent> u <C-u>' -\""
-        $(whence -a -p man) ${=args}
-    )
+    MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' \
+              | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' \
+                    -c 'nnoremap <silent> d <C-d>' \
+                    -c 'nnoremap <silent> u <C-u>' -\"" \
+            command man "$@"
 }
 
 # Moves the last created file to $2
@@ -83,12 +72,6 @@ mvlast() {
 }
 
 mvdlhere() { mvlast ~/Downloads/ "$(pwd)" }
-
-# Removes the last created file in the specified directory, defaulting to the
-# current directory.
-rmlast() {
-    [[ $# -eq 0 ]] && rm -i *(.oc[1]) || rm -i $1/*(.oc[1])
-}
 
 # calculator
 _zcalc() {
@@ -148,21 +131,20 @@ alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -A'         # Lists human readable sizes, hidden files.
 alias w3m="noglob w3m"
 
-if _exists dnf; then
-    alias dnfs="dnf search"                       # search package
-    alias dnfp="dnf info"                         # show package info
-    alias dnfl="dnf list"                         # list packages
-    alias dnfcu="dnf check-update"                # check updates
-    alias dnfh="sudo dnf history"                 # get dnf history
-    alias dnfu="sudo dnf upgrade"                 # upgrade packages
-    alias dnfi="sudo dnf install"                 # install package
-    alias dnfr="sudo dnf remove"                  # remove package
-    alias dnfgr="sudo dnf groupremove"            # remove pagage group
-    alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
-    alias dnfc="sudo dnf clean all"               # clean cachefi
-fi
+# ── DNF Aliases ────────────────────────────────────────────
+alias dnfs="dnf search"                       # search package
+alias dnfp="dnf info"                         # show package info
+alias dnfl="dnf list"                         # list packages
+alias dnfcu="dnf check-update"                # check updates
+alias dnfh="sudo dnf history"                 # get dnf history
+alias dnfu="sudo dnf upgrade"                 # upgrade packages
+alias dnfi="sudo dnf install"                 # install package
+alias dnfr="sudo dnf remove"                  # remove package
+alias dnfgr="sudo dnf groupremove"            # remove pagage group
+alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
+alias dnfc="sudo dnf clean all"               # clean cachefi
 
-
+# ── Git Aliases ────────────────────────────────────────────
 if _exists git; then
     # Git
     alias g='git'
