@@ -208,6 +208,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
       $1 ~ /^#?c.InteractiveShell.autoawait/ { set_value("True") }
       $1 ~ /^#?c.InteractiveShell.history_length/ { set_value("50000") }
       $1 ~ /^#?c.InteractiveShell.history_load_length/ { set_value("1000") }
+      $1 ~ /^#?c.TerminalInteractiveShell.prompt_includes_vi_mode/ { set_value("True") }
 
       { print }
     #+END_SRC
