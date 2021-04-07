@@ -1,5 +1,5 @@
 #+PROPERTY: header-args       :noweb no
-#+PROPERTY: header-args:sh    :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name))) :results replace output
+#+PROPERTY: header-args:sh    :results replace output
 
 * dotfilez
   #+CAPTION: the_setup
@@ -33,6 +33,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    [[file:zv.gpg.pub]]
 
 * Workstation Setup
+***** Installation
+      The following shell & configuration file snippets are intended to be installed using Emacs Org-Mode w/ [[https://orgmode.org/worg/org-contrib/babel/][Babel]].
+
+      To run an entire sections installation scripts, point your cursor at the appropriate heading and execute =org-babel-execute-subtree= (you can also run each individual step with =org-babel-execute-maybe=).
+
+      Configuration files are installed separately, using =org-babel-tangle= (=tramp= will prompt you to =sudo=)
 
 ** Packages
    :PROPERTIES:
@@ -76,7 +82,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Symlink RC Files
    #+NAME: link_if.sh
-   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh"
+   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh" :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name))) 
      link_if() {
          if command -V "$1" 1>/dev/null; then
              shift
