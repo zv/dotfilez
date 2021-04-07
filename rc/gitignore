@@ -1,43 +1,36 @@
-# OSX       taken from: https://github.com/github/gitignore/blob/master/Global/OSX.gitignore
-# ----------------------------------------------------------------------------------------------
+# ── OSX ────────────────────────────────────────────────────
+# From: https://github.com/github/gitignore/blob/master/Global/OSX.gitignore
+
+# ── Windows ────────────────────────────────────────────────
+# From: https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
 .DS_Store
 # Thumbnails
 ._*
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
-
-# Windows   taken from: https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
-# ----------------------------------------------------------------------------------------------
-# Windows image file caches
 Thumbs.db
-
 # Folder config file
 Desktop.ini
 
-# Tags      taken from: https://github.com/github/gitignore/blob/master/Global/Tags.gitignore
-# ----------------------------------------------------------------------------------------------
-# Ignore tags created by etags, ctags & gtags
+# ── Tags ───────────────────────────────────────────────────
+# From: https://github.com/github/gitignore/blob/master/Global/Tags.gitignore
 TAGS
 tags
 GPATH
 GRTAGS
 GTAGS
 
-# Vim       taken from: https://github.com/github/gitignore/blob/master/Global/vim.gitignore
-# ----------------------------------------------------------------------------------------------
+# ── Vim ────────────────────────────────────────────────────
+# From: https://github.com/github/gitignore/blob/master/Global/vim.gitignore
 .*.sw[a-z]
 *.un~
 Session.vim
 vim/.netrwhist
 
-# SASS
-# ----------------------------------------------------------------------------------------------
-.sass-cache
-
+# ── Miscellaneous ──────────────────────────────────────────
 .tern-port
-
-
+.sass-cache
 .gdb_history
-
-.idea
+__pycache__
+.mypy_cache
