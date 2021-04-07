@@ -20,9 +20,6 @@ export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS -
 export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
 
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-_exists() { (( $+commands[$1] == 1 )) }
-
-# Define general aliases.
 alias pr="print -l"
 alias _='sudo'
 alias e="emacsclient -t"
@@ -30,6 +27,10 @@ alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
 alias external-ip="curl ipinfo.io/ip"
+alias l='ls -1A'         # Lists in one column, hidden files.
+alias ll='ls -lh'        # Lists human readable sizes.
+alias la='ll -Ah'         # Lists human readable sizes, hidden files.
+alias w3m="noglob w3m"
 
 # Tmux
 alias ta="tmux attach-session -t"
@@ -38,22 +39,24 @@ alias tl="tmux list-sessions"
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias veactivate="source .venv/bin/activate && rehash"
 
+_exists() { (( $+commands[$1] == 1 )) }
+
 # Open a vim tab for each file matching the pattern specified
 rage() {
     vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(${commands[rg]-$commands[grep]} "$@" | cut -d: -f1 | sort -u)
 }
 
 man() {
-    LESS_TERMCAP_md=$(print -P "%B") \
-    LESS_TERMCAP_md=$(print -P "%B") \
-    LESS_TERMCAP_md=$(print -P "%B") \
-    LESS_TERMCAP_me=$'\E[0m' \
-    LESS_TERMCAP_so=$(print -P "%S%F{black}%K{white}") \
-    LESS_TERMCAP_se=$'\E[0m' \
-    LESS_TERMCAP_us=$(print -P "%U%F{cyan}") \
-    LESS_TERMCAP_ue=$'\E[0m' \
-    GROFF_NO_SGR=1 \
-    command man "$@"
+    LESS_TERMCAP_md="$(print -P "%B")" \
+                   LESS_TERMCAP_md="$(print -P "%B")" \
+                   LESS_TERMCAP_md="$(print -P "%B")" \
+                   LESS_TERMCAP_me=$'\E[0m' \
+                   LESS_TERMCAP_so="$(print -P "%S%F{black}%K{white}")" \
+                   LESS_TERMCAP_se=$'\E[0m' \
+                   LESS_TERMCAP_us="$(print -P "%U%F{cyan}")" \
+                   LESS_TERMCAP_ue=$'\E[0m' \
+                   GROFF_NO_SGR=1 \
+                   command man "$@"
 }
 
 # Use vim as a pager for man
@@ -85,25 +88,17 @@ _zcalc() {
 }
 alias calc='nocorrect noglob _zcalc'
 
+autoload -Uz pronounce_number
+
 # print the color spectrum
 spectrum_ls() {
-    string="${@:-block}"
-    if [[ "$string" = "block" ]]
-    then
-        string="███████████████████████████████"
-    fi
     for code in {000..255}; do
-        print -P -- "$code: %F{$code}${string}%f"
+        print -P -- "$code: %F{$code}███████████████████████████████%f"
     done
 }
 
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
-
-alias l='ls -1A'         # Lists in one column, hidden files.
-alias ll='ls -lh'        # Lists human readable sizes.
-alias la='ll -A'         # Lists human readable sizes, hidden files.
-alias w3m="noglob w3m"
 
 # ── DNF Aliases ────────────────────────────────────────────
 alias dnfs="dnf search"                       # search package
@@ -159,9 +154,6 @@ alias genp=" command genp"
 function format_c_hex {
     echo -e "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
 }
-
-# Disable correction in `rm`
-alias rm='nocorrect rm'
 
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
@@ -427,13 +419,6 @@ zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a
 # ls colors
 autoload -U colors && colors;
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-alias dir='dir --color=auto'
-alias vdir='vdir --color=auto'
-alias diff='diff --color=auto'
-alias ls='ls --group-directories-first --color=auto'
-alias grep="$aliases[grep] --color=auto"
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
 
 # Enable man completion when using Vim as a manpager
 compdef '_dispatch man man' manvi
@@ -589,8 +574,6 @@ fi
 
 # virtualenvwrapper
 # [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
-
-autoload pronounce_number
 
 if [[ -f ~/.zsh/local.zsh ]]; then
     source ~/.zsh/local.zsh
