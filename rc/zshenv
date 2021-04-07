@@ -37,7 +37,7 @@ typeset -gU fpath mailpath path cdpath
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
-    export TMPDIR="/tmp/${LOGNAME}"
+    export TMPDIR="/tmp/$LOGNAME"
     mkdir -m 700 "$TMPDIR"
 fi
 export TMPPREFIX="${TMPDIR%/}/zsh"
@@ -48,12 +48,8 @@ if [[ "$OSTYPE" == linux-gnu ]]; then
 fi
 
 # Configure LS_COLORS
-if (( $+commands[dircolors] )); then
-    if [[ -r ~/.dir_colors ]]; then
-        eval "$(dircolors -b ~/.dir_colors)"
-    else
-        eval "$(dircolors -b)"
-    fi
+if [[ $+commands[dircolors] == 1 && -r ~/.dir_colors ]]; then
+    eval "$(dircolors -b ~/.dir_colors)"
 fi
 
 if (( $+commands[vim] )); then

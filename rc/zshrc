@@ -634,6 +634,9 @@ fi
 # virtualenvwrapper
 # [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
-if [[ -r ~/.zsh/local.zsh ]]; then
+if [[ -f ~/.zsh/local.zsh ]]; then
     source ~/.zsh/local.zsh
+else
+    touch ~/.zsh/local.zsh
+    chmod 700 ~/.zsh/local.zsh
 fi
