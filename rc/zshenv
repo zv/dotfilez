@@ -58,12 +58,7 @@ fi
 
 if (( $+commands[vim] )); then
     export EDITOR="$commands[vim]"
-
-    if (( $+commands[gvim] )); then
-        export VISUAL="$commands[gvim]"
-    else
-        export VISUAL="$commands[vim]"
-    fi
+    export VISUAL="$commands[vim]"
 fi
 
 if (( $+commands[less] )); then
