@@ -62,7 +62,6 @@ ghc/
 rc/zsh/completion/_cargo
 rc/zsh/completion/_rustup
 rc/zsh/local.zsh
-rc/zsh/functions/*
 
 #━━━━ ssh / gpg ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 rc/gnupg/*

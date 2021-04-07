@@ -1,0 +1,30 @@
+#!/usr/bin/zsh -f
+
+# pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
+(( $+functions[_pronounce_number] )) || _pronounce_number()
+{
+    local -A scale=(
+        2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
+        12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
+        24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
+        36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
+        48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
+        60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
+    local number="${1##-}" # remove '-' at start of number
+    local -a cs=()
+    local -i i k
+    # loop through the position/name pairs, extracting
+    # characters between it and the previous pair used
+    for i in ${(Onk)scale}; do
+        local -i place="${number[-k, -i-1]}"
+        (( place )) && cs+=("$place ${scale[$i]}")
+        k=$i
+    done
+
+    # now just print the remainder (if one exists)
+    local rem=" and $(($number[-k, -1]))"
+    printf "%s%s\n" "${(j:, :)cs}" "${rem% and 0}"
+}
+
+_pronounce_number "$@"
+
