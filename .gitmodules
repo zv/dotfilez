@@ -3,4 +3,4 @@
 	url = https://github.com/zv/spacemacs.git
 [submodule "rc/zsh/zsh-completions"]
 	path = rc/zsh/zsh-completions
-	url = https://github.com/zsh-users/zsh-completions.git
+	url = https://github.com/zv/zsh-completions.git
