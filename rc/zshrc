@@ -566,14 +566,9 @@ if (( $+commands[rg] )); then
     export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 fi
 
-# Node
-# if [[ -e "$HOME/.rbenv/bin" ]]; then
-#     export PATH="$HOME/.rbenv/bin:$PATH"
-#     eval "$(rbenv init -)"
+# if (( $+commands[rustc] )); then
+#     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 # fi
-
-# virtualenvwrapper
-# [[ -x "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
 if [[ -f ~/.zsh/local.zsh ]]; then
     source ~/.zsh/local.zsh

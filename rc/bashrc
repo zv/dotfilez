@@ -1,0 +1,54 @@
+# .bashrc
+# shellcheck shell=bash
+# -*- mode: shell-script; sh-shell: bash; fill-column: 75; comment-column: 50; coding: utf-8 -*-
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+# shellcheck disable=SC2076
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# Locale
+export TZ=${TZ:=America/Los_Angeles}
+export LANG=${LANG:=en_US.UTF8}
+export LC_CTYPE="$LANG"
+
+# Use default prompt when paging through completion lists
+export LISTPROMPT=''
+
+# XDG vars
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:=~/.cache}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
+
+# Setup default temporary file location
+if [[ ! -d "$TMPDIR" ]]; then
+    TMPDIR="/tmp/$(whoami)"
+    export TMPDIR
+    # shellcheck disable=SC2174
+    mkdir -p -m 700 "$TMPDIR"
+fi
+
+if [[ "$OSTYPE" == linux-gnu ]]; then
+    export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
+fi
+
+export HISTCONTROL=ignorespace:erasedups
+export HISTSIZE=50000
+export HISTFILE=~/.bash_history
+
+# pager configuration
+export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS --window=-4'
+export PAGER="${PAGER:=less}"
+
+# User specific aliases and functions
+set -o vi

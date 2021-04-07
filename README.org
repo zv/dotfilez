@@ -1,5 +1,6 @@
 #+PROPERTY: header-args       :noweb no
 #+PROPERTY: header-args:sh    :results replace output
+#+HEADER: :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name)))
 
 * dotfilez
   #+CAPTION: the_setup
@@ -78,9 +79,10 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
        sudo dnf remove -y PackageKit-command-not-found
      #+END_SRC
 
-** Symlink RC Files
+** RC Files
+
    #+NAME: link_if.sh
-   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh" :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name)))
+   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh"
      link_if() {
          if command -V "$1" 1>/dev/null; then
              shift
@@ -120,6 +122,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
              link_if vim 'rc/vim' 'rc/vimrc'
              link_if weechat 'rc/weechat'
              link_if wget 'rc/wgetrc'
+             link_if bash 'rc/bashrc'
              link_if zsh 'rc/zsh' 'rc/zshenv' 'rc/zshrc'
              link_if dircolors 'rc/dir_colors'
              link_if Xorg 'rc/Xsession' 'rc/Xresources'
@@ -136,6 +139,17 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    #+BEGIN_SRC sh :exports code
      set -eu
      sudo usermod  --shell "$(which zsh)" "$(whoami)"
+   #+END_SRC
+
+** =/etc/profile.d=
+   #+NAME: dir_colors.sh
+   #+BEGIN_SRC sh :results file silent :file "/sudo::/etc/profile.d/dir_colors.sh" :file-mode (identity #o755)
+     if [[ -r ~/.dir_colors ]]; then
+         dircolors -b ~/.dir_colors
+     else
+         printf "%s does not exist\n" ~/.dir_colors
+         exit 1
+     fi
    #+END_SRC
 
 ** =org-protocol=

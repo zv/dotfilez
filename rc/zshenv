@@ -21,13 +21,13 @@ path=(
     /usr/local/bin
     /usr/local/sbin
     $path
-    "$HOME/.local/bin"
+    ~/.local/bin
 )
 
 # Load our completion functions
 fpath=(
-    "$HOME/.zsh/zsh-completions/src"
-    "$HOME/.zsh/functions"
+    ~/.zsh/zsh-completions/src
+    ~/.zsh/functions
     $fpath
 )
 
@@ -36,9 +36,12 @@ typeset -gU fpath mailpath path cdpath
 
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
-    export TMPDIR="/tmp/$LOGNAME"
-    mkdir -m 700 "$TMPDIR"
+    TMPDIR="/tmp/$(whoami)"
+    export TMPDIR
+    # shellcheck disable=SC2174
+    mkdir -p -m 700 "$TMPDIR"
 fi
+
 export TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Font Config
@@ -46,26 +49,12 @@ if [[ "$OSTYPE" == linux-gnu ]]; then
     export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
 fi
 
-# Configure LS_COLORS
-if [[ $+commands[dircolors] == 1 && -r ~/.dir_colors ]]; then
-    eval "$(dircolors -b ~/.dir_colors)"
-fi
-
-if (( $+commands[vim] )); then
-    export EDITOR="$commands[vim]"
-    export VISUAL="$commands[vim]"
-fi
-
-if (( $+commands[less] )); then
-    export PAGER="$commands[less]"
-fi
-
-if (( $+commands[rustc] )); then
-    export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
-fi
+export EDITOR="${commands[vim]-${commands[vi]}}"
+export VISUAL="$EDITOR"
+export PAGER="${commands[less]-${EDITOR}}"
 
 # virtualenvwrapper
-export WORKON_HOME="$HOME/.local/environments"
+export WORKON_HOME=~/.local/environments
 
 # Java
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
