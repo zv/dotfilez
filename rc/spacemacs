@@ -77,9 +77,7 @@ This function should only modify configuration layer settings."
      react
      erlang
      elixir
-     (treemacs :variables
-               treemacs-use-follow-mode t
-               treemacs-use-collapsed-directories 3)
+     neotree
      (rust :variables
            rust-backend 'lsp)
      (shell :variables
@@ -678,25 +676,9 @@ This function is called at the very end of Spacemacs initialization."
    '(expand-region-reset-fast-key "r")
    '(gud-gdb-command-name "gdb -i=mi -nh")
    '(helm-man-or-woman-function 'Man-getpage-in-background)
-   '(hl-todo-keyword-faces
-     '(("TODO" . "#dc752f")
-       ("NEXT" . "#dc752f")
-       ("THEM" . "#2d9574")
-       ("PROG" . "#3a81c3")
-       ("OKAY" . "#3a81c3")
-       ("DONT" . "#f2241f")
-       ("FAIL" . "#f2241f")
-       ("DONE" . "#42ae2c")
-       ("NOTE" . "#b1951d")
-       ("KLUDGE" . "#b1951d")
-       ("HACK" . "#b1951d")
-       ("TEMP" . "#b1951d")
-       ("FIXME" . "#dc752f")
-       ("XXX+" . "#dc752f")
-       ("\\?\\?\\?+" . "#dc752f")))
    '(org-refile-targets
      '((org-agenda-files :maxlevel . 1)
-       (org-default-notes-file :maxlevel . 2)))
+       (org-default-notes-file :maxlevel . 2)) t)
    '(page-break-lines-modes
      '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
    '(paradox-github-token t)
