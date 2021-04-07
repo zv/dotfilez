@@ -33,12 +33,10 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
    [[file:zv.gpg.pub]]
 
 * Workstation Setup
-***** Installation
-      The following shell & configuration file snippets are intended to be installed using Emacs Org-Mode w/ [[https://orgmode.org/worg/org-contrib/babel/][Babel]].
+  The following shell & configuration file snippets are intended to be installed
+  with [[https://orgmode.org/worg/org-contrib/babel/][Babel]].
 
-      To run an entire sections installation scripts, point your cursor at the appropriate heading and execute =org-babel-execute-subtree= (you can also run each individual step with =org-babel-execute-maybe=).
-
-      Configuration files are installed separately, using =org-babel-tangle= (=tramp= will prompt you to =sudo=)
+  To run an entire sections installation scripts, point your cursor at the appropriate heading and execute =org-babel-execute-subtree= (you can also run each individual step with =org-babel-execute-maybe=). Configuration files are installed separately, using =org-babel-tangle= (=tramp= will prompt you to =sudo=)
 
 ** Packages
    :PROPERTIES:
@@ -82,7 +80,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Symlink RC Files
    #+NAME: link_if.sh
-   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh" :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name))) 
+   #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh" :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name)))
      link_if() {
          if command -V "$1" 1>/dev/null; then
              shift
@@ -248,27 +246,21 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 ** systemd
 
 *** GnuPG
-**** Socket-activated =dirmngr=
-     #+BEGIN_SRC sh
-       systemctl --user --global enable dirmngr.socket
-     #+END_SRC
+    You can ensure that the GnuPG daemons =dirmngr= and =gpg-agent= are launched automatically the first time they're needed, and shut down cleanly at session logout by enabling user services via socket-activation:
 
-     #+RESULTS:
+    #+BEGIN_SRC sh
+      sudo systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
+    #+END_SRC
 
-**** Socket-activated =gpg-agent= with SSH support
-     #+BEGIN_SRC sh
-       systemctl --user enable gpg-agent.socket gpg-agent-ssh.socket
-     #+END_SRC
+    If you'd rather try a socket-activated GnuPG daemon in an already-running session without logging out, kill any existing daemons and start the user socket manually:
 
-***** With forwarding & web-browser access
-      #+BEGIN_SRC sh
-        sudo systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
-      #+END_SRC
+    #+BEGIN_EXAMPLE
+   gpgconf --kill dirmngr
+   systemctl --user start dirmngr.socket
+    #+END_EXAMPLE
 
-      #+RESULTS:
+*** =/etc/systemd/coredump.conf=
 
-*** =coredump=
-    I've never ended up with 20 gigabytes of coredump files, but I'd like to avoid it.
     #+name: coredump.conf
     #+BEGIN_SRC conf :tangle "/sudo::/etc/systemd/coredump.conf"
       # See coredump.conf(5) for details.
@@ -285,7 +277,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
 ** Gnome
 *** Settings
-
     #+NAME: keybindings.sh
     #+BEGIN_SRC sh :results output replace :file keybindings.sh :exports results :shebang "#!/bin/sh"
       print_gsetting() {
