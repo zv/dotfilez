@@ -1,0 +1,10 @@
+#!/usr/bin/zsh -f
+
+(( $+functions[_spectrum_ls] )) || _spectrum_ls()
+{
+    for code in {000..255}; do
+        print -P -- "$code: %F{$code}${@:-████████████████}%f"
+    done
+}
+
+_spectrum_ls "$@"

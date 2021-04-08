@@ -82,15 +82,6 @@ _zcalc() {
 }
 alias calc='nocorrect noglob _zcalc'
 
-autoload -Uz pronounce_number
-
-# print the color spectrum
-spectrum_ls() {
-    for code in {000..255}; do
-        print -P -- "$code: %F{$code}███████████████████████████████%f"
-    done
-}
-
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
 
@@ -554,6 +545,9 @@ export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | 
 
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
+
+autoload -Uz pronounce_number
+autoload -Uz spectrum_ls
 
 # Rust
 if [[ (( $+commands[cargo] )) && -r ~/.cargo/env ]]; then
