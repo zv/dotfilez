@@ -1,6 +1,5 @@
 #+PROPERTY: header-args       :noweb no
-#+PROPERTY: header-args:sh    :results replace output
-#+HEADER: :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name)))
+#+PROPERTY: header-args:sh    :results replace output :var DOTFILEZ=(directory-file-name (file-name-directory (buffer-file-name)))
 
 * dotfilez
   #+CAPTION: the_setup
