@@ -1,4 +1,4 @@
-#!/usr/bin/zsh -f
+# -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 
 emulate -L zsh
 

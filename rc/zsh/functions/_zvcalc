@@ -1,8 +1,10 @@
-#!/usr/bin/zsh -f
+# -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 
 emulate -L zsh
+
 local expr
 local PROMPT4 PS4="; "
+
 if [[ "$*" =~ "^[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
     { setopt xtrace; rax2 $* }
 else
