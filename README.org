@@ -292,7 +292,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 ** Gnome
 *** Settings
     #+NAME: keybindings.sh
-    #+BEGIN_SRC sh :results output replace :file keybindings.sh :exports results :shebang "#!/bin/sh"
+    #+BEGIN_SRC sh :results output replace :file keybindings.sh :exports results :shebang "#!/bin/sh" :prologue "set -x"
       print_gsetting() {
           printf 'gsettings set %s %s "%s"\n' "$1" "$2" "$(gsettings get "$1" "$2")"
       }
@@ -309,7 +309,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
               print_gsetting "$schema" "$key"
           done
       done
-
     #+END_SRC
 
     #+RESULTS: keybindings.sh
