@@ -13,12 +13,6 @@ setopt BG_NICE            # run all background jobs at a lower priority.
 unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
 setopt HUP                # kill jobs on shell exit.
 
-# ── Utility Control Variables ──────────────────────────────
-export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS --window=-4'
-
-# Expanded `time' output
-export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
-
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 alias pr="print -l"
 alias _='sudo'
@@ -115,7 +109,6 @@ alias dnfc="sudo dnf clean all"               # clean cachefi
 
 # ── Git Aliases ────────────────────────────────────────────
 if _exists git; then
-    # Git
     alias g='git'
     alias gst='git status'
     alias gl='git pull'
@@ -204,7 +197,7 @@ setopt SHARE_HISTORY             # Share history between all sessions.
 setopt HIST_FCNTL_LOCK           # Don't bother with old-school locking. We're on new POSIX here.
 
 # History
-export HISTFILE="$HOME/.zsh_history"
+export HISTFILE=~/.zsh_history
 
 # Lines to store
 export HISTSIZE=65535
@@ -543,6 +536,12 @@ if _exists gpg; then
     fi
 fi
 
+# ── Utility Control Variables ──────────────────────────────
+export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS --window=-4'
+
+# Expanded `time' output
+export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
+
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Configure Ocaml package manager
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
@@ -563,7 +562,7 @@ fi
 
 # rg
 if (( $+commands[rg] )); then
-    export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+    export RIPGREP_CONFIG_PATH=~/.ripgreprc
 fi
 
 # if (( $+commands[rustc] )); then
