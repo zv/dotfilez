@@ -569,9 +569,12 @@ fi
 #     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 # fi
 
-if [[ -f ~/.zsh/local.zsh ]]; then
+# Check if we own a readable file, not writable by other at ~/.zsh/local.zsh
+if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
     source ~/.zsh/local.zsh
-else
+elif [[ ! -e ~/.zsh/local.zsh ]]; then
     touch ~/.zsh/local.zsh
     chmod 700 ~/.zsh/local.zsh
+else
+    printf "Failed to import site config from %s\n" ~/.zsh/local.zsh >&2
 fi
