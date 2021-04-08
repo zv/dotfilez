@@ -575,5 +575,5 @@ if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
 elif [[ ! -e ~/.zsh/local.zsh ]]; then
     ( umask 077; touch ~/.zsh/local.zsh )
 else
-    printf "Failed to import site config from %s\n" ~/.zsh/local.zsh >&2
+    printf "Refusing to source unsafe site configuration from %s\n" ~/.zsh/local.zsh >&2
 fi
