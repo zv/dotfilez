@@ -293,6 +293,14 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 *** Settings
     #+NAME: keybindings.sh
     #+BEGIN_SRC sh :results output replace :file keybindings.sh :exports results :shebang "#!/bin/sh" :prologue "set -x"
+      print_dconf_heredoc() {
+          cat <<OUTER
+      dconf load "$1" <<EOF
+      $(dconf dump "$1")
+      EOF
+      OUTER
+      }
+
       print_gsetting() {
           printf 'gsettings set %s %s "%s"\n' "$1" "$2" "$(gsettings get "$1" "$2")"
       }
@@ -309,6 +317,8 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
               print_gsetting "$schema" "$key"
           done
       done
+
+      print_dconf_heredoc /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/
     #+END_SRC
 
     #+RESULTS: keybindings.sh
@@ -525,6 +535,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     gsettings set org.gnome.settings-daemon.plugins.media-keys previous-static "['XF86AudioPrev', '<Ctrl>XF86AudioPrev']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys keyboard-brightness-down-static "['XF86KbdBrightnessDown']"
     gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down-precise-static "['<Shift>XF86AudioLowerVolume', '<Ctrl><Shift>XF86AudioLowerVolume']"
+    dconf load "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/" <<EOF
+    [custom0]
+    binding='<Super>Return'
+    command='gnome-terminal'
+    name='Launch Terminal'
+    EOF
     #+end_example
 
 ** =gnome-terminal=
