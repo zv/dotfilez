@@ -70,18 +70,6 @@ mvlast() {
 
 mvdlhere() { mvlast ~/Downloads/ "$(pwd)" }
 
-# calculator
-_zcalc() {
-    local PS4="; "
-    if [[ "$*" =~ "^[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
-        { set -x; rax2 $* }
-    else
-        local expr="$(print $* | perl -wple '1 while s/([a-z]+) (.*)$/$1($2)/g')"
-        { set -x; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
-    fi
-}
-alias calc='nocorrect noglob _zcalc'
-
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
 
@@ -373,23 +361,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # Tmux Pane Completion
-_tmux_pane_words() {
-    local expl
-    local -a w
-    if [[ -z "$TMUX_PANE" ]]; then
-        _message "not running inside tmux!"
-        return 1
-    fi
-    # capture current pane first
-    w=( ${(u)=$(tmux capture-pane -J -p)} )
-    for i in $(tmux list-panes -F '#P'); do
-        # skip current pane (handled above)
-        [[ "$TMUX_PANE" = "$i" ]] && continue
-        w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
-    done
-    _wanted values expl 'words from current tmux pane' compadd -a w
-}
-
+autoload -Uz _tmux_pane_words
 zle -C tmux-pane-words-prefix   complete-word _generic
 zle -C tmux-pane-words-anywhere complete-word _generic
 bindkey '^X^X' tmux-pane-words-prefix
@@ -546,8 +518,10 @@ export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | 
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-autoload -Uz pronounce_number
-autoload -Uz spectrum_ls
+autoload +X -Uz pronounce_number
+autoload +X -Uz spectrum_ls
+autoload +X -Uz _zvcalc
+alias calc='nocorrect noglob _zvcalc'
 
 # Rust
 if [[ (( $+commands[cargo] )) && -r ~/.cargo/env ]]; then
