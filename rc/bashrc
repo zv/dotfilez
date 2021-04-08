@@ -1,6 +1,6 @@
+# -*- mode: shell-script; sh-shell: bash; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 # .bashrc
 # shellcheck shell=bash
-# -*- mode: shell-script; sh-shell: bash; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then

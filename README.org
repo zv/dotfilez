@@ -147,7 +147,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      if [[ -r ~/.dir_colors ]]; then
          dircolors -b ~/.dir_colors
      else
-         printf "%s does not exist\n" ~/.dir_colors
+         printf "%s does not exist\n" ~/.dir_colors >&2
          exit 1
      fi
    #+END_SRC
