@@ -573,8 +573,7 @@ fi
 if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
     source ~/.zsh/local.zsh
 elif [[ ! -e ~/.zsh/local.zsh ]]; then
-    touch ~/.zsh/local.zsh
-    chmod 700 ~/.zsh/local.zsh
+    ( umask 077; touch ~/.zsh/local.zsh )
 else
     printf "Failed to import site config from %s\n" ~/.zsh/local.zsh >&2
 fi
