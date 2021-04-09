@@ -228,7 +228,7 @@ PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-de
 # Load and initialize the completion system ignoring insecure directories with a
 # cache time of 20 hours, so it should almost always regenerate the first time a
 # shell is opened each day.
-autoload -Uz compinit
+autoload -U compinit
 compinit
 
 setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
@@ -248,15 +248,17 @@ unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
 unsetopt REC_EXACT          # Don' override completions for current perfect matches.
 setopt LIST_TYPES           # "Show the type of each file for possible completions"
+setopt CASE_GLOB            # Make globbing sensitive to case
 
 # zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
+
+# Don't try to complete the '.' and '..' special directories
+zstyle ':completion:*' special-dirs false
 
 # Case-insensitive  partial-word and string completion
-zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-setopt CASE_GLOB
+zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*'
 
 # Version control info (vcs_info)
 local base_vcs_style='%c%b%u%f'
@@ -321,7 +323,8 @@ zstyle '*' single-ignored show
 
 # Kill
 zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
 zstyle ':completion:*:*:kill:*' insert-ids single
