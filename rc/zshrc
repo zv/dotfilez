@@ -229,13 +229,7 @@ PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-de
 # cache time of 20 hours, so it should almost always regenerate the first time a
 # shell is opened each day.
 autoload -Uz compinit
-_comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-20))
-if (( $#_comp_files )); then
-    compinit -i -C
-else
-    compinit -i
-fi
-unset _comp_files
+compinit
 
 setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
 setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
@@ -263,7 +257,6 @@ zstyle ':completion:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
 # Case-insensitive  partial-word and string completion
 zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 setopt CASE_GLOB
-## zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # Version control info (vcs_info)
 local base_vcs_style='%c%b%u%f'
