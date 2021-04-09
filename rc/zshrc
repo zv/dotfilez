@@ -257,7 +257,7 @@ zstyle ':completion:*' use-cache on
 # Don't try to complete the '.' and '..' special directories
 zstyle ':completion:*' special-dirs false
 
-# Case-insensitive  partial-word and string completion
+# Case-sensitive partial-word and string completion
 zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*'
 
 # Version control info (vcs_info)
@@ -323,8 +323,6 @@ zstyle '*' single-ignored show
 
 # Kill
 zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
 zstyle ':completion:*:*:kill:*' insert-ids single
@@ -370,7 +368,8 @@ zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a
 
 # ls colors
 autoload -U colors && colors;
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 
 # Enable man completion when using Vim as a manpager
 compdef '_dispatch man man' manvi
