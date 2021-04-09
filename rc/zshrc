@@ -497,7 +497,14 @@ fi
 export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS --window=-4'
 
 # Expanded `time' output
-export TIMEFMT='%J %U user %S system %P cpu %*E total | %F mfault | %I/%O i/o | %Mk maxm | %w/%c ctx | %r %s'
+export TIMEFMT='%J
+real	%*E
+user	%*U
+sys	%*S
+cpu	%P
+mem	%Mkb max | %Kkb avg | %Dkb res | %Dkb virt
+ops	%I reads | %O writes
+proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Configure Ocaml package manager
