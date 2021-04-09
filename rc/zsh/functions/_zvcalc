@@ -2,12 +2,23 @@
 
 emulate -L zsh
 
-local expr
+local expr=''
 local PROMPT4 PS4="; "
 
 if [[ "$*" =~ "^[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
-    { setopt xtrace; rax2 $* }
+    { setopt xtrace; rax2 "$@" }
 else
-    expr="$(print $* | perl -wple '1 while s/([a-z]+) (.*)$/$1($2)/g')"
+    while (( $# )); do
+        print -f "%s %s" -v expr -- "$expr" "$1"
+
+        if [[ "$1" =~ "^[a-zA-Z]+$" && "$2" =~ "^[^\(]" ]]; then
+            shift
+            print -f "%s(%s)" -v expr -- "$expr" "$1"
+        fi
+
+        shift
+    done
+    expr="${expr## }"
+
     { setopt xtrace; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
 fi
