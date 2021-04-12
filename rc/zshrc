@@ -222,7 +222,7 @@ autoload -Uz vcs_info
 precmd () { vcs_info }
 
 local -A _keymap_fg_indicator=([vicmd]=red [viopp]=yellow)
-PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}$%f '
+PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}%(!.#.$)%f '
 
 # ── Modules and Completions ────────────────────────────────
 # Load and initialize the completion system ignoring insecure directories with a
@@ -519,9 +519,9 @@ proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-autoload +X -Uz pronounce_number
-autoload +X -Uz spectrum_ls
-autoload +X -Uz _zvcalc
+autoload -Uz pronounce_number
+autoload -Uz spectrum_ls
+autoload -Uz _zvcalc
 alias calc='nocorrect noglob _zvcalc'
 
 # Rust
@@ -542,7 +542,9 @@ fi
 if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
     source ~/.zsh/local.zsh
 elif [[ ! -e ~/.zsh/local.zsh ]]; then
-    ( umask 077; touch ~/.zsh/local.zsh )
+    if [[ -d ~/.zsh ]]; then
+        ( umask 077; touch ~/.zsh/local.zsh )
+    fi
 else
     printf "Refusing to source unsafe site configuration from %s\n" ~/.zsh/local.zsh >&2
 fi
