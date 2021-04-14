@@ -196,24 +196,50 @@ unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 setopt HASH_CMDS            # Note the location of a command before it's executed
 setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
 
+# ── Completions ────────────────────────────────
+setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
+setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
+setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
+setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
+setopt PATH_DIRS           # Perform path search even on command names with slashes.
+setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
+setopt MENU_COMPLETE       # Autoselect the first completion entry.
+# overridden by MENU_COMPLETE
+# setopt AUTO_MENU           # Show completion menu on a succesive tab press.
+
+setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
+unsetopt REC_EXACT          # Don' override completions for current perfect matches.
+setopt LIST_TYPES           # "Show the type of each file for possible completions"
+setopt CASE_GLOB            # Make globbing sensitive to case
+
+# Experimental
+unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
+
 # ── Prompting ──────────────────────────────────────────────
-setopt PROMPT_SUBST # Setup the prompt with pretty colors
 
 # If we're in a dumb terminal then dont play fancy pants with our prompt
-if [[ "$TERM" == dumb ]]; then
-    # Ensure we don't set preexec && precmd
+if [[ "$TERM" == dumb || "$TERM" == eterm-color ]]; then
     unsetopt ZLE
     unsetopt PROMPT_CR
     unsetopt PROMPT_SUBST
-    return
-elif [[ "$TERM" == eterm-color ]]; then
-    # unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    PROMPT="[%y] %2~ $baseprompt "
+
+    # Ensure we don't set preexec && precmd
+    if whence -w precmd >/dev/null; then
+        unfunction precmd
+    fi
+    if whence -w preexec >/dev/null; then
+        unfunction preexec
+    fi
+
+    if [[ "$TERM" == dumb ]]; then
+        PS1='$ '
+    fi
+
     return
 fi
 
+setopt ZLE
+setopt PROMPT_SUBST # Setup the prompt with pretty colors
 export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
@@ -224,31 +250,12 @@ precmd () { vcs_info }
 local -A _keymap_fg_indicator=([vicmd]=red [viopp]=yellow)
 PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}%(!.#.$)%f '
 
-# ── Modules and Completions ────────────────────────────────
+# ━━ Completion System ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Load and initialize the completion system ignoring insecure directories with a
 # cache time of 20 hours, so it should almost always regenerate the first time a
 # shell is opened each day.
 autoload -U compinit
 compinit
-
-setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
-setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
-setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
-setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
-setopt PATH_DIRS           # Perform path search even on command names with slashes.
-setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
-# overridden by MENU_COMPLETE
-# setopt AUTO_MENU           # Show completion menu on a succesive tab press.
-setopt MENU_COMPLETE       # Autoselect the first completion entry.
-
-# Experimental
-# not really a completion option
-unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
-
-setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
-unsetopt REC_EXACT          # Don' override completions for current perfect matches.
-setopt LIST_TYPES           # "Show the type of each file for possible completions"
-setopt CASE_GLOB            # Make globbing sensitive to case
 
 # zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.

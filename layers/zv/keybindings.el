@@ -66,13 +66,8 @@
 
 
 ;; evil bindings
-(global-set-key (kbd "H-f") 'evil-window-right)
-(global-set-key (kbd "H-s") 'evil-window-left)
-(global-set-key (kbd "H-e") 'evil-window-up)
-(global-set-key (kbd "H-d") 'evil-window-down)
-
-(global-set-key (kbd "H-k") 'evil-window-next)
-(global-set-key (kbd "H-j") 'evil-window-prev)
+(global-set-key (kbd "C-M-s-k") 'evil-window-next)
+(global-set-key (kbd "C-M-s-j") 'evil-window-prev)
 
 (define-key evil-insert-state-map (kbd "C-y") 'yank)
 

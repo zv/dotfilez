@@ -81,8 +81,11 @@ This function should only modify configuration layer settings."
      (rust :variables
            rust-backend 'lsp)
      (shell :variables
-            close-window-with-terminal t
-            shell-default-shell 'ansi-term)
+            shell-default-position 'bottom
+            shell-default-height 30
+            shell-default-shell 'ansi-term
+            shell-default-term-shell "/bin/bash"
+            close-window-with-terminal t)
      (sql :variables
           sql-capitalize-keywords t)
      shell-scripts
@@ -98,6 +101,7 @@ This function should only modify configuration layer settings."
      zv)
 
    dotspacemacs-additional-packages '()
+
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '(org-pomodoro
@@ -207,7 +211,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    ;; dotspacemacs-startup-lists '((agenda . 10)
@@ -539,9 +543,7 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env)
-  ;; Internal shell tools are more accommodating to bash in Emacs.
-  (setenv "SHELL" "/bin/bash"))
+  (spacemacs/load-spacemacs-env))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -556,8 +558,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
+
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -565,7 +567,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
   ;; Setup the directory where we're going to store backup, autosave & undo-tree
   ;; results. We use the 'standard'  XDG_CACHE_HOME here, but
   ;; `spacemacs-cache-directory' is another enticing option.
@@ -652,6 +653,7 @@ before packages are loaded."
                 web-mode-block-padding         css-indent-offset))
 
 
+
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -680,7 +682,8 @@ This function is called at the very end of Spacemacs initialization."
      '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
    '(paradox-github-token t)
    '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
-   '(ring-bell-function 'ignore))
+   '(ring-bell-function 'ignore)
+   '(shell-file-name "/bin/bash"))
   (custom-set-faces
    ;; custom-set-faces was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
@@ -688,3 +691,4 @@ This function is called at the very end of Spacemacs initialization."
    ;; If there is more than one, they won't work right.
    '(helm-ff-file-extension ((t nil))))
   )
+
