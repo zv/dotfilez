@@ -2,31 +2,44 @@
 
 emulate -L zsh
 
-local expr head
-local PROMPT4 PS4="; "
+function {
+    local PROMPT4 PS4="; "
 
-if [[ "$*" =~ "^(-[a-zA-Z] |=[0-9]+ )?[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
-    { setopt xtrace; rax2 "$@" }
-else
-    expr=''
+    # Handle simple base-conversions w/ `rax2`
+    if [[ "$*" =~ "^(-[a-zA-Z] |=[0-9]+ )?[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
+        { setopt xtrace; rax2 "$@" }
+    else
+        local expr
 
-    while (( $# )); do
-        head="$1"
-        shift
-
-        # Convert `100_000_000` to `100000000`
-        if [[ "$head" =~ '^[0-9]+(_[0-9]{1,3})*_[0-9]+$' ]]; then
-            head="${head//_/}"
-        fi
-
-        print -v expr -f "%s %s" -- "$expr" "$head"
-
-        if [[ "$head" =~ "^[a-zA-Z]+$" && "$1" =~ "^[^\(]" ]]; then
-            print -v expr -f "%s(%s)" -- "$expr" "$1"
+        # If the first word is alphanumeric, assume it's a function call
+        # e.g `sqrt 5+3` => `sqrt(5+3)`
+        if [[ "$#" -gt 1 && "$1" =~ "^[a-z]+$" && ! "$2" =~ "^[({[{]" ]]; then
+            local pfix="$1"
             shift
-        fi
-    done
-    expr="${expr## }"
 
-    { setopt xtrace; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
-fi
+            local -a oexpr
+            while (( $# )); do
+                if [[ "$1" =~ "^[0-9]+(,[0-9]{3})*$" ]]; then
+                    oexpr+=("${1//,/}")
+
+                    # Separate numeric arguments with a comma
+                    # e.g `sum 1 2 3` => `sum(1,2,3)`
+                    if [[ "$2" =~ "^[0-9]+(,[0-9]{3})*$" ]]; then
+                        oexpr+=(',')
+                    fi
+                else
+                    oexpr+=("$1")
+                fi
+
+                shift
+            done
+
+            print -v expr -f "%s(%s)" -- "$pfix" "${(j::)oexpr}"
+        else
+            print -v expr -f "%s" -- "$*"
+        fi
+
+        # Make sure double-quotes are escaped
+        { setopt xtrace; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
+    fi
+} "$@"
