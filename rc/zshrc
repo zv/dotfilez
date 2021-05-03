@@ -130,17 +130,11 @@ function format_c_hex {
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
-setopt CASE_GLOB            # Make globbing sensitive to case
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 unsetopt GLOB_DOTS          # Glob files beginning with dot (`.`)
-unsetopt NULL_GLOB          # Report an error rather than delete patterns without match from argument list
+setopt NULL_GLOB            # Delete patterns without match from argument list
 setopt BRACE_CCL            # Allow brace character class list expansion.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
-if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
-    # Suppress the undeclared global variable warning raised inside IDEA
-    typeset -g VARIABLE NAME
-fi
-setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
 
 # ── Directories ────────────────────────────────────────────
 setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
@@ -153,6 +147,12 @@ setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobb
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
+if [[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]]; then
+    # Suppress the undeclared global variable warning raised inside IDEA
+    typeset -g VARIABLE NAME
+fi
+setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+
 unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
@@ -186,34 +186,60 @@ export SAVEHIST=65535
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
 # ─ Input/ Output ───────────────────────────────────────────
-unsetopt RC_QUOTES              # Don't allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
-unsetopt CORRECT                # Don't correct the spelling of commands
-unsetopt CORRECT_ALL            # Don't correct any arguments
-unsetopt CLOBBER                # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
-unsetopt MAIL_WARNING           # Don't print a warning message if a mail file has been accessed.
-setopt SHORT_LOOPS              # Allow short loops.
-unsetopt INTERACTIVE_COMMENTS   # Allow comments in interactive mode
-setopt HASH_CMDS                # Note the location of a command before it's executed
-setopt HASH_EXECUTABLES_ONLY    # Check if we've got an executable before hashing it
+# setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
+unsetopt CORRECT            # Don't correct the spelling of commands
+unsetopt CORRECT_ALL        # Don't correct any arguments
+unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
+unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
+setopt SHORT_LOOPS          # Allow short loops.
+unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
+setopt HASH_CMDS            # Note the location of a command before it's executed
+setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
+
+# ── Completions ────────────────────────────────
+setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
+setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
+setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
+setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
+setopt PATH_DIRS           # Perform path search even on command names with slashes.
+setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
+setopt MENU_COMPLETE       # Autoselect the first completion entry.
+# overridden by MENU_COMPLETE
+# setopt AUTO_MENU           # Show completion menu on a succesive tab press.
+
+setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
+unsetopt REC_EXACT          # Don' override completions for current perfect matches.
+setopt LIST_TYPES           # "Show the type of each file for possible completions"
+setopt CASE_GLOB            # Make globbing sensitive to case
+
+# Experimental
+unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
 
 # ── Prompting ──────────────────────────────────────────────
-setopt PROMPT_SUBST # Setup the prompt with pretty colors
 
 # If we're in a dumb terminal then dont play fancy pants with our prompt
-if [[ "$TERM" == dumb ]]; then
-    # Ensure we don't set preexec && precmd
+if [[ "$TERM" == dumb || "$TERM" == eterm-color ]]; then
     unsetopt ZLE
     unsetopt PROMPT_CR
     unsetopt PROMPT_SUBST
-    return
-elif [[ "$TERM" == eterm-color ]]; then
-    # unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    PROMPT="[%y] %2~ $baseprompt "
+
+    # Ensure we don't set preexec && precmd
+    if whence -w precmd >/dev/null; then
+        unfunction precmd
+    fi
+    if whence -w preexec >/dev/null; then
+        unfunction preexec
+    fi
+
+    if [[ "$TERM" == dumb ]]; then
+        PS1='$ '
+    fi
+
     return
 fi
 
+setopt ZLE
+setopt PROMPT_SUBST # Setup the prompt with pretty colors
 export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
@@ -222,22 +248,14 @@ autoload -Uz vcs_info
 precmd () { vcs_info }
 
 local -A _keymap_fg_indicator=([vicmd]=red [viopp]=yellow)
-PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}$%f '
+PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}%(!.#.$)%f '
 
-# ── Modules and Completions ────────────────────────────────
+# ━━ Completion System ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Load and initialize the completion system ignoring insecure directories with a
+# cache time of 20 hours, so it should almost always regenerate the first time a
+# shell is opened each day.
 autoload -U compinit
 compinit
-
-setopt ALWAYS_TO_END        # Move cursor to the end of a completed word.
-setopt AUTO_LIST            # Automatically list choices on ambiguous completion.
-setopt AUTO_PARAM_SLASH     # If completed parameter is a directory, add a trailing slash.
-unsetopt COMPLETE_IN_WORD   # Complete from both ends of a word.
-setopt PATH_DIRS            # Perform path search even on command names with slashes.
-setopt GLOB_COMPLETE        # Do not insert all words resulting from expansion on <TAB>
-setopt MENU_COMPLETE        # Autoselect the first completion entry.
-setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
-unsetopt REC_EXACT          # Don't short-circuit completion if we already have a matching candidate.
-setopt LIST_TYPES           # Show the type of each file for possible completions (e.g a trailing slash for dirs)
 
 # zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.
@@ -508,9 +526,9 @@ proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-autoload +X -Uz pronounce_number
-autoload +X -Uz spectrum_ls
-autoload +X -Uz _zvcalc
+autoload -Uz pronounce_number
+autoload -Uz spectrum_ls
+autoload -Uz _zvcalc
 alias calc='nocorrect noglob _zvcalc'
 
 # Rust
@@ -531,7 +549,9 @@ fi
 if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
     source ~/.zsh/local.zsh
 elif [[ ! -e ~/.zsh/local.zsh ]]; then
-    ( umask 077 && touch ~/.zsh/local.zsh )
+    if [[ -d ~/.zsh ]]; then
+        ( umask 077; touch ~/.zsh/local.zsh )
+    fi
 else
     printf "Refusing to source unsafe site configuration from %s\n" ~/.zsh/local.zsh >&2
 fi
