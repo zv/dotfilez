@@ -213,7 +213,7 @@
 	changes = log --pretty=format:\"%C(yellow)%h%C(reset) %C(blue)%cr%Creset %C(013)%cn%Creset - %s\" --name-status
 
 	# Shortlog
-	short = log --pretty=format:\"%C(yellow)%h%Creset - %<(80,trunc)%s %<(20) %cn %cr \"
+	short = log --pretty=format:'%C(yellow)%h%Creset - %<(80,trunc)%s %<(20) %cn %cr '
 	changelog = log --pretty=format:\" * %s\"
 
 	# merge but without autocommit, and with a commit even if the merge resolved as a fast-forward.
@@ -222,6 +222,9 @@
 	# pull with rebase - to provide a cleaner, linear, bisectable history.
 	pr = pull --rebase
 	pro = !"git pull --rebase origin $(git symbolic-ref HEAD)"
+
+	# Show our branches as a tree
+	prtree  = log --graph --simplify-by-decoration --pretty=format:'%d' --all
 
 	# rbi
 	rbi = !"git rebase -i @{u}"
@@ -290,9 +293,6 @@
 	# Search git history for a filename
 	locate-all = "!git log --all --pretty=oneline --full-history -- **/$@"
 
-	# Sort by date for branches; can be useful for spring cleaning
-	refs-by-date = for-each-ref --sort=-committerdate --format='%(committerdate:short) %(refname:short)'
-
 	# Find all objects that aren't referenced by any other object (orphans).
 	orphans = fsck --full
 
@@ -320,7 +320,7 @@
 	log-graph = log --graph --oneline --decorate
 
 	# Show the date of the first commit
-	log-first-date = !"git log --date-order --date=iso --pretty=%ad --reverse | head -1"
+	log-first-date = !"git log --date-order --date=iso --pretty='%ad' --reverse | head -1"
 
 	# Show the recent day
 	log-day = log --since yesterday
@@ -411,11 +411,6 @@
 	# remote version of the current branch.
 	unpublish = !"git push origin :$(git branch-name)"
 
-	# Delete a branch name, then create the same branch name based on master —
-	# useful if you have, for example, a development branch and master branch
-	# and they go out of sync, and you want to nuke the development branch.
-	reincarnate = !"f() { [[ -n $@ ]] && git checkout \"$@\" && git unpublish && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" && git publish; }; f"
-
 	# ── Shell scripting aliases ────────────────────────────────
 
 	# Get the current branch name
@@ -486,8 +481,8 @@
 	graphviz = !"f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
 
 	# show a list of every branch and show their latests commit, sorted by last commit
-	branch-log = for-each-ref --sort=-committerdate refs/heads/ -- format='%(committerdate:short) %(authorname) %(refname:short)'
-	branch-log-remote = "!sh -c 'for C in $(git for-each-ref --sort=committerdate refs/remotes/$1 --format=\"%(refname:short)\") ; do git show  -s --pretty=format:\"%Cgreen%ci %Cblue%cr%Creset  $C\" \"$C\" -- ; git show --stat -s $C ; echo; done'"
+	branch-log = for-each-ref --sort=committerdate refs/heads --format='%(committerdate:iso) %(committerdate:relative)%09%(color:white)%(refname:short)%(color:reset)'
+	branch-log-remote = for-each-ref --sort=committerdate refs/remotes --format='%(committerdate:iso) %(committerdate:relative)%09%(color:white)%(refname:short)%(color:reset)'
 
 	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
 
@@ -499,6 +494,3 @@
 	# Branch Diff
 	branch-diff = "!f() { head=${1:-HEAD} ; ancestor=`git ancestor master $head` ; git diff $ancestor..$head ; }; f"
 	branch-vdiff = "!f() { head=${1:-HEAD} ; ancestor=`git ancestor master $head` ; git diff --name-only $ancestor..$head | xargs diffuse -s -r $ancestor ; }; f &"
-
-	# Show our branches as a tree
-	prtree  = log --graph --simplify-by-decoration --pretty=format:'%d' --all
