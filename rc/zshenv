@@ -51,7 +51,7 @@ fi
 
 export EDITOR="${commands[vim]-${commands[vi]}}"
 export VISUAL="$EDITOR"
-export PAGER="${commands[less]-${EDITOR}}"
+# export PAGER="${commands[less]-${EDITOR}}"
 
 # virtualenvwrapper
 export WORKON_HOME=~/.local/environments
