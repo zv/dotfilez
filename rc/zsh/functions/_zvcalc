@@ -4,38 +4,40 @@ emulate -L zsh
 
 function {
     local PROMPT4 PS4="; "
-    local expr='%s'
-    local -a oexpr
 
     # Handle simple base-conversions w/ `rax2`
     if [[ "$*" =~ "^(-[a-zA-Z] |=[0-9]+ )?[oO]?[t0-9a-fA-Fx.]+[oO]?$" ]]; then
         { setopt xtrace; rax2 "$@" }
     else
+        local expr
 
         # If the first word is alphanumeric, assume it's a function call
         # e.g `sqrt 5+3` => `sqrt(5+3)`
         if [[ "$#" -gt 1 && "$1" =~ "^[a-z]+$" && ! "$2" =~ "^[({[{]" ]]; then
-            expr="$1(%s)"
+            local pfix="$1"
             shift
-        fi
 
-        while (( $# )); do
-            if [[ "$1" =~ "^[0-9]+(,[0-9]{3})*$" ]]; then
-                oexpr+=("${1//,/}")
+            local -a oexpr
+            while (( $# )); do
+                if [[ "$1" =~ "^[0-9]+(,[0-9]{3})*$" ]]; then
+                    oexpr+=("${1//,/}")
 
-                # Separate numeric arguments with a comma
-                # e.g `sum 1 2 3` => `sum(1,2,3)`
-                if [[ "$2" =~ "^[0-9]+(,[0-9]{3})*$" ]]; then
-                    oexpr+=(',')
+                    # Separate numeric arguments with a comma
+                    # e.g `sum 1 2 3` => `sum(1,2,3)`
+                    if [[ "$2" =~ "^[0-9]+(,[0-9]{3})*$" ]]; then
+                        oexpr+=(',')
+                    fi
+                else
+                    oexpr+=("$1")
                 fi
-            else
-                oexpr+=("$1")
-            fi
 
-            shift
-        done
+                shift
+            done
 
-        print -v expr -f "$expr" -- "${(j::)oexpr}"
+            print -v expr -f "%s(%s)" -- "$pfix" "${(j::)oexpr}"
+        else
+            print -v expr -f "%s" -- "$*"
+        fi
 
         # Make sure double-quotes are escaped
         { setopt xtrace; emacsclient -e "(calc-eval \"$expr\")" } | perl -wple 's/^"|"$//g'
