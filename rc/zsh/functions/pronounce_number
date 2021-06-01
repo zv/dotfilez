@@ -4,16 +4,14 @@
 emulate -L zsh
 
 function {
-    local -a cs
-    local -i i k place remainder
-
     local -A scale=(
-        2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
-        12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
-        24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
-        36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
-        48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
-        60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
+        2  'Hundred'         3  'Thousand'         6  'Million'           9   'Billion'
+        12  'Trillion'       15  'Quadrillion'     18  'Quintillion'      21   'Sextillion'
+        24  'Septillion'     27  'Octillion'       30  'Nonillion'        33   'Decillion'
+        36  'Undecillion'    39  'Duodecillion'    42  'Tredecillion'     45   'Quattuordecillion'
+        48  'Quindecillion'  51  'Sexdecillion'    54  'Septendecillion'  57   'Octodecillion'
+        60  'Novemdecillion' 63  'Vigintillion'
+    )
 
     # remove '-' at start of number, or `,` & `_` anywhere in number
     local number="${${${1##-}//,/}//_/}"
@@ -25,19 +23,27 @@ function {
 
     # loop through the position/name pairs, extracting
     # characters between it and the previous pair used
+    local -a cs
+    local -i i place k="${#number}"
     for i in ${(Onk)scale}; do
         place="${number[-k, -i-1]}"
-        (( place )) && cs+=("$place ${scale[$i]}")
+
+        if (( place )); then
+            cs+=("$place ${scale[$i]}")
+        fi
+
         k=$i
     done
 
-    # now just print the remainder (if one exists)
-    remainder="$(($number[-k, -1]))"
+    # print the anglicized number
+    printf '%s' "${(j:, :)cs}"
+
+    # ... and print the remainder (if one exists)
+    local -i remainder="$(($number[-k, -1]))"
     if (( remainder )); then
-        printf '%s and %d\n' "${(j:, :)cs}" "$remainder"
-    else
-        printf '%s\n' "${(j:, :)cs}"
+        printf ' and %d' "$remainder"
     fi
 
+    printf '\n'
     return 0
 } "$@"
