@@ -3,47 +3,44 @@
 
 emulate -L zsh
 
-function {
-    local -A scale=(
-        2  'Hundred'         3  'Thousand'         6  'Million'           9   'Billion'
-        12  'Trillion'       15  'Quadrillion'     18  'Quintillion'      21   'Sextillion'
-        24  'Septillion'     27  'Octillion'       30  'Nonillion'        33   'Decillion'
-        36  'Undecillion'    39  'Duodecillion'    42  'Tredecillion'     45   'Quattuordecillion'
-        48  'Quindecillion'  51  'Sexdecillion'    54  'Septendecillion'  57   'Octodecillion'
-        60  'Novemdecillion' 63  'Vigintillion'
-    )
+local -A scale=(
+    2  'Hundred'         3  'Thousand'         6  'Million'           9   'Billion'
+    12  'Trillion'       15  'Quadrillion'     18  'Quintillion'      21   'Sextillion'
+    24  'Septillion'     27  'Octillion'       30  'Nonillion'        33   'Decillion'
+    36  'Undecillion'    39  'Duodecillion'    42  'Tredecillion'     45   'Quattuordecillion'
+    48  'Quindecillion'  51  'Sexdecillion'    54  'Septendecillion'  57   'Octodecillion'
+    60  'Novemdecillion' 63  'Vigintillion'
+)
 
-    # remove '-' at start of number, or `,` & `_` anywhere in number
-    local number="${${${1##-}//,/}//_/}"
+# remove '-' at start of number, or `,` & `_` anywhere in number
+local number="${${${1##-}//,/}//_/}"
 
-    if ! [[ "$number" =~ "^[0-9]+$" ]]; then
-        printf "'%s' is not a number\n" "$*" >&2
-        return 1
+if ! [[ "$number" =~ "^[0-9]+$" ]]; then
+    printf "'%s' is not a number\n" "$*" >&2
+    return 1
+fi
+
+# loop through the position/name pairs, extracting
+# characters between it and the previous pair used
+local -a cs
+local -i i place k="${#number}"
+for i in ${(Onk)scale}; do
+    place="${number[-k, -i-1]}"
+
+    if (( place )); then
+        cs+=("$place ${scale[$i]}")
     fi
 
-    # loop through the position/name pairs, extracting
-    # characters between it and the previous pair used
-    local -a cs
-    local -i i place k="${#number}"
-    for i in ${(Onk)scale}; do
-        place="${number[-k, -i-1]}"
+    k=$i
+done
 
-        if (( place )); then
-            cs+=("$place ${scale[$i]}")
-        fi
+# print the anglicized number
+printf '%s' "${(j:, :)cs}"
 
-        k=$i
-    done
+# ... and print the remainder (if one exists)
+local -i remainder="$(($number[-k, -1]))"
+if (( remainder )); then
+    printf ' and %d' "$remainder"
+fi
 
-    # print the anglicized number
-    printf '%s' "${(j:, :)cs}"
-
-    # ... and print the remainder (if one exists)
-    local -i remainder="$(($number[-k, -1]))"
-    if (( remainder )); then
-        printf ' and %d' "$remainder"
-    fi
-
-    printf '\n'
-    return 0
-} "$@"
+printf '\n'
