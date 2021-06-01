@@ -1,28 +1,43 @@
 # -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
+# pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
 
 emulate -L zsh
 
-# pronounce a number (e.g "pronounce_number 1001" => "One Thousand and One")
-local -A scale=(
-    2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
-    12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
-    24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
-    36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
-    48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
-    60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
-local number="${1##-}" # remove '-' at start of number
-local -a cs=()
-local -i i k place
-local rem
+function {
+    local -a cs
+    local -i i k place remainder
 
-# loop through the position/name pairs, extracting
-# characters between it and the previous pair used
-for i in ${(Onk)scale}; do
-    place="${number[-k, -i-1]}"
-    (( place )) && cs+=("$place ${scale[$i]}")
-    k=$i
-done
+    local -A scale=(
+        2  "Hundred"         3  "Thousand"         6  "Million"           9   "Billion"
+        12  "Trillion"       15  "Quadrillion"     18  "Quintillion"      21   "Sextillion"
+        24  "Septillion"     27  "Octillion"       30  "Nonillion"        33   "Decillion"
+        36  "Undecillion"    39  "Duodecillion"    42  "Tredecillion"     45   "Quattuordecillion"
+        48  "Quindecillion"  51  "Sexdecillion"    54  "Septendecillion"  57   "Octodecillion"
+        60  "Novemdecillion" 63  "Vigintillion"    303 "Centillion")
 
-# now just print the remainder (if one exists)
-rem=" and $(($number[-k, -1]))"
-printf "%s%s\n" "${(j:, :)cs}" "${rem% and 0}"
+    # remove '-' at start of number, or `,` & `_` anywhere in number
+    local number="${${${1##-}//,/}//_/}"
+
+    if ! [[ "$number" =~ "^[0-9]+$" ]]; then
+        printf "'%s' is not a number\n" "$*" >&2
+        return 1
+    fi
+
+    # loop through the position/name pairs, extracting
+    # characters between it and the previous pair used
+    for i in ${(Onk)scale}; do
+        place="${number[-k, -i-1]}"
+        (( place )) && cs+=("$place ${scale[$i]}")
+        k=$i
+    done
+
+    # now just print the remainder (if one exists)
+    remainder="$(($number[-k, -1]))"
+    if (( remainder )); then
+        printf '%s and %d\n' "${(j:, :)cs}" "$remainder"
+    else
+        printf '%s\n' "${(j:, :)cs}"
+    fi
+
+    return 0
+} "$@"
