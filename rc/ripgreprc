@@ -8,7 +8,7 @@
 --no-ignore
 
 # Exclude directories.
---glob=!{.git,.svn,.tldr,.idea,node_modules,.mypy_cache,__pycache__,vendor,venv,.venv}
+--glob=!{.git,.svn,.tldr,.idea,node_modules,.mypy_cache,__pycache__,vendor,venv,.venv,.tox}
 
 # Exclude file types.
 --glob=!*.{lock,gpg,asc}

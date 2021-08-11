@@ -34,3 +34,4 @@ vim/.netrwhist
 .gdb_history
 __pycache__
 .mypy_cache
+.venv/

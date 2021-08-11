@@ -109,8 +109,7 @@ This function should only modify configuration layer settings."
                                     pug-mode
                                     evil-goggles
                                     golden-ratio
-                                    fancy-battery
-                                    winum)
+                                    fancy-battery)
    dotspacemacs-delete-orphan-packages t
    dotspacemacs-install-packages 'used-only))
 
@@ -222,6 +221,12 @@ It should only modify the values of Spacemacs settings."
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
 
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
+
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
    ;; (default `text-mode')
@@ -254,7 +259,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator arrow :separator-scale 1.0)
+   dotspacemacs-mode-line-theme '(spacemacs :separator arrow :separator-scale 0.9)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -264,10 +269,9 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14
-                               :weight medium
-                               :width normal
-                               :powerline-scale 1.0)
+                               :size 11.0
+                               :weight normal
+                               :width normal)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -401,6 +405,10 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
@@ -515,6 +523,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
 
+   ;; Accept SPC as y for prompts if non nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
+
    ;; If non-nil shift your number row to match the entered keyboard layout
    ;; (only in insert state). Currently supported keyboard layouts are:
    ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
@@ -624,12 +635,6 @@ before packages are loaded."
                 helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
                 helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
 
-                js-indent-level                  2
-                js2-basic-offset                 js-indent-level
-                js2-include-browser-externs      t
-                js2-include-node-externs         t
-                js2-strict-missing-semi-warning  nil
-
                 kill-ring-max 256
 
                 magit-repo-dirs '("~/Development/")
@@ -642,12 +647,10 @@ before packages are loaded."
                 ;; Dont show entire (long) line
                 truncate-lines t
 
-                typescript-indent-level js-indent-level
-
-                web-mode-markup-indent-offset  js2-basic-offset
+                web-mode-markup-indent-offset  2
                 web-mode-css-indent-offset     css-indent-offset
-                web-mode-code-indent-offset    js2-basic-offset
-                web-mode-attr-indent-offset    js2-basic-offset
+                web-mode-code-indent-offset    2
+                web-mode-attr-indent-offset    2
 
                 web-mode-style-padding         css-indent-offset
                 web-mode-script-padding        css-indent-offset
@@ -677,9 +680,12 @@ This function is called at the very end of Spacemacs initialization."
  '(explicit-shell-file-name "/bin/bash")
  '(gud-gdb-command-name "gdb -i=mi -nh")
  '(helm-man-or-woman-function 'Man-getpage-in-background)
+ '(js-indent-level 2)
+ '(lsp-file-watch-ignored-directories
+   '("[/\\\\]\\.git\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]\\.venv\\'" "[/\\\\]venv\\'" "[/\\\\]\\.idea\\'" "[/\\\\]__pycache__\\'" "[/\\\\]\\.eggs\\'" "[/\\\\]\\.egg-info\\'" "[/\\\\]\\.cache\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.tox\\'" "[/\\\\]\\.pytest_cache\\'"))
  '(org-refile-targets
    '((org-agenda-files :maxlevel . 1)
-     (org-default-notes-file :maxlevel . 2)) t)
+     (org-default-notes-file :maxlevel . 2)))
  '(package-selected-packages
    '(winum yasnippet-snippets yapfify yaml-mode xterm-color x86-lookup ws-butler writeroom-mode which-key web-mode web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toml-mode toc-org tide terminal-here tagedit systemd symon symbol-overlay string-inflection string-edit sqlup-mode sql-indent sphinx-doc spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode ron-mode rjsx-mode restart-emacs rainbow-delimiters racer pytest pyenv-mode py-isort prettier-js powershell popwin poetry pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit-forge org-superstar org-rich-yank org-projectile org-present org-mime org-download org-cliplink org-brain open-junk-file ob-elixir npm-mode nose nodejs-repl neotree nasm-mode nameless multi-term multi-line mmm-mode markdown-toc magit-svn magit-section magit-gitflow macrostep lsp-ui lsp-python-ms lsp-pyright lsp-origami lorem-ipsum livid-mode live-py-mode link-hint json-navigator js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode ibuffer-projectile hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helpful helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gh-md fuzzy font-lock+ flycheck-ycmd flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flycheck-bashate flx-ido fish-mode eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emr emmet-mode elisp-slime-nav editorconfig dumb-jump drag-stuff dotenv-mode dockerfile-mode docker disaster dired-quick-sort diminish devdocs define-word dap-mode cython-mode cpp-auto-include company-ycmd company-web company-statistics company-shell company-rtags company-lua company-c-headers company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode ccls cargo browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-link ace-jump-helm-line ac-ispell))
  '(page-break-lines-modes
