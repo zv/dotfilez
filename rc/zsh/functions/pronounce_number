@@ -27,7 +27,7 @@ for i in ${(Onk)scale}; do
     if (( number[-k, -i-1] )); then
         printf "%d %s" "$((number[-k, -i-1]))" "${scale[$i]}"
 
-        if [[ "$i" -gt 3 ]]; then
+        if [[ "$i" -gt 2 ]]; then
             printf ', '
         fi
     fi
