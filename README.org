@@ -195,6 +195,28 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      Defaults  timestamp_type  = global
    #+END_SRC
 
+   
+** Emacs
+   
+*** Build
+    #+BEGIN_SRC sh
+      mkdir ~/Development/
+      cd ~/Development/
+      git clone --depth=1 https://git.savannah.gnu.org/git/emacs.git
+      sudo dnf install librsvg2-devel ImageMagick-devel gnutls-devel
+      sudo dnf builddep emacs
+      ./autogen.sh
+      CFLAGS='-pipe -mtune=native -march=native' ./configure \
+            --with-dbus \
+            --with-gnutls \
+            --with-imagemagick \
+            --with-rsvg \
+            --with-mailutils \
+            --with-xml2 \
+            --with-modules
+      make
+    #+END_SRC
+
 ** Python
 
 *** =IPython= config
