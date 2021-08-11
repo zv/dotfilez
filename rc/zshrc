@@ -74,17 +74,19 @@ mvdlhere() { mvlast ~/Downloads/ "$(pwd)" }
 mcd() { mkdir -p "$1" && cd "$1"; }
 
 # ── DNF Aliases ────────────────────────────────────────────
-alias dnfs="dnf search"                       # search package
-alias dnfp="dnf info"                         # show package info
-alias dnfl="dnf list"                         # list packages
-alias dnfcu="dnf check-update"                # check updates
-alias dnfh="sudo dnf history"                 # get dnf history
-alias dnfu="sudo dnf upgrade"                 # upgrade packages
-alias dnfi="sudo dnf install"                 # install package
-alias dnfr="sudo dnf remove"                  # remove package
-alias dnfgr="sudo dnf groupremove"            # remove pagage group
-alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
-alias dnfc="sudo dnf clean all"               # clean cachefi
+if _exists dnf; then
+    alias dnfs="dnf search"                       # search package
+    alias dnfp="dnf info"                         # show package info
+    alias dnfl="dnf list"                         # list packages
+    alias dnfcu="dnf check-update"                # check updates
+    alias dnfh="sudo dnf history"                 # get dnf history
+    alias dnfu="sudo dnf upgrade"                 # upgrade packages
+    alias dnfi="sudo dnf install"                 # install package
+    alias dnfr="sudo dnf remove"                  # remove package
+    alias dnfgr="sudo dnf groupremove"            # remove pagage group
+    alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
+    alias dnfc="sudo dnf clean all"               # clean cachefi
+fi
 
 # ── Git Aliases ────────────────────────────────────────────
 if _exists git; then
@@ -97,25 +99,6 @@ if _exists git; then
     alias gcm='git checkout master'
     alias ga='git add'
     alias gfa='git fetch --all'
-
-    gpro() {
-        local full_branch="$(git symbolic-ref HEAD)"
-        local branch="${full_branch##ref/heads/}"
-        git pull --rebase origin "$branch"
-    }
-
-    alias git-userlinecount="git ls-files | xargs -n1 -d'\n' -i git blame {} | perl -n -e '/\s\((.*?)\s[0-9]{4}/ && print \"$1\n\"' | sort -f | uniq -c -w3 | sort -r"
-
-    # Lists all files that have been ignored with git update-index
-    alias git-ignorelog='git ls-files -v | grep "^h"'
-
-    # Displays some git related author statistics
-    function authorstats {
-        gitauth="$1";
-        git log --author="$gitauth" --pretty=tformat: --numstat | \
-            gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s",add,subs,loc }' -
-        echo ''
-    }
 fi
 
 alias aws="MANPAGER='more' aws"
@@ -532,12 +515,16 @@ autoload -Uz _zvcalc
 alias calc='nocorrect noglob _zvcalc'
 
 # Rust
-if [[ (( $+commands[cargo] )) && -r ~/.cargo/env ]]; then
-    source ~/.cargo/env
+if _exists cargo && test -r ~/.cargo/env; then
+    if test -O ~/.cargo/env(#qf:go-w:N); then
+        source ~/.cargo/env
+    else
+        printf "Refusing to source from %s\n" ~/.cargo/env >&2
+    fi
 fi
 
 # rg
-if (( $+commands[rg] )); then
+if _exists rg && test -r ~/.ripgreprc; then
     export RIPGREP_CONFIG_PATH=~/.ripgreprc
 fi
 
@@ -553,5 +540,5 @@ elif [[ ! -e ~/.zsh/local.zsh ]]; then
         ( umask 077; touch ~/.zsh/local.zsh )
     fi
 else
-    printf "Refusing to source unsafe site configuration from %s\n" ~/.zsh/local.zsh >&2
+    printf "Refusing to source from %s\n" ~/.zsh/local.zsh >&2
 fi
