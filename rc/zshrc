@@ -532,12 +532,16 @@ autoload -Uz _zvcalc
 alias calc='nocorrect noglob _zvcalc'
 
 # Rust
-if [[ (( $+commands[cargo] )) && -r ~/.cargo/env ]]; then
-    source ~/.cargo/env
+if _exists cargo && test -r ~/.cargo/env; then
+    if test -O ~/.cargo/env(#qf:go-w:N); then
+        source ~/.cargo/env
+    else
+        printf "Refusing to source from %s\n" ~/.cargo/env >&2
+    fi
 fi
 
 # rg
-if (( $+commands[rg] )); then
+if _exists rg; then
     export RIPGREP_CONFIG_PATH=~/.ripgreprc
 fi
 
@@ -553,5 +557,5 @@ elif [[ ! -e ~/.zsh/local.zsh ]]; then
         ( umask 077; touch ~/.zsh/local.zsh )
     fi
 else
-    printf "Refusing to source unsafe site configuration from %s\n" ~/.zsh/local.zsh >&2
+    printf "Refusing to source from %s\n" ~/.zsh/local.zsh >&2
 fi
