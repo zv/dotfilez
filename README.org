@@ -115,7 +115,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
              link_if rg 'rc/ripgreprc'
              link_if ruby 'rc/pryrc' 'rc/gemrc'
              link_if screen 'rc/screenrc'
-             link_if screen 'rc/screenrc'
              link_if tmux 'rc/tmux.conf'
              link_if top 'rc/toprc'
              link_if vim 'rc/vim' 'rc/vimrc'
