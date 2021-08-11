@@ -52,10 +52,13 @@ set foldnestmax=3	" deepest fold is 3 levels
 set complete-=.,w,b,u,t
 set completeopt=menu,longest,menuone
 set pumheight=10
-set wildmenu  " Display candidate supplement.
-set wildignorecase
-set wildmode=longest,list,full
+
+set wildmenu
+set wildmode=longest,full
+set wildignorecase        " ignore case in wildmenu
 set wildoptions=tagfile   " Can supplement a tag in a command-line.
+set wildchar=<Tab>        " char to start expansion
+set wildcharm=<C-Z>       " 'wildcharm' is 'wildchar' inside macros
 
 "}}}
 " --------------- Search Settings ---------------- {{{
@@ -156,7 +159,6 @@ nnoremap <silent> <leader>sc :nohlsearch<CR>
 nnoremap <silent> <leader>fs :w<CR>
 nnoremap <leader>ft :cd %:p:h<cr>:Lexplore<cr>
 nnoremap <leader>ad :cd %:p:h<cr>:Explore<cr>
-nnoremap <silent> <leader>bb :buffers<CR>
 nnoremap <silent> Q :q<CR>
 nnoremap <silent> <leader>fed :e ~/.vimrc<CR>
 
@@ -171,10 +173,11 @@ function! CreateScratchBuffer()
 endfunction
 nnoremap <silent> <leader>bs :call CreateScratchBuffer()<CR>
 nnoremap <silent> <leader>bc :bunload<CR>
+nnoremap <silent> <leader>bd :bdelete<CR>
 nnoremap <silent> <leader>bx :bdelete<CR>
 nnoremap <silent> <leader>bp :bprevious<CR>
 nnoremap <silent> <leader>bn :bnext<CR>
-nnoremap <silent> <leader>bb :buffers<CR>
+nnoremap <leader>bb :buffer<Space><C-Z>
 nnoremap <silent> <leader>bl :tabedit %<CR>
 nnoremap <silent> <leader>bw :set modifiable!<CR>
 
