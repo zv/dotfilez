@@ -407,7 +407,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Show the scroll bar while scrolling. The auto hide time can be configured
    ;; by setting this variable to a number. (default t)
-   dotspacemacs-scroll-bar-while-scrolling t
+   dotspacemacs-scroll-bar-while-scrolling nil
 
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
@@ -658,50 +658,49 @@ before packages are loaded."
                 web-mode-block-padding         css-indent-offset))
 
 
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
- '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
- '(company-selection-wrap-around t)
- '(confirm-nonexistent-file-or-buffer nil)
- '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
- '(evil-want-Y-yank-to-eol nil)
- '(expand-region-contract-fast-key "V")
- '(expand-region-reset-fast-key "r")
- '(explicit-shell-file-name "/bin/bash")
- '(gud-gdb-command-name "gdb -i=mi -nh")
- '(helm-man-or-woman-function 'Man-getpage-in-background)
- '(js-indent-level 2)
- '(lsp-file-watch-ignored-directories
-   '("[/\\\\]\\.git\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]\\.venv\\'" "[/\\\\]venv\\'" "[/\\\\]\\.idea\\'" "[/\\\\]__pycache__\\'" "[/\\\\]\\.eggs\\'" "[/\\\\]\\.egg-info\\'" "[/\\\\]\\.cache\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.tox\\'" "[/\\\\]\\.pytest_cache\\'"))
- '(org-refile-targets
-   '((org-agenda-files :maxlevel . 1)
-     (org-default-notes-file :maxlevel . 2)))
- '(package-selected-packages
-   '(winum yasnippet-snippets yapfify yaml-mode xterm-color x86-lookup ws-butler writeroom-mode which-key web-mode web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toml-mode toc-org tide terminal-here tagedit systemd symon symbol-overlay string-inflection string-edit sqlup-mode sql-indent sphinx-doc spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode ron-mode rjsx-mode restart-emacs rainbow-delimiters racer pytest pyenv-mode py-isort prettier-js powershell popwin poetry pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit-forge org-superstar org-rich-yank org-projectile org-present org-mime org-download org-cliplink org-brain open-junk-file ob-elixir npm-mode nose nodejs-repl neotree nasm-mode nameless multi-term multi-line mmm-mode markdown-toc magit-svn magit-section magit-gitflow macrostep lsp-ui lsp-python-ms lsp-pyright lsp-origami lorem-ipsum livid-mode live-py-mode link-hint json-navigator js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode ibuffer-projectile hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helpful helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gh-md fuzzy font-lock+ flycheck-ycmd flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flycheck-bashate flx-ido fish-mode eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emr emmet-mode elisp-slime-nav editorconfig dumb-jump drag-stuff dotenv-mode dockerfile-mode docker disaster dired-quick-sort diminish devdocs define-word dap-mode cython-mode cpp-auto-include company-ycmd company-web company-statistics company-shell company-rtags company-lua company-c-headers company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode ccls cargo browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-link ace-jump-helm-line ac-ispell))
- '(page-break-lines-modes
-   '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
- '(paradox-github-token t)
- '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
- '(ring-bell-function 'ignore)
- '(shell-file-name "/bin/bash"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(helm-ff-file-extension ((t nil))))
-)
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(ansi-color-names-vector
+     ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
+   '(canlock-password "9ca6d042878b195aa1f739607943049da803f282")
+   '(company-selection-wrap-around t)
+   '(confirm-nonexistent-file-or-buffer nil)
+   '(disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn")
+   '(evil-want-Y-yank-to-eol nil)
+   '(expand-region-contract-fast-key "V")
+   '(expand-region-reset-fast-key "r")
+   '(explicit-shell-file-name "/bin/bash")
+   '(gud-gdb-command-name "gdb -i=mi -nh")
+   '(helm-man-or-woman-function 'Man-getpage-in-background)
+   '(js-indent-level 2)
+   '(lsp-file-watch-ignored-directories
+     '("[/\\\\]\\.git\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]\\.venv\\'" "[/\\\\]venv\\'" "[/\\\\]\\.idea\\'" "[/\\\\]__pycache__\\'" "[/\\\\]\\.eggs\\'" "[/\\\\]\\.egg-info\\'" "[/\\\\]\\.cache\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.tox\\'" "[/\\\\]\\.pytest_cache\\'"))
+   '(org-ditaa-jar-path "/usr/share/java/ditaa.jar")
+   '(org-refile-targets
+     '((org-agenda-files :maxlevel . 1)
+       (org-default-notes-file :maxlevel . 2)))
+   '(package-selected-packages
+     '(winum yasnippet-snippets yapfify yaml-mode xterm-color x86-lookup ws-butler writeroom-mode which-key web-mode web-beautify vterm volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree toml-mode toc-org tide terminal-here tagedit systemd symon symbol-overlay string-inflection string-edit sqlup-mode sql-indent sphinx-doc spaceline-all-the-icons smeargle slim-mode shell-pop scss-mode sass-mode ron-mode rjsx-mode restart-emacs rainbow-delimiters racer pytest pyenv-mode py-isort prettier-js powershell popwin poetry pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit-forge org-superstar org-rich-yank org-projectile org-present org-mime org-download org-cliplink org-brain open-junk-file ob-elixir npm-mode nose nodejs-repl neotree nasm-mode nameless multi-term multi-line mmm-mode markdown-toc magit-svn magit-section magit-gitflow macrostep lsp-ui lsp-python-ms lsp-pyright lsp-origami lorem-ipsum livid-mode live-py-mode link-hint json-navigator js2-refactor js-doc insert-shebang indent-guide importmagic impatient-mode ibuffer-projectile hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helpful helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate google-c-style gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ gh-md fuzzy font-lock+ flycheck-ycmd flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-package flycheck-elsa flycheck-credo flycheck-bashate flx-ido fish-mode eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erlang emr emmet-mode elisp-slime-nav editorconfig dumb-jump drag-stuff dotenv-mode dockerfile-mode docker disaster dired-quick-sort diminish devdocs define-word dap-mode cython-mode cpp-auto-include company-ycmd company-web company-statistics company-shell company-rtags company-lua company-c-headers company-anaconda column-enforce-mode clean-aindent-mode centered-cursor-mode ccls cargo browse-at-remote blacken auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent ace-link ace-jump-helm-line ac-ispell))
+   '(page-break-lines-modes
+     '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode c-mode))
+   '(paradox-github-token t)
+   '(pdf-view-midnight-colors '("#655370" . "#fbf8ef"))
+   '(ring-bell-function 'ignore)
+   '(shell-file-name "/bin/bash"))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(helm-ff-file-extension ((t nil)))))
