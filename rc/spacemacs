@@ -590,24 +590,25 @@ before packages are loaded."
          (make-directory emacs-temporary-dir t)))
 
   (setq-default backup-by-copying t    ; Copy the file, don't rename
-                make-backup-files nil  ; Don't copy
-                backup-directory-alist `(("\\`/tmp/.+" . ,emacs-temporary-dir)
-                                         (".*" . ,emacs-temporary-dir))
+                backup-directory-alist `(("\\`/home/.+" . ,emacs-temporary-dir)
+                                         (".*" . nil))
                 vc-make-backup-files nil ; Don't bother making backups for files in VC
-                vc-follow-symlinks t
+                vc-follow-symlinks t    ; don't ask when visiting a symbolic link under version control
                 version-control t        ; use versioned backups
-                auto-save-default t     ; auto-save every buffer that visits a file
                 auto-save-timeout (* 60 60 12)    ; number of seconds idle time before auto-save
                 auto-save-interval 400   ; number of keystrokes between auto-saves
-                auto-save-file-name-transforms  `(("\\`/tmp/.+" ,emacs-temporary-dir t)
-                                                  ;; always auto-save TRAMP files to dist
-                                                  (".*"  ,emacs-temporary-dir t))
+                auto-save-file-name-transforms  `(("\\`/home/.+" ,emacs-temporary-dir t))
                 undo-tree-auto-save-history nil ; (DONT) Automatically save our undo history.
                 undo-tree-enable-undo-in-region  nil
-                undo-tree-history-directory-alist `((".+gpg\\'" . ,emacs-temporary-dir)
-                                                    (".+asc\\'" . ,emacs-temporary-dir)
-                                                    ("\\`/tmp/.+" . ,emacs-temporary-dir)
-                                                    (".*" . ,emacs-temporary-dir)))
+                undo-tree-history-directory-alist `((".+\\.gpg\\'" . nil)
+                                                    (".+\\.asc\\'" . nil)
+                                                    ("\\`/tmp/.+" . nil)
+                                                    ("\\`/home/.+" . ,emacs-temporary-dir)
+                                                    ("." . nil)))
+  ;; disable auto-save & backup
+  (setq-default
+   make-backup-files nil
+   auto-save-default nil)
 
   (add-to-list 'auto-mode-alist '("\\.nse\\'" . lua-mode))
   (setq-default abbrev-mode nil
