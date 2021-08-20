@@ -93,14 +93,6 @@
 
       (require 'org-protocol)
 
-      (require 's)
-      (defun build-frontmatter (ss backend info)
-        (let ((title (org-no-properties (car (plist-get (org-export-get-environment) :title))))
-              (tags (format "%s" (string-join
-                                  (append '("tags:" "post")
-                                          (mapcar 'org-no-properties org-file-tags)) "\n  - "))))
-          (s-format ss 'aget `(("title" . ,title) ("tagslist" . ,tags)))))
-
       (setq-default
        ;; Do not dim blocked tasks
        org-agenda-dim-blocked-tasks nil
@@ -176,16 +168,14 @@
                                     :exclude "_\w+.org"
                                     :recursive t
                                     :section-numbers nil
-                                    :with-toc nil
                                     :html-extension "html"
                                     :headline-levels 4
                                     :html-html5-fancy t
                                     :body-only t))
 
-       org-export-filter-export-block-functions '(build-frontmatter)
-
        ;; Targets include this file and any file contributing to the agenda - up to 6 levels deep
        org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
+       org-export-allow-bind-keywords t
        org-refile-allow-creating-parent-node t
        org-refile-use-outline-path t)
 
