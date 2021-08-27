@@ -186,6 +186,7 @@
 	lola  = log --graph --decorate --pretty=oneline --abbrev-commit --all
 
 	# log with patch generation.
+	# show changes with log
 	lp = log --patch
 
 	# log with items appearing in topological order, i.e. descendant commits are shown before their parents.
@@ -290,28 +291,11 @@
 	orphans = fsck --full
 
 	# ── Log Aliases ───────────────────────────────────────
-
-	log-graph = log --all --graph --decorate
-	log-timeline = log --format='%h %an %ar - %s'
-	log-local = log --oneline origin..HEAD
-	log-timeline = log --date=local --format='%h %an %ar - %s'
-	log-fetched = log --oneline HEAD..origin/master
-
-	# Show log with dates in our local timezone
-	log-local = log --date=local
-
-	# Show the log for my own user email
-	log-me = !git log --author $(git config user.email)
-
-	# Show log as a graph
-	log-graph = log --graph --oneline --decorate
-
 	# Show the date of the first commit
 	log-first-date = !"git log --date-order --date=iso --pretty='%ad' --reverse | head -1"
 
 	# Show the recent day
 	log-day = log --since yesterday
-	log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
 
 	# churn: show log of files that have many changes
 	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count", "file"} {print $1, $2}' | sort -g
