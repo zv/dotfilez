@@ -440,6 +440,9 @@
 	branch-log = for-each-ref --sort=committerdate refs/heads --format='%(committerdate:iso) %(committerdate:relative)%09%(color:white)%(refname:short)%(color:reset)'
 	branch-log-remote = for-each-ref --sort=committerdate refs/remotes --format='%(committerdate:iso) %(committerdate:relative)%09%(color:white)%(refname:short)%(color:reset)'
 
+	# Show each branch, indicating how many commits ahead, behind each branch is.
+	upstream-commits-diff = for-each-ref --sort=committerdate --format="%(refname:short) %(push:track)" ref/heads
+
 	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
 
 	whats-new     = !sh -c 'git log $1@{1}..$1@{0} "$@"'
