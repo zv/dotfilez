@@ -55,7 +55,8 @@ This function should only modify configuration layer settings."
      (javascript :variables
                  javascript-backend 'lsp
                  javascript-repl 'skewer
-                 javascript-fmt-tool 'prettier)
+                 javascript-import-tool 'import-js
+                 javascript-lsp-linter nil)
      org
      (json :variables json-backend 'lsp)
      (lsp :variables
