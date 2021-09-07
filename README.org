@@ -278,7 +278,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     You can ensure that the GnuPG daemons =dirmngr= and =gpg-agent= are launched automatically the first time they're needed, and shut down cleanly at session logout by enabling user services via socket-activation:
 
     #+BEGIN_SRC sh
-      sudo systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
+      systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
     #+END_SRC
 
     If you'd rather try a socket-activated GnuPG daemon in an already-running session without logging out, kill any existing daemons and start the user socket manually:
