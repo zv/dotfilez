@@ -9,17 +9,10 @@
    - [ ] GPG
      - [ ] Export public key ring (=pubring.gpg=)
      - [ ] Export owner-trust list (=owner_trust.lst=)
-   - [ ] Credentials
-     - [ ] netrc (~$HOME/.netrc~)
-     - [ ] authinfo (~$HOME/.authinfo~)
-     - [ ] Kubernetes (~$HOME/.kube/config~)
-     - [ ] AWS (~$HOME/.aws/{config,credentials}~)
-   - [ ] Code
-     - [ ] Push all branches with changes not pushed to ~master~
-     - [ ] Backup any without remotes
+   - [ ] Predownloaded
+     - [ ] Newest Nvidia Drivers
+     - [ ] Chromium
    - [ ] Virtual Machines
-   - [ ] SSH
-     - [ ] Check for system-specific private keys in ~$HOME/.ssh/id_*~
    - [ ] History
      - [ ] ~$HOME/.zsh_history~
      - [ ] ~$HOME/.psql_history-*~
@@ -31,133 +24,115 @@
      - [ ] ~$HOME/Pictures~
      - [ ] ~$HOME/Music~
 
-
 ** Home
-   :PROPERTIES:
-   :header-args: :dir home
-   :END:
+*** Layout
+    - $HOME/Documents/ :: Contains local documents & records
+    - $HOME/Books :: Saved eBooks
+    - $HOME/Pictures :: Saved pictures & screenshots
+    - $HOME/Development :: Source code of personally developed software
+    - $HOME/dotfilez :: Contains configuration (/rc/) files which are checked-in to version control.
+    - $HOME/zv.github.io :: Github pages site
+    - $HOME/extern :: Source code & binaries from external sources
 
-   #+BEGIN_SRC sh :results output
-     tar --create \
-         --preserve-permissions \
-         --posix \
-         --one-file-system \
-         --auto-compress \
-         --exclude-backups \
-         --exclude-vcs \
-         --exclude-from=".tar_exclude" \
-         --file "home.tar" \
-         --directory="$HOME" \
-         ".aws/config" \
-         ".aws/credentials" \
-         ".kube/config" \
-         ".bash_history" \
-         ".zsh_history" \
-         ".local/share/keyrings" \
-         "Backup" \
-         "Books" \
-         "Documents" \
-         "Music" \
-         "Pictures"
-   #+END_SRC
-
-
-** Development
-*** Prepare
-    #+BEGIN_SRC sh :results output
-      for dir in $HOME/Development/*/; do
-          (
-              if test -d "$dir/.git"; then
-                  cd "$dir"
-
-                  if git remote get-url origin 2>&1 >/dev/null; then
-                      git master-cleanse
-                      git remote prune origin
-                      git repacker
-
-                      if git branch --no-merged origin/master >/dev/null; then
-                          printf "%s has unmerged branches\n" "$dir"
-                      else
-                          printf "%s is fully merged\n" "$dir"
-                      fi
-                  else
-                      printf "%s has no 'origin' remote\n" "$dir"
-                  fi
-              else
-                  printf "%s is not a git repository\n" "$dir"
-              fi
-          )
-      done
+*** Archive
+    #+BEGIN_SRC python :results output
+      import datetime as dt
+      from pathlib import Path
+      
+      OUTDIR = Path('/run/media/zv/4712695a-e37f-477c-a48a-907b7a3bde6c')
+      date = f'{dt.datetime.now():%Y-%m-%d}'
+      BACKUP_FILE = OUTDIR.joinpath(f'backup-{date}.tar.gz')
+      home = Path.home()
+      
+      print(f"""tar \\
+          --create \\
+          --file '{BACKUP_FILE!s}' \\
+          --verbose \\
+          --preserve-permissions \\
+          --one-file-system \\
+          --auto-compress \\
+          --directory='{home!s}' \\
+          --exclude='*/*.*.sw?' \\
+          --exclude='*/.mypy_cache' \\
+          --exclude='*/.sass-cache' \\
+          --exclude='*/.tox' \\
+          --exclude='*/.venv' \\
+          --exclude='*/.jekyll-cache' \\
+          --exclude='*/TAGS' \\
+          --exclude='*/node_modules' \\
+          --exclude='Development/*/venv' \\
+          --exclude='Development/campuslaunch-mvp' \\
+          --exclude='Development/polyswarm' \\
+          --exclude='Development/sochat' \\
+          --exclude='dotfilez/emacs.d'""",
+            end='')
+      
+      dirs = [
+          ".auth_info",
+          ".aws/config",
+          ".aws/credentials",
+          ".bash_history",
+          ".kube/config",
+          ".local/share/keyrings",
+          ".ipython/profile_default/history.sqlite",
+          ".netrc",
+          ".psql_history",
+          ".zsh_history",
+          "Backup",
+          "Books",
+          "Development",
+          "Documents",
+          "Music",
+          "Pictures",
+          "dotfilez",
+          "zv.github.io",
+      ]
+      
+      if home.joinpath('.ssh').resolve() != home.joinpath('dotfilez/rc/ssh'):
+          dirs.append('.ssh')
+      
+      if home.joinpath('.gnupg').resolve() != home.joinpath('dotfilez/rc/gnupg'):
+          dirs.append('.gnupg')
+      
+      for d in dirs:
+          if home.joinpath(d).exists():
+              print(f" \\\n    '{d}'", end='')
+      
+      print('')
     #+END_SRC
 
-** Thunderbird
-   :PROPERTIES:
-   :header-args: :dir thunderbird
-   :END:
+** Software
+*** Thunderbird
+    :PROPERTIES:
+    :header-args: :dir thunderbird
+    :END:
 
-*** Profile
-    #+BEGIN_SRC sh
-      if test -d "$HOME/.thunderbird/"; then
-          tar --create \
-              -C "$HOME/.thunderbird/" \
-              --exclude-from=".tar_exclude" \
-              --file "thunderbird.tar"
-      else
-          printf "No thunderbird profile found at %s\n" "$HOME/.thunderbird/"
-      fi
-    #+END_SRC
-
-**** Restore
+**** Profile
      #+BEGIN_SRC sh
-       tar --extract --file "$THUNDERBIRD_PROFILE_ARCHIVE" --directory "$HOME/.thunderbird"
+       if test -d "$HOME/.thunderbird/"; then
+           tar --create \
+               -C "$HOME/.thunderbird/" \
+               --exclude-from=".tar_exclude" \
+               --file "thunderbird.tar"
+       else
+           printf "No thunderbird profile found at %s\n" "$HOME/.thunderbird/"
+       fi
      #+END_SRC
 
-** GnuPG
-   :PROPERTIES:
-   :header-args: :dir gnupg
-   :END:
+***** Restore
+      #+BEGIN_SRC sh
+        tar --extract --file "$THUNDERBIRD_PROFILE_ARCHIVE" --directory "$HOME/.thunderbird"
+      #+END_SRC
 
-*** Owner Trust
-    #+NAME: owner_trust.lst
-    #+BEGIN_SRC sh :results output :exports results
-      gpg --export-ownertrust
-    #+END_SRC
+*** GnuPG
+**** Owner Trust
+     #+NAME: owner_trust.lst
+     #+BEGIN_SRC sh :results output :exports results
+       gpg --export-ownertrust
+     #+END_SRC
 
-    #+RESULTS: owner_trust.lst
-    #+begin_example
-    # List of assigned trustvalues, created Mon 05 Apr 2021 02:08:18 PM PDT
-    # (Use "gpg --import-ownertrust" to restore them)
-    9358C8BDAAD9A62BB08B9660F6F2D0445DC172F8:6:
-    E1E70D6E64BA8D1F74E78285E5001906A3FDE45E:5:
-    E3371C093FEB6AF954D9AA7AF05E232B31FE4222:5:
-    9466BC69D21C3EB6B8271C6EFAA0F9C4E6F74C23:5:
-    F35DA90DA32BE26B5F482F434050B1E4B888F8A9:5:
-    10645351F62D42C389A299A9AACCAC21430AF5E7:2:
-    1222A1BE8EB72C64DC4273C5360E77FEC40F2998:5:
-    28D3BED851FDF3AB57FEF93C233587A47C207910:2:
-    EA55E87FF06C4955B9E99986040D0A3B4ED2E5C7:2:
-    108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE:2:
-    0D99E203DFFE1D2F7D0B48D0DAE717EFE9424541:2:
-    99E4A8F4DECC782FCB1955300A04E2A9F7B13CE1:2:
-    EF45510680FB02326B045AFB32474CF834EC9CBA:2:
-    9B9EB21FF345FA6D451DAEA52E1D830ED7B83025:4:
-    2D835E1D7DAD0F8DA2DC4335C2F66E51DDC797A3:5:
-    F24BD37573361FE30470B2D3CC1885691B29FA62:5:
-    D16F04E928688169B64088D5A84BF48A12CA3765:5:
-    69E77962A25643EA25E1028205C82CF57AD1DA46:2:
-    C7214D308D9C6F98245ECCF02E631D1C7E1F8F93:5:
-    6BE6FF53EC5AA7E21F81B402E18650C1EF268C5F:5:
-    C813BB9E9EFDC2A071AE4ED0B13E298AB47E94C9:5:
-    B3F7B9C95EC1283A34D77BD37B716BFEE79AEEE3:5:
-    DD12BEB4BDB0A79B7D7F364C95A2775913674492:5:
-    2DF553CC450B52D3D487963C70B01D84031D83CA:4:
-    F44E3D4039246B4B00908A4F2D07523C0EFE890C:5:
-    FA4455CADAA9458939DFECA21CBED555BDC04539:5:
-    BD287EC59E613F51FC955214D4CA6BE24F5C2560:2:
-    #+end_example
+     You can import =owner_trust.lst= by doing:
 
-    You can import =owner_trust.lst= by doing:
-
-    #+BEGIN_SRC sh :results output
-      gpg --import-ownertrust owner_trust.lst
-    #+END_SRC
+     #+BEGIN_SRC sh :results output
+       gpg --import-ownertrust owner_trust.lst
+     #+END_SRC
