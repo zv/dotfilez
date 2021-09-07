@@ -91,8 +91,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
                  local dst="${HOME}/.$(basename "$1")"
                  if test -e "$dst"; then
                      printf "%s already exists\n" "$dst"
-                 elif test -d "$src"; then
-                     ( set -x; ln -st "$dst" "$src" )
                  else
                      ( set -x; ln -sT "$src" "$dst" )
                  fi
