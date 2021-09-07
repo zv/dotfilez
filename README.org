@@ -79,13 +79,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      #+END_SRC
 
 ** RC Files
-
    #+NAME: link_if.sh
    #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh"
      link_if() {
          if command -V "$1" 1>/dev/null; then
              shift
-
+     
              while (( $# )); do
                  local src="$(realpath -e "$1")"
                  local dst="${HOME}/.$(basename "$1")"
@@ -98,7 +97,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
              done
          fi
      }
-
+     
      (
          if cd "${DOTFILEZ:-0}"; then
              link_if dig 'rc/digrc'
@@ -187,14 +186,12 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      # Number of minutes that can elapse before sudo will ask for a passwd again.
      # You can create or delete a timestamp with `sudo -v` & `sudo -k` respectively
      Defaults  timestamp_timeout  = 30
-
+     
      # `global` sets a single time stamp record, regardless of the terminal or parent process ID.
      Defaults  timestamp_type  = global
    #+END_SRC
 
-   
 ** Emacs
-   
 *** Build
     #+BEGIN_SRC sh
       mkdir ~/Development/
@@ -221,14 +218,14 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
     #+BEGIN_SRC awk :results file :file "~/.ipython/profile_default/ipython_config.py" :exports code
       #!/usr/bin/awk -f
-
+      
       BEGIN {
           if (ARGC == 1) {
               ARGV[ARGC] = ENVIRON["HOME"] "/.ipython/profile_default/ipython_config.py"
               ARGC = ARGC + 1
           }
       }
-
+      
       function set_value(new) {
           if ($2 == "=" && NF == 3) {
               sub("^#", "", $1)  # uncomment line
@@ -236,7 +233,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
               next
           }
       }
-
+      
       $1 ~ /^#?c.TerminalIPythonApp.display_banner/ { set_value("False") }
       $1 ~ /^#?c.TerminalInteractiveShell.editing_mode/ { set_value("'vi'") }
       $1 ~ /^#?c.TerminalInteractiveShell.extra_open_editor_shortcuts/ { set_value("True") }
@@ -245,7 +242,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
       $1 ~ /^#?c.InteractiveShell.history_length/ { set_value("50000") }
       $1 ~ /^#?c.InteractiveShell.history_load_length/ { set_value("1000") }
       $1 ~ /^#?c.TerminalInteractiveShell.prompt_includes_vi_mode/ { set_value("True") }
-
+      
       { print }
     #+END_SRC
 
@@ -262,7 +259,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+name: 70-u2f.rules
     #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/70-u2f.rules"
       # Yubico YubiKey
-
+      
       KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0113|0114|0115|0116|0120|0200|0402|0403|0406|0407|0410", TAG+="uaccess"
     #+END_SRC
 
@@ -271,7 +268,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+name: 90-wireshark-usbmon.rules
     #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/90-wireshark-usbmon.rules"
       # Wireshark
-
+      
       SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
     #+END_SRC
 
@@ -296,7 +293,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+name: coredump.conf
     #+BEGIN_SRC conf :tangle "/sudo::/etc/systemd/coredump.conf"
       # See coredump.conf(5) for details.
-
+      
       [Coredump]
       #Storage=external
       Compress=yes
@@ -322,10 +319,10 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
       print_gsetting() {
           printf 'gsettings set %s %s "%s"\n' "$1" "$2" "$(gsettings get "$1" "$2")"
       }
-
+      
       # Swap Caps-lock & alt
       print_gsetting org.gnome.desktop.input-sources xkb-options
-
+      
       # Dump of Gnome window keybindings
       for schema in 'org.gnome.Terminal.Legacy.Settings' \
                         'org.gnome.desktop.wm.keybindings' \
@@ -694,10 +691,10 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
        server=2001:4860:4860::8844
        server=1.1.1.1
        server=8.8.8.8
-
+       
        # Increase the cachesize
        cache-size=1500
-
+       
        # Don't store in cache the invalid resolutions
        no-negcache
      #+END_SRC
