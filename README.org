@@ -273,6 +273,17 @@
       SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
     #+END_SRC
 
+** Nvidia (GeForce/Quadro/Tesla)
+   This driver is suitable for any GPU found in 2012 and later.
+
+
+   #+BEGIN_SRC sh
+     sudo dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+     sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda
+   #+END_SRC
+
+   Once the module is built, you can check it's installation with ~modinfo -F version nvidia~
+
 ** systemd
 
 *** GnuPG
