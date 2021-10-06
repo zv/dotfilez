@@ -110,6 +110,7 @@ This function should only modify configuration layer settings."
                                     forge
                                     golden-ratio
                                     org-pomodoro
+                                    info+
                                     orgit
                                     pug-mode
                                     spray)
