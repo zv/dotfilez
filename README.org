@@ -19,8 +19,8 @@
 * Public Keys
 ** =authorized_keys=
    #+BEGIN_EXAMPLE
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCMbMY01S86OnaP7Q5H9kYHeBUdfTsZkGh1AwQC1VJIwXRHdldRigkFxCLR6QJkFVQt5ntruvXwBre1bDF04UveXLLtcq2P5iGZWgQtuVAsZ1DAENR5N+SMZY6DA/aPjg8tzv7lL09pwFkAxfVDWLEZXtcEuuCaaGbW9GH707MBnvMZn8rWD8MEEEflkrtpbTGxjrsubYqGOB9bL3PTEtrKBAhptaIHIhX7tcHBHoWVCNgt47U+zghg4VaJIj/c+TUY+1CUF/QWqfWl6En2JwLqKe8RhH4SqgWMt6WY5XDXurJHNjtlzSCbwf8jrXfSZq+63WLFxqdINyjqedkLSVhl zv@sigstkflt
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC zv@sigstkflt
+   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCMbMY01S86OnaP7Q5H9kYHeBUdfTsZkGh1AwQC1VJIwXRHdldRigkFxCLR6QJkFVQt5ntruvXwBre1bDF04UveXLLtcq2P5iGZWgQtuVAsZ1DAENR5N+SMZY6DA/aPjg8tzv7lL09pwFkAxfVDWLEZXtcEuuCaaGbW9GH707MBnvMZn8rWD8MEEEflkrtpbTGxjrsubYqGOB9bL3PTEtrKBAhptaIHIhX7tcHBHoWVCNgt47U+zghg4VaJIj/c+TUY+1CUF/QWqfWl6En2JwLqKe8RhH4SqgWMt6WY5XDXurJHNjtlzSCbwf8jrXfSZq+63WLFxqdINyjqedkLSVhl cardno:000603647045
+   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC zv-sigstkflt
    #+END_EXAMPLE
 
 ** GnuPG Key
@@ -79,7 +79,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      #+END_SRC
 
 ** RC Files
-
    #+NAME: link_if.sh
    #+BEGIN_SRC sh :exports code :results verbatim :prologue "exec 2>&1" :shebang "#!/bin/sh"
      link_if() {
@@ -91,8 +90,6 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
                  local dst="${HOME}/.$(basename "$1")"
                  if test -e "$dst"; then
                      printf "%s already exists\n" "$dst"
-                 elif test -d "$src"; then
-                     ( set -x; ln -st "$dst" "$src" )
                  else
                      ( set -x; ln -sT "$src" "$dst" )
                  fi
@@ -194,9 +191,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
      Defaults  timestamp_type  = global
    #+END_SRC
 
-   
 ** Emacs
-   
 *** Build
     #+BEGIN_SRC sh
       mkdir ~/Development/
@@ -223,31 +218,32 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
 
     #+BEGIN_SRC awk :results file :file "~/.ipython/profile_default/ipython_config.py" :exports code
       #!/usr/bin/awk -f
-
+      
       BEGIN {
           if (ARGC == 1) {
               ARGV[ARGC] = ENVIRON["HOME"] "/.ipython/profile_default/ipython_config.py"
               ARGC = ARGC + 1
           }
       }
-
+      
       function set_value(new) {
-          if ($2 == "=" && NF == 3) {
-              sub("^#", "", $1)  # uncomment line
-              printf "%s = %s\n", $1, new
-              next
+          for (i=0;i<NF;i++) {
+              if ($i == "=") {
+                  printf "%s = %s\n", $(i-1), new
+                  next
+              }
           }
       }
-
-      $1 ~ /^#?c.TerminalIPythonApp.display_banner/ { set_value("False") }
-      $1 ~ /^#?c.TerminalInteractiveShell.editing_mode/ { set_value("'vi'") }
-      $1 ~ /^#?c.TerminalInteractiveShell.extra_open_editor_shortcuts/ { set_value("True") }
-      $1 ~ /^#?c.InteractiveShell.autoindent/ { set_value("True") }
-      $1 ~ /^#?c.InteractiveShell.autoawait/ { set_value("True") }
-      $1 ~ /^#?c.InteractiveShell.history_length/ { set_value("50000") }
-      $1 ~ /^#?c.InteractiveShell.history_load_length/ { set_value("1000") }
-      $1 ~ /^#?c.TerminalInteractiveShell.prompt_includes_vi_mode/ { set_value("True") }
-
+      
+      /^[#]* *c.TerminalIPythonApp.display_banner/ { set_value("False") }
+      /^[#]* *c.TerminalInteractiveShell.editing_mode/ { set_value("'vi'") }
+      /^[#]* *c.TerminalInteractiveShell.extra_open_editor_shortcuts/ { set_value("True") }
+      /^[#]* *c.InteractiveShell.autoindent/ { set_value("True") }
+      /^[#]* *c.InteractiveShell.autoawait/ { set_value("True") }
+      /^[#]* *c.InteractiveShell.history_length/ { set_value("50000") }
+      /^[#]* *c.InteractiveShell.history_load_length/ { set_value("1000") }
+      /^[#]* *c.TerminalInteractiveShell.prompt_includes_vi_mode/ { set_value("True") }
+      
       { print }
     #+END_SRC
 
@@ -273,9 +269,20 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+name: 90-wireshark-usbmon.rules
     #+BEGIN_SRC conf :tangle "/sudo::/etc/udev/rules.d/90-wireshark-usbmon.rules"
       # Wireshark
-
+      
       SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
     #+END_SRC
+
+** Nvidia (GeForce/Quadro/Tesla)
+   This driver is suitable for any GPU found in 2012 and later.
+
+
+   #+BEGIN_SRC sh
+     sudo dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+     sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda
+   #+END_SRC
+
+   Once the module is built, you can check it's installation with ~modinfo -F version nvidia~
 
 ** systemd
 
@@ -283,7 +290,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     You can ensure that the GnuPG daemons =dirmngr= and =gpg-agent= are launched automatically the first time they're needed, and shut down cleanly at session logout by enabling user services via socket-activation:
 
     #+BEGIN_SRC sh
-      sudo systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
+      systemctl --user enable dirmngr.socket gpg-agent.socket gpg-agent-ssh.socket gpg-agent-browser.socket gpg-agent-extra.socket
     #+END_SRC
 
     If you'd rather try a socket-activated GnuPG daemon in an already-running session without logging out, kill any existing daemons and start the user socket manually:
@@ -344,20 +351,21 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZiX9CJyfQ2QYkm9Sh+BRoQVeM5UACdbOhf8PYfrwSC
     #+RESULTS: keybindings.sh
     #+begin_example
     gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:ralt_rctrl', 'ctrl:rctrl_ralt', 'ctrl:nocaps', 'lv3:menu_switch']"
-    gsettings set org.gnome.Terminal.Legacy.Settings shortcuts-enabled "false"
-    gsettings set org.gnome.Terminal.Legacy.Settings unified-menu "false"
-    gsettings set org.gnome.Terminal.Legacy.Settings schema-version "uint32 3"
-    gsettings set org.gnome.Terminal.Legacy.Settings shell-integration-enabled "true"
-    gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'window'"
-    gsettings set org.gnome.Terminal.Legacy.Settings tab-position "'top'"
-    gsettings set org.gnome.Terminal.Legacy.Settings new-tab-position "'last'"
     gsettings set org.gnome.Terminal.Legacy.Settings mnemonics-enabled "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings tab-position "'top'"
     gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
-    gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar "false"
-    gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled "false"
-    gsettings set org.gnome.Terminal.Legacy.Settings confirm-close "true"
-    gsettings set org.gnome.Terminal.Legacy.Settings tab-policy "'automatic'"
+    gsettings set org.gnome.Terminal.Legacy.Settings new-terminal-mode "'window'"
     gsettings set org.gnome.Terminal.Legacy.Settings theme-variant "'dark'"
+    gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings shell-integration-enabled "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings schema-version "uint32 3"
+    gsettings set org.gnome.Terminal.Legacy.Settings confirm-close "true"
+    gsettings set org.gnome.Terminal.Legacy.Settings new-tab-position "'last'"
+    gsettings set org.gnome.Terminal.Legacy.Settings unified-menu "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings context-info "['numbers']"
+    gsettings set org.gnome.Terminal.Legacy.Settings shortcuts-enabled "false"
+    gsettings set org.gnome.Terminal.Legacy.Settings tab-policy "'automatic'"
     gsettings set org.gnome.desktop.wm.keybindings switch-group "@as []"
     gsettings set org.gnome.desktop.wm.keybindings begin-resize "@as []"
     gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-7 "['<Super>u']"
