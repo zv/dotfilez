@@ -38,7 +38,7 @@ This function should only modify configuration layer settings."
                       auto-completion-use-company-box nil
                       company-show-numbers t)
      (asm :variables
-          x86-lookup-pdf "~/Documents/IA64-Vol2.pdf")
+          x86-lookup-pdf "~/Books/Intel IA64 Vol 2 (Instruction Set Reference).pdf")
      prettier
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c-mode
