@@ -6,7 +6,7 @@
 
 (defvar zv-whitelist '() "List of helm buffers in which to show dots.")
 
-(defconst zv//blog-path (expand-file-name "~/zv.github.com/")
+(defconst zv//blog-path (expand-file-name "~/zv.github.io/")
   "Path to the root of the org blog")
 
 (defvar zv//blog-posts-path (expand-file-name "org/_posts/" zv//blog-path)
