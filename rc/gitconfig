@@ -293,7 +293,7 @@
 	# churn: show log of files that have many changes
 	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count", "file"} {print $1, $2}' | sort -g
 
-  # last-modified: show file's last modification date
+	# last-modified: show file's last modification date
 	last-modified = !git log -M -C --name-only --format=':%ar <%ce>' | awk '/^:/ { meta=substr($0, 2) } /^[^:]/ && !found[$0] { printf(\"%-80s %s\\n\", $0, meta) } { found[$0] = 1 }'
 
 	# ── Lookup aliases ────────────────────────────────────
