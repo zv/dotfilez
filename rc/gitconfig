@@ -279,18 +279,11 @@
 	diff-stat = diff --stat -b -r
 	diff-staged = diff --cached
 
-	# From https://gist.github.com/492227
-	head = !"git log -n1"
-	heads = !"git log origin/master.. --format='%Cred%h%Creset;%C(yellow)%an%Creset;%H;%Cblue%f%Creset' | git name-rev --stdin --always --name-only | column -t -s';'"
-	lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
-
 	# Search git history for a filename
 	locate-all = "!git log --all --pretty=oneline --full-history -- \"**/$@\""
 
-	# Find all objects that aren't referenced by any other object (orphans).
-	orphans = fsck --full
-
 	# ── Log Aliases ───────────────────────────────────────
+
 	# Show the date of the first commit
 	log-first-date = !"git log --date-order --date=iso --pretty='%ad' --reverse | head -1"
 
@@ -300,7 +293,8 @@
 	# churn: show log of files that have many changes
 	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count", "file"} {print $1, $2}' | sort -g
 
-	recently-changed = !git log -M -C --name-only --format=':%ar <%ce>' | awk '/^:/ { meta=substr($0, 2) } /^[^:]/ && !found[$0] { printf(\"%-80s %s\\n\", $0, meta) } { found[$0] = 1 }'
+  # last-modified: show file's last modification date
+	last-modified = !git log -M -C --name-only --format=':%ar <%ce>' | awk '/^:/ { meta=substr($0, 2) } /^[^:]/ && !found[$0] { printf(\"%-80s %s\\n\", $0, meta) } { found[$0] = 1 }'
 
 	# ── Lookup aliases ────────────────────────────────────
 
@@ -335,15 +329,6 @@
 	unadd = reset HEAD
 	unstage = reset HEAD
 
-	# Editing and adding conflicted files: when we get many merge conflicts
-	# and want to quickly solve them using an editor, then add the  files.
-	edit-unmerged = !"f() { git ls-files --unmerged | cut -f2 | sort -u ; }; $EDITOR `f`"
-	add-unmerged = !"f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
-
-	# Ours & Theirs - easy merging when you know which files you want
-	ours   = !"f() { git checkout --ours $@ && git add $@; }; f"
-	theirs = !"f() { git checkout --theirs $@ && git add $@; }; f"
-
 	# Assume: from http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
 	# Sometimes we want to change a file in a repo, but never check in your edits.
 	# We can't use .gitignore because the file is tracked. We use update-index.
@@ -368,6 +353,18 @@
 	# remote version of the current branch.
 	unpublish = !"git push origin :$(git branch-name)"
 
+	# Search for a given string in all patches and print commit messages.
+	#
+	# Example: search for any commit that adds or removes string "foobar"
+	#     git grep-all foobar
+	#
+	# Example: search commits for string "foobar" in directory src/lib
+	#     git grep-all foobar src/lib
+	#
+	# Example: search commits for "foobar", print full diff of commit with 1 line context
+	#     git grep-all foobar --pickaxe-all -U1 src/lib
+	grep-all = log --all -G
+
 	# ── Shell scripting aliases ────────────────────────────────
 
 	# Get the current branch name
@@ -381,33 +378,14 @@
 	exec = ! exec
 
 	# ── Maintenance aliases ────────────────────────────────────
+
 	# repacker: repack a repo the way Linus recommends.
 	repacker = !git repack -a -d -f --depth=300 --window=300 --window-memory=1g
 
+	# Find all objects that aren't referenced by any other object (orphans).
+	orphans = fsck --full
+
 	# ── Advanced aliases ───────────────────────────────────────
-	# Search for a given string in all patches and print commit messages.
-	#
-	# Example: search for any commit that adds or removes string "foobar"
-	#     git grep-all foobar
-	#
-	# Example: search commits for string "foobar" in directory src/lib
-	#     git grep-all foobar src/lib
-	#
-	# Example: search commits for "foobar", print full diff of commit with 1 line context
-	#     git grep-all foobar --pickaxe-all -U1 src/lib
-	grep-all = log --all -G
-
-	# A 'debug' alias to help debugging builtins: when debugging builtins,
-	# we use gdb to analyze the runtime state. However, we have to disable
-	# the pager, and often we have to call the program with arguments.
-	# If the program to debug is a builtin, we use this alias.
-	debug = !GIT_PAGER= gdb --args git
-
-	# Calling "interdiff" between commits: if upstream applied a
-	# slightly modified patch, and we want to see the modifications,
-	# we use the program interdiff of the patchutils package.
-	intercommit = !sh -c 'git show "$1" > .git/commit1 && git show "$2" > .git/commit2 && interdiff .git/commit[12] | less -FRS' -
-
 	# Prune all your stale remote branches: there's no way to tell
 	# git remote update to prune stale branches, and git remote prune
 	# does not understand --all. So here is a shell command to do it.
