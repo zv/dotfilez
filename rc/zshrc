@@ -3,6 +3,24 @@
 # This is zv's ZSHRC.
 
 # ━━ Initialization ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Load our completion functions
+fpath=(
+    "$HOME/.zsh/zsh-completions/src"
+    "$HOME/.zsh/functions"
+    $fpath
+)
+
+# Ensure path arrays do not contain duplicates.
+typeset -gU fpath mailpath path cdpath
+
+export TMPPREFIX="${TMPDIR%/}/zsh"
+
 unsetopt ALL_EXPORT       # Absolutely do not automatically export defined params
 
 # ── Job Control ────────────────────────────────────────────
