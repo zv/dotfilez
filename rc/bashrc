@@ -13,6 +13,9 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
 then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
+
+export DENO_INSTALL="/home/zv/.deno"
+PATH="$DENO_INSTALL/bin:$PATH"
 export PATH
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
@@ -33,7 +36,7 @@ if [[ -z "$TMPDIR" ]]; then
 fi
 
 export HISTCONTROL=ignorespace:erasedups
-export HISTSIZE=50000
+export HISTSIZE=65535
 export HISTFILE=~/.bash_history
 
 # User specific aliases and functions
