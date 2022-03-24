@@ -14,9 +14,12 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
-export DENO_INSTALL="/home/zv/.deno"
-PATH="$DENO_INSTALL/bin:$PATH"
-export PATH
+if [[ -d "$HOME/.deno" ]]
+then
+    export DENO_INSTALL="$HOME/.deno"
+    PATH="$DENO_INSTALL/bin:$PATH"
+    export PATH
+fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
