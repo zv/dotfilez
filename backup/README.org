@@ -99,7 +99,7 @@
 
     You can extract an archive built with the =tar= command generated above with:
     
-    ~cd $HOME && tar --extract --file '$BACKUP_FILE'~
+    =cd $HOME && tar --extract --file '$BACKUP_FILE'=
     
 ** Software
 *** Thunderbird
