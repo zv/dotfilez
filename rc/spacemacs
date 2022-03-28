@@ -645,7 +645,6 @@ This function is called at the very end of Spacemacs initialization."
  '(projectile-tags-command "gtags %s")
  '(ring-bell-function 'ignore)
  '(shell-file-name "/bin/bash")
- '(tab-width 2)
  '(truncate-lines t)
  '(undo-tree-auto-save-history nil)
  '(undo-tree-enable-undo-in-region nil)
