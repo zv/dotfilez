@@ -130,13 +130,13 @@
      
 ***** Keys
       #+NAME: keys.asc
-      #+BEGIN_SRC sh :results output :exports results
+      #+BEGIN_SRC sh :results output
         gpg --export --export-options backup -a
       #+END_SRC
 
 ***** Owner Trust
       #+NAME: owner_trust.lst
-      #+BEGIN_SRC sh :results output :exports results
+      #+BEGIN_SRC sh :results output
         gpg --export-ownertrust
       #+END_SRC
 
