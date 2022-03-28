@@ -36,38 +36,41 @@
 
 *** Archive
     #+BEGIN_SRC python :results output
-      import datetime as dt
-      from pathlib import Path
+      import datetime
+      import pathlib
       
-      OUTDIR = Path('/run/media/zv/4712695a-e37f-477c-a48a-907b7a3bde6c')
-      date = f'{dt.datetime.now():%Y-%m-%d}'
-      BACKUP_FILE = OUTDIR.joinpath(f'backup-{date}.tar.gz')
-      home = Path.home()
+      BACKUP_FILE = pathlib.Path(
+          '/run/media/zv/4712695a-e37f-477c-a48a-907b7a3bde6c/backup-{:%Y-%m-%d}.tar.gz'
+          .format(datetime.datetime.now()))
+      HOME = pathlib.Path.home()
       
-      print(f"""tar \\
-          --create \\
-          --file '{BACKUP_FILE!s}' \\
-          --verbose \\
-          --preserve-permissions \\
-          --one-file-system \\
-          --auto-compress \\
-          --directory='{home!s}' \\
-          --exclude='*/*.*.sw?' \\
-          --exclude='*/.mypy_cache' \\
-          --exclude='*/.sass-cache' \\
-          --exclude='*/.tox' \\
-          --exclude='*/.venv' \\
-          --exclude='*/.jekyll-cache' \\
-          --exclude='*/TAGS' \\
-          --exclude='*/node_modules' \\
-          --exclude='Development/*/venv' \\
-          --exclude='Development/campuslaunch-mvp' \\
-          --exclude='Development/polyswarm' \\
-          --exclude='Development/sochat' \\
-          --exclude='dotfilez/emacs.d'""",
-            end='')
+      cmdline = [
+          "tar",
+          "--create",
+          "--file '%s'" % BACKUP_FILE,
+          "--verbose",
+          "--preserve-permissions",
+          "--one-file-system",
+          "--auto-compress",
+          "--directory='%s'" % HOME,
+          "--exclude='*/*.*.sw?'",
+          "--exclude='*/__pycache__'",
+          "--exclude='*/.pytest_cache'",
+          "--exclude='*/.mypy_cache'",
+          "--exclude='*/.sass-cache'",
+          "--exclude='*/.tox'",
+          "--exclude='*/.jekyll-cache'",
+          "--exclude='*/TAGS'",
+          "--exclude='*/node_modules'",
+          "--exclude='%s'" % HOME.joinpath('Development/*/venv'),
+          "--exclude='%s'" % HOME.joinpath('Development/*/.venv'),
+          "--exclude='%s'" % HOME.joinpath('Development/campuslaunch-mvp'),
+          "--exclude='%s'" % HOME.joinpath('Development/polyswarm'),
+          "--exclude='%s'" % HOME.joinpath('Development/sochat'),
+          "--exclude='%s'" % HOME.joinpath('dotfilez/emacs.d'),
+      ]
       
-      dirs = [
+      dirs = (
           ".auth_info",
           ".aws/config",
           ".aws/credentials",
@@ -86,21 +89,18 @@
           "Pictures",
           "dotfilez",
           "zv.github.io",
-      ]
+          ".ssh",
+          ".gnupg",
+      )
+      cmdline.extend(f"'{d}'" for d in map(HOME.joinpath, dirs) if d.exists())
       
-      if home.joinpath('.ssh').resolve() != home.joinpath('dotfilez/rc/ssh'):
-          dirs.append('.ssh')
-      
-      if home.joinpath('.gnupg').resolve() != home.joinpath('dotfilez/rc/gnupg'):
-          dirs.append('.gnupg')
-      
-      for d in dirs:
-          if home.joinpath(d).exists():
-              print(f" \\\n    '{d}'", end='')
-      
-      print('')
+      print(' \\\n\t'.join(cmdline))
     #+END_SRC
 
+    You can extract an archive built with the =tar= command generated above with:
+    
+    ~cd $HOME && tar --extract --file '$BACKUP_FILE'~
+    
 ** Software
 *** Thunderbird
     :PROPERTIES:
