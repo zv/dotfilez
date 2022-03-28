@@ -125,14 +125,38 @@
       #+END_SRC
 
 *** GnuPG
-**** Owner Trust
-     #+NAME: owner_trust.lst
-     #+BEGIN_SRC sh :results output :exports results
-       gpg --export-ownertrust
+    
+**** Export
+     
+***** Keys
+      #+NAME: keys.asc
+      #+BEGIN_SRC sh :results output :exports results
+        gpg --export --export-options backup -a
+      #+END_SRC
+
+***** Owner Trust
+      #+NAME: owner_trust.lst
+      #+BEGIN_SRC sh :results output :exports results
+        gpg --export-ownertrust
+      #+END_SRC
+
+**** Import
+
+***** Keys     
+     #+BEGIN_SRC sh :results output
+       gpg --import --import-options restore keys.asc
      #+END_SRC
-
-     You can import =owner_trust.lst= by doing:
-
+     
+***** Owner Trust
      #+BEGIN_SRC sh :results output
        gpg --import-ownertrust owner_trust.lst
      #+END_SRC
+     
+***** Fetching on-card keys
+      You can also fetch any of the private keys stored on a smartcard using the following:
+      
+      #+BEGIN_EXAMPLE 
+      $ gpg --edit-card
+      ...
+      gpg/card> fetch
+      #+END_EXAMPLE
