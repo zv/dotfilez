@@ -97,9 +97,13 @@
       print(' \\\n\t'.join(cmdline))
     #+END_SRC
 
-    You can extract an archive built with the =tar= command generated above with:
+**** Restore
+     You can extract an archive built with the =tar= command generated above with:
     
-    =cd $HOME && tar --extract --file '$BACKUP_FILE'=
+      #+BEGIN_SRC sh :results output
+        cd $HOME
+        tar --extract --file '$BACKUP_FILE'
+      #+END_SRC
     
 ** Software
 *** Thunderbird
