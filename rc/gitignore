@@ -38,6 +38,7 @@ vim/.netrwhist
 .tern-port
 .tox
 .venv/
+.pytest_cache
 .mypy_cache
 .sass-cache
 .gdb_history
