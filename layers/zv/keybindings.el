@@ -23,16 +23,15 @@
 ;; Custom leaders
 (spacemacs/declare-prefix "o" "custom")
 (spacemacs/declare-prefix "of" "custom-files")
-(spacemacs/declare-prefix "ofe" "config" "Configuration files")
+(spacemacs/declare-prefix "ofe" "config")
 (zv/bind-find-file        "ofez" "~/dotfilez/"
-                          "ofed" "~/Development/"
-                          "ofez" zv-configuration-layer-directory)
+                          "ofed" "~/Development/")
 
-(spacemacs/declare-prefix "ofo" "org-mode" "Documents and Org-mode files")
+(spacemacs/declare-prefix "ofo" "org-mode")
 (zv/bind-find-file        "ofod" org-directory
                           "ofon" org-default-notes-file)
 
-(spacemacs/declare-prefix "ofz" "blog" "Blogfolder")
+(spacemacs/declare-prefix "ofz" "blog")
 (zv/bind-find-file        "ofzb" zv//blog-path
                           "ofzp" zv//blog-posts-path)
 
@@ -45,19 +44,9 @@
                                     (interactive)
                                     (print "Automatic publishing disabled")
                                     (remove-hook 'after-save-hook 'zv/auto-publish)))
-(spacemacs/declare-prefix "oe" "extensions")
-(spacemacs/set-leader-keys "oem" 'quick-calculate-mode)
-(spacemacs/set-leader-keys "oeb" 'regexp-builder)
-
 (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
 (spacemacs/set-leader-keys "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
-
-(spacemacs/declare-prefix "od" "documentation")
-(spacemacs/set-leader-keys "odm" 'helm-man-woman)
-(spacemacs/set-leader-keys "dm" 'man)
-
 (spacemacs/set-leader-keys "jk" 'avy-goto-char)
-
 
 ;; Mode-specific leaders
 
