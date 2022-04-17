@@ -54,9 +54,12 @@ This function should only modify configuration layer settings."
               ibuffer-group-buffers-by 'projects)
      (javascript :variables
                  javascript-backend 'lsp
-                 javascript-repl 'skewer
+                 javascript-fmt-tool 'prettier
                  javascript-import-tool 'import-js
-                 javascript-lsp-linter nil)
+                 javascript-lsp-linter nil
+                 javascript-repl 'skewer
+                 js2-mode-show-strict-warnings nil
+                 node-add-modules-path t)
      org
      (json :variables json-backend 'lsp)
      (lsp :variables

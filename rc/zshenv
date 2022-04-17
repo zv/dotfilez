@@ -16,24 +16,6 @@ export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE=true
 
-# Paths
-path=(
-    /usr/local/bin
-    /usr/local/sbin
-    $path
-    ~/.local/bin
-)
-
-# Load our completion functions
-fpath=(
-    ~/.zsh/zsh-completions/src
-    ~/.zsh/functions
-    $fpath
-)
-
-# Ensure path arrays do not contain duplicates.
-typeset -gU fpath mailpath path cdpath
-
 # Temporary Files
 if [[ ! -d "$TMPDIR" ]]; then
     TMPDIR="/tmp/$(whoami)"
@@ -41,8 +23,6 @@ if [[ ! -d "$TMPDIR" ]]; then
     # shellcheck disable=SC2174
     mkdir -p -m 700 "$TMPDIR"
 fi
-
-export TMPPREFIX="${TMPDIR%/}/zsh"
 
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then
@@ -58,4 +38,3 @@ export WORKON_HOME=~/.local/environments
 
 # Java
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
-

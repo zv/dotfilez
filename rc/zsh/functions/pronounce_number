@@ -12,8 +12,8 @@ local -A scale=(
     60  'Novemdecillion' 63  'Vigintillion'
 )
 
-# remove '-' at start of number, or `,` & `_` anywhere in number
-local number="${${${1##-}//,/}//_/}"
+# remove '.[0-9] at the end of a number, '-' at start of number, or `,` & `_` anywhere in number
+local number="${${${${1##-}//,/}//_/}//[.][0-9]*/}"
 local -i k i
 
 if ! [[ "$number" =~ "^[0-9]+$" ]]; then
