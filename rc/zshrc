@@ -473,9 +473,13 @@ bindkey ' ' magic-space # [Space] - do history expansion
 if _exists gpg; then
     export GPG_TTY=$(tty)
 
-    unset SSH_AGENT_PID
-    if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+    # Make sure we're not setting this up *inside* a remote SSH connection
+    if [[ -z "$SSH_CONNECTION" ]]; then
+        unset SSH_AGENT_PID
+
+        if [[ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]]; then
+            export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+        fi
     fi
 fi
 
