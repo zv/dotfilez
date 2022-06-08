@@ -96,7 +96,7 @@ set noswapfile
 
 if has('win32') || has('win64')
 	if empty($LOCALAPPDATA)
-		let $LOCALAPPDATA="$APPDATA\\Local"
+		let $LOCALAPPDATA=$APPDATA . "\\Local"
 	endif
 	for d in ["swap", "backup", "undo"]
 		if !isdirectory($LOCALAPPDATA . "\\vim\\" . d)
@@ -107,8 +107,8 @@ if has('win32') || has('win64')
 	set backupdir=$LOCALAPPDATA\\vim\\backup,$TEMP,$TMP,.
 	set undodir=$LOCALAPPDATA\\vim\\undo,$TEMP,$TMP,.
 else
-	if empty("$XDG_CACHE_HOME")
-		let $XDG_CACHE_HOME="$HOME/.cache"
+	if empty($XDG_CACHE_HOME)
+		let $XDG_CACHE_HOME=$HOME . "/.cache"
 	endif
 	for d in ["swap", "backup", "undo"]
 		if !isdirectory($XDG_CACHE_HOME . "/vim/". d)
