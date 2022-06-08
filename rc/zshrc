@@ -19,8 +19,6 @@ fpath=(
 # Ensure path arrays do not contain duplicates.
 typeset -gU fpath mailpath path cdpath
 
-export TMPPREFIX="${TMPDIR%/}/zsh"
-
 unsetopt ALL_EXPORT       # Absolutely do not automatically export defined params
 
 # ── Job Control ────────────────────────────────────────────
@@ -39,6 +37,7 @@ alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
 alias external-ip="curl ipinfo.io/ip"
+alias ls='ls --color=auto'
 alias l='ls -1A'         # Lists in one column, hidden files.
 alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -Ah'         # Lists human readable sizes, hidden files.
@@ -50,6 +49,9 @@ alias tl="tmux list-sessions"
 
 alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias veactivate="source .venv/bin/activate && rehash"
+
+alias aws="MANPAGER='more' aws"
+alias genp=" command genp"
 
 _exists() { (( $+commands[$1] == 1 )) }
 
@@ -119,15 +121,6 @@ if _exists git; then
     alias gfa='git fetch --all'
 fi
 
-alias aws="MANPAGER='more' aws"
-alias genp=" command genp"
-
-# Format a series of hex into a C-like hex string
-# e.g format_c_hex 9f909090afcb80 => \x9f\x90\x90\x90\xaf\xcb\x80
-function format_c_hex {
-    echo -e "$@" | sed 's/\(.\{2\}\)/\\x\1/g'
-}
-
 # ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
 setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
@@ -182,9 +175,6 @@ export HISTFILE=~/.zsh_history
 # Lines to store
 export HISTSIZE=65535
 export SAVEHIST=65535
-
-# Lists the ten most used commands.
-alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
 
 # ─ Input/ Output ───────────────────────────────────────────
 # setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
@@ -248,8 +238,7 @@ export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 autoload -Uz vcs_info
 precmd () { vcs_info }
 
-local -A _keymap_fg_indicator=([vicmd]=red [viopp]=yellow)
-PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${_keymap_fg_indicator[$KEYMAP]:-default}}%(!.#.$)%f '
+PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${${${KEYMAP/#%main/default}/#%vicmd/red}}}%(!.#.$)%f '
 
 # ━━ Completion System ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Load and initialize the completion system ignoring insecure directories with a
@@ -339,21 +328,8 @@ zstyle ':completion:*:*:kill:*' insert-ids single
 zstyle ':completion:*:manuals' separate-sections true
 zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
-# Media Players
-zstyle ':completion:*:*:mpg123:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
-zstyle ':completion:*:*:mpg321:*' file-patterns '*.(mp3|MP3):mp3\ files *(-/):directories'
-zstyle ':completion:*:*:ogg123:*' file-patterns '*.(ogg|OGG|flac):ogg\ files *(-/):directories'
-zstyle ':completion:*:*:mocp:*' file-patterns '*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories'
-
 # SSH/SCP/RSYNC
-typeset -a _etc_host_ignores=('0.0.0.0' '127.0.0.1')
-zstyle -e ':completion:*:hosts' hosts 'reply=(
-${=${=${=${${(f)"$(cat {/etc/ssh/ssh_,~/.ssh/}known_hosts(|2)(N) 2> /dev/null)"}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
-${=${(f)"$(cat /etc/hosts(|)(N) <<(echo))"}%%(\#${_etc_host_ignores:+|${(j:|:)~_etc_host_ignores}})*}
-    ${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2> /dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}}
-    )'
-
-zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
+zstyle -e ':completion:*:(ssh|scp|rsync):*' hosts 'reply=(${=${${${${(@M)${(f)"$(cat ~/.ssh/config 2> /dev/null)"}:#Host *}#Host }:#*\**}:#*\?*}})'
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
 zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
 zstyle ':completion:*:ssh:*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *'
@@ -362,18 +338,6 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*' ''
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
-# Tmux Pane Completion
-autoload -Uz _tmux_pane_words
-zle -C tmux-pane-words-prefix   complete-word _generic
-zle -C tmux-pane-words-anywhere complete-word _generic
-bindkey '^X^X' tmux-pane-words-prefix
-bindkey '^X^T' tmux-pane-words-anywhere
-zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer _tmux_pane_words
-zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
-# display the (interactive) menu on first execution of the hotkey
-zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
-zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
-
 # ls colors
 autoload -U colors && colors;
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -381,6 +345,20 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-
 
 # Enable man completion when using Vim as a manpager
 compdef '_dispatch man man' manvi
+
+# Tmux Pane Completion
+if [[ -n "$TMUX_PANE" ]]; then
+    autoload -Uz _tmux_pane_words
+    zle -C tmux-pane-words-prefix   complete-word _generic
+    zle -C tmux-pane-words-anywhere complete-word _generic
+    bindkey '^X^X' tmux-pane-words-prefix
+    bindkey '^X^T' tmux-pane-words-anywhere
+    zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer _tmux_pane_words
+    zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
+    # display the (interactive) menu on first execution of the hotkey
+    zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
+    zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
+fi
 
 # ━━ ZLE / Line commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt COMBINING_CHARS     # Combine zero-length punctuation characters

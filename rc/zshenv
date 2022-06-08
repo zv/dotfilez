@@ -16,14 +16,6 @@ export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE=true
 
-# Temporary Files
-if [[ ! -d "$TMPDIR" ]]; then
-    TMPDIR="/tmp/$(whoami)"
-    export TMPDIR
-    # shellcheck disable=SC2174
-    mkdir -p -m 700 "$TMPDIR"
-fi
-
 # Font Config
 if [[ "$OSTYPE" == linux-gnu ]]; then
     export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
