@@ -170,11 +170,11 @@ setopt SHARE_HISTORY             # Share history between all sessions.
 setopt HIST_FCNTL_LOCK           # Don't bother with old-school locking. We're on new POSIX here.
 
 # History
-export HISTFILE=~/.zsh_history
+HISTFILE=~/.zsh_history
 
 # Lines to store
-export HISTSIZE=65535
-export SAVEHIST=65535
+HISTSIZE=65535
+SAVEHIST=65535
 
 # ─ Input/ Output ───────────────────────────────────────────
 # setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
@@ -231,7 +231,7 @@ fi
 
 setopt ZLE
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
-export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
+KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
 
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
 # you know what you are dealing with.
@@ -487,7 +487,7 @@ fi
 export LESS='--ignore-case --long-prompt --chop-long-lines --RAW-CONTROL-CHARS --window=-4'
 
 # Expanded `time' output
-export TIMEFMT='%J
+TIMEFMT='%J
 real	%*E
 user	%*U
 sys	%*S
