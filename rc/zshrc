@@ -238,7 +238,7 @@ export KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 autoload -Uz vcs_info
 precmd () { vcs_info }
 
-PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${${${KEYMAP##main}:+red}:-default}}%(!.#.$)%f '
+PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${${${KEYMAP:#main}:+red}:-default}}%(!.#.$)%f '
 
 # ━━ Completion System ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Load and initialize the completion system ignoring insecure directories with a
