@@ -231,7 +231,7 @@ fi
 
 setopt ZLE
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
-KEYTIMEOUT=1 # Immediately switch to vicmd/viinst
+KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 
 # shows a slightly different prompt for vicmd vs other ZLE command modes to let
 # you know what you are dealing with.
