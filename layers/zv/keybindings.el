@@ -18,7 +18,6 @@
 
 (define-key (current-global-map) [up] 'scroll-down-command)
 (define-key (current-global-map) [down] 'scroll-up-command)
-
 
 ;; Custom leaders
 (spacemacs/declare-prefix "o" "custom")
@@ -47,57 +46,40 @@
 (spacemacs/set-leader-keys "oj" 'dumb-jump-go)
 (spacemacs/set-leader-keys "ob" 'spacemacs-layouts/non-restricted-buffer-list-helm)
 (spacemacs/set-leader-keys "jk" 'avy-goto-char)
-
-;; Mode-specific leaders
-
-;;; Python
-(spacemacs/set-leader-keys-for-major-mode 'python-mode "ov" 'zv/search-parents-for-venv)
 
 
-;; evil bindings
-(global-set-key (kbd "C-M-s-k") 'evil-window-next)
-(global-set-key (kbd "C-M-s-j") 'evil-window-prev)
+;; Use the "smiley button" to switch between windows
+(global-set-key (kbd "C-M-s-SPC") 'evil-window-next)
 
-(define-key evil-insert-state-map (kbd "C-y") 'yank)
-
-;; (define-key evil-normal-state-map "\C-p" 'helm-projectile-find-file)
-(define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
-(define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
-
-;; insert mode
-(define-key evil-insert-state-map (kbd "C-h") 'backward-char)
-(define-key evil-insert-state-map (kbd "C-l") 'forward-char)
-
-(global-set-key (kbd "H-w") 'zv/enlarge-window-by-dominant-dimension)
-(global-set-key (kbd "H-r") 'zv/shrink-window-by-dominant-dimension)
-
+;; (define-key evil-normal-state-map (kbd "RET") 'evil-scroll-down)
+;; (define-key evil-normal-state-map (kbd "<backspace>") 'evil-scroll-up)
 
 (use-package calendar
   :defer t
   :bind (:map calendar-mode-map
-         ("l" . calendar-forward-day)
-         ("h" . calendar-backward-day)
-         ("j" . calendar-forward-week)
-         ("k" . calendar-backward-week)
-         ("{" . calendar-forward-month)
-         ("}" . calendar-backward-month)
-         ("0" . calendar-beginning-of-week)
-         ("$" . calendar-end-of-week)))
+         ("l" . 'calendar-forward-day)
+         ("h" . 'calendar-backward-day)
+         ("j" . 'calendar-forward-week)
+         ("k" . 'calendar-backward-week)
+         ("{" . 'calendar-forward-month)
+         ("}" . 'calendar-backward-month)
+         ("0" . 'calendar-beginning-of-week)
+         ("$" . 'calendar-end-of-week)))
 
 
 ; Man & WoMan
 (use-package woman
   :bind (:map woman-mode-map
-              ("}" . WoMan-next-manpage)
-              ("{" . WoMan-previous-manpage)))
+              ("}" . 'WoMan-next-manpage)
+              ("{" . 'WoMan-previous-manpage)))
 
 (use-package man
   :init
   (setq evil-lookup-func #'(lambda () (man (Man-default-man-entry))))
   :bind (:map Man-mode-map
-              ("}" . Man-next-manpage)
-              ("{" . Man-previous-manpage)
-              ("u" . scroll-down-command)
+              ("}" . 'Man-next-manpage)
+              ("{" . 'Man-previous-manpage)
+              ("u" . 'scroll-down-command)
               ("]" . 'Man-next-section)
               ("[" . 'Man-previous-section)
               ("g" . 'Man-goto-section)
@@ -127,10 +109,10 @@
 (use-package helm-ag
   :defer t
   :bind (:map helm-ag-map
-              ("<M-down>"      . helm-ag--next-file)
-              ("<M-up>"        . helm-ag--previous-file)
-              ("<XF86Forward>" . helm-ag--next-file)
-              ("<XF86Back>"    . helm-ag--previous-file)))
+              ("<M-down>"      . 'helm-ag--next-file)
+              ("<M-up>"        . 'helm-ag--previous-file)
+              ("<XF86Forward>" . 'helm-ag--next-file)
+              ("<XF86Back>"    . 'helm-ag--previous-file)))
 
 
 ;; Set emacs as the initial state in a variety of modes
