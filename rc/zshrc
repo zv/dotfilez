@@ -95,17 +95,27 @@ mcd() { mkdir -p "$1" && cd "$1"; }
 
 # ── DNF Aliases ────────────────────────────────────────────
 if _exists dnf; then
-    alias dnfs="dnf search"                       # search package
-    alias dnfp="dnf info"                         # show package info
-    alias dnfl="dnf list"                         # list packages
-    alias dnfcu="dnf check-update"                # check updates
-    alias dnfh="sudo dnf history"                 # get dnf history
-    alias dnfu="sudo dnf upgrade"                 # upgrade packages
-    alias dnfi="sudo dnf install"                 # install package
-    alias dnfr="sudo dnf remove"                  # remove package
-    alias dnfgr="sudo dnf groupremove"            # remove pagage group
-    alias dnfrl="sudo dnf remove --remove-leaves" # remove package and leaves
-    alias dnfc="sudo dnf clean all"               # clean cachefi
+    alias dnfi="sudo dnf install"                   # install package
+    alias dnfs="dnf search"                         # search package
+    alias dnfu="sudo dnf upgrade"                   # upgrade packages
+    alias dnfrm="sudo dnf remove"                   # remove package
+    alias dnflsdeps="dnf deplist"                   # list pkg dependencies
+    alias dnflshist="sudo dnf history"              # list  dnf history
+    alias dnflsrepo="dnf repolist"                  # list repositories
+    alias dnfpowner="dnf repoquery --file"          # who owns this file
+    alias dnfpprovider="dnf whatprovides"           # what package provides a file
+    alias dnfpupdates="dnf check-update"            # check updates
+elif _exists apt; then
+    alias dnfi="sudo apt install"                           # install package
+    alias dnfs="apt search"                                 # search package
+    alias dnfu="sudo apt upgrade"                           # upgrade packages
+    alias dnfrm="sudo apt remove"                           # remove package
+    alias dnflsdeps="apt-cache depends"                     # list pkg dependencies
+    alias dnflshist="cat /var/log/apt/history.log"          # list  dnf history
+    alias dnflsrepo="apt-cache policy"                      # list repositories
+    alias dnfpowner="dpkg-query -S"                         # who owns this file
+    alias dnfpprovider="dpkg -S"                            # what package provides a file
+    alias dnfpupdates="apt list --upgradable"               # check updates
 fi
 
 # ── Git Aliases ────────────────────────────────────────────
