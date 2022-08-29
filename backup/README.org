@@ -41,7 +41,7 @@
       
       BACKUP_FILE = pathlib.Path(
           '/run/media/zv/4712695a-e37f-477c-a48a-907b7a3bde6c/backup-{:%Y-%m-%d}.tar.gz'
-          .format(datetime.datetime.now()))
+          .format(datetime.datetime.utcnow()))
       HOME = pathlib.Path.home()
       
       cmdline = [

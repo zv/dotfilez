@@ -43,6 +43,11 @@
    :header-args:sh: :results output replace :exports code
    :END:
 
+*** =dnf.conf=
+    #+BEGIN_SRC sh
+      sudo dnf config-manager --save --setopt fastestmirror=True
+    #+END_SRC
+
 *** Base
     #+BEGIN_SRC sh
       sudo dnf install -y tmux vim-enhanced zsh
