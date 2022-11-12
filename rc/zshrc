@@ -485,6 +485,10 @@ proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [[ -d ~/.local/bin ]] && path+=(~/.local/bin)
+## autoload -Uz pronounce_number
+## autoload -Uz spectrum_ls
+## autoload -Uz _zvcalc
+## alias calc='nocorrect noglob _zvcalc'
 
 # Configure Ocaml package manager
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
@@ -508,8 +512,8 @@ if _exists cargo && [[ -r ~/.cargo/env ]]; then
 fi
 
 # rg
-if _exists rg && [[ -r ~/.ripgreprc ]]; then
-    export RIPGREP_CONFIG_PATH=~/.ripgreprc
+if _exists rg && test -r ~/.ripgreprc; then
+    export RIPGREP_CONFIG_PATH="${HOME}/.ripgreprc"
 fi
 
 # if _exists rustc; then
