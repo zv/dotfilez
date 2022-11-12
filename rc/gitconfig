@@ -79,19 +79,6 @@
 	enabled = false
 
 [alias]
-	# ── Git Alias Help ─────────────────────────────────────────
-	#
-	#   * <https://git.wiki.kernel.org/index.php/Aliases>
-	#   * <http://stackoverflow.com/questions/267761/what-does-your-gitconfig-contain>
-	#   * <http://superuser.com/questions/169695/what-are-your-favorite-git-aliases>
-	#   * <http://stackoverflow.com/questions/1309430/how-to-embed-bash-script-directly-inside-a-git-alias>
-	#   * <http://code.joejag.com/2013/everyday-git-aliases/>
-	#   * <http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/>
-	#   * <https://ochronus.com/git-tips-from-the-trenches/>
-	#   * <http://mislav.uniqpath.com/2010/07/git-tips/>
-
-	# ── Short aliases ──────────────────────────────────────────
-
 	# add - record file contents to the index.
 	a = add
 
@@ -101,23 +88,8 @@
 	# commit - record changes to the repostiory.
 	c = commit
 
-	# diff - show changes between commits, commit and working tree, etc.
-	d = diff
-
-	# fetch - download objects and refs from another repository.
-	f = fetch
-
-	# grep - print lines matching a pattern.
-	g = grep
-
 	# log - show commit logs.
 	l = log --date=format:\"%m/%d/%y\" --pretty=\"format:%C(auto)%<(8)%h%Creset| %C(blue)%ad%Creset | %C(013)%><(15,trunc)%aN%Creset |%C(auto)%d%Creset %s\" --abbrev-commit
-
-	# merge - join two or more development histories together.
-	m = merge
-
-	# checkout - update the working tree to match a branch or paths; we use "o" to mean "out".
-	o = checkout
 
 	# pull - fetch from and merge with another repository or a local branch.
 	p = pull
@@ -134,9 +106,6 @@
 	# add just the files in the local directory that are updated.
 	au = add --update .
 
-	# add by patch then commit - looks at each change, and asks if we want to put it in the repo, then commits.
-	ac = !"git add --patch; git commit"
-
 	# add by patch - looks at each change, and asks if we want to put it in the repo.
 	ap = add --patch
 
@@ -152,12 +121,6 @@
 	# branch and only list branches whose tips are not reachable from the specified commit (HEAD if not specified).
 	brnm = branch --no-merged
 
-	# commit - amend the tip of the current branch rather than creating a new commit.
-	ca = commit --amend
-
-	# commit interacively
-	ci = commit --interactive
-
 	# commit with a message
 	cm = commit --message
 
@@ -169,6 +132,9 @@
 
 	# cherry-pick without making a commit, and when when recording the commit, append a line that says "(cherry picked from commit ...)"
 	cp-nx = cherry-pick --no-commit -x
+
+	# diff - show changes between commits, commit and working tree, etc.
+	d = diff
 
 	# diff - show changes not yet staged
 	dc = diff --cached
@@ -203,12 +169,6 @@
 
 	# Decorate with branches
 	ll = log --graph --oneline --decorate --branches --tags
-
-	# A shortcut for seeing the fetched commits
-	lc = log ORIG_HEAD.. --stat --no-merges
-
-	# Show signatures
-	lsig = log  --pretty=format:\"%C(blue)%ad%  %C(yellow)%h%C(red)%d%Creset %s %C(013)%C(bold) %m %an [%G?] %GS %GK %Creset\"
 
 	# Log changes
 	changes = log --pretty=format:\"%C(yellow)%h%C(reset) %C(blue)%cr%Creset %C(013)%cn%Creset - %s\" --name-status
@@ -255,7 +215,7 @@
 	rvnc = revert --no-commit
 
 	# show-branch - print a list of branches and their commits.
-	sb = show-branch
+	sb = show-branch --date-order
 
 	# submodule - enables foreign repositories to be embedded within a dedicated subdirectory of the source tree.
 	sm = submodule
@@ -281,18 +241,205 @@
 	diff-staged = diff --cached
 
 	# Search git history for a filename
-	locate-all = "!git log --all --pretty=oneline --full-history -- \"**/$@\""
+	locate-all = !"git log --all --pretty=oneline --full-history -- \"**/$@\""
 
 	# ── Log Aliases ───────────────────────────────────────
 
-	# Show the date of the first commit
-	log-first-date = !"git log --date-order --date=iso --pretty='%ad' --reverse | head -1"
+	# Show log of new commits after you fetched, with stats, excluding merges
+	log-fresh = log ORIG_HEAD.. --stat --no-merges
 
-	# Show the recent day
-	log-day = log --since yesterday
+	# Show signatures
+	log-signatures = log --pretty=format:\"%C(blue)%ad%  %C(yellow)%h%C(red)%d%Creset %s %C(013)%C(bold) %m %an [%G?] %GS %GK %Creset\"
+
+	# Show log list with our preferred information, a.k.a. `ll`
+	log-list = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+
+	# Show log  list with our preferred information with long formats, a.k.a. `lll`
+	log-list-long = log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'
+
+	# Show log for my own commits by my own user email
+	log-my = !git log --author $(git config user.email)
+
+	# Show log as a graph
+	log-graph = log --graph --all --oneline --decorate
+
+	# Show the date of the first (a.k.a. earliest) commit, in strict ISO 8601 format
+	log-date-first = !"git log --date-order --format=%cI | tail -1"
+
+	# Show the date of the last (a.k.a. latest) commit, in strict ISO 8601 format
+	log-date-last = log -1 --date-order --format=%cI
+
+	# Show log with the recent hour, day, week, month, year
+	log-1-hour  = log --since=1-hour-ago
+	log-1-day   = log --since=1-day-ago
+	log-1-week  = log --since=1-week-ago
+	log-1-month = log --since=1-month-ago
+	log-1-year  = log --since=1-year-ago
+
+	# Show a specific format string and its number of log entries
+	log-of-format-and-count = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort; }; f"
+	log-of-count-and-format = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+
+	# Show the number of log entries by a specific format string and date format string
+	log-of-format-and-count-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort -r; }; f"
+	log-of-count-and-format-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+
+	# Show the number of log items by email
+	log-of-email-and-count         = "!f() { git log-of-format-and-count \"%aE\" $@; }; f"
+	log-of-count-and-email         = "!f() { git log-of-count-and-format \"%aE\" $@; }; f"
+
+	# Show the number of log items by hour
+	log-of-hour-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+	log-of-count-and-hour          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+
+	# Show the number of log items by day
+	log-of-day-and-count           = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+	log-of-count-and-day           = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+
+	# Show the number of log items by week
+	log-of-week-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+	log-of-count-and-week          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+
+	# Show the number of log items by month
+	log-of-month-and-count         = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+	log-of-count-and-month         = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+
+	# Show the number of log items by year
+	log-of-year-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y\" $@ ; }; f"
+	log-of-count-and-year          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y\" $@ ; }; f"
+
+	# Show the number of log items by hour of day
+	log-of-hour-of-day-and-count   = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%H\" $@; }; f"
+	log-of-count-and-hour-of-day   = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%H\" $@; }; f"
+
+	# Show the number of log items by day of week
+	log-of-day-of-week-and-count   = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%u\" $@; }; f"
+	log-of-count-and-day-of-week   = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%u\" $@; }; f"
+
+	# Show the number of log items by week of year
+	log-of-week-of-year-and-count  = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%V\" $@; }; f"
+	log-of-count-and-week-of-year  = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%V\" $@; }; f"
+
+	# TODO
+	log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
+	log-timeline = log --format='%h %an %ar - %s'
+	log-local = log --oneline origin..HEAD
+	log-fetched = log --oneline HEAD..origin/main
+
+	# chart: show a summary chart of activity per author.
+	#
+	# Example:
+	#
+	#     $ git chart
+	#     ..X..........X...2..12 alice@example.com
+	#     ....2..2..13.......... bob@example.com
+	#     2.....1....11......... carol@example.com
+	#     ..1............1..1... david@example.com
+	#     ....1.......1.3.3.22.2 eve@example.com
+	#
+	# The chart rows are the authors.
+	# TODO: sort the rows meaningfully,
+	# such as alphabetically, or by count.
+	#
+	# The chart columns are the days.
+	# The chart column prints one character per day.
+	#
+	#   * For 1-9 commits, show the number.
+	#   * For 10 or more commits, show "X" as a visual indicator.
+	#   * For no commits, show "." as a visual placeholder.
+	#
+	# The chart timeline adjusts the date range automatically:
+	#
+	#   * The timeline starts with the date of the earliest commit.
+	#   * The timeline stops with the date of the latest commit.
+	#   * The intent is to show the most relevant information.
+	#
+	# The chart default is to look at the past 6 weeks;
+	# this gives a good balance of recency and speed
+	# for a team that's currently working on a repo,
+	# and also gives a good balance of fitting within
+	# one terminal window 80 character width.
+	#
+	# You can adjust how far back the chart looks,
+	# by providing your own `--since` parameter.
+	# For example if you want to chart an older repo,
+	# that does not have any recent commits, then you
+	# you must provide a longer `--since` parameter.
+	#
+	chart = "!f() { \
+	  git log \
+	  --format=oneline \
+	  --format=\"%aE %at\" \
+	  --since=6-weeks-ago \
+	  $* | \
+	  awk ' \
+	  function time_to_slot(t) { return strftime(\"%Y-%m-%d\", t, true) } \
+	  function count_to_char(i) { return (i > 0) ? ((i < 10) ? i : \"X\") : \".\" } \
+	  BEGIN { \
+	    time_min = systime(); time_max = 0; \
+	    SECONDS_PER_DAY=86400; \
+	  } \
+	  { \
+	    item = $1; \
+	    time = 0 + $2; \
+	    if (time > time_max){ time_max = time } else if (time < time_min){ time_min = time }; \
+	    slot = time_to_slot(time); \
+	    items[item]++; \
+	    slots[slot]++; \
+	    views[item, slot]++; \
+	  } \
+	  END{ \
+	    printf(\"Chart time range %s to %s.\\n\", time_to_slot(time_min), time_to_slot(time_max)); \
+	    time_max_add = time_max += SECONDS_PER_DAY; \
+	    for(item in items){ \
+	      row = \"\"; \
+	      for(time = time_min; time < time_max_add; time += SECONDS_PER_DAY) { \
+	        slot = time_to_slot(time); \
+	        count = views[item, slot]; \
+	        row = row count_to_char(count); \
+	      } \
+	      print row, item; \
+	    } \
+	  }'; \
+	}; f"
 
 	# churn: show log of files that have many changes
-	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count", "file"} {print $1, $2}' | sort -g
+	#
+	# Show churn for specific directories:
+	#
+	#   $ git churn app lib
+	#
+	# Show churn for a time range:
+	#
+	#   $ git churn --since=1-month-ago
+	#
+	# These are all standard arguments to `git log`.
+	#
+	churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
+
+	# summary: print a helpful summary of some typical metrics
+	summary = "!f() { \
+	  printf \"Summary of this branch...\n\"; \
+	  printf \"%s\n\" $(git rev-parse --abbrev-ref HEAD); \
+	  printf \"%s first commit timestamp\n\" $(git log --date-order --format=%cI | tail -1); \
+	  printf \"%s last commit timestamp\n\" $(git log -1 --date-order --format=%cI); \
+	  printf \"\nSummary of counts...\n\"; \
+	  printf \"%d commit count\n\" $(git rev-list --count HEAD); \
+	  printf \"%d date count\n\" $(git log --format=oneline --format=\"%ad\" --date=format:\"%Y-%m-%d\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+	  printf \"%d tag count\n\" $(git tag | wc -l); \
+	  printf \"%d author count\n\" $(git log --format=oneline --format=\"%aE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+	  printf \"%d committer count\n\" $(git log --format=oneline --format=\"%cE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+	  printf \"%d local branch count\n\" $(git branch | grep -v \" -> \" | wc -l); \
+	  printf \"%d remote branch count\n\" $(git branch -r | grep -v \" -> \" | wc -l); \
+	  printf \"\nSummary of this directory...\n\"; \
+	  printf \"%s\n\" $(pwd); \
+	  printf \"%d file count via git ls-files\n\" $(git ls-files | wc -l); \
+	  printf \"%d file count via find command\n\" $(find . | wc -l); \
+	  printf \"%d disk usage\n\" $(du -s | awk '{print $1}'); \
+	  printf \"\nMost-active authors, with commit count and %%...\n\"; git log-of-count-and-email | head -7; \
+	  printf \"\nMost-active dates, with commit count and %%...\n\"; git log-of-count-and-day | head -7; \
+	  printf \"\nMost-active files, with churn count\n\"; git churn | head -7; \
+	}; f"
 
 	# last-modified: show file's last modification date
 	last-modified = !git log -M -C --name-only --format=':%ar <%ce>' | awk '/^:/ { meta=substr($0, 2) } /^[^:]/ && !found[$0] { printf(\"%-80s %s\\n\", $0, meta) } { found[$0] = 1 }'
@@ -300,13 +447,13 @@
 	# ── Lookup aliases ────────────────────────────────────
 
 	# whois: given a string for an author, try to figure out full name and email:
-	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
+	whois = "!sh -c 'git log --regexp-ignore-case -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
 
 	# Given any git object, try to show it briefly
 	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
 
 	# Show who contributed with summarized changes
-	who = shortlog -s --
+	who = shortlog --summary --numbered --no-merges
 
 	# Show who contributed, in descending order by number of commits
 	whorank = shortlog -sn --no-merges
@@ -319,16 +466,57 @@
 	# When you're a little worried that the world is coming to an end
 	panic = !tar cvf ../git_panic.tar *
 
-	# Do everything we can to synchronize all changes
-	get = !git pull --rebase && git submodule update --init --recursive
-	put = !git commit -am "$1" && git push
+	# Undo commits.
+	undo-commit        = reset --soft HEAD~1
+	undo-commit-hard   = reset --hard HEAD~1
+	undo-commit-hard-clean  = !git reset --hard HEAD~1 && git clean -fd
+	undo-to-pristine   = !git reset --hard && git clean -ffdx
+	undo-to-upstream   = !git reset --hard $(git upstream-branch)
 
-	# Undo aliases
-	undo = reset --hard
-	undoclean = !git reset --hard && git clean -fd
-	uncommit = reset --soft HEAD^
+	uncommit = reset --soft HEAD~1
 	unadd = reset HEAD
-	unstage = reset HEAD
+
+	# Discard changes in a (list of) file(s) in working tree.
+	discard = checkout --
+
+	# Clean a working tree using more powerful options.
+	cleaner = clean -dff
+
+	# Clean a working tree using the most powerful options.
+	cleanest = clean -dffx
+
+	# Clean a working tree using typical options then checkout.
+	cleanout = !git clean -df && git checkout -- .
+
+	# Expunge a file everywhere; this command is typically for a serious problem,
+	# such as accidentally committing a file of sensitive data, such as passwords.
+	# After you use command, you will likely need to force push everything.
+	# See <https://help.github.com/articles/removing-sensitive-data-from-a-repository/>
+	expunge = !"f() { git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all }; f"
+
+	# Show logs of unreachable commits.
+	# This can be useful, for example, when recovering contents of dropped stashes or reset commits.
+	show-unreachable = !"git fsck --unreachable | grep commit | cut -d\" \" -f3 | xargs git log"
+
+	# Ours & Theirs - Easy merging when you know which files you want
+	#
+	# Sometimes during a merge you want to take a file from one side wholesale.
+	#
+	# The following aliases expose the ours and theirs commands which let you
+	# pick a file(s) from the current branch or the merged branch respectively.
+	#
+	#   * git ours - Checkout our version of a file and add it
+	#
+	#   * git theirs - Checkout their version of a file and add it
+	#
+	# N.b. the function is there as hack to get $@ doing
+	# what you would expect it to as a shell user.
+
+	# Checkout our version of a file and add it.
+	ours   = !"f() { git checkout --ours   $@ && git add $@; }; f"
+
+	# Checkout their version of a file and add it.
+	theirs = !"f() { git checkout --theirs $@ && git add $@; }; f"
 
 	# Assume: from http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
 	# Sometimes we want to change a file in a repo, but never check in your edits.
@@ -336,6 +524,41 @@
 	assume   = update-index --assume-unchanged
 	unassume = update-index --no-assume-unchanged
 	assumed  = !"git ls-files -v | grep ^h | cut -c 3-"
+
+	# ── hew* aliases ──────────────────────────────────────
+
+	# Delete all branches that have been merged into a commit
+	hew = !git hew-local "$@" && git hew-remote "$@";
+
+	# Delete all branches that have been merged into a commit (dry run)
+	hew-dry-run = !git hew-local-dry-run "$@" && git hew-remote-dry-run "$@";
+
+	# Delete all local branches that have been merged into a commit
+	hew-local = !"f() { \
+	    hew-local-dry-run \"$@\" | \
+	    xargs git branch --delete ; \
+	}; f \"$@\""
+
+	# Delete all local branches that have been merged into a commit  (dry run)
+	hew-local-dry-run = !"f() { \
+	    commit=${1:-$(git current-branch)}; \
+	    git branch --merged \"$commit\" | \
+	    grep -v \"^[[:space:]]*\\*[[:space:]]*$commit$\" ; \
+	}; f \"$@\""
+
+	# Delete all remote branches that have been merged into a commit
+	hew-remote = !"f() { \
+	    hew-remote-dry-run \"$@\" | \
+	    xargs -I% git push origin :% 2>&1 ; \
+	}; f \"$@\""
+
+	# Delete all remote branches that have been merged into a commit (dry run)
+	hew-remote-dry-run = !"f() { \
+	    commit=${1:-$(git upstream-branch)}; \
+	    git branch --remotes --merged \"$commit\" | \
+	    grep -v \"^[[:space:]]*origin/$commit$\" | \
+	    sed 's#[[:space:]]*origin/##' ; \
+	}; f \"$@\""
 
 	# Delete all branches that have already been merged into the master branch.
 	master-cleanse = !"git master-cleanse-local && git master-cleanse-remote"
@@ -354,18 +577,6 @@
 	# remote version of the current branch.
 	unpublish = !"git push origin :$(git branch-name)"
 
-	# Search for a given string in all patches and print commit messages.
-	#
-	# Example: search for any commit that adds or removes string "foobar"
-	#     git grep-all foobar
-	#
-	# Example: search commits for string "foobar" in directory src/lib
-	#     git grep-all foobar src/lib
-	#
-	# Example: search commits for "foobar", print full diff of commit with 1 line context
-	#     git grep-all foobar --pickaxe-all -U1 src/lib
-	grep-all = log --all -G
-
 	# ── Shell scripting aliases ────────────────────────────────
 
 	# Get the current branch name
@@ -379,32 +590,73 @@
 	exec = ! exec
 
 	# ── Maintenance aliases ────────────────────────────────────
+	# pruner: prune everything that is unreachable now.
+	# This command takes a long time to run, perhaps even overnight.
+	pruner = !"git prune --expire=now; git reflog expire --expire-unreachable=now --rewrite --all"
 
 	# repacker: repack a repo the way Linus recommends.
-	repacker = !git repack -a -d -f --depth=300 --window=300 --window-memory=1g
+	repacker = repack -a -d -f --depth=300 --window=300 --window-memory=1g
+
+	# Do everything we can to optimize the repository.
+	optimizer = !"git pruner; git repacker; git prune-packed"
 
 	# Find all objects that aren't referenced by any other object (orphans).
 	orphans = fsck --full
 
 	# ── Advanced aliases ───────────────────────────────────────
-	# Prune all your stale remote branches: there's no way to tell
-	# git remote update to prune stale branches, and git remote prune
-	# does not understand --all. So here is a shell command to do it.
-	prune-all = !git remote | xargs -n 1 git remote prune
+	# Search for a given string in all patches and print commit messages.
+	#
+	# Example: search for any commit that adds or removes string "foobar"
+	#
+	#     git search-commits foobar
+	#
+	# Example: search commits for string "foobar" in directory src/lib
+	#
+	#     git search-commits foobar src/lib
+	#
+	# Example: search commits for "foobar", print full diff of commit with 1 line context
+	#
+	#     git search-commits foobar --pickaxe-all -U1 src/lib
+	#
+	search-commits = !"f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
+
+	# git diff-chunk - Get the diff of one chunk.
+	#
+	# Suppose we want to see just the differences of one chunk,
+	# such as one function, in one file, in two different commits.
+	#
+	# This alias creates two temp files which contain only the chunk,
+	# then does a typical git diff.
+	#
+	# Syntax:
+	#
+	#     git diff-chunk <old-rev> <new-rev> <path> <chunk pattern>
+	#
+	diff-chunk = "!f() { \
+	  git show \"$1:$3\" | sed -n \"/^[^ \t].*$4(/,/^}/p\" > .tmp1 ; \
+	  git show \"$2:$3\" | sed -n \"/^[^ \t].*$4(/,/^}/p\" > .tmp2 ; \
+	  git diff --no-index .tmp1 .tmp2 ; \
+	}; f"
+
+	# git remotes-prune - For each remote branch, prune it.
+	# There's no way to tell `git remote update` to prune stale branches,
+	# and `git remote prune` does not currently understand `--all`.
+	# So this shell command iterates on each remote, and prunes it.
+	remotes-prune = !git remote | xargs -n 1 git remote prune
 
 	# Thanks to cody cutrer
 	cherry-pick-merge = !"bash -c 'git cherry-pick -n -m 1 $0 && \
-        git log -1 --pretty=%P $0 | cut -b 42- > .git/MERGE_HEAD && \
-        git commit -v'"
+	      git log -1 --pretty=%P $0 | cut -b 42- > .git/MERGE_HEAD && \
+	      git commit -v'"
 
 	# Thanks to jtolds on stackoverflow
 	remote-ref = !"bash -c ' \
-        local_ref=$(git symbolic-ref HEAD); \
-        local_name=${local_ref##refs/heads/}; \
-        remote=$(git config branch.\"#local_name\".remote || echo origin); \
-        remote_ref=$(git config branch.\"$local_name\".merge); \
-        remote_name=${remote_ref##refs/heads/}; \
-        echo remotes/$remote/$remote_name'"
+	      local_ref=$(git symbolic-ref HEAD); \
+	      local_name=${local_ref##refs/heads/}; \
+	      remote=$(git config branch.\"#local_name\".remote || echo origin); \
+	      remote_ref=$(git config branch.\"$local_name\".merge); \
+	      remote_name=${remote_ref##refs/heads/}; \
+	      echo remotes/$remote/$remote_name'"
 
 	# Thanks to jtolds on stackoverflow
 	rebase-recent = !git rebase -i $(git remote-ref)
@@ -421,9 +673,5 @@
 
 	# Show each branch, indicating how many commits ahead, behind each branch is.
 	upstream-commits-diff = for-each-ref --sort=committerdate --format="%(refname:short) %(push:track)" ref/heads
-
-	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
-
-	whats-new     = !sh -c 'git log $1@{1}..$1@{0} "$@"'
 [diff "sopsdiffer"]
 	textconv = sops -d
