@@ -2,23 +2,75 @@
 # -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 # This is zv's ZSHRC.
 
+# ── Changing Directories ───────────────────────────────────
+setopt AUTO_CD              # Auto changes to a directory without typing cd.
+setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
+setopt CDABLE_VARS          # Change directory to a path stored in a variable.
+unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
+
+# ── Completion ─────────────────────────────────
+setopt ALWAYS_TO_END     # Move cursor to the end of a completed word
+setopt AUTO_LIST         # Automatically list choices on ambiguous completion
+setopt AUTO_PARAM_KEYS   # Params should complete unusual symbols correctly
+setopt AUTO_PARAM_SLASH  # If completed parameter is a directory, add a trailing slash
+setopt COMPLETE_IN_WORD  # Complete from both ends of a word
+setopt GLOB_COMPLETE     # Do not insert all words resulting from expansion on <TAB>
+setopt LIST_TYPES        # Show the type of each file for possible completions
+setopt MENU_COMPLETE     # Autoselect the first completion entry
+unsetopt REC_EXACT       # Don' override completions for current perfect matches
+
+# ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
+setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
+setopt BRACE_CCL            # Allow brace character class list expansion.
+setopt CASE_GLOB            # Make globbing sensitive to case
+setopt EXTENDED_GLOB        # Use extended globbing syntax.
+unsetopt GLOB_DOTS          # Glob files beginning with dot (`.`)
+setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
+setopt NULL_GLOB            # Delete patterns without match from argument list
+setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
+setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+
+# ── History ────────────────────────────────────────────────
+setopt BANG_HIST               # Treat the '!' character specially during expansion.
+setopt EXTENDED_HISTORY        # Write the history file in the ':start:elapsed;command' format.
+setopt HIST_BEEP               # Beep when accessing non-existent history.
+setopt HIST_EXPIRE_DUPS_FIRST  # Expire a duplicate event first when trimming history.
+setopt HIST_FCNTL_LOCK         # Don't bother with old-school locking. We're on new POSIX here.
+setopt HIST_FIND_NO_DUPS       # Do not display a previously found event.
+setopt HIST_IGNORE_ALL_DUPS    # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_IGNORE_DUPS        # Do not record an event that was just recorded again.
+setopt HIST_IGNORE_SPACE       # Do not record an event starting with a space.
+setopt HIST_REDUCE_BLANKS      # Remove extraneous blanks from history entries
+setopt HIST_SAVE_NO_DUPS       # Do not write a duplicate event to the history file.
+setopt HIST_VERIFY             # Do not execute immediately upon history expansion.
+setopt INC_APPEND_HISTORY      # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY           # Share history between all sessions.
+
+# History
+HISTFILE=~/.zsh_history
+
+# Lines to store
+HISTSIZE=65535
+SAVEHIST=65535
+
+# ─ Input/ Output ───────────────────────────────────────────
+# setopt RC_QUOTES             # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'
+unsetopt APPEND_CREATE         # Don't warn if `>>` is used on a file that doesn't exist
+unsetopt CLOBBER               # Do not overwrite existing files with > and >>. Use >! and >>! to bypass
+unsetopt CORRECT               # Don't correct the spelling of commands
+unsetopt CORRECT_ALL           # Don't correct any arguments
+setopt HASH_CMDS               # Note the location of a command before it's executed
+setopt HASH_EXECUTABLES_ONLY   # Check if we've got an executable before hashing it
+unsetopt INTERACTIVE_COMMENTS  # Don't allow comments in interactive mode
+unsetopt MAIL_WARNING          # Don't print a warning message if a mail file has been accessed
+setopt PATH_DIRS               # Perform path search even on command names with slashes
+setopt SHORT_LOOPS             # Allow short loops
+
+# Experimental
+unsetopt FLOW_CONTROL          # Disable start/stop characters in shell editor
+
 # ━━ Initialization ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
-export PATH
-
-# Load our completion functions
-fpath=(
-    "$HOME/.zsh/zsh-completions/src"
-    "$HOME/.zsh/functions"
-    $fpath
-)
-
-# Ensure path arrays do not contain duplicates.
-typeset -gU fpath mailpath path cdpath
-
 unsetopt ALL_EXPORT       # Absolutely do not automatically export defined params
 
 # ── Job Control ────────────────────────────────────────────
@@ -29,200 +81,29 @@ setopt BG_NICE            # run all background jobs at a lower priority.
 unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
 setopt HUP                # kill jobs on shell exit.
 
-# ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-alias pr="print -l"
-alias _='sudo'
-alias e="emacsclient -t"
-alias ec="emacsclient -c"
-alias edit="emacs -nw"
-alias info="info --vi-keys"
-alias external-ip="curl ipinfo.io/ip"
-alias ls='ls --color=auto'
-alias l='ls -1A'         # Lists in one column, hidden files.
-alias ll='ls -lh'        # Lists human readable sizes.
-alias la='ll -Ah'         # Lists human readable sizes, hidden files.
-alias w3m="noglob w3m"
-
-# Tmux
-alias ta="tmux attach-session -t"
-alias tl="tmux list-sessions"
-
-alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
-alias veactivate="source .venv/bin/activate && rehash"
-
-alias aws="MANPAGER='more' aws"
-alias genp=" command genp"
-
-_exists() { (( $+commands[$1] == 1 )) }
-
-# Open a vim tab for each file matching the pattern specified
-rage() {
-    vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(${commands[rg]-$commands[grep]} "$@" | cut -d: -f1 | sort -u)
-}
-
-man() {
-    LESS_TERMCAP_md="$(print -P "%B")" \
-                   LESS_TERMCAP_md="$(print -P "%B")" \
-                   LESS_TERMCAP_md="$(print -P "%B")" \
-                   LESS_TERMCAP_me=$'\E[0m' \
-                   LESS_TERMCAP_so="$(print -P "%S%F{black}%K{white}")" \
-                   LESS_TERMCAP_se=$'\E[0m' \
-                   LESS_TERMCAP_us="$(print -P "%U%F{cyan}")" \
-                   LESS_TERMCAP_ue=$'\E[0m' \
-                   GROFF_NO_SGR=1 \
-                   command man "$@"
-}
-
-# Use vim as a pager for man
-manvi() {
-    MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' \
-        | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' \
-        -c 'nnoremap <silent> d <C-d>' \
-        -c 'nnoremap <silent> u <C-u>' -\"" \
-            command man "$@"
-}
-
-# Moves the last created file to $2
-mvlast() {
-    local last_file=("$1"/*(.oc[1]))
-    mv "$last_file" "$2" && print "$last_file"
-}
-
-mvdlhere() { mvlast ~/Downloads/ "$(pwd)" }
-
-# # mkdir & cd to it
-mcd() { mkdir -p "$1" && cd "$1"; }
-
-# ── DNF Aliases ────────────────────────────────────────────
-if _exists dnf; then
-    alias dnfi="sudo dnf install"                   # install package
-    alias dnfs="dnf search"                         # search package
-    alias dnfu="sudo dnf upgrade"                   # upgrade packages
-    alias dnfrm="sudo dnf remove"                   # remove package
-    alias dnflsdeps="dnf deplist"                   # list pkg dependencies
-    alias dnflshist="sudo dnf history"              # list  dnf history
-    alias dnflsrepo="dnf repolist"                  # list repositories
-    alias dnfpowner="dnf repoquery --file"          # who owns this file
-    alias dnfpprovider="dnf whatprovides"           # what package provides a file
-    alias dnfpupdates="dnf check-update"            # check updates
-elif _exists apt; then
-    alias dnfi="sudo apt install"                           # install package
-    alias dnfs="apt search"                                 # search package
-    alias dnfu="sudo apt upgrade"                           # upgrade packages
-    alias dnfrm="sudo apt remove"                           # remove package
-    alias dnflsdeps="apt-cache depends"                     # list pkg dependencies
-    alias dnflshist="cat /var/log/apt/history.log"          # list  dnf history
-    alias dnflsrepo="apt-cache policy"                      # list repositories
-    alias dnfpowner="dpkg-query -S"                         # who owns this file
-    alias dnfpprovider="dpkg -S"                            # what package provides a file
-    alias dnfpupdates="apt list --upgradable"               # check updates
-fi
-
-# ── Git Aliases ────────────────────────────────────────────
-if _exists git; then
-    alias g='git'
-    alias gst='git status'
-    alias gl='git pull'
-    alias gc='git commit -v'
-    alias gca='git commit -v -a'
-    alias gco='git checkout'
-    alias gcm='git checkout master'
-    alias ga='git add'
-    alias gfa='git fetch --all'
-fi
-
-# ━━ Expansion and Globbing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-setopt BAD_PATTERN          # Print error if filename glob pat. is badly formed
-setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
-setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
-unsetopt GLOB_DOTS          # Glob files beginning with dot (`.`)
-setopt NULL_GLOB            # Delete patterns without match from argument list
-setopt BRACE_CCL            # Allow brace character class list expansion.
-setopt EXTENDED_GLOB        # Use extended globbing syntax.
-
 # ── Directories ────────────────────────────────────────────
 setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
-setopt AUTO_CD              # Auto changes to a directory without typing cd.
 setopt AUTO_NAME_DIRS       # Auto add variable-stored paths to ~ list.
-setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
-setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
-setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
-unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
 if [[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]]; then
     # Suppress the undeclared global variable warning raised inside IDEA
     typeset -g VARIABLE NAME
 fi
-setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
-
 unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
-# ── Shell Emulation ────────────────────────────────────────
-unsetopt APPEND_CREATE        # Don't warn if `>>` is used on a file that doesn't exist
-
-# ── History ────────────────────────────────────────────────
-setopt BANG_HIST                 # Treat the '!' character specially during expansion.
-setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
-setopt HIST_BEEP                 # Beep when accessing non-existent history.
-setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming history.
-setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
-setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
-setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
-setopt HIST_REDUCE_BLANKS        # Remove extraneous blanks from history entries
-setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
-setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
-setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
-setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
-setopt SHARE_HISTORY             # Share history between all sessions.
-setopt HIST_FCNTL_LOCK           # Don't bother with old-school locking. We're on new POSIX here.
-
-# History
-HISTFILE=~/.zsh_history
-
-# Lines to store
-HISTSIZE=65535
-SAVEHIST=65535
-
-# ─ Input/ Output ───────────────────────────────────────────
-# setopt RC_QUOTES          # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'.
-unsetopt CORRECT            # Don't correct the spelling of commands
-unsetopt CORRECT_ALL        # Don't correct any arguments
-unsetopt CLOBBER            # Do not overwrite existing files with > and >>. Use >! and >>! to bypass.
-unsetopt MAIL_WARNING       # Don't print a warning message if a mail file has been accessed.
-setopt SHORT_LOOPS          # Allow short loops.
-unsetopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
-setopt HASH_CMDS            # Note the location of a command before it's executed
-setopt HASH_EXECUTABLES_ONLY # Check if we've got an executable before hashing it
-
-# ── Completions ────────────────────────────────
-setopt ALWAYS_TO_END       # Move cursor to the end of a completed word.
-setopt AUTO_LIST           # Automatically list choices on ambiguous completion.
-setopt AUTO_PARAM_SLASH    # If completed parameter is a directory, add a trailing slash.
-setopt COMPLETE_IN_WORD    # Complete from both ends of a word.
-setopt PATH_DIRS           # Perform path search even on command names with slashes.
-setopt GLOB_COMPLETE       # Do not insert all words resulting from expansion on <TAB>
-setopt MENU_COMPLETE       # Autoselect the first completion entry.
-# overridden by MENU_COMPLETE
-# setopt AUTO_MENU           # Show completion menu on a succesive tab press.
-
-setopt AUTO_PARAM_KEYS      # Params should complete unusual symbols correctly.
-unsetopt REC_EXACT          # Don' override completions for current perfect matches.
-setopt LIST_TYPES           # "Show the type of each file for possible completions"
-setopt CASE_GLOB            # Make globbing sensitive to case
-
-# Experimental
-unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor.
+# Load our completion functions
+fpath+=(~/.zsh/functions ~/.zsh/zsh-completions/src)
 
 # ── Prompting ──────────────────────────────────────────────
 
-# If we're in a dumb terminal then dont play fancy pants with our prompt
+# Dumb terminals
 if [[ "$TERM" == dumb || "$TERM" == eterm-color ]]; then
-    unsetopt ZLE
     unsetopt PROMPT_CR
     unsetopt PROMPT_SUBST
+    unsetopt ZLE
 
     # Ensure we don't set preexec && precmd
     if whence -w precmd >/dev/null; then
@@ -232,10 +113,6 @@ if [[ "$TERM" == dumb || "$TERM" == eterm-color ]]; then
         unfunction preexec
     fi
 
-    if [[ "$TERM" == dumb ]]; then
-        PS1='$ '
-    fi
-
     return
 fi
 
@@ -243,8 +120,7 @@ setopt ZLE
 setopt PROMPT_SUBST # Setup the prompt with pretty colors
 KEYTIMEOUT=2 # Immediately switch to vicmd/viinst
 
-# shows a slightly different prompt for vicmd vs other ZLE command modes to let
-# you know what you are dealing with.
+# show a different prompt for vicmd / viins
 autoload -Uz vcs_info
 precmd () { vcs_info }
 
@@ -253,7 +129,7 @@ PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${${${KEYMAP:#main}:+red}:-default}
 # ━━ Completion System ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Load and initialize the completion system ignoring insecure directories with a
 # cache time of 20 hours, so it should almost always regenerate the first time a
-# shell is opened each day.
+# shell is opened each day
 autoload -U compinit
 compinit
 
@@ -268,13 +144,12 @@ zstyle ':completion:*' special-dirs false
 zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*'
 
 # Version control info (vcs_info)
-local base_vcs_style='%c%b%u%f'
-zstyle ':vcs_info:*' enable git hg # svn # cvs fossil bzr
+zstyle ':vcs_info:*' enable git # hg svn cvs fossil bzr
 zstyle ':vcs_info:*' check-for-staged-changes true
-zstyle ':vcs_info:*' actionformats "- [$base_vcs_style|%F{green}%a%f] "
+zstyle ':vcs_info:*' actionformats "- [%c%b%u%f|%F{green}%a%f] "
 zstyle ':vcs_info:*' stagedstr '%F{028}'
 zstyle ':vcs_info:*' unstagedstr '*'
-zstyle ':vcs_info:*' formats " [$base_vcs_style]"
+zstyle ':vcs_info:*' formats " [%c%b%u%f]"
 zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
 
 # Group matches and describe.
@@ -418,7 +293,6 @@ function find-history-forwards {
 }
 zle -N find-history-forwards
 
-
 # ZSH line editor stuff needed for bindkey to work
 zle -N zle-line-init
 zle -N zle-keymap-select
@@ -479,9 +353,112 @@ bindkey -M viins "\e^?" backward-delete-word
 
 bindkey ' ' magic-space # [Space] - do history expansion
 
+# ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+alias pr="print -l"
+alias _='sudo'
+alias e="emacsclient -t"
+alias ec="emacsclient -c"
+alias edit="emacs -nw"
+alias info="info --vi-keys"
+alias external-ip="curl ipinfo.io/ip"
+alias ls='ls --color=auto'
+alias l='ls -1A'         # Lists in one column, hidden files.
+alias ll='ls -lh'        # Lists human readable sizes.
+alias la='ll -Ah'         # Lists human readable sizes, hidden files.
+alias w3m="noglob w3m"
+
+# Tmux
+alias ta="tmux attach-session -t"
+alias tl="tmux list-sessions"
+
+alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
+alias veactivate="source .venv/bin/activate && rehash"
+
+alias aws="MANPAGER='more' aws"
+alias calc='nocorrect noglob _zvcalc'
+alias genp=" command genp"
+
+_exists() { (( $+commands[$1] == 1 )) }
+
+# Open a vim tab for each file matching the pattern specified
+rage() {
+    vim +'/\v'"$1" +':silent tabdo :1 | normal! n' +':tabfirst' -p $(${commands[rg]-$commands[grep]} "$@" | cut -d: -f1 | sort -u)
+}
+
+man() {
+    LESS_TERMCAP_md="$(print -P "%B")" \
+                   LESS_TERMCAP_md="$(print -P "%B")" \
+                   LESS_TERMCAP_md="$(print -P "%B")" \
+                   LESS_TERMCAP_me=$'\E[0m' \
+                   LESS_TERMCAP_so="$(print -P "%S%F{black}%K{white}")" \
+                   LESS_TERMCAP_se=$'\E[0m' \
+                   LESS_TERMCAP_us="$(print -P "%U%F{cyan}")" \
+                   LESS_TERMCAP_ue=$'\E[0m' \
+                   GROFF_NO_SGR=1 \
+                   command man "$@"
+}
+
+# Use vim as a pager for man
+manvi() {
+    MANPAGER="/bin/sh -c \"sed -r 's/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' \
+        | vim -c 'set ft=man nomod nolist norelativenumber nonu noma showtabline=0 shortmess+=T' \
+        -c 'nnoremap <silent> d <C-d>' \
+        -c 'nnoremap <silent> u <C-u>' -\"" \
+            command man "$@"
+}
+
+# Moves the last created file to $2
+mvlast() {
+    set -x
+    mv "$1"/*(.oc[1]) "$2"
+}
+
+mvdlhere() { mvlast ~/Downloads "$(pwd)" }
+
+# # mkdir & cd to it
+mcd() { mkdir -p "$1" && cd "$1"; }
+
+# ── DNF Aliases ────────────────────────────────────────────
+if _exists dnf; then
+    alias dnfi="sudo dnf install"                   # install package
+    alias dnfs="dnf search"                         # search package
+    alias dnfu="sudo dnf upgrade"                   # upgrade packages
+    alias dnfrm="sudo dnf remove"                   # remove package
+    alias dnflsdeps="dnf deplist"                   # list pkg dependencies
+    alias dnflshist="sudo dnf history"              # list  dnf history
+    alias dnflsrepo="dnf repolist"                  # list repositories
+    alias dnfpowner="dnf repoquery --file"          # who owns this file
+    alias dnfpprovider="dnf whatprovides"           # what package provides a file
+    alias dnfpupdates="dnf check-update"            # check updates
+elif _exists apt; then
+    alias dnfi="sudo apt install"                           # install package
+    alias dnfs="apt search"                                 # search package
+    alias dnfu="sudo apt upgrade"                           # upgrade packages
+    alias dnfrm="sudo apt remove"                           # remove package
+    alias dnflsdeps="apt-cache depends"                     # list pkg dependencies
+    alias dnflshist="cat /var/log/apt/history.log"          # list  dnf history
+    alias dnflsrepo="apt-cache policy"                      # list repositories
+    alias dnfpowner="dpkg-query -S"                         # who owns this file
+    alias dnfpprovider="dpkg -S"                            # what package provides a file
+    alias dnfpupdates="apt list --upgradable"               # check updates
+fi
+
+# ── Git Aliases ────────────────────────────────────────────
+if _exists git; then
+    alias g='git'
+    alias gst='git status'
+    alias gl='git pull'
+    alias gc='git commit -v'
+    alias gca='git commit -v -a'
+    alias gco='git checkout'
+    alias gcm='git checkout master'
+    alias ga='git add'
+    alias gfa='git fetch --all'
+fi
+
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 if _exists gpg; then
-    export GPG_TTY=$(tty)
+    export GPG_TTY="$(tty)"
 
     # Make sure we're not setting this up *inside* a remote SSH connection
     if [[ -z "$SSH_CONNECTION" ]]; then
@@ -507,6 +484,8 @@ ops	%I reads | %O writes
 proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[[ -d ~/.local/bin ]] && path+=(~/.local/bin)
+
 # Configure Ocaml package manager
 # [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
 
@@ -519,14 +498,9 @@ proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 # The next line enables shell command completion for gcloud.
 # [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
 
-autoload -Uz pronounce_number
-autoload -Uz spectrum_ls
-autoload -Uz _zvcalc
-alias calc='nocorrect noglob _zvcalc'
-
 # Rust
-if _exists cargo && test -r ~/.cargo/env; then
-    if test -O ~/.cargo/env(#qf:go-w:N); then
+if _exists cargo && [[ -r ~/.cargo/env ]]; then
+    if [[ -O ~/.cargo/env(#qf:go-w:N) ]]; then
         source ~/.cargo/env
     else
         printf "Refusing to source from %s\n" ~/.cargo/env >&2
@@ -534,11 +508,11 @@ if _exists cargo && test -r ~/.cargo/env; then
 fi
 
 # rg
-if _exists rg && test -r ~/.ripgreprc; then
+if _exists rg && [[ -r ~/.ripgreprc ]]; then
     export RIPGREP_CONFIG_PATH=~/.ripgreprc
 fi
 
-# if (( $+commands[rustc] )); then
+# if _exists rustc; then
 #     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 # fi
 
