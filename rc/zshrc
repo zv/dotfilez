@@ -356,8 +356,6 @@ bindkey ' ' magic-space # [Space] - do history expansion
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 alias pr="print -l"
 alias _='sudo'
-alias e="emacsclient -t"
-alias ec="emacsclient -c"
 alias edit="emacs -nw"
 alias info="info --vi-keys"
 alias external-ip="curl ipinfo.io/ip"
@@ -377,8 +375,6 @@ alias veactivate="source .venv/bin/activate && rehash"
 alias aws="MANPAGER='more' aws"
 alias calc='nocorrect noglob _zvcalc'
 alias genp=" command genp"
-
-_exists() { (( $+commands[$1] == 1 )) }
 
 # Open a vim tab for each file matching the pattern specified
 rage() {
@@ -419,32 +415,37 @@ mvdlhere() { mvlast ~/Downloads "$(pwd)" }
 mcd() { mkdir -p "$1" && cd "$1"; }
 
 # ── DNF Aliases ────────────────────────────────────────────
-if _exists dnf; then
-    alias dnfi="sudo dnf install"                   # install package
-    alias dnfs="dnf search"                         # search package
-    alias dnfu="sudo dnf upgrade"                   # upgrade packages
-    alias dnfrm="sudo dnf remove"                   # remove package
-    alias dnflsdeps="dnf deplist"                   # list pkg dependencies
-    alias dnflshist="sudo dnf history"              # list  dnf history
-    alias dnflsrepo="dnf repolist"                  # list repositories
-    alias dnfpowner="dnf repoquery --file"          # who owns this file
-    alias dnfpprovider="dnf whatprovides"           # what package provides a file
-    alias dnfpupdates="dnf check-update"            # check updates
-elif _exists apt; then
-    alias dnfi="sudo apt install"                           # install package
-    alias dnfs="apt search"                                 # search package
-    alias dnfu="sudo apt upgrade"                           # upgrade packages
-    alias dnfrm="sudo apt remove"                           # remove package
-    alias dnflsdeps="apt-cache depends"                     # list pkg dependencies
-    alias dnflshist="cat /var/log/apt/history.log"          # list  dnf history
-    alias dnflsrepo="apt-cache policy"                      # list repositories
-    alias dnfpowner="dpkg-query -S"                         # who owns this file
-    alias dnfpprovider="dpkg -S"                            # what package provides a file
-    alias dnfpupdates="apt list --upgradable"               # check updates
+if (( ${+commands[dnf]} )); then
+    alias pkg-add='sudo dnf install'                         # add package
+    alias pkg-search='dnf search'                            # list packages matching pattern
+    alias pkg-update='sudo dnf upgrade'                      # update package
+    alias pkg-remove='sudo dnf remove'                       # remove this package
+    alias pkg-info='dnf info'                                # show package info
+    alias pkg-lsfiles='dnf repoquery --list --installed'     # what files owned by package (must 
+    alias pkg-lsrepos='dnf repolist'                         # list repositories
+    alias pkg-lsinstalled='dnf history userinstalled'        # list user-installed packages
+    alias pkg-whatdeps='dnf repoquery --deplist --installed' # what dependencies of a package
+    alias pkg-whatprovides='dnf provides'                    # what package(s) provide a given spec
+    alias pkg-whatrequires='dnf repoquery --whatrequires'    # what packages require this package
+else
+    alias pkg-add='sudo apt-get install'                     # add package
+    alias pkg-search='apt-cache search'                      # list packages matching pattern
+    alias pkg-update='sudo apt upgrade'                      # update package
+    alias pkg-remove='sudo apt remove'                       # remove this package
+    alias pkg-info='apt-cache show'                          # show package info
+    alias pkg-lsfiles='dpkg -L'                              # what files owned by package (must be installed)
+    alias pkg-lsrepos='apt-cache policy'                     # list repositories
+    alias pkg-lsinstalled='cat /var/log/apt/history.log'     # list user-installed packages
+    alias pkg-whatdeps='apt-cache depends'                   # what dependencies of a package
+    alias pkg-whatprovides='dpkg -S'                         # what package(s) provide a given spec
+    alias pkg-whatrequires='apt-cache rdepends'              # what packages require this package
 fi
 
+alias dnfi='pkg-add'
+alias dnfs='pkg-search'
+
 # ── Git Aliases ────────────────────────────────────────────
-if _exists git; then
+if (( ${+commands[git]} )); then
     alias g='git'
     alias gst='git status'
     alias gl='git pull'
@@ -457,7 +458,7 @@ if _exists git; then
 fi
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if _exists gpg; then
+if (( ${+commands[gpg]} )); then
     export GPG_TTY="$(tty)"
 
     # Make sure we're not setting this up *inside* a remote SSH connection
@@ -485,40 +486,15 @@ proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [[ -d ~/.local/bin ]] && path+=(~/.local/bin)
-## autoload -Uz pronounce_number
-## autoload -Uz spectrum_ls
-## autoload -Uz _zvcalc
-## alias calc='nocorrect noglob _zvcalc'
+autoload -Uz pronounce_number spectrum_ls _zvcalc
+alias calc='nocorrect noglob _zvcalc'
 
-# Configure Ocaml package manager
-# [[ -x "/home/zv/.opam/opam-init/init.zsh" ]] && source /home/zv/.opam/opam-init/init.zsh > /dev/null 2> /dev/null
-
-# cdpath=($cdpath)
-# export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
-# The next line updates PATH for the Google Cloud SDK.
-# [[ -e '/home/zv/extern/google-cloud-sdk/path.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/path.zsh.inc'
-
-# The next line enables shell command completion for gcloud.
-# [[ -e '/home/zv/extern/google-cloud-sdk/completion.zsh.inc' ]] && source '/home/zv/extern/google-cloud-sdk/completion.zsh.inc'
+# rg config file
+(( ${+commands[rg]} )) && export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
 # Rust
-if _exists cargo && [[ -r ~/.cargo/env ]]; then
-    if [[ -O ~/.cargo/env(#qf:go-w:N) ]]; then
-        source ~/.cargo/env
-    else
-        printf "Refusing to source from %s\n" ~/.cargo/env >&2
-    fi
-fi
-
-# rg
-if _exists rg && test -r ~/.ripgreprc; then
-    export RIPGREP_CONFIG_PATH="${HOME}/.ripgreprc"
-fi
-
-# if _exists rustc; then
-#     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
-# fi
+(( ${+commands[rustc]} )) && export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+[[ -O ~/.cargo/env(#qf:go-w:N) ]] && source ~/.cargo/env
 
 # Check if we own a readable file, not writable by other at ~/.zsh/local.zsh
 if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
