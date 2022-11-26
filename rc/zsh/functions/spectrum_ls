@@ -1,9 +1,0 @@
-# -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
-
-emulate -L zsh
-
-local -i code
-
-for code in {000..255}; do
-    print -P -- "$code: %F{$code}${@:-████████████████}%f"
-done

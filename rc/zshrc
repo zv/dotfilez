@@ -2,12 +2,6 @@
 # -*- mode: shell-script; sh-shell: zsh; fill-column: 75; comment-column: 50; coding: utf-8 -*-
 # This is zv's ZSHRC.
 
-# ── Changing Directories ───────────────────────────────────
-setopt AUTO_CD              # Auto changes to a directory without typing cd.
-setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
-setopt CDABLE_VARS          # Change directory to a path stored in a variable.
-unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
-
 # ── Completion ─────────────────────────────────
 setopt ALWAYS_TO_END     # Move cursor to the end of a completed word
 setopt AUTO_LIST         # Automatically list choices on ambiguous completion
@@ -25,37 +19,34 @@ setopt BARE_GLOB_QUAL       # Treat trailing parens as qualifier list.
 setopt BRACE_CCL            # Allow brace character class list expansion.
 setopt CASE_GLOB            # Make globbing sensitive to case
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
-unsetopt GLOB_DOTS          # Glob files beginning with dot (`.`)
+setopt GLOB_DOTS            # Glob files beginning with dot (`.`)
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 setopt NULL_GLOB            # Delete patterns without match from argument list
-setopt RC_EXPAND_PARAM      # xx=(a b c) && echo 'foo${xx}bar' -> fooabar, foobbar, foocbar instead of the default fooa b cbar
 setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
 
 # ── History ────────────────────────────────────────────────
 setopt BANG_HIST               # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY        # Write the history file in the ':start:elapsed;command' format.
+setopt HIST_FCNTL_LOCK         # Don't bother with old-school locking. We're on new POSIX here.
 setopt HIST_BEEP               # Beep when accessing non-existent history.
 setopt HIST_EXPIRE_DUPS_FIRST  # Expire a duplicate event first when trimming history.
-setopt HIST_FCNTL_LOCK         # Don't bother with old-school locking. We're on new POSIX here.
-setopt HIST_FIND_NO_DUPS       # Do not display a previously found event.
-setopt HIST_IGNORE_ALL_DUPS    # Delete an old recorded event if a new event is a duplicate.
 setopt HIST_IGNORE_DUPS        # Do not record an event that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS    # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_SAVE_NO_DUPS       # Do not write a duplicate event to the history file.
+setopt HIST_FIND_NO_DUPS       # Do not display a previously found event.
 setopt HIST_IGNORE_SPACE       # Do not record an event starting with a space.
 setopt HIST_REDUCE_BLANKS      # Remove extraneous blanks from history entries
-setopt HIST_SAVE_NO_DUPS       # Do not write a duplicate event to the history file.
 setopt HIST_VERIFY             # Do not execute immediately upon history expansion.
-setopt INC_APPEND_HISTORY      # Write to the history file immediately, not when the shell exits.
 setopt SHARE_HISTORY           # Share history between all sessions.
 
 # History
 HISTFILE=~/.zsh_history
 
 # Lines to store
-HISTSIZE=65535
-SAVEHIST=65535
+SAVEHIST=65000
+HISTSIZE=90000
 
 # ─ Input/ Output ───────────────────────────────────────────
-# setopt RC_QUOTES             # Allow 'Zephyr''s Rad Pad' instead of 'Zephyrs'\''s Rad Pad'
 unsetopt APPEND_CREATE         # Don't warn if `>>` is used on a file that doesn't exist
 unsetopt CLOBBER               # Do not overwrite existing files with > and >>. Use >! and >>! to bypass
 unsetopt CORRECT               # Don't correct the spelling of commands
@@ -82,20 +73,17 @@ unsetopt CHECK_JOBS       # don't report on jobs when shell exit.
 setopt HUP                # kill jobs on shell exit.
 
 # ── Directories ────────────────────────────────────────────
-setopt PUSHD_TO_HOME        # Push to home directory when no argument is given.
+setopt AUTO_CD              # Auto changes to a directory without typing cd.
 setopt AUTO_NAME_DIRS       # Auto add variable-stored paths to ~ list.
-setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
+setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
+setopt CDABLE_VARS          # Change directory to a path stored in a variable.
+unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
-if [[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]]; then
-    # Suppress the undeclared global variable warning raised inside IDEA
-    typeset -g VARIABLE NAME
-fi
+# Suppress the undeclared global variable warning raised inside IDEA
+[[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]] && typeset -g VARIABLE NAME
 unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
-
-# Load our completion functions
-fpath+=(~/.zsh/functions ~/.zsh/zsh-completions/src)
 
 # ── Prompting ──────────────────────────────────────────────
 
@@ -127,21 +115,15 @@ precmd () { vcs_info }
 PROMPT='[%n@%m] %B%2~%b${vcs_info_msg_0_} %F{${${${KEYMAP:#main}:+red}:-default}}%(!.#.$)%f '
 
 # ━━ Completion System ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Load and initialize the completion system ignoring insecure directories with a
-# cache time of 20 hours, so it should almost always regenerate the first time a
-# shell is opened each day
-autoload -U compinit
-compinit
-
 # zstyle ':completion::*' insert-tab on
 # Use caching to make completion for commands such as dpkg and apt usable.
-zstyle ':completion:*' use-cache on
+zstyle ':completion:*' use-cache yes
 
 # Don't try to complete the '.' and '..' special directories
 zstyle ':completion:*' special-dirs false
 
 # Case-sensitive partial-word and string completion
-zstyle ':completion:*' matcher-list 'r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 
 # Version control info (vcs_info)
 zstyle ':vcs_info:*' enable git # hg svn cvs fossil bzr
@@ -154,9 +136,8 @@ zstyle ':vcs_info:git:*' branchformat '%b%F{1}:%F{3}%r'
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select
-zstyle ':completion:*:matches' group 'yes'
-zstyle ':completion:*:options' description 'yes'
-zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:matches' group yes
+zstyle ':completion:*:options' description yes
 zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
 zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
 zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
@@ -164,6 +145,7 @@ zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
 zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
 zstyle ':completion:*' group-name ''
+# Give a more specific definition for each context inside the completion system
 zstyle ':completion:*' verbose yes
 
 # Fuzzy match mistyped completions.
@@ -171,8 +153,8 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 
 # Increase the number of errors based on the length of the typed word.
-zstyle ':completion:*:approximate:*' max-errors 1 numeric
-zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) numeric )'
+zstyle ':completion:history-words:*' remove-all-dups true
 
 # Don't complete unavailable commands.
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
@@ -193,8 +175,7 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Environmental Variables
-zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
-zstyle ':completion:*:*:*:users' users 'zv' 'root' 'zephyr'
+zstyle ':completion:*:*:*:users' users 'zv' 'root' 'zephyr' 'pellerin'
 
 # Ignore multiple entries.
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
@@ -204,7 +185,7 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 zstyle '*' single-ignored show
 
 # Kill
-zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
+zstyle ':completion:*:processes' command 'ps -u $USERNAME -o pid,user,args'
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
 zstyle ':completion:*:*:kill:*' insert-ids single
@@ -224,16 +205,12 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # ls colors
-autoload -U colors && colors;
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-
-# Enable man completion when using Vim as a manpager
-compdef '_dispatch man man' manvi
 
 # Tmux Pane Completion
 if [[ -n "$TMUX_PANE" ]]; then
-    autoload -Uz _tmux_pane_words
+    autoload -Uz ~/.zsh/functions/_tmux_pane_words
     zle -C tmux-pane-words-prefix   complete-word _generic
     zle -C tmux-pane-words-anywhere complete-word _generic
     bindkey '^X^X' tmux-pane-words-prefix
@@ -245,6 +222,11 @@ if [[ -n "$TMUX_PANE" ]]; then
     zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 fi
 
+# Load and initialize the completion system ignoring insecure directories with a
+# cache time of 20 hours, so it should almost always regenerate the first time a
+# shell is opened each day
+autoload -Uz compinit
+compinit
 # ━━ ZLE / Line commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 setopt COMBINING_CHARS     # Combine zero-length punctuation characters
 setopt NO_BEEP             # Stop the beep insanity
@@ -327,15 +309,10 @@ bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
 
-autoload smart-insert-last-word
+autoload -Uz ~/.zsh/functions/smart-insert-last-word
 zle -N smart-insert-last-word
 # bind alt-p to cycle through the last argument of the previous line
 bindkey -M viins '\ep' smart-insert-last-word
-
-# EZKeys
-# bindkey -s '\eu' "..\n"
-# bindkey -s '\es' "$HOME/"
-# bindkey -s '\e^p' "$HOME/Development/"
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' find-history-backwards # up-line-or-search
@@ -373,8 +350,10 @@ alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 alias veactivate="source .venv/bin/activate && rehash"
 
 alias aws="MANPAGER='more' aws"
-alias calc='nocorrect noglob _zvcalc'
 alias genp=" command genp"
+
+# show each terminal color
+alias spectrum_ls='for code ({000..255}) print -P "$code: %F{$code}████████████████%f"'
 
 # Open a vim tab for each file matching the pattern specified
 rage() {
@@ -402,14 +381,18 @@ manvi() {
         -c 'nnoremap <silent> u <C-u>' -\"" \
             command man "$@"
 }
+# Enable man completion when using Vim as a manpager
+compdef '_dispatch man man' manvi
 
 # Moves the last created file to $2
 mvlast() {
-    set -x
-    mv "$1"/*(.oc[1]) "$2"
+    local last=("$1"/*(.oc[1]))
+    if [[ ! -f "$last" ]]; then
+        printf "'%s' is not a directory or is empty" "$1" >&2
+        return 1
+    fi
+    mv --verbose --interactive --target-directory="$2" "$last"
 }
-
-mvdlhere() { mvlast ~/Downloads "$(pwd)" }
 
 # # mkdir & cd to it
 mcd() { mkdir -p "$1" && cd "$1"; }
@@ -428,9 +411,9 @@ if (( ${+commands[dnf]} )); then
     alias pkg-whatprovides='dnf provides'                    # what package(s) provide a given spec
     alias pkg-whatrequires='dnf repoquery --whatrequires'    # what packages require this package
 else
-    alias pkg-add='sudo apt-get install'                     # add package
+    alias pkg-add='sudo apt-get install --no-upgrade'        # add package
     alias pkg-search='apt-cache search'                      # list packages matching pattern
-    alias pkg-update='sudo apt upgrade'                      # update package
+    alias pkg-update='sudo apt install --only-upgrade'       # update package
     alias pkg-remove='sudo apt remove'                       # remove this package
     alias pkg-info='apt-cache show'                          # show package info
     alias pkg-lsfiles='dpkg -L'                              # what files owned by package (must be installed)
@@ -441,25 +424,20 @@ else
     alias pkg-whatrequires='apt-cache rdepends'              # what packages require this package
 fi
 
-alias dnfi='pkg-add'
-alias dnfs='pkg-search'
-
 # ── Git Aliases ────────────────────────────────────────────
 if (( ${+commands[git]} )); then
     alias g='git'
     alias gst='git status'
-    alias gl='git pull'
     alias gc='git commit -v'
     alias gca='git commit -v -a'
     alias gco='git checkout'
-    alias gcm='git checkout master'
     alias ga='git add'
     alias gfa='git fetch --all'
 fi
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 if (( ${+commands[gpg]} )); then
-    export GPG_TTY="$(tty)"
+    export GPG_TTY=$(tty)
 
     # Make sure we're not setting this up *inside* a remote SSH connection
     if [[ -z "$SSH_CONNECTION" ]]; then
@@ -485,24 +463,24 @@ ops	%I reads | %O writes
 proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[[ -d ~/.local/bin ]] && path+=(~/.local/bin)
-autoload -Uz pronounce_number spectrum_ls _zvcalc
-alias calc='nocorrect noglob _zvcalc'
-
 # rg config file
-(( ${+commands[rg]} )) && export RIPGREP_CONFIG_PATH=~/.ripgreprc
+[[ -f ~/.ripgreprc ]] && export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
 # Rust
-(( ${+commands[rustc]} )) && export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
-[[ -O ~/.cargo/env(#qf:go-w:N) ]] && source ~/.cargo/env
+if (( ${+commands[rustc]} )); then
+    export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+    [[ -d "$RUST_SRC_PATH" ]] || unset RUST_SRC_PATH
+    # test if $HOME/.cargo/env exists, we own it and can't be written to be others
+    [[ -O ~/.cargo/env(#qf:go-w:N) ]] && source ~/.cargo/env
+fi
 
 # Check if we own a readable file, not writable by other at ~/.zsh/local.zsh
 if [[ -O ~/.zsh/local.zsh(#qf:go-w:N) ]]; then
     source ~/.zsh/local.zsh
 elif [[ ! -e ~/.zsh/local.zsh ]]; then
-    if [[ -d ~/.zsh ]]; then
-        ( umask 077; touch ~/.zsh/local.zsh )
-    fi
+    [[ -d ~/.zsh ]] && ( umask 077; touch ~/.zsh/local.zsh )
 else
     printf "Refusing to source from %s\n" ~/.zsh/local.zsh >&2
 fi
+
+path+=(~/.local/bin)
