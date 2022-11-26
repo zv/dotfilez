@@ -282,6 +282,18 @@
       { print }
     #+END_SRC
 
+** =noatime=
+  I run my workstation's primary filesystems with the =noatime= option; no
+  longer updating file access times. I rarely care about when files were
+  accessed, usually only caring about it's =mtime= (last modification).
+
+  Access times are still useful, rarely justify themselves.
+
+   #+BEGIN_SRC sh
+     sudoedit /etc/fstab # add `noatime` mount option to `/`, `/home`, etc.
+     systemctl daemon-reload # ask systemd to regenerate mount units from fstab
+   #+END_SRC
+
 ** =udev=
    =udev= is a device manager for the Linux kernel. As the successor of
    =devfsd= and =hotplug=, =udev= primarily manages device nodes in the =/dev=
