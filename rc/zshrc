@@ -80,12 +80,13 @@ setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 unsetopt PUSHD_SILENT       # Do not print the directory stack after pushd or popd.
 
 # ── Scripts and Functions ──────────────────────────────────
-# Suppress the undeclared global variable warning raised inside IDEA
-[[ "$TERMINAL_EMULATOR" = "JetBrains-JediTerm" ]] && typeset -g VARIABLE NAME
 unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
 # ── Prompting ──────────────────────────────────────────────
+# Suppress the undeclared global variable warning raised inside IDEA
+[[ "$TERMINAL_EMULATOR" = 'JetBrains-JediTerm' || \
+    "$TERM_PROGRAM" = 'vscode' ]] && unsetopt WARN_CREATE_GLOBAL
 
 # Dumb terminals
 if [[ "$TERM" == dumb || "$TERM" == eterm-color ]]; then
