@@ -438,7 +438,7 @@ fi
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 if (( ${+commands[gpg]} )); then
-    export GPG_TTY=$(tty)
+    export GPG_TTY="$(tty)"
 
     # Make sure we're not setting this up *inside* a remote SSH connection
     if [[ -z "$SSH_CONNECTION" ]]; then
