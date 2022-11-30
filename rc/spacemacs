@@ -47,6 +47,9 @@ This function should only modify configuration layer settings."
           x86-lookup-pdf "~/Books/Intel IA64 Vol 2 (Instruction Set Reference).pdf")
      prettier
      (c-c++ :variables
+            c-c++-backend 'lsp-clangd
+            c-c++-enable-google-style t
+            c-c++-enable-google-newline t
             c-c++-default-mode-for-headers 'c-mode
             c-c++-enable-clang-support t)
      docker
@@ -678,6 +681,7 @@ This function is called at the very end of Spacemacs initialization."
  '(helm-scroll-amount 8)
  '(js-indent-level 2)
  '(kill-ring-max 256)
+ '(lsp-clients-clangd-executable "/usr/bin/clangd")
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]\\.venv\\'" "[/\\\\]venv\\'" "[/\\\\]\\.idea\\'" "[/\\\\]__pycache__\\'" "[/\\\\]\\.eggs\\'" "[/\\\\]\\.egg-info\\'" "[/\\\\]\\.cache\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.tox\\'" "[/\\\\]\\.pytest_cache\\'"))
  '(magit-repo-dirs '("~/Development/"))
