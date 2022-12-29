@@ -1,23 +1,5 @@
 Compression yes
 ControlMaster auto
 ControlPath /tmp/%r@%h:%p
-ControlPersist yes
-HashKnownHosts yes
-HostKeyAlgorithms ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp521,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384
-ServerAliveCountMax 6
-ServerAliveInterval 15
-TCPKeepAlive yes
+ControlPersist 5d
 VisualHostKey yes
-
-Host *.nxvr.org
-  user zv
-  ForwardAgent yes
-
-Host nxvr.org
-  HostName nxvr
-
-Host offblast.org
-  HostName offblast
-
-Host slaanesh
-  HostName sl
