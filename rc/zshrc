@@ -22,7 +22,9 @@ setopt EXTENDED_GLOB        # Use extended globbing syntax.
 setopt GLOB_DOTS            # Glob files beginning with dot (`.`)
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 setopt NULL_GLOB            # Delete patterns without match from argument list
-setopt WARN_CREATE_GLOBAL   # Print a warning when global parmeter is created within a fun
+if [[ $(uname) != "Darwin" ]]; then
+    setopt WARN_CREATE_GLOBAL   # Print a warning when global parameter is created within a fun
+fi
 
 # ── History ────────────────────────────────────────────────
 setopt BANG_HIST               # Treat the '!' character specially during expansion.
@@ -206,6 +208,11 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # ls colors
+if [[ $(uname) == "Darwin" ]]; then
+    export CLICOLOR="YES"
+    export LSCOLORS="Gxfxcxdxbxegedabagacad"
+fi
+
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 
@@ -484,4 +491,6 @@ else
     printf "Refusing to source from %s\n" ~/.zsh/local.zsh >&2
 fi
 
-path+=(~/.local/bin)
+if [[ -d ~/.local/ && -d ~/.local/bin/ ]]; then
+    path+=(~/.local/bin)
+fi

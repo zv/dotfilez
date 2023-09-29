@@ -10,8 +10,10 @@ export LC_CTYPE="$LANG"
 export LISTPROMPT=''
 
 # XDG vars
-export XDG_CACHE_HOME=${XDG_CACHE_HOME:=~/.cache}
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
+if [[ $(uname) != "Darwin" ]]; then
+    export XDG_CACHE_HOME=${XDG_CACHE_HOME:=~/.cache}
+    export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
+fi
 
 # Don't automatically rename my windows in screen/tmux
 export DISABLE_AUTO_TITLE=true
