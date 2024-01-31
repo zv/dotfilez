@@ -10,7 +10,7 @@ export LC_CTYPE="$LANG"
 export LISTPROMPT=''
 
 # XDG vars
-if [[ $(uname) != "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
     export XDG_CACHE_HOME=${XDG_CACHE_HOME:=~/.cache}
     export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=~/.config}
 fi
@@ -19,7 +19,7 @@ fi
 export DISABLE_AUTO_TITLE=true
 
 # Font Config
-if [[ "$OSTYPE" == linux-gnu ]]; then
+if [[ "$OSTYPE" == 'linux-gnu' ]]; then
     export FONTCONFIG_PATH=${FONTCONFIG_PATH:=/etc/fonts}
 fi
 

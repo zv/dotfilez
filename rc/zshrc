@@ -22,8 +22,13 @@ setopt EXTENDED_GLOB        # Use extended globbing syntax.
 setopt GLOB_DOTS            # Glob files beginning with dot (`.`)
 setopt GLOB_STAR_SHORT      # Abbreviate `**/*` to `**` and `***/*` to `***`
 setopt NULL_GLOB            # Delete patterns without match from argument list
-if [[ $(uname) != "Darwin" ]]; then
-    setopt WARN_CREATE_GLOBAL   # Print a warning when global parameter is created within a fun
+setopt WARN_CREATE_GLOBAL   # Print a warning when global parameter is created within a fun
+
+if [[ "$OSTYPE" == darwin*
+    || "$TERMINAL_EMULATOR" == 'JetBrains-JediTerm'
+    || "$TERM_PROGRAM" == 'vscode' ]]; then
+    # Suppress the undeclared global variable warning raised inside IDEA or OSX
+    unsetopt WARN_CREATE_GLOBAL
 fi
 
 # ── History ────────────────────────────────────────────────
@@ -86,12 +91,8 @@ unsetopt C_BASES            # Dont output hex numbers in 0xFF instead of 16#FF
 setopt MULTIOS              # Write to multiple descriptors.
 
 # ── Prompting ──────────────────────────────────────────────
-# Suppress the undeclared global variable warning raised inside IDEA
-[[ "$TERMINAL_EMULATOR" = 'JetBrains-JediTerm' || \
-    "$TERM_PROGRAM" = 'vscode' ]] && unsetopt WARN_CREATE_GLOBAL
-
 # Dumb terminals
-if [[ "$TERM" == dumb || "$TERM" == eterm-color ]]; then
+if [[ "$TERM" == 'dumb' || "$TERM" == 'eterm-color' ]]; then
     unsetopt PROMPT_CR
     unsetopt PROMPT_SUBST
     unsetopt ZLE
@@ -178,7 +179,7 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
 # Environmental Variables
-zstyle ':completion:*:*:*:users' users 'zv' 'root' 'zephyr' 'pellerin'
+zstyle ':completion:*:*:*:users' users root ${USERNAME}
 
 # Ignore multiple entries.
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
@@ -208,7 +209,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '0.0.0.<->' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # ls colors
-if [[ $(uname) == "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
     export CLICOLOR="YES"
     export LSCOLORS="Gxfxcxdxbxegedabagacad"
 fi
@@ -317,10 +318,12 @@ bindkey -M vicmd "/" vi-history-search-backward
 bindkey -M vicmd "k" up-line-or-search   # up-line-or-history
 bindkey -M vicmd "j" down-line-or-search # down-line-or-history
 
-autoload -Uz ~/.zsh/functions/smart-insert-last-word
-zle -N smart-insert-last-word
-# bind alt-p to cycle through the last argument of the previous line
-bindkey -M viins '\ep' smart-insert-last-word
+if [[ -e ~/.zsh/functions/smart-insert-last-word ]]; then
+    autoload -Uz ~/.zsh/functions/smart-insert-last-word
+    zle -N smart-insert-last-word
+    # bind alt-p to cycle through the last argument of the previous line
+    bindkey -M viins '\ep' smart-insert-last-word
+fi
 
 # make search up and down work, so partially type and hit up/down to find relevant stuff
 bindkey '^[[A' find-history-backwards # up-line-or-search
@@ -341,24 +344,24 @@ bindkey ' ' magic-space # [Space] - do history expansion
 # ━━ Aliasing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 alias pr="print -l"
 alias _='sudo'
-alias edit="emacs -nw"
-alias info="info --vi-keys"
+alias aws="MANPAGER='more' aws"
 alias external-ip="curl ipinfo.io/ip"
-alias ls='ls --color=auto'
+alias genp=" command genp"
+alias info="command info --vi-keys"
 alias l='ls -1A'         # Lists in one column, hidden files.
-alias ll='ls -lh'        # Lists human readable sizes.
 alias la='ll -Ah'         # Lists human readable sizes, hidden files.
+alias ll='ls -lh'        # Lists human readable sizes.
+alias ls='ls --color=auto'
+alias veactivate="source .venv/bin/activate && rehash"
 alias w3m="noglob w3m"
 
 # Tmux
 alias ta="tmux attach-session -t"
 alias tl="tmux list-sessions"
 
-alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
-alias veactivate="source .venv/bin/activate && rehash"
-
-alias aws="MANPAGER='more' aws"
-alias genp=" command genp"
+if (( ${+commands[emacs]} )); then 
+    alias edit="emacs -nw"
+fi
 
 # show each terminal color
 alias spectrum_ls='for code ({000..255}) print -P "$code: %F{$code}████████████████%f"'
@@ -418,7 +421,7 @@ if (( ${+commands[dnf]} )); then
     alias pkg-whatdeps='dnf repoquery --deplist --installed' # what dependencies of a package
     alias pkg-whatprovides='dnf provides'                    # what package(s) provide a given spec
     alias pkg-whatrequires='dnf repoquery --whatrequires'    # what packages require this package
-else
+elif (( ${+commands[apt-get]} )); then
     alias pkg-add='sudo apt-get install --no-upgrade'        # add package
     alias pkg-search='apt-cache search'                      # list packages matching pattern
     alias pkg-update='sudo apt install --only-upgrade'       # update package
@@ -444,8 +447,9 @@ if (( ${+commands[git]} )); then
 fi
 
 # ━━ GPG Agent Setup ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if (( ${+commands[gpg]} )); then
+if (( ${+commands[gpg]} )) ; then
     export GPG_TTY="$(tty)"
+    alias gpginit="date | gpg -a --encrypt -r zv@nxvr.org | gpg --decrypt"
 
     # Make sure we're not setting this up *inside* a remote SSH connection
     if [[ -z "$SSH_CONNECTION" ]]; then
@@ -472,7 +476,9 @@ proc	%W swaps | %w waits | %c preempts | %k signals | %F major faults'
 
 # ━━ Other ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # rg config file
-[[ -f ~/.ripgreprc ]] && export RIPGREP_CONFIG_PATH=~/.ripgreprc
+if [[ -f ~/.ripgreprc ]]; then
+    export RIPGREP_CONFIG_PATH=~/.ripgreprc
+fi
 
 # Rust
 if (( ${+commands[rustc]} )); then
